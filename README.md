@@ -1,7 +1,7 @@
 # ESP32 Audio Docks
 
-![Open Source Hardware](/doc/images/open-source-hardware-logo.png)
-![Open Source Software](/doc/images/open-source-software-logo.png)
+![Open Source Hardware](/images/open-source-hardware-logo.png)
+![Open Source Software](/images/open-source-software-logo.png)
 
 ESP32 Audio Docks is a range of extension boards (i.e. docks) that allow you to develop Audio solutions based on ESP32 chips. These were created to make Audio development entry as easy and inexpensive as possible. 
 
@@ -21,7 +21,7 @@ I created those docks, to be able quick prototype for whole range of ESP8266 and
 |-------------|-----------------------------------------------------|---------------------------------------------------|-----------------------------|-------------------------------------------------------|
 | Image       | ?image                                              | ?image                                            | ?image                      | ?image                                                |
 | Docks with  | ESP8266, ESP32C3, ESP32S2 Mini modules              | ESP32 Mini Module                                 | ESP32 Mini Module           | ESP32 Mini Module                                     |
-| DAC         | Single I2S DAC (MAX98537) with built in D-Class amp | Dual I2S DAC (MAX98537) with built in D-Class amp | PCM5100A 32bit Stereo DAC   | Stereo I2S DAC (TAS5805M) with   built in D-Class amp |
+| DAC         | Single I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | PCM5100A 32bit Stereo DAC   | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with   built in D-Class amp |
 | Output (4Ω) | 3W                                                  | 2x 3W                                             | Non-amplified stereo output | 2x 15W at 12V Vin                                     |
 | Output (8Ω) | 1.5W                                                | 2x 1.5W                                           | Non-amplified stereo output | 2x 23W at 22V Vin                                     |
 | Adds        |                                                     | 8Mb PSRAM (4Mb usable)                            | 8Mb PSRAM (4Mb usable)      | 8Mb PSRAM (4Mb usable)                                |
