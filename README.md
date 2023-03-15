@@ -21,16 +21,16 @@ I created those docks, to be able quick prototype for whole range of ESP8266 and
 |-------------|-----------------------------------------------------|---------------------------------------------------|-----------------------------|-------------------------------------------------------|
 | Image       | ![image](https://user-images.githubusercontent.com/5459747/225271839-3844b043-f3f4-4cb1-8a11-72c4f02aedce.png)                                              | ![image](https://user-images.githubusercontent.com/5459747/225271977-fd333283-66f0-448f-b748-e0ac94e25680.png)                                            | ![image](https://user-images.githubusercontent.com/5459747/225272052-c36d5b87-1b9a-439c-be69-94077135e72a.png)                      | ![image](https://user-images.githubusercontent.com/5459747/225272110-9433ff86-8912-47c5-a9f2-12bd7a0fe5a0.png)                                                |
 | Docks with  | ESP8266, ESP32C3, ESP32S2 Mini modules              | ESP32 Mini Module                                 | ESP32 Mini Module           | ESP32 Mini Module                                     |
-| DAC         | Single I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | PCM5100A 32bit Stereo DAC   | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with   built in D-Class amp |
+| DAC         | Single I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC <br/> -100 dB typical noise level   | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with   built in D-Class amp |
 | Output (4Ω) | 3W                                                  | 2x 3W                                             | Non-amplified stereo output | 2x 15W at 12V Vin                                     |
 | Output (8Ω) | 1.5W                                                | 2x 1.5W                                           | Non-amplified stereo output | 2x 23W at 22V Vin                                     |
-| Adds        |                                                     | 8Mb PSRAM (4Mb usable)                            | 8Mb PSRAM (4Mb usable)      | 8Mb PSRAM (4Mb usable)                                |
+| Adds        |                                                     | 8MB PSRAM (4MB usable)                            | 8MB PSRAM (4MB usable)      | 8MB PSRAM (4MB usable)                                |
 
 ### Onboard PSRAM
 
-Audio streaming require proper buffering to work, even with ESP32 500K of RAM it is a challending task. For that reason most of the projects will require WROVER modules that have onboard PSRAM chip. 
+Audio streaming require proper buffering to work, even with ESP32 500K of RAM it is a challenging task. For that reason most of the projects will require WROVER modules that have onboard PSRAM chip. 
 
-All ESP32 Docks has 8M PSRAM chip onboard, connected via high-speed SDIO interface. This effectively **turns your regular WROOM module into WROVER module** with no effort required. Any code using PSRAM with just work out-of-the box.
+All ESP32 Docks has 8MB PSRAM chip onboard, connected via high-speed SDIO interface. This effectively **turns your regular WROOM module into WROVER module** with no effort required. Any code using PSRAM with just work out-of-the box.
 
 ## Boards Pinout
 
@@ -80,6 +80,30 @@ Follow the [ESP8266Audio](https://github.com/earlephilhower/ESP8266Audio) librar
 ![image](https://user-images.githubusercontent.com/5459747/225272625-777fa75d-bccc-427c-a861-e01784543c87.png)
 
 Please visit [hardware](/hardware/) section for board schematics and PCB designs. Note that PCB are shared as multi-layer PDFs.
+
+### ESP Audio Solo
+
+| Image  | Legend  |
+|---|---|
+| ![image](https://user-images.githubusercontent.com/5459747/225284415-e778cd0f-4549-46fb-a25a-a7e58b23b6f8.png) | - ![image](https://user-images.githubusercontent.com/5459747/225284233-da43e71b-976a-4356-a562-d97d42c3e817.png) MAX98357A DAC <br/> - ![image](https://user-images.githubusercontent.com/5459747/225284300-ff5c3ced-1a0f-4658-bafc-9b5ab7c43811.png) Speaker Terminal  |
+
+### ESP Audio Duo
+
+| Image  | Legend  |
+|---|---|
+| ![image](https://user-images.githubusercontent.com/5459747/225284680-72c9de9e-d5bc-4b68-9aa6-d070b52da3e0.png) | - ![image](https://user-images.githubusercontent.com/5459747/225284233-da43e71b-976a-4356-a562-d97d42c3e817.png) MAX98357A DAC <br/> - ![image](https://user-images.githubusercontent.com/5459747/225284300-ff5c3ced-1a0f-4658-bafc-9b5ab7c43811.png) Speaker Terminals <br/> - ![image](https://user-images.githubusercontent.com/5459747/225284781-8a9ab413-24d4-49c4-b7b6-f21593f564be.png) 8MB PSRAM IC  |
+
+### HiFi-ESP
+
+| Image  | Legend  |
+|---|---|
+| ![image](https://user-images.githubusercontent.com/5459747/225285266-be88b0ee-0d24-4246-86ed-d6f48b8b53f0.png) | - ![image](https://user-images.githubusercontent.com/5459747/225284233-da43e71b-976a-4356-a562-d97d42c3e817.png) MAX98357A DAC <br/> - ![image](https://user-images.githubusercontent.com/5459747/225284300-ff5c3ced-1a0f-4658-bafc-9b5ab7c43811.png) Speaker Terminals <br/> - ![image](https://user-images.githubusercontent.com/5459747/225284781-8a9ab413-24d4-49c4-b7b6-f21593f564be.png) 8MB PSRAM IC <br/> - ![image](https://user-images.githubusercontent.com/5459747/225285323-7fb37cfd-da4e-4ec3-bc1e-34ffdee6af7e.png) Ultra-Low noise LDO 3V3 Voltage regulator |
+
+### Louder ESP
+
+| Image  | Legend  |
+|---|---|
+| ![image](https://user-images.githubusercontent.com/5459747/225285681-2a0c9948-7879-4eba-aa25-e042851eddf0.png) | - ![image](https://user-images.githubusercontent.com/5459747/225284233-da43e71b-976a-4356-a562-d97d42c3e817.png) MAX98357A DAC <br/> - ![image](https://user-images.githubusercontent.com/5459747/225284300-ff5c3ced-1a0f-4658-bafc-9b5ab7c43811.png) Speaker Terminals <br/> - ![image](https://user-images.githubusercontent.com/5459747/225284781-8a9ab413-24d4-49c4-b7b6-f21593f564be.png) 8MB PSRAM IC <br/> - ![image](https://user-images.githubusercontent.com/5459747/225285323-7fb37cfd-da4e-4ec3-bc1e-34ffdee6af7e.png) 3V3 Drop-Down voltage regulator (powers ESP32) <br/> - ![image](https://user-images.githubusercontent.com/5459747/225285837-a7c99f60-7faa-4250-8168-b10ac963df1c.png) Input Voltage terminal |
 
 ## Where to buy
 
