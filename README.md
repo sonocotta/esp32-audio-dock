@@ -5,7 +5,7 @@
 
 ESP32 Audio Docks is a range of extension boards (i.e. docks) that allow you to develop Audio solutions based on ESP32 chips. These were created to make Audio development entry as easy and inexpensive as possible. 
 
-@image
+![image](https://user-images.githubusercontent.com/5459747/225271619-35ba0f99-fdd1-496b-b305-26e397df4460.png)
 
 ## Motivation
 
@@ -19,7 +19,7 @@ I created those docks, to be able quick prototype for whole range of ESP8266 and
 
 |             | ESP Audio Solo                                      | ESP Audio Duo                                     | Hifi ESP                    | Louder ESP                                            |
 |-------------|-----------------------------------------------------|---------------------------------------------------|-----------------------------|-------------------------------------------------------|
-| Image       | ?image                                              | ?image                                            | ?image                      | ?image                                                |
+| Image       | ![image](https://user-images.githubusercontent.com/5459747/225271839-3844b043-f3f4-4cb1-8a11-72c4f02aedce.png)                                              | ![image](https://user-images.githubusercontent.com/5459747/225271977-fd333283-66f0-448f-b748-e0ac94e25680.png)                                            | ![image](https://user-images.githubusercontent.com/5459747/225272052-c36d5b87-1b9a-439c-be69-94077135e72a.png)                      | ![image](https://user-images.githubusercontent.com/5459747/225272110-9433ff86-8912-47c5-a9f2-12bd7a0fe5a0.png)                                                |
 | Docks with  | ESP8266, ESP32C3, ESP32S2 Mini modules              | ESP32 Mini Module                                 | ESP32 Mini Module           | ESP32 Mini Module                                     |
 | DAC         | Single I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | PCM5100A 32bit Stereo DAC   | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with   built in D-Class amp |
 | Output (4Ω) | 3W                                                  | 2x 3W                                             | Non-amplified stereo output | 2x 15W at 12V Vin                                     |
@@ -30,11 +30,35 @@ I created those docks, to be able quick prototype for whole range of ESP8266 and
 
 Audio streaming require proper buffering to work, even with ESP32 500K of RAM it is a challending task. For that reason most of the projects will require WROVER modules that have onboard PSRAM chip. 
 
-All ESP32 Docks has 8M PSRAM chip onboard, connected via high-speed SDIO interface. This effectively turn your regular WROOM module into WROVER module with no effort required. Any code using PSRAM with just work out-of-the box.
+All ESP32 Docks has 8M PSRAM chip onboard, connected via high-speed SDIO interface. This effectively **turns your regular WROOM module into WROVER module** with no effort required. Any code using PSRAM with just work out-of-the box.
 
 ## Boards Pinout
 
-?image and description 
+### ESP Audio Solo
+
+|         | I2S CLK | I2S DATA | I2S WS |
+|---------|---------|----------|--------|
+| ESP8266 | 15      | 3        | 2      |
+| ESP32C3 | 5       | 20       | 6      |
+| ESP32S2 | 12      | 37       | 16     |
+
+### ESP Audio Duo
+
+|       | I2S CLK | I2S DATA | I2S WS | PSRAM CE | PSRAM CLK |
+|-------|---------|----------|--------|----------|-----------|
+| ESP32 | 26      | 22       | 25     | 16       | 17        |
+
+### HiFi-ESP
+
+|       | I2S CLK | I2S DATA | I2S WS | PSRAM CE | PSRAM CLK |
+|-------|---------|----------|--------|----------|-----------|
+| ESP32 | 26      | 22       | 25     | 16       | 17        |
+
+### Louder ESP
+
+|       | I2S CLK | I2S DATA | I2S WS | PSRAM CE | PSRAM CLK | TAS5805 SDA | TAS5805 SCL | TAS5805 PWDN | TAS5805 FAULT |
+|-------|---------|----------|--------|----------|-----------|-------------|-------------|--------------|---------------|
+| ESP32 | 26      | 22       | 25     | 16       | 17        | 21          | 27          | 33           | 34            |
 
 ## Software samples
 
@@ -52,6 +76,8 @@ All samples are provided as [Plarformio IDE](https://platformio.org/platformio-i
 Follow the [ESP8266Audio](https://github.com/earlephilhower/ESP8266Audio) library guide. Default settings will work out of the box with ESP8266 and ESP32 boards. For ESP32C3 and ESP32S2 board please adjust pinout according to the above section
 
 ## Hardware
+
+![image](https://user-images.githubusercontent.com/5459747/225272625-777fa75d-bccc-427c-a861-e01784543c87.png)
 
 Please visit [hardware](/hardware/) section for board schematics and PCB designs. Note that PCB are shared as multi-layer PDFs.
 
