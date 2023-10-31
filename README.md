@@ -109,6 +109,8 @@ Please visit [hardware](/hardware/) section for board schematics and PCB designs
 
 ## Where to buy
 
-In limited quantities possible to buy at [Tindie](https://www.tindie.com/products/sonocotta/).
+In limited quantities possible to buy at Tindie
+- [ESP Audio Dock](https://www.tindie.com/products/sonocotta/esp-audio-dock/)
+- [Louder ESP32](https://www.tindie.com/products/sonocotta/louder-esp32/)
 
 ## Links
