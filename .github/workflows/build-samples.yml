@@ -16,6 +16,7 @@ jobs:
         example:
           - ./firmware/esp32-i2s-bare
           - ./firmware/esp32-i2s-esp8266audio
+          - ./firmware/esp32-i2s-web-radio
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
