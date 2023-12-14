@@ -1,4 +1,4 @@
-# ESP32 Audio Docks
+# ESP32 Audio Docks and Louder ESP
 
 ![Open Source Hardware](/images/open-source-hardware-logo.png)
 ![Open Source Software](/images/open-source-software-logo.png)
@@ -25,6 +25,7 @@ I created those docks, to be able quick prototype for whole range of ESP8266 and
 | Output (4Ω) | 3W                                                  | 2x 3W                                             | Non-amplified stereo output | 2x 15W at 12V Vin                                     |
 | Output (8Ω) | 1.5W                                                | 2x 1.5W                                           | Non-amplified stereo output | 2x 23W at 22V Vin                                     |
 | Adds        |                                                     | 8MB PSRAM (4MB usable)                            | 8MB PSRAM (4MB usable)      | 8MB PSRAM (4MB usable)                                |
+| Connectivity | WiFi (ESP8266, ESP32S2) <br/> WiFi + BT5.0 (ESP32C3) |  WiFi + BT4.2 + BLE |  WiFi + BT4.2 + BLE |  WiFi + BT4.2 + BLE </br> Ethernet
 
 ### Onboard PSRAM
 
@@ -60,13 +61,20 @@ All ESP32 Docks has 8MB PSRAM chip onboard, connected via high-speed SDIO interf
 |-------|---------|----------|--------|----------|-----------|-------------|-------------|--------------|---------------|
 | ESP32 | 26      | 22       | 25     | 16       | 17        | 21          | 27          | 33           | 34            |
 
+Starting from revision E, Louder ESP exposes Ethernet header, compatible with popular [W5500](https://www.wiznet.io/product-item/w5500/) module 
+
+|       | SPI CLK | SPI MOSI | SPI MISO | SPI CS | SPI HOST/SPEED | ETH INT | ETH RST | 
+|-------|---------|----------|--------|----------|-----------|-------------|-------------|
+| ESP32 | 18      | 23       | 19     | 05       | 2/20MHz        | 35          | 14          |
+
 ## Software samples
 
 In the [software](/firmware) section two firmware examples provided.
 
 - [esp32-i2s-bare](/firmware/esp32-i2s-bare/) is base I2S implementation based on ESP-IDF implementation directly.
 - [esp32-i2s-esp8266audio](/firmware/esp32-i2s-esp8266audio/) is based on excellent [ESP8266Audio](https://github.com/earlephilhower/ESP8266Audio) library (it works with the whole ESP range, don't get fooled by the name), providing minimum code implementation. 
-- [esp32-i2s-web-radio](/firmware/esp32-i2s-web-radio/) is based on the [same library](https://github.com/earlephilhower/ESP8266Audio), providing minimum web-readio stream player. It expects playlist as an input in 'data' folder. 
+- [esp32-i2s-web-radio](/firmware/esp32-i2s-web-radio/) is based on the [same library](https://github.com/earlephilhower/ESP8266Audio), providing minimum web-readio stream player. It expects playlist as an input in 'data' folder.
+- [Squeezelite-ESP32](https://github.com/sle118/squeezelite-esp32) - see more details [below](#Squeezelite-ESP32)
 
 ### Platformio IDE
  
@@ -103,8 +111,9 @@ Use [Squeezelite-ESP32 installer](https://sle118.github.io/squeezelite-esp32-ins
 | Device is in recovery mode. Connect to `squeezelite-299fac` wifi network with `squeezelite` password (your network name suffix will be different) | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/2763663c-dbc9-4c71-af12-0a6fb9c2d94d) |
 | When redirected to captive portal let device scan wifi network and provide valid credentials | <img src="https://github.com/sonocotta/esp32-audio-dock/assets/5459747/d2540ffb-d1d1-4441-a2b1-bbd6b8ad608f" width="30%" /> <img src="https://github.com/sonocotta/esp32-audio-dock/assets/5459747/b21f30e6-8899-46bc-b047-23281cae52b8" width="30%" /> <img src="https://github.com/sonocotta/esp32-audio-dock/assets/5459747/5dd1a1f6-0c6d-4045-b135-1d8cdd077161" width="30%" /> |
 | You can use provided IP address (http://192.168.1.99/ on the screenshot) to access settings page |  ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/e3bbf910-1a5c-4c58-bd4e-c348ef0a91e5)
-| ["ESP Audio Duo", "HiFi-ESP"] <br /><br /> Navigate to **Hardware** section and provide following updates in the **DAC Options** <br/><br /> DAC model: `I2S` <br/> Clock GPIO: `26` <br/> Word Select GPIO: `25` <br/> Data GPIO: `22` <br/> <br /> Press `Save` button |  ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/f52e3a05-abe6-40d7-98ac-212bff6c431f)
-| ["Louder ESP"] <br /><br /> Navigate to **NVS Editor** section and provide following updates <br /><br /> dac_config: `model=I2S,bck=26,ws=25,do=22,sda=21,scl=27,i2c=45` <br /> (STEREO, [BTL mode](#btl-and-pbtl-mode)) dac_controlset: `{"init":[{"reg":3,"val":2},{"reg":3,"val":3}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]}` <br /> (MONO, [PBTL mode](#btl-and-pbtl-mode)) dac_controlset: `{"init":[{"reg":3,"val":2},{"reg":3,"val":3},{"reg":2,"val":4}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]}` <br /> i2c_config: `scl=27,sda=21,speed=400000,port=1` <br /> set_GPIO: `33=vcc` <br/><br /> Press `Commit` button |  ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/cac2a1cc-7216-47c9-97b2-6a72c6559165)
+| _ESP Audio Duo, HiFi-ESP_ <br /><br /> Navigate to **Hardware** section and provide following updates in the **DAC Options** <br/><br /> DAC model: `I2S` <br/> Clock GPIO: `26` <br/> Word Select GPIO: `25` <br/> Data GPIO: `22` <br/> <br /> Press `Save` button |  ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/f52e3a05-abe6-40d7-98ac-212bff6c431f)
+| _Louder ESP_ <br /><br /> Navigate to **NVS Editor** section and provide following updates <br /><br /> dac_config: `model=I2S,bck=26,ws=25,do=22,sda=21,scl=27,i2c=45` <br /> (STEREO, [BTL mode](#btl-and-pbtl-mode)) dac_controlset: `{"init":[{"reg":3,"val":2},{"reg":3,"val":3}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]}` <br /> (MONO, [PBTL mode](#btl-and-pbtl-mode)) dac_controlset: `{"init":[{"reg":3,"val":2},{"reg":3,"val":3},{"reg":2,"val":4}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]}` <br /> i2c_config: `scl=27,sda=21,speed=400000,port=1` <br /> set_GPIO: `33=vcc` <br/><br /> Press `Commit` button |  ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/cac2a1cc-7216-47c9-97b2-6a72c6559165)
+| _Louder ESP, Rev E_  <br /><br /> Update Ethernet configuration, if you're planning to use Ethernet module <br /> eth_config: `model=w5500,cs=5,speed=20000000,intr=35,rst=14` <br/> spi_config: `mosi=23,clk=18,host=2,miso=19` <br/> <br /> Press `Commit` button |  ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/f52e3a05-abe6-40d7-98ac-212bff6c431f)
 | (Optional) You may change device names to something close to you heart| ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/adc1fff1-8572-4fe5-9d88-943d86a3fb11)
 | Exit recovery | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/c54b18fa-c995-4e67-bced-820f8bce5fe6)
   
@@ -145,6 +154,14 @@ Please visit [hardware](/hardware/) section for board schematics and PCB designs
 | ![image](https://user-images.githubusercontent.com/5459747/225285681-2a0c9948-7879-4eba-aa25-e042851eddf0.png) | ![image](https://user-images.githubusercontent.com/5459747/225284233-da43e71b-976a-4356-a562-d97d42c3e817.png) [TAS5805M](https://www.ti.com/product/TAS5805M) DAC <br/> ![image](https://user-images.githubusercontent.com/5459747/225284300-ff5c3ced-1a0f-4658-bafc-9b5ab7c43811.png) Speaker Terminals <br/> ![image](https://user-images.githubusercontent.com/5459747/225284781-8a9ab413-24d4-49c4-b7b6-f21593f564be.png) 8MB PSRAM IC <br/> ![image](https://user-images.githubusercontent.com/5459747/225285323-7fb37cfd-da4e-4ec3-bc1e-34ffdee6af7e.png) 3V3 Drop-Down voltage regulator (powers ESP32) <br/> ![image](https://user-images.githubusercontent.com/5459747/225285837-a7c99f60-7faa-4250-8168-b10ac963df1c.png) Input Voltage terminal |
 | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/98712315/6de133de-de03-4f95-bf70-996191733ec4) (REV B, C, D) |![image](https://user-images.githubusercontent.com/5459747/225284233-da43e71b-976a-4356-a562-d97d42c3e817.png) [TAS5805M](https://www.ti.com/product/TAS5805M) DAC <br/> ![image](https://user-images.githubusercontent.com/5459747/225284300-ff5c3ced-1a0f-4658-bafc-9b5ab7c43811.png) Speaker Terminals <br/> - 8MB PSRAM IC (Hidden under ESP32 module) <br/> - 3V3 Drop-Down voltage regulator (powers ESP32, hidden under ESP32 module) <br/> ![image](https://user-images.githubusercontent.com/5459747/225285837-a7c99f60-7faa-4250-8168-b10ac963df1c.png) Input Voltage terminal 
 
+### Louder Optional ESP Ethernet
+
+| Image  | Legend  |
+|---|---|
+| Optional Ethernet header is exposed on the bottom side of the PCB | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/762bfea5-ffbf-493f-8217-8a47c146b304) |
+| Use popular W5500 based module as displayed on the picture | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/090520a2-1ee7-45ec-81e4-86343b0aef25)
+
+
 ### BTL and PBTL mode
 
 [TAS5805M DAC](https://www.ti.com/lit/ds/symlink/tas5805m.pdf?ts=1701767947387) Allows 2 modes of operation. 
@@ -156,11 +173,27 @@ Please visit [hardware](/hardware/) section for board schematics and PCB designs
 | Schematics | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/e7ada8c0-c906-4c08-ae99-be9dfe907574) | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/55f5315a-03eb-47c8-9aea-51e3eb3757fe)
 | Speaker Connection | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/eca2cf1e-ebe0-4684-9aa2-1cc193e0982f) | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/ee5b4517-3799-43a7-8d10-0a2f3a425c81) 
 
+Starting from Rev E, additonal header is exposed to allow datasheet-speced connectivity
+
+| Image  | Legend  |
+|---|---|
+| Stereo Mode - leave open | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/8c06f495-f551-46ef-86c0-e390a6a63241) |
+| Mono (PBTL) Mode, close horisontally | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/a5c78b6a-84c3-4546-afc8-5f65ca268157)
+
+### Louder ESP power considerations
+
+[Barrel jack used](https://www.lcsc.com/product-detail/AC-DC-Power-Connectors_XKB-Connectivity-DC-044D-2-5A-2-0-SMT_C397342.html) is speced at 6mm hole/2mm pin, which is typically 5.5/2.5mm jack on the male side. 
+
+![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/0b18f215-e4ce-4335-9217-d8859566c3a4)
+
+Screw-terminal is connected parallel to the barrel-jack, you can use either interchangeably.
+
+The power adapter specs depend on the speaker you're planning to use. DAC efficiency is close to 100%, so just take the power rating of your speaker (say 2x10w), impedance (say 8 ohm) and you'd need  at least 9 volts rated at 1.2 amps per channel, round up to 3 total amps. 
+
+It is not recommended to go beyond voltage your speakers can take, otherwise amp will blow you speakers in no time. 
 
 ## Where to buy
 
 In limited quantities possible to buy at Tindie
 - [ESP Audio Dock](https://www.tindie.com/products/sonocotta/esp-audio-dock/)
 - [Louder ESP32](https://www.tindie.com/products/sonocotta/louder-esp32/)
-
-## Links
