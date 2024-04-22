@@ -108,7 +108,7 @@ void setup()
 
   file = new AudioFileSourceSPIFFS(audio_files[seq % audio_files_length]);
   if (wav->begin(file, out))
-    log_i("Start playing: %s", audio_files[seq % audio_files_length]);
+    Serial.printf("Start playing: %s", audio_files[seq % audio_files_length]);
 }
 
 void loop()
