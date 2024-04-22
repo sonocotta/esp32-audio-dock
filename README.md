@@ -13,7 +13,7 @@ I spent the last few years developing different solutions based on ESP devices. 
 
 Now new ESP32 C-Series and S-Series chips are entering the market, and their potential is mostly unrealized as of today.
 
-I created those docks, to be able quick prototype for whole range of ESP8266 and ESP32 chips, starting with the simplest finger-sized toys and going all the way up to full-sized speakers.
+I created those docks, to be able to quickly prototype for the whole range of ESP8266 and ESP32 chips, starting with the simplest finger-sized toys and going all the way up to full-sized speakers.
 
 ## Features
 
@@ -29,7 +29,7 @@ I created those docks, to be able quick prototype for whole range of ESP8266 and
 
 ### Onboard PSRAM
 
-Audio streaming requires proper buffering to work, even with ESP32 500K of RAM it is a challenging task. For that reason most of the projects will require WROVER modules that have onboard PSRAM chips. 
+Audio streaming requires proper buffering to work, even with ESP32 500K of RAM it is a challenging task. For that reason, most of the projects will require WROVER modules that have onboard PSRAM chips. 
 
 All ESP32 Docks have an 8MB PSRAM chip onboard, connected via a high-speed SDIO interface. This effectively **turns your regular WROOM module into WROVER module** with no effort required. Any code using PSRAM with just work out-of-the box.
 
@@ -61,7 +61,7 @@ All ESP32 Docks have an 8MB PSRAM chip onboard, connected via a high-speed SDIO 
 |-------|---------|----------|--------|----------|-----------|-------------|-------------|--------------|---------------|
 | ESP32 | 26      | 22       | 25     | 16       | 17        | 21          | 27          | 33           | 34            |
 
-Starting from revision E, Louder ESP exposes Ethernet header, compatible with popular [W5500](https://www.wiznet.io/product-item/w5500/) module 
+Starting from revision E, Louder ESP exposes an Ethernet header, compatible with the popular [W5500](https://www.wiznet.io/product-item/w5500/) module 
 
 |       | SPI CLK | SPI MOSI | SPI MISO | SPI CS | SPI HOST/SPEED | ETH INT | ETH RST | 
 |-------|---------|----------|--------|----------|-----------|-------------|-------------|
@@ -94,9 +94,9 @@ Squeezelite-ESP32 is a multimedia software suite, that started as a renderer (or
 And LMS itself
 - Streams your local music and connects to all major online music providers (Spotify, Deezer, Tidal, Qobuz) using Logitech Media Server - a.k.a LMS with **multi-room** audio synchronization.
 - LMS can be extended by numerous plugins and can be controlled using a Web browser or dedicated applications (iPhone, Android).
-- It can also send audio to UPnP, Sonos, Chromecast and AirPlay speakers/devices.
+- It can also send audio to UPnP, Sonos, Chromecast, and AirPlay speakers/devices.
 
-All ESP32-based boards are tested with [Squeezelite-ESP32](https://github.com/sle118/squeezelite-esp32) software, which can be flashed using nothing but web browser. You can use [Squeezelite-ESP32 installer](https://sle118.github.io/squeezelite-esp32-installer/) for that purpose.
+All ESP32-based boards are tested with [Squeezelite-ESP32](https://github.com/sle118/squeezelite-esp32) software, which can be flashed using nothing but a web browser. You can use [Squeezelite-ESP32 installer](https://sonocotta.github.io/esp32-audio-dock/) for that purpose.
 
 ### How to flash and configure ("ESP Audio Duo", "HiFi-ESP" and "Louder ESP")
 
