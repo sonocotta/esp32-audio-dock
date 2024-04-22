@@ -1,0 +1,102 @@
+[
+    {
+        "name": "hifi-esparagus.16.1672.master-v4.3",
+        "branch": "master-v4.3",
+        "description": "2024-01-27\n - complete libflac fix and add chaining enablement\n - fixed stream Ogg demux issue with unknown granule\n \n2024-01-19\n - fixed libflac with OggFlac\n - AirPlay missed frame logging\n \n2024-01-16\n - catch-up with cspot latest\n - refactor airplay flush/first packet\n - new libFLAC that supports multi-stream OggFlac\n - fix output threshold\n - log missed frames\n \n2024-01-10\n - add OggFlac to stream metadata\n - fix OggFlac deadlock in flac callback when not enough data in streambuf\n - fix no displayer due to threadshold too high (use 500ms instead)\n - reset outputbuf when cspot starts\n \n2024-01-01\n - ogg stream are parsed to foward metadata to LMS\n - fix some ogg parsing on multi-stream containers\n \n2023-11-19\n - more robust (?) airplay RTP frame recovery\n - initialize of scratch string in monitor (trying to figure out random reboot)\n\n2023-11-16\n - add SH1122 support\n - optimize GDS DrawPixel function\n \n2023-11-09\n - force gpio_pad_select_gpio in dac_controlset in case somebody uses UART gpio's (or other pre-programmed)\n \n2023-11-08\n - execute dac_controlset even when there is no i2s (for gpio)\n \n2023-11-07\n - led-vu gain + misc fixes\n - bump plugin version to 0.600\n \n2023-11-03\n - don't reboot when external decoder is connected even with a LMS server\n \n2023-10-28\n - fix recovery size (remove bootstrap)\n - improve NVS initialization structure\n\n2023-10-27\n - fix vorbis (and opus) memory leak\n \n2023-10-25\n - fix vorbis codec close\n\n2023-10-23\n - fix Spotify track insertion\n - [WEB] Allow running without LMS with option \"Audio/Disable Squeezelite\"\n\n2023-10.07\n - catchup with official cspot\n \n2023-10-06\n - fix cspot PREV on first track, NEXT on last track and normal ending\n - use DMA_AUTO for SPI\n - cspot share same time log\n \n2023-10-06\n - Fix bootswatch bug that caused difficult to read UI ( issue #319)\n\n2023-10-02\n - update cspot\n \n2023-09-29\n- sleep mechanism\n- spotify can store credentials so that zeroconf is optional and players are always registered\n- add battery to led_vu (see credits)\n- spdif can do 24 bits (see credits)\n- rmt fixes\n- airplay & spotify artwork fixes\n- airplay stability improvments\n- fix UI text color",
+        "release_details": {
+            "version": "2.1672",
+            "idf": "v4.3",
+            "platform": "hifi-esparagus",
+            "branch": "master-v4.3",
+            "bitrate": "16"
+        },
+        "bin_files": [
+            {
+                "name": "common-esp-2.1672-16-bootloader.bin",
+                "offset": "0x1000",
+                "artifact_relpath": "common-esp-2.1672-16-bootloader.bin"
+            },
+            {
+                "name": "common-esp-2.1672-16-partition-table.bin",
+                "offset": "0x8000",
+                "artifact_relpath": "common-esp-2.1672-16-partition-table.bin"
+            },
+            {
+                "name": "common-esp-nvs.bin",
+                "offset": "0x9000",
+                "artifact_relpath": "common-esp-nvs.bin"
+            },
+            {
+                "name": "common-esp-2.1672-16-ota_data_initial.bin",
+                "offset": "0xd000",
+                "artifact_relpath": "common-esp-2.1672-16-ota_data_initial.bin"
+            },
+            {
+                "name": "common-esp-2.1672-16-recovery.bin",
+                "offset": "0x10000",
+                "artifact_relpath": "common-esp-2.1672-16-recovery.bin"
+            },
+            {
+                "name": "common-esp-2.1672-16-squeezelite.bin",
+                "offset": "0x150000",
+                "artifact_relpath": "common-esp-2.1672-16-squeezelite.bin"
+            },
+            {
+                "name": "hifi-esparagus-settings.bin",
+                "offset": "0x3f0000",
+                "artifact_relpath": "hifi-esparagus-settings.bin"
+            }
+        ],
+        "manifest_name": "manifest-master-v4.3-I2S-4MFlash-2.1672-16.json"
+    },
+    {
+        "name": "hifi-esparagus.16.1670.master-v4.3",
+        "branch": "master-v4.3",
+        "description": "2024-01-27\n - complete libflac fix and add chaining enablement\n - fixed stream Ogg demux issue with unknown granule\n \n2024-01-19\n - fixed libflac with OggFlac\n - AirPlay missed frame logging\n \n2024-01-16\n - catch-up with cspot latest\n - refactor airplay flush/first packet\n - new libFLAC that supports multi-stream OggFlac\n - fix output threshold\n - log missed frames\n \n2024-01-10\n - add OggFlac to stream metadata\n - fix OggFlac deadlock in flac callback when not enough data in streambuf\n - fix no displayer due to threadshold too high (use 500ms instead)\n - reset outputbuf when cspot starts\n \n2024-01-01\n - ogg stream are parsed to foward metadata to LMS\n - fix some ogg parsing on multi-stream containers\n \n2023-11-19\n - more robust (?) airplay RTP frame recovery\n - initialize of scratch string in monitor (trying to figure out random reboot)\n\n2023-11-16\n - add SH1122 support\n - optimize GDS DrawPixel function\n \n2023-11-09\n - force gpio_pad_select_gpio in dac_controlset in case somebody uses UART gpio's (or other pre-programmed)\n \n2023-11-08\n - execute dac_controlset even when there is no i2s (for gpio)\n \n2023-11-07\n - led-vu gain + misc fixes\n - bump plugin version to 0.600\n \n2023-11-03\n - don't reboot when external decoder is connected even with a LMS server\n \n2023-10-28\n - fix recovery size (remove bootstrap)\n - improve NVS initialization structure\n\n2023-10-27\n - fix vorbis (and opus) memory leak\n \n2023-10-25\n - fix vorbis codec close\n\n2023-10-23\n - fix Spotify track insertion\n - [WEB] Allow running without LMS with option \"Audio/Disable Squeezelite\"\n\n2023-10.07\n - catchup with official cspot\n \n2023-10-06\n - fix cspot PREV on first track, NEXT on last track and normal ending\n - use DMA_AUTO for SPI\n - cspot share same time log\n \n2023-10-06\n - Fix bootswatch bug that caused difficult to read UI ( issue #319)\n\n2023-10-02\n - update cspot\n \n2023-09-29\n- sleep mechanism\n- spotify can store credentials so that zeroconf is optional and players are always registered\n- add battery to led_vu (see credits)\n- spdif can do 24 bits (see credits)\n- rmt fixes\n- airplay & spotify artwork fixes\n- airplay stability improvments\n- fix UI text color",
+        "release_details": {
+            "version": "2.1670",
+            "idf": "v4.3",
+            "platform": "hifi-esparagus",
+            "branch": "master-v4.3",
+            "bitrate": "16"
+        },
+        "bin_files": [
+            {
+                "name": "common-esp-2.1670-16-bootloader.bin",
+                "offset": "0x1000",
+                "artifact_relpath": "common-esp-2.1670-16-bootloader.bin"
+            },
+            {
+                "name": "common-esp-2.1670-16-partition-table.bin",
+                "offset": "0x8000",
+                "artifact_relpath": "common-esp-2.1670-16-partition-table.bin"
+            },
+            {
+                "name": "common-esp-nvs.bin",
+                "offset": "0x9000",
+                "artifact_relpath": "common-esp-nvs.bin"
+            },
+            {
+                "name": "common-esp-2.1670-16-ota_data_initial.bin",
+                "offset": "0xd000",
+                "artifact_relpath": "common-esp-2.1670-16-ota_data_initial.bin"
+            },
+            {
+                "name": "common-esp-2.1670-16-recovery.bin",
+                "offset": "0x10000",
+                "artifact_relpath": "common-esp-2.1670-16-recovery.bin"
+            },
+            {
+                "name": "common-esp-2.1670-16-squeezelite.bin",
+                "offset": "0x150000",
+                "artifact_relpath": "common-esp-2.1670-16-squeezelite.bin"
+            },
+            {
+                "name": "hifi-esparagus-settings.bin",
+                "offset": "0x3f0000",
+                "artifact_relpath": "hifi-esparagus-settings.bin"
+            }
+        ],
+        "manifest_name": "manifest-master-v4.3-I2S-4MFlash-2.1670-16.json"
+    }
+]
