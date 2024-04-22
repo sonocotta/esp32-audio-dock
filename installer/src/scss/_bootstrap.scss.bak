@@ -1,0 +1,94 @@
+//---------------------------------------------
+//
+//  Partially loading Bootstrap's components
+//
+//    1. Banner
+//    2. Functions
+//    3. Variables
+//    4. Maps + Mixins
+//    5. Root + Reboot
+//    6. Type
+//    7. Components
+//    8. Helpers & Mixins for Breakpoints + Print
+//
+//---------------------------------------------
+
+//---------------------------------------------
+// 1. Banner
+//---------------------------------------------
+
+@import "~bootstrap/scss/mixins/banner";
+@include bsBanner("");
+
+//---------------------------------------------
+// 2. Functions
+//---------------------------------------------
+
+@import "~bootstrap/scss/functions";
+
+//---------------------------------------------
+// 3. Variables
+//---------------------------------------------
+
+@import "~bootstrap/scss/variables";
+
+//---------------------------------------------
+// 4. Maps + Mixins
+//---------------------------------------------
+
+@import "~bootstrap/scss/maps";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/utilities";
+
+//---------------------------------------------
+// 5. Root + Reboot
+//---------------------------------------------
+
+@import "~bootstrap/scss/root";
+@import "~bootstrap/scss/reboot";
+
+//---------------------------------------------
+// 6. Type
+//---------------------------------------------
+
+@import "~bootstrap/scss/type";
+
+//---------------------------------------------
+// 7. Components
+//---------------------------------------------
+
+@import "~bootstrap/scss/images";
+@import "~bootstrap/scss/containers";
+@import "~bootstrap/scss/grid";
+@import "~bootstrap/scss/tables";
+@import "~bootstrap/scss/forms";
+@import "~bootstrap/scss/buttons";
+@import "~bootstrap/scss/transitions";
+@import "~bootstrap/scss/dropdown";
+@import "~bootstrap/scss/button-group";
+@import "~bootstrap/scss/nav";
+@import "~bootstrap/scss/navbar";
+@import "~bootstrap/scss/card";
+@import "~bootstrap/scss/accordion";
+@import "~bootstrap/scss/breadcrumb";
+@import "~bootstrap/scss/pagination";
+@import "~bootstrap/scss/badge";
+@import "~bootstrap/scss/alert";
+@import "~bootstrap/scss/progress";
+@import "~bootstrap/scss/list-group";
+@import "~bootstrap/scss/close";
+@import "~bootstrap/scss/toasts";
+@import "~bootstrap/scss/modal";
+@import "~bootstrap/scss/tooltip";
+@import "~bootstrap/scss/popover";
+@import "~bootstrap/scss/carousel";
+@import "~bootstrap/scss/spinners";
+@import "~bootstrap/scss/offcanvas";
+@import "~bootstrap/scss/placeholders";
+
+//---------------------------------------------
+// 8. Helpers & Mixins for Breakpoints + Print
+//---------------------------------------------
+
+@import "~bootstrap/scss/helpers";
+@import "~bootstrap/scss/utilities/api";

@@ -1,0 +1,44 @@
+//---------------------------------------------
+//
+//  Fonts
+//
+//    1. Loading Mixins
+//    2. Loading Fonts
+//
+//---------------------------------------------
+
+//---------------------------------------------
+// 1. Loading Mixins
+//---------------------------------------------
+
+@import "mixins/google-fonts";
+
+//---------------------------------------------
+// 2. Loading Fonts
+//---------------------------------------------
+
+@include googleFont((
+  "name": "Roboto",
+  "folder": "Roboto",
+  "files": "Roboto",
+  "weights": (300, 400, 700)
+));
+
+/*
+ * Example for loading multiple fonts at once
+ *
+@include googleFonts((
+  (
+    "name": "Roboto",
+    "folder": "Roboto",
+    "files": "Roboto",
+    "weights": (300, 400, 700)
+  ),
+  (
+    "name": "Besley",
+    "folder": "Besley",
+    "files": "Besley",
+    "weights": (300, 400, 700)
+  ),
+));
+*/
