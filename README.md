@@ -190,6 +190,7 @@ It is not recommended to go beyond voltage your speakers can take, otherwise amp
 
 ## Where to buy
 
-You may support my work by ordering these product at Tindie
+You may support my work by ordering these product at Tindie and Elecrow
 - [ESP Audio Dock](https://www.tindie.com/products/sonocotta/esp-audio-dock/)
 - [Louder ESP32](https://www.tindie.com/products/sonocotta/louder-esp32/)
+- [Louder ESP32](https://www.elecrow.com/louder-esp32.html)
