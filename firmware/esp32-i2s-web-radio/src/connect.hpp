@@ -42,7 +42,7 @@ public:
 
 void Connect::init()
 {
-#ifdef ARDUINO_LOLIN_C3_MINI
+#if defined(ARDUINO_LOLIN_C3_MINI) or defined(ARDUINO_LOLIN_S2_MINI)
     // https://github.com/tzapu/WiFiManager/issues/1422
     log_d("Set WIFI_POWER_8_5dBm");
     WiFi.setTxPower(WIFI_POWER_8_5dBm); 

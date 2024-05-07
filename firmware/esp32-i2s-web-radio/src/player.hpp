@@ -1,14 +1,12 @@
 #pragma once
 
-// #ifdef BOARD_HAS_PSRAM
-// #include "AudioFileSourceSPIRAMBuffer.h"
-// #define AudioFileSourceBufferClass AudioFileSourceSPIRAMBuffer
-// #define AudioFileSourceBufferSize 1048576ull
-// #else
+
 #include "AudioFileSourceBuffer.h"
-#define AudioFileSourceBufferClass AudioFileSourceBuffer
-#define AudioFileSourceBufferSize 4096
-// #endif
+#ifdef BOARD_HAS_PSRAM
+#define AudioFileSourceBufferSize (1024 * 1024)
+#else
+#define AudioFileSourceBufferSize (4096)
+#endif
 
 #include "AudioFileSourceICYStream.h"
 #include "AudioGeneratorMP3.h"
@@ -36,7 +34,7 @@ class Player
 {
 private:
   AudioFileSourceICYStream *file;
-  AudioFileSourceBufferClass *buff;
+  AudioFileSourceBuffer *buff;
   AudioGeneratorMP3 *mp3;
   AudioOutputI2S *out = new AudioOutputI2S();
   AudioOutputMixer *mixer = new AudioOutputMixer(64, out);
@@ -71,7 +69,14 @@ void Player::play(PlaylistEntry entry)
   audioLogger = &Serial;
   file = new AudioFileSourceICYStream(entry.url.c_str());
   file->RegisterMetadataCB(Player::mdCallback, (void *)"ICY");
-  buff = new AudioFileSourceBufferClass(file, AudioFileSourceBufferSize);
+
+#ifdef BOARD_HAS_PSRAM
+  uint8_t * spiBuffer = (uint8_t *)ps_malloc(AudioFileSourceBufferSize);
+  buff = new AudioFileSourceBuffer(file, spiBuffer, AudioFileSourceBufferSize);
+#else 
+  buff = new AudioFileSourceBuffer(file, AudioFileSourceBufferSize);
+#endif
+
   buff->RegisterStatusCB(Player::statusCallback, (void *)"buffer");
 
   // stubs[0] = mixer->NewInput();
@@ -135,6 +140,12 @@ void Player::statusCallback(void *cbData, int code, const char *string)
 
 void Player::audioInit()
 {
+  log_i("Setting I2S pins: clk = %d, ws = %d, data = %d\n", PIN_I2S_SCK, PIN_I2S_FS, PIN_I2S_SD);
+  if (!out->SetPinout(PIN_I2S_SCK, PIN_I2S_FS, PIN_I2S_SD))
+  {
+    log_e("Failed to set pinout");
+  }
+
 #ifdef DAC_TAS5805M
   Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL);
   Tas5805m->init();

@@ -21,6 +21,7 @@ void bailOut(String status)
 void setup()
 {
   Serial.begin(SERIAL_BAUD);
+  Serial.setDebugOutput(true);
   log_i("Starting up...");
 
 #if defined(ARDUINO_USB_CDC_ON_BOOT) && (CORE_DEBUG_LEVEL >= ARDUHAL_LOG_LEVEL_DEBUG)
