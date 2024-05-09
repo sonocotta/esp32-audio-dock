@@ -105,13 +105,13 @@ Use [Installer for ESP Audio Dock](https://sonocotta.github.io/esp32-audio-dock/
 |   |   |
 |---|---|
 | Select the correct device first	 | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/47626d0a-c47a-4df7-80c1-e5aa82c9ab16)
-| Connect the device to USB port and select it from the list | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/def64924-7a93-41d1-a5e8-49f33285b31a)
+| Connect the device to the USB port and select it from the list | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/def64924-7a93-41d1-a5e8-49f33285b31a)
 | Press `Flash` and wait around 2 minutes  | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/ccdb0813-b5bc-43b1-b516-20e52849c5c4)
 | (Optional) You may enter the serial console to get more information | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/89832ed4-4314-486f-b6a3-66efb46d3587)
 | Device is in recovery mode. Connect to `squeezelite-299fac` wifi network with `squeezelite` password (your network name suffix will be different) | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/2763663c-dbc9-4c71-af12-0a6fb9c2d94d) |
-| When redirected to captive portal let device scan wifi network and provide valid credentials | <img src="https://github.com/sonocotta/esp32-audio-dock/assets/5459747/d2540ffb-d1d1-4441-a2b1-bbd6b8ad608f" width="30%" /> <img src="https://github.com/sonocotta/esp32-audio-dock/assets/5459747/b21f30e6-8899-46bc-b047-23281cae52b8" width="30%" /> <img src="https://github.com/sonocotta/esp32-audio-dock/assets/5459747/5dd1a1f6-0c6d-4045-b135-1d8cdd077161" width="30%" /> |
+| When redirected to the captive portal let the device scan wifi network and provide valid credentials | <img src="https://github.com/sonocotta/esp32-audio-dock/assets/5459747/d2540ffb-d1d1-4441-a2b1-bbd6b8ad608f" width="30%" /> <img src="https://github.com/sonocotta/esp32-audio-dock/assets/5459747/b21f30e6-8899-46bc-b047-23281cae52b8" width="30%" /> <img src="https://github.com/sonocotta/esp32-audio-dock/assets/5459747/5dd1a1f6-0c6d-4045-b135-1d8cdd077161" width="30%" /> |
 | You can use provided IP address (http://192.168.1.99/ on the screenshot) to access settings page |  ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/e3bbf910-1a5c-4c58-bd4e-c348ef0a91e5)
-| (Optional) You may change device names to something close to you heart| ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/962c2ced-c7c4-4a8a-b58f-72ad2f1f6b94)
+| (Optional) You may change device names to something close to your heart| ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/962c2ced-c7c4-4a8a-b58f-72ad2f1f6b94)
 | Exit recovery | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/0fa0bab1-c225-47c7-ab26-29d9eb98ffcf)
 
 You can use it now
@@ -124,7 +124,7 @@ You can use it now
 
 ![image](https://user-images.githubusercontent.com/5459747/225272625-777fa75d-bccc-427c-a861-e01784543c87.png)
 
-Please visit [hardware](/hardware/) section for board schematics and PCB designs. Note that PCBs are shared as multi-layer PDFs.
+Please visit the [hardware](/hardware/) section for board schematics and PCB designs. Note that PCBs are shared as multi-layer PDFs.
 
 ### ESP Audio Solo
 
@@ -169,7 +169,7 @@ Please visit [hardware](/hardware/) section for board schematics and PCB designs
 | Schematics | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/e7ada8c0-c906-4c08-ae99-be9dfe907574) | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/55f5315a-03eb-47c8-9aea-51e3eb3757fe)
 | Speaker Connection | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/eca2cf1e-ebe0-4684-9aa2-1cc193e0982f) | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/ee5b4517-3799-43a7-8d10-0a2f3a425c81) 
 
-Starting from Rev E, additonal header is exposed to allow datasheet-speced connectivity
+Starting from Rev E, an additional header is exposed to allow datasheet-speced connectivity
 
 | Image  | Legend  |
 |---|---|
@@ -178,19 +178,19 @@ Starting from Rev E, additonal header is exposed to allow datasheet-speced conne
 
 ### Louder ESP power considerations
 
-[Barrel jack used](https://www.lcsc.com/product-detail/AC-DC-Power-Connectors_XKB-Connectivity-DC-044D-2-5A-2-0-SMT_C397342.html) is speced at 6mm hole/2mm pin, which is typically 5.5/2.5mm jack on the male side. 
+[Barrel jack used](https://www.lcsc.com/product-detail/AC-DC-Power-Connectors_XKB-Connectivity-DC-044D-2-5A-2-0-SMT_C397342.html) is spaced at 6mm hole/2mm pin, which is typically 5.5/2.5mm jack on the male side. 
 
 ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/0b18f215-e4ce-4335-9217-d8859566c3a4)
 
-Screw-terminal is connected parallel to the barrel-jack, you can use either interchangeably.
+The screw terminal is connected parallel to the barrel jack, you can use either interchangeably.
 
-The power adapter specs depend on the speaker you're planning to use. DAC efficiency is close to 100%, so just take the power rating of your speaker (say 2x10w), impedance (say 8 ohm) and you'd need  at least 9 volts rated at 1.2 amps per channel, round up to 3 total amps. 
+The power adapter specs depend on the speaker you're planning to use. DAC efficiency is close to 100%, so just take the power rating of your speaker (say 2x10w), and impedance (say 8 ohm) and you'd need  at least 9 volts rated at 1.2 amps per channel, round up to 3 total amps. 
 
-It is not recommended to go beyond voltage your speakers can take, otherwise amp will blow you speakers in no time. 
+It is not recommended to go beyond the voltage your speakers can take, otherwise amp will blow your speakers in no time. 
 
 ## Where to buy
 
-You may support my work by ordering these product at Tindie and Elecrow
-- [ESP Audio Dock](https://www.tindie.com/products/sonocotta/esp-audio-dock/)
-- [Louder ESP32](https://www.tindie.com/products/sonocotta/louder-esp32/)
-- [Louder ESP32](https://www.elecrow.com/louder-esp32.html)
+You may support my work by ordering these products at Tindie and Elecrow
+- [ESP Audio Dock](https://www.tindie.com/products/sonocotta/esp-audio-dock/) at Tindie
+- [Louder ESP32](https://www.tindie.com/products/sonocotta/louder-esp32/) at Tindie
+- [Louder ESP32](https://www.elecrow.com/louder-esp32.html) at Elecrow
