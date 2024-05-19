@@ -7,6 +7,33 @@ ESP32 Audio Docks is a range of extension boards (i.e. docks) that allow you to 
 
 ![image](https://user-images.githubusercontent.com/5459747/225271619-35ba0f99-fdd1-496b-b305-26e397df4460.png)
 
+## Table of Contents
+
+- [ESP32 Audio Docks and Louder ESP](#esp32-audio-docks-and-louder-esp)
+  - [Table of Contents](#table-of-contents)
+  - [Motivation](#motivation)
+  - [Features](#features)
+    - [Onboard PSRAM](#onboard-psram)
+  - [Boards Pinout](#boards-pinout)
+    - [ESP Audio Solo](#esp-audio-solo)
+    - [ESP Audio Duo](#esp-audio-duo)
+    - [HiFi-ESP](#hifi-esp)
+    - [Louder ESP](#louder-esp)
+  - [Software samples](#software-samples)
+    - [Platformio IDE](#platformio-ide)
+  - [Arduino IDE](#arduino-ide)
+  - [Squeezelite-ESP32](#squeezelite-esp32)
+    - [How to flash and configure ("ESP Audio Duo", "HiFi-ESP" and "Louder ESP")](#how-to-flash-and-configure-esp-audio-duo-hifi-esp-and-louder-esp)
+  - [Hardware](#hardware)
+    - [ESP Audio Solo](#esp-audio-solo-1)
+    - [ESP Audio Duo](#esp-audio-duo-1)
+    - [HiFi-ESP](#hifi-esp-1)
+    - [Louder ESP](#louder-esp-1)
+    - [Louder Optional SPI Ethernet module](#louder-optional-spi-ethernet-module)
+    - [BTL and PBTL mode](#btl-and-pbtl-mode)
+    - [Louder ESP power considerations](#louder-esp-power-considerations)
+  - [Where to buy](#where-to-buy)
+
 ## Motivation
 
 I spent the last few years developing different solutions based on ESP devices. It all started with ESP8266, where CPU power is not really sufficient to do real-time decoding, so you're limited to a rather simple ding-dong business. Then ESP32 came, bringing two much more capable cores, so you have a powerhouse to handle communication and decoding at the same time. Perhaps most importantly it also came with SPIRAM, so you can do decent buffering (essential for streamed content). 
@@ -150,6 +177,18 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 |---|---|
 | ![image](https://user-images.githubusercontent.com/5459747/225285681-2a0c9948-7879-4eba-aa25-e042851eddf0.png) | ![image](https://user-images.githubusercontent.com/5459747/225284233-da43e71b-976a-4356-a562-d97d42c3e817.png) [TAS5805M](https://www.ti.com/product/TAS5805M) DAC <br/> ![image](https://user-images.githubusercontent.com/5459747/225284300-ff5c3ced-1a0f-4658-bafc-9b5ab7c43811.png) Speaker Terminals <br/> ![image](https://user-images.githubusercontent.com/5459747/225284781-8a9ab413-24d4-49c4-b7b6-f21593f564be.png) 8MB PSRAM IC <br/> ![image](https://user-images.githubusercontent.com/5459747/225285323-7fb37cfd-da4e-4ec3-bc1e-34ffdee6af7e.png) 3V3 Drop-Down voltage regulator (powers ESP32) <br/> ![image](https://user-images.githubusercontent.com/5459747/225285837-a7c99f60-7faa-4250-8168-b10ac963df1c.png) Input Voltage terminal |
 | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/98712315/6de133de-de03-4f95-bf70-996191733ec4) (REV B, C, D) |![image](https://user-images.githubusercontent.com/5459747/225284233-da43e71b-976a-4356-a562-d97d42c3e817.png) [TAS5805M](https://www.ti.com/product/TAS5805M) DAC <br/> ![image](https://user-images.githubusercontent.com/5459747/225284300-ff5c3ced-1a0f-4658-bafc-9b5ab7c43811.png) Speaker Terminals <br/> - 8MB PSRAM IC (Hidden under ESP32 module) <br/> - 3V3 Drop-Down voltage regulator (powers ESP32, hidden under ESP32 module) <br/> ![image](https://user-images.githubusercontent.com/5459747/225285837-a7c99f60-7faa-4250-8168-b10ac963df1c.png) Input Voltage terminal 
+
+### Louder ESP32 (rev H)
+
+| Image  | Legend  |
+|---|---|
+| ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/e60cadb6-ace1-4141-92a5-171c640dc8ac) | Details to be added
+
+### Louder ESP32-S3 (rev J)
+
+| Image  | Legend  |
+|---|---|
+| ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/d0827984-5e3c-4ca3-9b60-3d6bc2901a74) | Details to be added
 
 ### Louder Optional SPI Ethernet module
 
