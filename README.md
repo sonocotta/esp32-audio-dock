@@ -67,8 +67,8 @@ All ESP32 Docks have an 8MB PSRAM chip onboard, connected via a high-speed SDIO 
 |         | I2S CLK | I2S DATA | I2S WS |
 |---------|---------|----------|--------|
 | ESP8266 | 15      | 3        | 2      |
-| ESP32C3 | 5       | 20       | 6      |
-| ESP32S2 | 12      | 37       | 16     |
+| ESP32-C3 | 5       | 20       | 6      |
+| ESP32-S2 | 12      | 37       | 16     |
 
 ### ESP Audio Duo
 
@@ -87,12 +87,14 @@ All ESP32 Docks have an 8MB PSRAM chip onboard, connected via a high-speed SDIO 
 |       | I2S CLK | I2S DATA | I2S WS | PSRAM CE | PSRAM CLK | TAS5805 SDA | TAS5805 SCL | TAS5805 PWDN | TAS5805 FAULT |
 |-------|---------|----------|--------|----------|-----------|-------------|-------------|--------------|---------------|
 | ESP32 | 26      | 22       | 25     | 16       | 17        | 21          | 27          | 33           | 34            |
+| ESP32-S3 | 14      | 16       | 15     | -       | -        | 8          | 9          | 17           | 18            |
 
 Starting from revision E, Louder ESP exposes an Ethernet header, compatible with the popular [W5500](https://www.wiznet.io/product-item/w5500/) module 
 
-|       | SPI CLK | SPI MOSI | SPI MISO | SPI CS | SPI HOST/SPEED | ETH INT | ETH RST | 
-|-------|---------|----------|--------|----------|-----------|-------------|-------------|
-| ESP32 | 18      | 23       | 19     | 05       | 2/20MHz        | 35          | 14          |
+|       | SPI CLK | SPI MOSI | SPI MISO | SPI CS | SPI HOST/SPEED | ETH INT | ETH RST | IR IN | RGB OUT
+|-------|---------|----------|--------|----------|-----------|-------------|-------------|-------------|-------------|
+| ESP32 | 18      | 23       | 19     | 05       | 2/20MHz        | 35          | 14          | -  | -
+| ESP32-S3 | 12      | 11       | 13     | 10       | SPI2/20MHz        | 6          | 5          |   7 | 36
 
 ## Software samples
 
