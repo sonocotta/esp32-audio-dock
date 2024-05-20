@@ -7,11 +7,11 @@
     "new_install_improv_wait_time": 20,
     "builds": [
         {
-            "chipFamily": "ESP32",
+            "chipFamily": "ESP32-S3",
             "parts": [
                 {
                     "path": "common-esp32s3-2.1672-16-bootloader.bin",
-                    "offset": "0x1000"
+                    "offset": "0x0"
                 },
                 {
                     "path": "common-esp32s3-2.1672-16-partition-table.bin",
