@@ -15,11 +15,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <title>ESP Audio Dock Squeezelite-ESP32 Installer</title>
-    <script type="module" src="https://unpkg.com/esp-web-tools@8.0.1/dist/web/install-button.js?module">
+    <script
+        type="module"
+        src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module">
     </script>
-    <style>
-
-    </style>
 </head>
 
 <body>
@@ -53,13 +52,13 @@
             </esp-web-install-button>
         </div>
 
-        <div id="device_tiles">
+        <div id="device_tiles_1">
             <div class="d-flex justify-content-between">
 
                 <div class="card border-primary mb-3" style="max-width: 20rem;" role="button">
                     <h3 class="card-header bg-primary" role="button" id="hifi-esp_header" manifest="artifacts/manifest-hifi-esp-2.1672-16.json">
                         <input id="hifi-esp" type="radio" checked="">
-                        <label for="hifi-esp">HiFi ESP</label> 
+                        <label for="hifi-esp">HiFi ESP</label>
                     </h3>
                     <div class="card-body">
                         <p class="card-text text-muted">
@@ -72,11 +71,11 @@
                 <div class="card border-primary mb-3" style="max-width: 20rem;" role="button">
                     <h3 class="card-header" id="esp-audio-duo_header" role="button" manifest="artifacts/manifest-esp-audio-duo-2.1672-16.json">
                         <input id="esp-audio-duo" type="radio">
-                        <label for="esp-audio-duo">ESP Audio Duo</label> 
+                        <label for="esp-audio-duo">ESP Audio Duo</label>
                     </h3>
                     <div class="card-body">
                         <p class="card-text text-muted">
-                            ESP Audio Duo is aimed to be paired with small-to-medium sized speakers in a small room. It uses a dual MAX98357 Hi-Fi DAC that will output 3W per speaker. 
+                            ESP Audio Duo is aimed to be paired with small-to-medium sized speakers in a small room. It uses a dual MAX98357 Hi-Fi DAC that will output 3W per speaker.
                         </p>
                         <img src="https://user-images.githubusercontent.com/5459747/225271977-fd333283-66f0-448f-b748-e0ac94e25680.png" width="100%" />
                     </div>
@@ -85,7 +84,7 @@
                 <div class="card border-primary mb-3" style="max-width: 20rem;" role="button">
                     <h3 class="card-header" id="loud-esp_header" role="button" manifest="artifacts/manifest-loud-esp-2.1672-16.json">
                         <input id="loud-esp" type="radio">
-                        <label for="loud-esp">Loud ESP</label> 
+                        <label for="loud-esp">Loud ESP</label>
                     </h3>
                     <div class="card-body">
                         <p class="card-text text-muted">
@@ -95,10 +94,16 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+
+        <div id="device_tiles_2">
+            <div class="d-flex justify-content-between">
+
                 <div class="card border-primary mb-3" style="max-width: 20rem;" role="button">
-                    <h3 class="card-header" id="louder-esp_header" role="button" manifest="artifacts/manifest-louder-esp-2.1672-16.json">
+                    <h3 class="card-header" id="louder-esp_header" role="button" manifest="artifacts/manifest-louder-esp32-2.1672-16.json">
                         <input id="louder-esp" type="radio">
-                        <label for="louder-esp">Louder-ESP32</label> 
+                        <label for="louder-esp">Louder-ESP32</label>
                     </h3>
                     <div class="card-body">
                         <p class="card-text text-muted">
@@ -108,6 +113,31 @@
                     </div>
                 </div>
 
+                <div class="card border-primary mb-3" style="max-width: 20rem;" role="button">
+                    <h3 class="card-header" id="louder-esp32_header" role="button" manifest="artifacts/manifest-louder-esp32-2.1672-16.json">
+                        <input id="louder-esp32" type="radio">
+                        <label for="louder-esp32">Louder-ESP32 (rev H+)</label>
+                    </h3>
+                    <div class="card-body">
+                        <p class="card-text text-muted">
+                            Reviewed design on the Louder-ESP32 model includes onboard WROVER module with external Wifi antenna. It dramatically improved WiFi perception while usage of the WROVER module maintains lower device cost.
+                        </p>
+                        <img src="https://github.com/sonocotta/esp32-audio-dock/assets/5459747/e60cadb6-ace1-4141-92a5-171c640dc8ac" width="100%" />
+                    </div>
+                </div>
+
+                <div class="card border-primary mb-3" style="max-width: 20rem;" role="button">
+                    <h3 class="card-header" id="louder-esp-s3_header" role="button" manifest="artifacts/manifest-louder-esp32s3-2.1672-16.json">
+                        <input id="louder-esp-s3" type="radio">
+                        <label for="louder-esp-s3">Louder-ESP32-S3</label>
+                    </h3>
+                    <div class="card-body">
+                        <p class="card-text text-muted">
+                            Louder-ESP32-S3 is an ESP32-S3 version of the Louder-ESP32. It is a top-of-the-range model that uses modern highly capable TAS5805M DAC. It does not support Bluetooth, but have more accessible PSRAM running at higher speed. Note, that squeezelite-esp32 support is still experimental on the S3.
+                        </p>
+                        <img src="https://github.com/sonocotta/esp32-audio-dock/assets/5459747/d0827984-5e3c-4ca3-9b60-3d6bc2901a74" width="100%" />
+                    </div>
+                </div>
 
             </div>
         </div>

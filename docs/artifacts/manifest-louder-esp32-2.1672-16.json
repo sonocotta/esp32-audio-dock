@@ -1,5 +1,5 @@
 {
-    "name": "louder-esp",
+    "name": "louder-esp32",
     "version": "2.1672",
     "home_assistant_domain": "slim_player",
     "funding_url": "https://esphome.io/guides/supporters.html",
