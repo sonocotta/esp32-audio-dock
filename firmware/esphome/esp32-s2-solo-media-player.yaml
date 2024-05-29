@@ -1,0 +1,55 @@
+substitutions:
+  name: esp32-s2-test
+  friendly_name: ESP32-S2-Solo Media Player
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  name_add_mac_suffix: false
+  project:
+    name: esphome.web
+    version: '1.0'
+    on_boot:
+      priority: 800
+      then:
+      - media_player.volume_set:
+          id: esp32s2solo
+          volume: 50%
+
+esp32:
+  board: esp32-s2-saola-1
+  framework:
+    type: arduino
+
+
+# Enable logging
+logger:
+  level: DEBUG
+  
+# Enable Home Assistant API
+api:
+
+# Allow Over-The-Air updates
+ota:
+  password: !secret esphome_ota_password
+
+wifi:
+  ssid: !secret esphome_wifi_ssid
+  password: !secret esphome_wifi_password
+  ap:
+    ssid: "$devicename Fallback Hotspot"
+    password: !secret esphome_ap_password
+
+captive_portal:
+  
+i2s_audio:
+  i2s_lrclk_pin: GPIO16
+  i2s_bclk_pin: GPIO12
+
+media_player:
+  - platform: i2s_audio
+    id: esp32s2solo
+    name: $friendly_name
+    dac_type: external
+    i2s_dout_pin: GPIO37
+    mode: stereo

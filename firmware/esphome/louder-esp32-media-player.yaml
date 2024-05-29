@@ -1,0 +1,83 @@
+substitutions:
+  name: "louder-esp32"
+  friendly_name: Louder-ESP32 Media Player
+
+esphome:
+  name: "${name}"
+  name_add_mac_suffix: false
+  comment: "${friendly_name} Louder ESP32 ${pcb_version}"
+  includes:
+    - louderesp32.h
+  platformio_options:
+    lib_deps: "Wire"
+  on_boot:
+    priority: 800
+    then:
+    ## Set a volume limit just to be safe...
+    - media_player.volume_set:
+        id: louderesp32
+        volume: 20%
+
+esp32:
+  board: mhetesp32minikit
+
+### Optional if you want ethernet (then remove all wifi config) ###
+#ethernet:
+#  type: W5500
+#  clk_pin: GPIO18
+#  mosi_pin: GPIO23
+#  miso_pin: GPIO19
+#  cs_pin: GPIO05
+#  interrupt_pin: GPIO35
+#  reset_pin: GPIO14
+
+# Enable logging
+logger:
+  level: DEBUG
+  
+# Enable Home Assistant API
+api:
+
+# Allow Over-The-Air updates
+ota:
+  password: !secret esphome_ota_password
+
+wifi:
+  ssid: !secret esphome_wifi_ssid
+  password: !secret esphome_wifi_password
+  ap:
+    ssid: "$name Hotspot"
+    password: !secret esphome_ap_password
+
+captive_portal:
+
+psram:
+  mode: octal
+  speed: 80MHz
+
+switch:
+  - platform: custom
+    lambda: |-
+      auto tas5805 = new TAS5805();
+      App.register_component(tas5805);
+      return {tas5805};
+    switches:
+      name: "Enable Amp"
+
+i2c:
+  sda: GPIO21
+  scl: GPIO27
+  scan: True
+  id: i2c_component
+
+i2s_audio:
+  i2s_lrclk_pin: GPIO25
+  i2s_bclk_pin: GPIO26
+
+media_player:
+  - platform: i2s_audio
+    name: $friendly_name
+    id: louderesp32
+    dac_type: external
+    i2s_dout_pin: GPIO22
+    mode: stereo

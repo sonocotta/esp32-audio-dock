@@ -1,0 +1,58 @@
+substitutions:
+  name: esphome-web-e002d0
+  friendly_name: ESP32-Duo Media Player
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  name_add_mac_suffix: false
+  project:
+    name: esphome.web
+    version: '1.0'
+    on_boot:
+      priority: 800
+      then:
+      - media_player.volume_set:
+          id: esp32duo
+          volume: 50%
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+  level: DEBUG
+  
+# Enable Home Assistant API
+api:
+
+# Allow Over-The-Air updates
+ota:
+  password: !secret esphome_ota_password
+
+wifi:
+  ssid: !secret esphome_wifi_ssid
+  password: !secret esphome_wifi_password
+  ap:
+    ssid: "$name Hotspot"
+    password: !secret esphome_ap_password
+
+captive_portal:
+
+psram:
+  mode: octal
+  speed: 80MHz
+  
+i2s_audio:
+  i2s_lrclk_pin: GPIO25
+  i2s_bclk_pin: GPIO26
+
+media_player:
+  - platform: i2s_audio
+    id: esp32duo
+    name: $friendly_name
+    dac_type: external
+    i2s_dout_pin: GPIO22
+    mode: stereo
