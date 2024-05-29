@@ -24,11 +24,11 @@ ESP32 Audio Docks is a range of extension boards (i.e. docks) that allow you to 
     - [Louder ESP](#louder-esp)
   - [Software samples](#software-samples)
     - [Platformio IDE](#platformio-ide)
-  - [Arduino IDE](#arduino-ide)
-  - [ESPHome and Home Assistant](#esphome-and-home-assistant)
-    - [Bonus - automation example](#bonus---automation-example)
-  - [Squeezelite-ESP32](#squeezelite-esp32)
-    - [How to flash and configure ("ESP Audio Duo", "HiFi-ESP" and "Louder ESP")](#how-to-flash-and-configure-esp-audio-duo-hifi-esp-and-louder-esp)
+    - [Arduino IDE](#arduino-ide)
+    - [ESPHome and Home Assistant](#esphome-and-home-assistant)
+      - [Bonus - automation example](#bonus---automation-example)
+    - [Squeezelite-ESP32](#squeezelite-esp32)
+      - [How to flash and configure ("ESP Audio Duo", "HiFi-ESP" and "Louder ESP")](#how-to-flash-and-configure-esp-audio-duo-hifi-esp-and-louder-esp)
   - [Hardware](#hardware)
     - [ESP Audio Solo](#esp-audio-solo-1)
     - [ESP Audio Duo](#esp-audio-duo-1)
@@ -116,11 +116,11 @@ In the [software](/firmware) section two firmware examples are provided.
  
 All samples are provided as [Plarformio IDE](https://platformio.org/platformio-ide) projects. After installing it, open the sample project. Select the proper environment based on your dock. Run the `Build` and `Upload` commands to install necessary tools and libraries, and build and upload the project to the board. Communication and proper upload method selection will be handled by IDE automatically. 
 
-## Arduino IDE
+### Arduino IDE
 
 Follow the [ESP8266Audio](https://github.com/earlephilhower/ESP8266Audio) library guide. Default settings will work out of the box with ESP8266 and ESP32 boards. For ESP32C3 and ESP32S2 board please adjust the pinout according to the above section
 
-## ESPHome and Home Assistant
+### ESPHome and Home Assistant
 
 Being a ESP#2 based device, you can easily integrate it into your Home Assistant using ESPHome. Start with [esphome web installer](https://web.esphome.io/), which will give you ESPHome base install and WiFi configuration in minutes. Some S2/S3 board have issues with we-installer, you may need to use [Adafruit flasher](https://adafruit.github.io/Adafruit_WebSerial_ESPTool/) instead with binaries pulled from the HA.
 
@@ -139,13 +139,13 @@ Few words of explanation.
 - ![image](https://github.com/crowd-supply-projects/esparagus-media-center/assets/5459747/917f49ae-81e3-4a9b-a843-87ebc2f8dae6)
 - Volume set up to 50% on player start. Especially for Louder-ESP32 this is helpful :) 
 
-### Bonus - automation example
+#### Bonus - automation example
 
 True power of the native speaker iin th eHA is use of automations. One example that I find useful. This simple automation will pronounce every hour between 8AM and 9PM. Another one is used to pronounce the bed time, you get the point...
 
 ![image](https://github.com/crowd-supply-projects/esparagus-media-center/assets/5459747/af8804a2-f686-4686-93ec-1fc254816254)
 
-## Squeezelite-ESP32
+### Squeezelite-ESP32
 
 Squeezelite-ESP32 is a multimedia software suite, that started as a renderer (or player) of LMS (Logitech Media Server). Now it is extended with 
 - **Spotify** over-the-air player using SpotifyConnect (thanks to cspot)
@@ -159,7 +159,7 @@ And LMS itself
 
 All ESP32-based boards are tested with [Squeezelite-ESP32](https://github.com/sle118/squeezelite-esp32) software, which can be flashed using nothing but a web browser. You can use [Squeezelite-ESP32 installer](https://sonocotta.github.io/esp32-audio-dock/) for that purpose.
 
-### How to flash and configure ("ESP Audio Duo", "HiFi-ESP" and "Louder ESP")
+#### How to flash and configure ("ESP Audio Duo", "HiFi-ESP" and "Louder ESP")
 
 Use [Installer for ESP Audio Dock](https://sonocotta.github.io/esp32-audio-dock/) to flash firmware first. It has been preconfigured to work with ESP Audio boards and will configure all hardware automatically.
 
