@@ -124,26 +124,27 @@ Follow the [ESP8266Audio](https://github.com/earlephilhower/ESP8266Audio) librar
 
 Being an ESP32-based device, you can easily integrate it into your Home Assistant using ESPHome. Start with [esphome web installer](https://web.esphome.io/), which will give you ESPHome base install and WiFi configuration in minutes. Some S2/S3 boards have issues with we-installer, you may need to use [Adafruit flasher](https://adafruit.github.io/Adafruit_WebSerial_ESPTool/) instead with binaries pulled from the HA.
 
-![image](https://github.com/crowd-supply-projects/esparagus-media-center/assets/5459747/ffe620c2-a375-4dba-af1f-d98dd1cd01d4)
-![image](https://github.com/crowd-supply-projects/esparagus-media-center/assets/5459747/0fbd508e-1bf8-4961-97f9-5ed9cc22cc83)
+![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/abde451b-5619-4b32-a024-3f680999567f)
+![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/fc567914-0d0a-4402-a5c5-ddfad77f2b83)
+
 
 Next, navigate to your Home Assistant (assuming you have your [ESPHome integration](https://esphome.io/guides/getting_started_hassio.html) installed), and adopt the newly created node
 
-![image](https://github.com/crowd-supply-projects/esparagus-media-center/assets/5459747/0c1017a7-82de-4f79-a906-40c7942fd8bb)
+![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/299fb7ab-003e-4259-b0c1-9d13dd3e54ba)
 
 [ESPHome](/firmware/esphome/) will give you ESPHome configs for Solo board running with ESP32-S2/S3, as well as Duo/HiFi-ESP and Louder ESP working with ESP32.
 
 Few words of explanation.
 
 - `media_player` publishes the media player into the Home assistant, so you can use it together with the native player or Music Assistant. You have a volume knob in the HA as well.
-- ![image](https://github.com/crowd-supply-projects/esparagus-media-center/assets/5459747/917f49ae-81e3-4a9b-a843-87ebc2f8dae6)
+- ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/f73a7347-672f-4dfc-afb8-35c7eb78e464)
 - Volume set up to 50% on player start. Especially for Louder-ESP32, this is helpful :) 
 
 #### Bonus - automation example
 
 The true power of the native speaker in the eHA is the use of automation. One example that I find useful. This simple automation will be pronounced every hour between 8 AM and 9 PM. Another one is used to pronounce bedtime, you get the point...
 
-![image](https://github.com/crowd-supply-projects/esparagus-media-center/assets/5459747/af8804a2-f686-4686-93ec-1fc254816254)
+![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/fd25fb6a-19a7-4957-a2cb-a723723fde4d)
 
 ### Squeezelite-ESP32
 
