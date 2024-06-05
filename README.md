@@ -215,15 +215,16 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 
 ### Louder ESP32 (rev H)
 
-| Image  | Legend  |
-|---|---|
-| ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/e60cadb6-ace1-4141-92a5-171c640dc8ac) | Details to be added
+| Image  |
+|---|
+| ![DSC_0013_small JPG-mh](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/c4947d1b-76f1-468b-81d9-68b46ef42851)
+
 
 ### Louder ESP32-S3 (rev J)
 
-| Image  | Legend  |
-|---|---|
-| ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/d0827984-5e3c-4ca3-9b60-3d6bc2901a74) | Details to be added
+| Image  | 
+|---|
+| ![DSC_0012_small JPG-mh](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/6716a624-e44d-4f83-a8ee-91ab67b8411a)
 
 ### Louder Optional SPI Ethernet module
 
