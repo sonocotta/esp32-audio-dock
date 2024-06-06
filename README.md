@@ -265,6 +265,12 @@ The power adapter specs depend on the speaker you're planning to use. DAC effici
 
 It is not recommended to go beyond the voltage your speakers can take, otherwise amp will blow your speakers in no time. 
 
+### Case
+
+Louder-ESP32 is mechanically compatible with Raspberry Pi 3/4 cases, tested with transparent ones. Also, community members created a few 3-D printable designs that can be found [here](https://www.thingiverse.com/thing:6333131) and [here](https://www.thingiverse.com/thing:6326927)
+
+![DSC_0001](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/68d5c2ab-d5f7-4f66-8ff7-4301ddaab7ed)
+
 ## Where to buy
 
 You may support my work by ordering these products at Tindie and Elecrow
