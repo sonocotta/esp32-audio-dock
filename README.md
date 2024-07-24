@@ -41,6 +41,7 @@ ESP32 Audio Docks is a range of extension boards (i.e. docks) that allow you to 
     - [Louder Optional SPI Ethernet module](#louder-optional-spi-ethernet-module)
     - [BTL and PBTL mode](#btl-and-pbtl-mode)
     - [Louder ESP power considerations](#louder-esp-power-considerations)
+    - [Case](#case)
   - [Where to buy](#where-to-buy)
 
 ## Motivation
