@@ -6,15 +6,12 @@ esphome:
   name: ${name}
   friendly_name: ${friendly_name}
   name_add_mac_suffix: false
-  project:
-    name: esphome.web
-    version: '1.0'
-    on_boot:
-      priority: 800
-      then:
-      - media_player.volume_set:
-          id: esp32s3solo
-          volume: 50%
+  on_boot:
+    priority: 800
+    then:
+    - media_player.volume_set:
+        id: esp32s3solo
+        volume: 50%
 
 esp32:
   board: esp32-s3-devkitc-1
@@ -31,6 +28,7 @@ api:
 
 # Allow Over-The-Air updates
 ota:
+  platform: esphome
   password: !secret esphome_ota_password
 
 wifi:
