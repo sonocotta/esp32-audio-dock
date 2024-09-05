@@ -238,11 +238,23 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 
 ### BTL and PBTL mode
 
-[TAS5805M DAC](https://www.ti.com/lit/ds/symlink/tas5805m.pdf?ts=1701767947387) Allows 2 modes of operation. 
+[TAS5805M DAC](https://www.ti.com/lit/ds/symlink/tas5805m.pdf?ts=1701767947387) Allows 2 modes of operation - BTL (stereo) and PBTL (parallel, or mono). In Mono amp will use a completely different modulation scheme and basically will fully synchronize output drivers. Jumpers on the board allow both output drivers to connect to the same speaker. The most important step is to inform the Amp to change modulation in the first place via I2C comman. In the case of sqeezelite DAC controlsset value is the following:
+```
+dac_controlset: `{"init":[{"reg":3,"val":2},{"reg":3,"val":3},{"reg":2,"val":4}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]}`
+```
+compared to default:
+```
+dac_controlset: `{"init":[{"reg":3,"val":2},{"reg":3,"val":3}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]}`
+
+```
+
+One can test audio with single speaker connected between L and R terminals (plus on one side and minus on the other). Optionally, jumpers on the board will effectively connect second driver in parallel doubling the current capability.
+
+Important point, this will send only one channel to the output, that’s just how the DAC works. True mono as (L+R)/2 is possible via more in-depth configuration (very poorly documented), but I haven’t managed to configure that on the stand. I’m still working on that. (Along with a few more really cool DSP features that this DAC has, like EQ, subwoofer mode and tone compensation settings)
 
 |  | BTL | PBTL |
 |---|---|---|
-| Descriotion | Bridge Tied Load, Stereo | Parallel Bridge Tied Load, Stereo |
+| Descriotion | Bridge Tied Load, Stereo | Parallel Bridge Tied Load, Mono |
 | Rated Power | 2×23W (8-Ω, 21 V, THD+N=1%) | 45W (4-Ω, 21 V, THD+N=1%) |
 | Schematics | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/e7ada8c0-c906-4c08-ae99-be9dfe907574) | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/55f5315a-03eb-47c8-9aea-51e3eb3757fe)
 | Speaker Connection | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/ee5b4517-3799-43a7-8d10-0a2f3a425c81) | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/eca2cf1e-ebe0-4684-9aa2-1cc193e0982f) 
