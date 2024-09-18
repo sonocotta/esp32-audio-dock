@@ -52,7 +52,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [HiFi-ESP32](#hifi-esp32-1)
     - [Loud-ESP32](#loud-esp32-1)
     - [Louder-ESP32 and Louder-ESP32S3](#louder-esp32-and-louder-esp32s3)
-    - [Louder Optional SPI Ethernet module](#louder-optional-spi-ethernet-module)
+    - [Optional SPI Ethernet module](#optional-spi-ethernet-module)
     - [BTL and PBTL mode (TAS5805M DAC)](#btl-and-pbtl-mode-tas5805m-dac)
     - [Louder ESP power considerations](#louder-esp-power-considerations)
     - [Case](#case)
