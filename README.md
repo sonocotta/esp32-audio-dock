@@ -189,6 +189,9 @@ Follow the [ESP8266Audio](https://github.com/earlephilhower/ESP8266Audio) librar
 
 Being an ESP32-based device, you can easily integrate it into your Home Assistant using ESPHome. Start with [esphome web installer](https://web.esphome.io/), which will give you ESPHome base install and WiFi configuration in minutes. Some S2/S3 boards have issues with we-installer, you may need to use [Adafruit flasher](https://adafruit.github.io/Adafruit_WebSerial_ESPTool/) instead with binaries pulled from the HA.
 
+<details>
+  <summary>Install instructions</summary>
+  
 ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/abde451b-5619-4b32-a024-3f680999567f)
 ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/fc567914-0d0a-4402-a5c5-ddfad77f2b83)
 
@@ -211,6 +214,8 @@ The true power of the native speaker in the eHA is the use of automation. One ex
 
 ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/fd25fb6a-19a7-4957-a2cb-a723723fde4d)
 
+</details>
+
 ### Squeezelite-ESP32
 
 Squeezelite-ESP32 is a multimedia software suite, that started as a renderer (or player) of LMS (Logitech Media Server). Now it is extended with 
@@ -229,6 +234,9 @@ All ESP32-based boards are tested with [Squeezelite-ESP32](https://github.com/sl
 
 Use [Installer for ESP Audio Dock](https://sonocotta.github.io/esp32-audio-dock/) to flash firmware first. It has been preconfigured to work with ESP Audio boards and will configure all hardware automatically.
 
+<details>
+  <summary>Install instructions</summary>
+  
 |   |   |
 |---|---|
 | Select the correct device first	 | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/47626d0a-c47a-4df7-80c1-e5aa82c9ab16)
@@ -246,6 +254,7 @@ You can use it now
 |---|---|---|---|
 | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/cd0e7cb2-4a15-48fc-b308-0281e414619e)| ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/edcb5a3b-bead-44d8-b51d-4c36ed19b7da)| ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/20586bb4-bc51-4cfb-802a-c6072987c1da)| ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/dfdb89dd-755b-42fe-a381-a92011f9c681)
 
+</details>
 
 ## Hardware
 
