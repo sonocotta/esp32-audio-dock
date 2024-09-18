@@ -10,12 +10,14 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
 
 <details>
   <summary>First generation docks</summary>
-  ![image](https://user-images.githubusercontent.com/5459747/225271619-35ba0f99-fdd1-496b-b305-26e397df4460.png)
+  
+![image](https://user-images.githubusercontent.com/5459747/225271619-35ba0f99-fdd1-496b-b305-26e397df4460.png)
+
 </details>
 
 | HiFi-ESP | Loud-ESP | Louder-ESP
 |---|---|---|
-| <image> | <image coming> | ![DSC_0019](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/26c98a87-cd12-466d-990c-05dfb163390c)
+| ![DSC_0009](https://github.com/user-attachments/assets/0ac16dd2-0bd2-42e4-9e07-c2dd8b2b0266) | _Work in progress, coming soon..._ | ![DSC_0019](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/26c98a87-cd12-466d-990c-05dfb163390c)
 
 
 ## Table of Contents
@@ -81,9 +83,9 @@ I created those docks and subsequently development boards, to be able to quickly
 
 |  | HiFi-ESP32 | HiFi-ESP32S3 | Loud-ESP32 | Loud-ESP32S3 | Louder-ESP32 | Louder-ESP32S3 |
 |---|---|---|---|---|---|---|
-| Image | image | image | image | image | ![DSC_0013](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/46ea4f10-c363-4623-b5d6-29e1135e5983) | ![DSC_0012](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/0e0c2146-79da-41e7-96da-63cf37637bce) |
+| | ![DSC_0002](https://github.com/user-attachments/assets/d025ef42-daa3-4ad0-aeec-6ddf309c267b) | ![DSC_0005](https://github.com/user-attachments/assets/6f0482a2-7e08-475c-b6f0-0fe631a8e2f4) | _Work in progress, coming soon..._ | _Work in progress, coming soon..._ | ![DSC_0013](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/46ea4f10-c363-4623-b5d6-29e1135e5983) | ![DSC_0012](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/0e0c2146-79da-41e7-96da-63cf37637bce) |
 | Docks with | ESP32-WROVER-N16R8 onboard | ESP32-S3-WROOM-N16R8 onboard | ESP32-WROVER-N16R8 onboard | ESP32-S3-WROOM-N16R8 onboard | ESP32-WROVER-N16R8 onboard | ESP32-S3-WROOM-N16R8 onboard |
-| DAC | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC  -100 dB typical noise level | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC  -100 dB typical noise level | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with   built in D-Class amp | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with   built in D-Class amp |
+| DAC | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC <br/> -100 dB typical noise level | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC <br/> -100 dB typical noise level | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with   built in D-Class amp | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with   built in D-Class amp |
 | Output (4Ω) | Non-amplified stereo output, 2.1V RMS | Non-amplified stereo output, 2.1V RMS | 2x 5W | 2x 5W | 2x 32W (4Ω, 1% THD+N) | 2x 32W (4Ω, 1% THD+N) |
 | Output (8Ω) | Non-amplified stereo output | Non-amplified stereo output | 2x 3W | 2x 3W | 2x 22W (8Ω, 1% THD+N) | 2x 22W (8Ω, 1% THD+N) |
 | PSRAM | 8MB PSRAM (4MB usable) over 40MHz SPI | 8MB PSRAM over 80MHz QSPI | 8MB PSRAM (4MB usable) over 40MHz SPI | 8MB PSRAM over 80MHz QSPI | 8MB PSRAM (4MB usable) over 40MHz SPI | 8MB PSRAM over 80MHz QSPI |
@@ -283,6 +285,11 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 
 ### HiFi-ESP32
 
+| Image  |
+|---|
+| ![image](https://github.com/user-attachments/assets/6cb02a5b-a0ef-4dce-b101-1cd92f6addc8)  |
+| ![image](https://github.com/user-attachments/assets/17c488ec-65b1-46df-a6f6-c0abaa99830c)  |
+
 ### Loud-ESP32
 
 *coming soon...*
@@ -294,12 +301,14 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 | ![DSC_0013_small JPG-mh](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/c4947d1b-76f1-468b-81d9-68b46ef42851)
 | ![DSC_0012_small JPG-mh](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/6716a624-e44d-4f83-a8ee-91ab67b8411a)
 
-### Louder Optional SPI Ethernet module
 
-| Image  | Legend  |
+### Optional SPI Ethernet module
+
+Every board has a header that allows to solder in W5500 SPI Ethernet module that is very easy to find. The only downside is that with the module installed board will not fit the case, unless it is cut to accomodate extra height.
+
+| HiFi-ESP32(S3) | Louder-ESP32(S3)  |
 |---|---|
-| Optional Ethernet header is exposed on the bottom side of the PCB | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/762bfea5-ffbf-493f-8217-8a47c146b304) |
-| Use popular W5500 based module as displayed on the picture | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/090520a2-1ee7-45ec-81e4-86343b0aef25)
+| ![DSC_0015](https://github.com/user-attachments/assets/7c71f12a-744c-4d25-bb3b-492df4cf5c78) | _image coming soon..._
 
 ### BTL and PBTL mode (TAS5805M DAC)
 
@@ -339,9 +348,9 @@ Starting from Rev E, an additional header is exposed to allow datasheet-speced c
 
 The screw terminal is connected parallel to the barrel jack, you can use either interchangeably.
 
-The power adapter specs depend on the speaker you're planning to use. DAC efficiency is close to 100%, so just take the power rating of your speaker (say 2x10w), and impedance (say 8 ohm) and you'd need  at least 9 volts rated at 1.2 amps per channel, round up to 3 total amps. 
+The power adapter specs depend on the speaker you're planning to use. DAC efficiency is close to 100%, so just take the power rating of your speaker (say 2x10w), and impedance (say 8 ohms) and you'd need  at least 9 volts rated at 1.2 amps per channel, round up to 3 total amps. 
 
-It is not recommended to go beyond the voltage your speakers can take, otherwise amp will blow your speakers in no time. 
+It is not recommended to go beyond the voltage your speakers can take, otherwise, the amp will blow your speakers in no time. 
 
 ### Case
 
@@ -349,7 +358,7 @@ Louder-ESP32 is mechanically compatible with Raspberry Pi 3/4 cases, tested with
 
 | Hifi-ESP32 | Louder-ESP32 |
 |---|---|
-| <image> | ![DSC_0001](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/68d5c2ab-d5f7-4f66-8ff7-4301ddaab7ed)
+| ![DSC_0013](https://github.com/user-attachments/assets/3eb6bb16-e103-40e1-8142-a239dc5271ca) | ![DSC_0001](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/68d5c2ab-d5f7-4f66-8ff7-4301ddaab7ed)
 
 ## Where to buy
 
