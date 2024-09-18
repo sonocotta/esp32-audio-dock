@@ -331,7 +331,7 @@ dac_controlset: `{"init":[{"reg":3,"val":2},{"reg":3,"val":3}],"poweron":[{"reg"
 
 ```
 
-One can test audio with single speaker connected between L and R terminals (plus on one side and minus on the other). Optionally, jumpers on the board will effectively connect second driver in parallel doubling the current capability.
+One can test audio with a single speaker connected between L and R terminals (plus on one side and minus on the other). Optionally, jumpers on the board will effectively connect the second driver in parallel doubling the current capability.
 
 Important point, this will send only one channel to the output, that’s just how the DAC works. True mono as (L+R)/2 is possible via more in-depth configuration (very poorly documented), but I haven’t managed to configure that on the stand. I’m still working on that. (Along with a few more really cool DSP features that this DAC has, like EQ, subwoofer mode and tone compensation settings)
 
@@ -363,11 +363,11 @@ It is not recommended to go beyond the voltage your speakers can take, otherwise
 
 ### Case
 
-Louder-ESP32 is mechanically compatible with Raspberry Pi 3/4 cases, tested with transparent ones. Also, community members created a few 3-D printable designs that can be found [here](https://www.thingiverse.com/thing:6333131) and [here](https://www.thingiverse.com/thing:6326927)
+HiFi-ESP32(S3), Loud-ESP32(S3) and Louder-ESP32(S3) are mechanically compatible with Raspberry Pi 3/4 cases, tested with transparent ones. Also, community members created a few 3-D printable designs that can be found [here](https://www.thingiverse.com/thing:6333131) and [here](https://www.thingiverse.com/thing:6326927)
 
-| Hifi-ESP32 | Louder-ESP32 |
-|---|---|
-| ![DSC_0013](https://github.com/user-attachments/assets/3eb6bb16-e103-40e1-8142-a239dc5271ca) | ![DSC_0001](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/68d5c2ab-d5f7-4f66-8ff7-4301ddaab7ed)
+| Hifi-ESP32 | Loud-ESP32 | Louder-ESP32 |
+|---|---|---|
+| ![DSC_0013](https://github.com/user-attachments/assets/3eb6bb16-e103-40e1-8142-a239dc5271ca) | Image coming soon... | ![DSC_0001](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/68d5c2ab-d5f7-4f66-8ff7-4301ddaab7ed)
 
 ## Where to buy
 
