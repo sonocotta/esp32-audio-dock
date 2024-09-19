@@ -1,20 +1,20 @@
 {
-    "name": "hifi-esp",
-    "version": "2.1670",
+    "name": "hifi-esp32s3",
+    "version": "2.1672",
     "home_assistant_domain": "slim_player",
     "funding_url": "https://esphome.io/guides/supporters.html",
     "new_install_prompt_erase": true,
     "new_install_improv_wait_time": 20,
     "builds": [
         {
-            "chipFamily": "ESP32",
+            "chipFamily": "ESP32-S3",
             "parts": [
                 {
-                    "path": "common-esp-2.1670-16-bootloader.bin",
-                    "offset": "0x1000"
+                    "path": "common-esp32s3-2.1672-16-bootloader.bin",
+                    "offset": "0x0"
                 },
                 {
-                    "path": "common-esp-2.1670-16-partition-table.bin",
+                    "path": "common-esp32s3-2.1672-16-partition-table.bin",
                     "offset": "0x8000"
                 },
                 {
@@ -22,23 +22,23 @@
                     "offset": "0x9000"
                 },
                 {
-                    "path": "common-esp-2.1670-16-ota_data_initial.bin",
+                    "path": "common-esp32s3-2.1672-16-ota_data_initial.bin",
                     "offset": "0xd000"
                 },
                 {
-                    "path": "common-esp-2.1670-16-recovery.bin",
+                    "path": "common-esp32s3-2.1672-16-recovery.bin",
                     "offset": "0x10000"
                 },
                 {
-                    "path": "common-esp-2.1670-16-squeezelite.bin",
+                    "path": "common-esp32s3-2.1672-16-squeezelite.bin",
                     "offset": "0x150000"
                 },
                 {
-                    "path": "hifi-esp-settings.bin",
+                    "path": "hifi-esp32s3-settings.bin",
                     "offset": "0x3f0000"
                 }
             ]
         }
     ],
-    "manifest_name": "manifest-hifi-esp-2.1670-16.json"
+    "manifest_name": "manifest-hifi-esp32s3-2.1672-16.json"
 }
