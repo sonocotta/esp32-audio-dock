@@ -34,7 +34,7 @@
                     "offset": "0x150000"
                 },
                 {
-                    "path": "hifi-esp-settings.bin",
+                    "path": "hifi-esp32s3-settings.bin",
                     "offset": "0x3f0000"
                 }
             ]
