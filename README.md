@@ -256,6 +256,24 @@ You can use it now
 
 </details>
 
+#### Ethernet configuration
+
+If you have optional ethernet on the board, please put this config in the NVS settings
+
+##### ESP32
+
+```
+eth_config = model=w5500,cs=5,speed=20000000,intr=35,rst=14
+spi_config = mosi=23,clk=18,host=2,miso=19
+```
+
+##### ESP32S3
+
+```
+eth_config = model=w5500,cs=10,speed=20000000,intr=6,rst=5
+spi_config = mosi=11,clk=12,host=2,miso=13
+```
+
 ## Hardware
 
 Please visit the [hardware](/hardware/) section for board schematics and PCB designs. Note that PCBs are shared as multi-layer PDFs.
