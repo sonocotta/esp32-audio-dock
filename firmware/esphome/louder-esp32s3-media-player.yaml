@@ -6,11 +6,12 @@ substitutions:
 esphome:
   name: "${name}"
   name_add_mac_suffix: false
-  comment: "${friendly_name} Louder ESP32 ${pcb_version}"
   includes:
-    - louderesp32.h
+    - include/louderesp32-s3.h
   platformio_options:
     lib_deps: "Wire"
+    build_flags: "-DBOARD_HAS_PSRAM"
+    board_build.arduino.memory_type: qio_opi
   on_boot:
     priority: 800
     then:
@@ -21,6 +22,10 @@ esphome:
 
 esp32:
   board: esp32-s3-devkitc-1
+  variant: ESP32S3
+  flash_size: 16MB
+  framework:
+    type: arduino
 
 ### Optional if you want ethernet (then remove all wifi config) ###
 #ethernet:
