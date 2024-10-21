@@ -5,8 +5,8 @@ tas5805m Tas5805m(&Wire);
 #endif
 
 #include <I2S.h>
-const int frequency = 512;  // frequency of square wave in Hz
-const int amplitude = 256;   // amplitude of square wave
+const int frequency = 16;  // frequency of square wave in Hz
+const int amplitude = 1024;   // amplitude of square wave
 const int sampleRate = 8000; // sample rate in Hz
 const int bps = 16;
 
@@ -16,15 +16,6 @@ int32_t sample = amplitude; // current sample value
 int count = 0;
 
 i2s_mode_t mode = I2S_PHILIPS_MODE; // I2S decoder is needed
-// i2s_mode_t mode = ADC_DAC_MODE; // Audio amplifier is needed
-
-// Mono channel input
-// This is ESP specific implementation -
-//   samples will be automatically copied to both channels inside I2S driver
-//   If you want to have true mono output use I2S_PHILIPS_MODE and interlay
-//   second channel with 0-value samples.
-//   The order of channels is RIGH followed by LEFT
-// i2s_mode_t mode = I2S_RIGHT_JUSTIFIED_MODE; // I2S decoder is needed
 
 void setup()
 {
