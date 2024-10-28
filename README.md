@@ -54,6 +54,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [Louder-ESP32 and Louder-ESP32S3](#louder-esp32-and-louder-esp32s3)
     - [Optional SPI Ethernet module](#optional-spi-ethernet-module)
     - [BTL and PBTL mode (TAS5805M DAC)](#btl-and-pbtl-mode-tas5805m-dac)
+    - [TAS5805M DSP capabilities](#tas5805m-dsp-capabilities)
     - [Louder ESP power considerations](#louder-esp-power-considerations)
     - [Case](#case)
   - [Where to buy](#where-to-buy)
@@ -360,12 +361,39 @@ Important point, this will send only one channel to the output, that’s just ho
 | Schematics | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/e7ada8c0-c906-4c08-ae99-be9dfe907574) | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/55f5315a-03eb-47c8-9aea-51e3eb3757fe)
 | Speaker Connection | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/ee5b4517-3799-43a7-8d10-0a2f3a425c81) | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/eca2cf1e-ebe0-4684-9aa2-1cc193e0982f) 
 
-Starting from Rev E, an additional header is exposed to allow datasheet-speced connectivity
+Starting from Rev E, an additional header is exposed to allow datasheet-specced connectivity
 
 | Image  | Legend  |
 |---|---|
 | Stereo Mode - leave open | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/8c06f495-f551-46ef-86c0-e390a6a63241) |
 | Mono (PBTL) Mode, close horisontally | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/a5c78b6a-84c3-4546-afc8-5f65ca268157)
+
+### TAS5805M DSP capabilities
+
+The TAS5805M DAC has a very powerful DSP, that allows doing lots of data processing on the silicon, that otherwise would take a considerable part of your CPU time. As of the moment of writing it is mostly an undiscovered part of the DAC, since unfortunately, TI is not making it very easy for developers. (A minute of complaint) To be more specific, you need to be (A) a proven hardware manufacturer to get access to the configuration software, namely PurePath. (B) you need to apply for a personal license and go through an approval process, and after a few weeks of waiting you get access to one DAC configuration you asked for. (C) You find out that it will work with TI's own evaluation board that will set you back $250 if you'd be able to find one. Otherwise, all you have is a list of I2C commands that you need to transfer to the device on your own cost. No wonder no one knows how to use it.
+
+But moanings aside, what do you get after:
+
+- Flexible input mixer with gain corrections
+- 15 EQ with numerous filter configurations
+- 3-band Dynamic Range Compression with flexible curve configuration
+- Automatic Gain Limiter with flexible configuration
+- Soft clipper
+- and a few other things
+
+At this moment it is very experimental. In the perfect world, you should be able to adjust all of those settings to make your speaker-enclosure setup work the best it can, and even apply your room factors into the equation. But with above disclaimer I can only deliver limited set of configurations corresponding to the most common use cases:
+
+- Stereo mode with enabled DRC (Loudness) and AGL settings
+- Full range Mono mode with DRC (Loudness) and AGL settings
+- Subwoofer Mono mode with few filter frequency options
+- Bi-Amp configuration with few crossover frequency options
+
+All of the above are available right now for experimentation. I'm keen to hear your feedback while I moving forward with porting this to other software options
+
+- [X] - Bare [I2S TAS5805M library](https://github.com/sonocotta/esp32-tas5805m-dac)
+- [X] - [espragus-snapclient](https://sonocotta.github.io/esparagus-snapclient/) software
+- [ ] - [squeezelite-esp32](https://sonocotta.github.io/esp32-audio-dock/) <- to do
+- [ ] - flexible configurations with on-the-fly configuration changes
 
 ### Louder ESP power considerations
 
