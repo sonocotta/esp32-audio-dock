@@ -141,10 +141,10 @@ Audio streaming requires proper buffering to work, even with ESP32 500K of RAM i
 
 ### Loud-ESP32
 
-|       | I2S CLK | I2S DATA | I2S WS | PSRAM RESERVED | 
-|-------|---------|----------|--------|----------|
-| ESP32 | 26      | 22       | 25     | 16, 17        |
-| ESP32-S3 | 14      | 16       | 15     | 35, 36, 37 | 
+|       | I2S CLK | I2S DATA | I2S WS | DAC EN | PSRAM RESERVED | 
+|-------|---------|----------|--------|----------|--------------|
+| ESP32 | 26      | 22       | 25     |    13    |  16, 17      |
+| ESP32-S3 | 14   | 16       | 15     |     8    |   35, 36, 37 | 
 
 
 ### Louder-ESP32
