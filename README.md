@@ -15,10 +15,9 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
 
 </details>
 
-| HiFi-ESP | Loud-ESP | Louder-ESP
+| HiFi-ESP32 | Loud-ESP32 | Louder-ESP32
 |---|---|---|
-| ![DSC_0009](https://github.com/user-attachments/assets/0ac16dd2-0bd2-42e4-9e07-c2dd8b2b0266) | _Work in progress, coming soon..._ | ![DSC_0019](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/26c98a87-cd12-466d-990c-05dfb163390c)
-
+| ![DSC_0009](https://github.com/user-attachments/assets/0ac16dd2-0bd2-42e4-9e07-c2dd8b2b0266) | ![DSC_0017](https://github.com/user-attachments/assets/94ffe10e-e206-4ced-aa2c-32b60508b280) | ![DSC_0019](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/26c98a87-cd12-466d-990c-05dfb163390c)
 
 ## Table of Contents
 
@@ -84,7 +83,7 @@ I created those docks and subsequently development boards, to be able to quickly
 
 |  | HiFi-ESP32 | HiFi-ESP32S3 | Loud-ESP32 | Loud-ESP32S3 | Louder-ESP32 | Louder-ESP32S3 |
 |---|---|---|---|---|---|---|
-| | ![DSC_0002](https://github.com/user-attachments/assets/d025ef42-daa3-4ad0-aeec-6ddf309c267b) | ![DSC_0005](https://github.com/user-attachments/assets/6f0482a2-7e08-475c-b6f0-0fe631a8e2f4) | _Work in progress, coming soon..._ | _Work in progress, coming soon..._ | ![DSC_0013](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/46ea4f10-c363-4623-b5d6-29e1135e5983) | ![DSC_0012](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/0e0c2146-79da-41e7-96da-63cf37637bce) |
+| | ![DSC_0002](https://github.com/user-attachments/assets/d025ef42-daa3-4ad0-aeec-6ddf309c267b) | ![DSC_0005](https://github.com/user-attachments/assets/6f0482a2-7e08-475c-b6f0-0fe631a8e2f4) |![DSC_0002](https://github.com/user-attachments/assets/7d351d02-7e7f-4974-9a12-ee353c239654) | ![DSC_0009](https://github.com/user-attachments/assets/e732f7a9-77e5-4182-b808-bf12ff35a8b7) | ![DSC_0013](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/46ea4f10-c363-4623-b5d6-29e1135e5983) | ![DSC_0012](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/0e0c2146-79da-41e7-96da-63cf37637bce) |
 | MCU | ESP32-WROVER-N16R8 | ESP32-S3-WROOM-N16R8 | ESP32-WROVER-N16R8 | ESP32-S3-WROOM-N16R8 | ESP32-WROVER-N16R8 | ESP32-S3-WROOM-N16R8 |
 | DAC | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC <br/> -100 dB typical noise level | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC <br/> -100 dB typical noise level | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with   built in D-Class amp | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with   built in D-Class amp |
 | Output (4Ω) | Non-amplified stereo output, 2.1V RMS | Non-amplified stereo output, 2.1V RMS | 2x 5W | 2x 5W | 2x 32W (4Ω, 1% THD+N) | 2x 32W (4Ω, 1% THD+N) |
@@ -320,7 +319,11 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 
 ### Loud-ESP32
 
-*coming soon...*
+| Image  |
+|---|
+| ![image](https://github.com/user-attachments/assets/eb558181-9d9a-4b62-9acb-b8de41450554)
+| ![image](https://github.com/user-attachments/assets/99a27eb2-72de-4a96-8b84-8d4426176222)
+
 
 ### Louder-ESP32 and Louder-ESP32S3
 
@@ -334,9 +337,9 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 
 Every board has a header that allows to solder in W5500 SPI Ethernet module that is very easy to find. The only downside is that with the module installed board will not fit the case, unless it is cut to accomodate extra height.
 
-| HiFi-ESP32(S3) | Louder-ESP32(S3)  |
-|---|---|
-| ![DSC_0015](https://github.com/user-attachments/assets/7c71f12a-744c-4d25-bb3b-492df4cf5c78) | _image coming soon..._
+| HiFi-ESP32(S3) | Loud-ESP32(S3) | Louder-ESP32(S3)  |
+|---|---|---|
+| ![DSC_0015](https://github.com/user-attachments/assets/7c71f12a-744c-4d25-bb3b-492df4cf5c78) | ![DSC_0026](https://github.com/user-attachments/assets/e688d75d-8e5d-4e58-8fec-fd900e44b3d8)
 
 ### BTL and PBTL mode (TAS5805M DAC)
 
@@ -413,12 +416,13 @@ HiFi-ESP32(S3), Loud-ESP32(S3) and Louder-ESP32(S3) are mechanically compatible 
 
 | Hifi-ESP32 | Loud-ESP32 | Louder-ESP32 |
 |---|---|---|
-| ![DSC_0013](https://github.com/user-attachments/assets/3eb6bb16-e103-40e1-8142-a239dc5271ca) | Image coming soon... | ![DSC_0001](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/68d5c2ab-d5f7-4f66-8ff7-4301ddaab7ed)
+| ![DSC_0013](https://github.com/user-attachments/assets/3eb6bb16-e103-40e1-8142-a239dc5271ca) | ![DSC_0019](https://github.com/user-attachments/assets/79b78c61-b6bf-454d-91f6-9eb513bc06d8) | ![DSC_0001](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/68d5c2ab-d5f7-4f66-8ff7-4301ddaab7ed)
 
 ## Where to buy
 
 You may support my work by ordering these products at Tindie and Elecrow
 - [ESP Audio Dock](https://www.tindie.com/products/sonocotta/esp-audio-dock/) at Tindie
-- [Louder ESP32](https://www.elecrow.com/louder-esp32.html) at Elecrow
-- [Louder-ESP32 and Louder-ESP32S3](https://www.tindie.com/products/sonocotta/louder-esp32/) at Tindie
 - [HiFi-ESP32 and HiFi-ESP32S3](https://www.tindie.com/products/sonocotta/hifi-esp32/)
+- [Loud-ESP32 and Loud-ESP32S3](https://www.tindie.com/products/sonocotta/loud-esp32/)
+- [Louder-ESP32 and Louder-ESP32S3](https://www.tindie.com/products/sonocotta/louder-esp32/) at Tindie
+- [Louder ESP32](https://www.elecrow.com/louder-esp32.html) at Elecrow
