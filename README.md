@@ -341,6 +341,22 @@ Every board has a header that allows to solder in W5500 SPI Ethernet module that
 |---|---|---|
 | ![DSC_0015](https://github.com/user-attachments/assets/7c71f12a-744c-4d25-bb3b-492df4cf5c78) | ![DSC_0026](https://github.com/user-attachments/assets/e688d75d-8e5d-4e58-8fec-fd900e44b3d8)
 
+squeezelite-esp32 nvs settings that you need to apply to enable it
+
+##### ESP32
+
+```
+eth_config = model=w5500,cs=5,speed=20000000,intr=35,rst=14
+spi_config = mosi=23,clk=18,host=2,miso=19
+```
+
+##### ESP32S3
+
+```
+eth_config = model=w5500,cs=10,speed=20000000,intr=6,rst=5
+spi_config = mosi=11,clk=12,host=2,miso=13
+```
+
 ### BTL and PBTL mode (TAS5805M DAC)
 
 [TAS5805M DAC](https://www.ti.com/lit/ds/symlink/tas5805m.pdf?ts=1701767947387) Allows 2 modes of operation - BTL (stereo) and PBTL (parallel, or mono). In Mono amp will use a completely different modulation scheme and basically will fully synchronize output drivers. Jumpers on the board allow both output drivers to connect to the same speaker. The most important step is to inform the Amp to change modulation in the first place via I2C comman. In the case of sqeezelite DAC controlsset value is the following:
