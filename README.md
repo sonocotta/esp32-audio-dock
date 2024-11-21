@@ -378,9 +378,9 @@ Important point, this will send only one channel to the output, that’s just ho
 | Descriotion | Bridge Tied Load, Stereo | Parallel Bridge Tied Load, Mono |
 | Rated Power | 2×23W (8-Ω, 21 V, THD+N=1%) | 45W (4-Ω, 21 V, THD+N=1%) |
 | Schematics | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/e7ada8c0-c906-4c08-ae99-be9dfe907574) | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/55f5315a-03eb-47c8-9aea-51e3eb3757fe)
-| Speaker Connection | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/ee5b4517-3799-43a7-8d10-0a2f3a425c81) | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/eca2cf1e-ebe0-4684-9aa2-1cc193e0982f) 
+| Speaker Connection | ![image](https://github.com/user-attachments/assets/8e5e9c38-2696-419b-9c5b-d278c655b0db) | ![image](https://github.com/user-attachments/assets/8aba6273-84c4-45a8-9808-93317d794a44)
 
-Starting from Rev E, an additional header is exposed to allow datasheet-specced connectivity
+Starting from Rev E, an additional header is exposed to allow datasheet-specced connectivity 
 
 | Image  | Legend  |
 |---|---|
