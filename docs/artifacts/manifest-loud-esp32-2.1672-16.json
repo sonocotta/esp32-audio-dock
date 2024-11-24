@@ -1,5 +1,5 @@
 {
-    "name": "louder-esp32",
+    "name": "loud-esp32",
     "version": "2.1672",
     "home_assistant_domain": "slim_player",
     "funding_url": "https://esphome.io/guides/supporters.html",
@@ -34,11 +34,11 @@
                     "offset": "0x150000"
                 },
                 {
-                    "path": "louder-esp32-settings.bin",
+                    "path": "loud-esp32-settings.bin",
                     "offset": "0x3f0000"
                 }
             ]
         }
     ],
-    "manifest_name": "manifest-louder-esp32-2.1672-16.json"
+    "manifest_name": "manifest-loud-esp32-2.1672-16.json"
 }
