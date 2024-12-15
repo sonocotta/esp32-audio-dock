@@ -5,6 +5,9 @@ substitutions:
 esphome:
   name: "${name}"
   name_add_mac_suffix: false
+  project:
+    name: Sonocotta.Louder ESP32
+    version: '1.0'
   comment: "${friendly_name} Louder ESP32 ${pcb_version}"
   includes:
     - louderesp32.h

@@ -5,6 +5,9 @@ substitutions:
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
+  project:
+    name: Sonocotta.ESP32-S3-Solo
+    version: '1.0'
   name_add_mac_suffix: false
   on_boot:
     priority: 800

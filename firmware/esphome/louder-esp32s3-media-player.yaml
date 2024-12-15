@@ -6,6 +6,10 @@ substitutions:
 esphome:
   name: "${name}"
   name_add_mac_suffix: false
+  project:
+    name: Sonocotta.Louder ESP32-S3
+    version: '1.0'
+  comment: "${friendly_name} Louder ESP32-S3 ${pcb_version}"
   includes:
     - include/louderesp32-s3.h
   platformio_options:
@@ -43,8 +47,8 @@ logger:
   
 # Enable Home Assistant API
 api:
-    encryption: 
-      key: !secret esphome_api_key
+  encryption:
+    key: !secret esphome_api_key
 
 # Allow Over-The-Air updates
 ota:
