@@ -72,6 +72,7 @@ switch:
       return {tas5805};
     switches:
       name: "Enable Amp"
+      id: amp
 
 i2c:
   sda: GPIO8
@@ -90,3 +91,5 @@ media_player:
     dac_type: external
     i2s_dout_pin: GPIO16
     mode: stereo
+    on_play:
+      - switch.turn_on: amp
