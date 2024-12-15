@@ -84,6 +84,21 @@ i2s_audio:
   i2s_lrclk_pin: GPIO15
   i2s_bclk_pin: GPIO14
 
+interval:
+  - interval: 1min
+    then:
+      - if:
+          condition:
+            - switch.is_on: amp
+            - for:
+                time: 30s
+                condition:
+                  or:
+                    - media_player.is_idle: louderesp32
+                    - media_player.is_paused: louderesp32
+          then:
+            - switch.turn_off: amp
+
 media_player:
   - platform: i2s_audio
     name: $friendly_name
