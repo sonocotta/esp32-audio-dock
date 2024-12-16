@@ -5,6 +5,9 @@ substitutions:
 esphome:
   name: "${name}"
   name_add_mac_suffix: false
+  project:
+    name: Sonocotta.Louder ESP32
+    version: '1.0'
   comment: "${friendly_name} Louder ESP32 ${pcb_version}"
   includes:
     - louderesp32.h
@@ -64,6 +67,7 @@ switch:
       return {tas5805};
     switches:
       name: "Enable Amp"
+      id: amp
 
 i2c:
   sda: GPIO21
@@ -75,6 +79,21 @@ i2s_audio:
   i2s_lrclk_pin: GPIO25
   i2s_bclk_pin: GPIO26
 
+interval:
+  - interval: 1min
+    then:
+      - if:
+          condition:
+            - switch.is_on: amp
+            - for:
+                time: 30s
+                condition:
+                  or:
+                    - media_player.is_idle: louderesp32
+                    - media_player.is_paused: louderesp32
+          then:
+            - switch.turn_off: amp
+
 media_player:
   - platform: i2s_audio
     name: $friendly_name
@@ -82,3 +101,5 @@ media_player:
     dac_type: external
     i2s_dout_pin: GPIO22
     mode: stereo
+    on_play:
+      - switch.turn_on: amp

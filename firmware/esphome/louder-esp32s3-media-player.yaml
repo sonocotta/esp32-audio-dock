@@ -6,6 +6,10 @@ substitutions:
 esphome:
   name: "${name}"
   name_add_mac_suffix: false
+  project:
+    name: Sonocotta.Louder ESP32-S3
+    version: '1.0'
+  comment: "${friendly_name} Louder ESP32-S3 ${pcb_version}"
   includes:
     - include/louderesp32-s3.h
   platformio_options:
@@ -43,8 +47,8 @@ logger:
   
 # Enable Home Assistant API
 api:
-    encryption: 
-      key: !secret esphome_api_key
+  encryption:
+    key: !secret esphome_api_key
 
 # Allow Over-The-Air updates
 ota:
@@ -72,6 +76,7 @@ switch:
       return {tas5805};
     switches:
       name: "Enable Amp"
+      id: amp
 
 i2c:
   sda: GPIO8
@@ -83,6 +88,21 @@ i2s_audio:
   i2s_lrclk_pin: GPIO15
   i2s_bclk_pin: GPIO14
 
+interval:
+  - interval: 1min
+    then:
+      - if:
+          condition:
+            - switch.is_on: amp
+            - for:
+                time: 30s
+                condition:
+                  or:
+                    - media_player.is_idle: louderesp32
+                    - media_player.is_paused: louderesp32
+          then:
+            - switch.turn_off: amp
+
 media_player:
   - platform: i2s_audio
     name: $friendly_name
@@ -90,3 +110,5 @@ media_player:
     dac_type: external
     i2s_dout_pin: GPIO16
     mode: stereo
+    on_play:
+      - switch.turn_on: amp
