@@ -2,6 +2,7 @@ substitutions:
   name: "louder-esp32"
   friendly_name: Louder-ESP32 Media Player
   pcb_version: "J"
+#  max_volume: "0.9"  # If volume exceeds this we reset it to this. Be sure to uncomment the code below "max_volume feature".
 
 esphome:
   name: "${name}"
@@ -112,3 +113,18 @@ media_player:
     mode: stereo
     on_play:
       - switch.turn_on: amp
+### max_volume feature - uncomment below to enable
+#     on_state:
+#       then:
+#         - if:
+#             condition:
+#               lambda: |-
+#                 float current_volume = roundf(id(louderesp32).volume * 100) / 100.0;
+#                 float max_vol = roundf(${max_volume} * 100) / 100.0;
+#                 return current_volume > max_vol;
+#             then:
+#               - logger.log: "Volume exceeds max volume, resetting to max volume"
+#               - media_player.volume_set:
+#                   id: louderesp32
+#                   volume: ${max_volume}
+#               - logger.log: "Volume set to max volume"
