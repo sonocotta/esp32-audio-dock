@@ -371,7 +371,22 @@ dac_controlset: `{"init":[{"reg":3,"val":2},{"reg":3,"val":3}],"poweron":[{"reg"
 
 One can test audio with a single speaker connected between L and R terminals (plus on one side and minus on the other). Optionally, jumpers on the board will effectively connect the second driver in parallel doubling the current capability.
 
-Important point, this will send only one channel to the output, that’s just how the DAC works. True mono as (L+R)/2 is possible via more in-depth configuration (very poorly documented), but I haven’t managed to configure that on the stand. I’m still working on that. (Along with a few more really cool DSP features that this DAC has, like EQ, subwoofer mode and tone compensation settings)
+Important point, this simple setup will send only one channel to the output, that’s just how the basic DAC setup works. In case you want true mono (L + R)/2 or pure R or L audio, you need to apply a mixer configuration. Full config looks like below (thanks @frdfsnlght for helping me [here](https://github.com/sonocotta/esp32-audio-dock/issues/27))
+
+Single speaker (PBTL mode), mono mix (L+R)/2:
+```
+{"init":[{"reg":3,"val":2},{"reg":3,"val":3},{"reg":2,"val":4},{"reg":0,"val":0},{"reg":127,"val":140},{"reg":0,"val":41},{"reg":24,"val":[0,64,38,231]},{"reg":28,"val":[0,64,38,231]},{"reg":32,"val":[0,0,0,0]},{"reg":36,"val":[0,0,0,0]},{"reg":0,"val":0},{"reg":127,"val":0}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]} 
+```
+
+Single speaker (PBTL mode), right input only:
+```
+{"init":[{"reg":3,"val":2},{"reg":3,"val":3},{"reg":2,"val":4},{"reg":0,"val":0},{"reg":127,"val":140},{"reg":0,"val":41},{"reg":24,"val":[0,128,0,0]},{"reg":28,"val":[0,0,0,0]},{"reg":32,"val":[0,0,0,0]},{"reg":36,"val":[0,0,0,0]},{"reg":0,"val":0},{"reg":127,"val":0}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]} 
+```
+
+Single speaker (PBTL mode), left input only:
+```
+{"init":[{"reg":3,"val":2},{"reg":3,"val":3},{"reg":2,"val":4},{"reg":0,"val":0},{"reg":127,"val":140},{"reg":0,"val":41},{"reg":24,"val":[0,0,0,0]},{"reg":28,"val":[0,128,0,0]},{"reg":32,"val":[0,0,0,0]},{"reg":36,"val":[0,0,0,0]},{"reg":0,"val":0},{"reg":127,"val":0}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]} 
+```
 
 |  | BTL | PBTL |
 |---|---|---|
