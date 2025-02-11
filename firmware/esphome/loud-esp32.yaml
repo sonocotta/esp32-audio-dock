@@ -54,7 +54,7 @@ switch:
     id: speaker_switch
     icon: "mdi:speaker"
     pin:
-      number: GPIO8
+      number: GPIO13
 
 media_player:
   - platform: i2s_audio
