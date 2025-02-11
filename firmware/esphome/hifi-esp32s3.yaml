@@ -60,15 +60,7 @@ media_player:
     id: esp32_audio
     dac_type: external
     i2s_dout_pin: GPIO16
-    mode: mono
-    on_announcement:
-      - logger.log: "Announcement started"
-    on_play:
-      - logger.log: "Playback started"
-    on_pause:
-      - logger.log: "Playback paused"
-    on_idle:
-      - logger.log: "Playback ended"
+    mode: stereo
 
 button:
   - platform: restart

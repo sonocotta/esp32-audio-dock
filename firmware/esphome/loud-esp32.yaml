@@ -8,9 +8,6 @@ esphome:
   project:
     name: esphome.web
     version: '1.0'
-  platformio_options:
-    build_flags: "-DBOARD_HAS_PSRAM"
-    board_build.arduino.memory_type: qio_opi
   on_boot:
     priority: 800
     then:
@@ -19,9 +16,7 @@ esphome:
         volume: 70%
 
 esp32:
-  board: esp32-s3-devkitc-1
-  variant: ESP32S3
-  flash_size: 16MB
+  board: esp32dev
   framework:
     type: arduino
 
@@ -51,8 +46,8 @@ psram:
   speed: 80MHz
 
 i2s_audio:
-    i2s_lrclk_pin: GPIO15
-    i2s_bclk_pin: GPIO14
+  i2s_lrclk_pin: GPIO25
+  i2s_bclk_pin: GPIO26
 
 switch:
   - platform: gpio
@@ -66,7 +61,7 @@ media_player:
     name: $friendly_name
     id: esp32_audio
     dac_type: external
-    i2s_dout_pin: GPIO16
+    i2s_dout_pin: GPIO22
     mode: stereo
     on_announcement:
       - logger.log: "Announcement started"
