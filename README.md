@@ -443,11 +443,20 @@ It is not recommended to go beyond the voltage your speakers can take, otherwise
 
 ### Case
 
-HiFi-ESP32(S3), Loud-ESP32(S3) and Louder-ESP32(S3) are mechanically compatible with Raspberry Pi 3/4 cases, tested with transparent ones. Also, community members created a few 3-D printable designs that can be found [here](https://www.thingiverse.com/thing:6333131) and [here](https://www.thingiverse.com/thing:6326927)
+HiFi-ESP32(S3), Loud-ESP32(S3) and Louder-ESP32(S3) are mechanically compatible with Raspberry Pi 3/4 cases, tested with transparent ones. 
 
 | Hifi-ESP32 | Loud-ESP32 | Louder-ESP32 |
 |---|---|---|
 | ![DSC_0013](https://github.com/user-attachments/assets/3eb6bb16-e103-40e1-8142-a239dc5271ca) | ![DSC_0019](https://github.com/user-attachments/assets/79b78c61-b6bf-454d-91f6-9eb513bc06d8) | ![DSC_0001](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/68d5c2ab-d5f7-4f66-8ff7-4301ddaab7ed)
+
+Also, community members created a few 3-D printable designs for Louder-ESP32 boards that can be found below 
+
+| #  | Image |
+|----|----|
+| [#1](https://www.printables.com/model/1058552-louder-esp32-s3-playeramplifier-case/comments) | ![image](https://github.com/user-attachments/assets/ad4a30d6-953b-461e-b108-9c6155ce2477)
+| [#2](https://www.thingiverse.com/thing:6333131) | ![image](https://github.com/user-attachments/assets/6e37b6ce-443e-4067-8a7a-e3b49e5e8ad3)
+| [#3](https://www.thingiverse.com/thing:6326927) | ![image](https://github.com/user-attachments/assets/cf2983fa-0c92-4798-9cb5-5e4e97d70970)
+
 
 ## Where to buy
 
