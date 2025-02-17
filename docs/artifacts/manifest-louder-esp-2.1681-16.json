@@ -1,6 +1,6 @@
 {
-    "name": "loud-esp32",
-    "version": "2.1672",
+    "name": "louder-esp32",
+    "version": "2.1681",
     "home_assistant_domain": "slim_player",
     "funding_url": "https://esphome.io/guides/supporters.html",
     "new_install_prompt_erase": true,
@@ -10,11 +10,11 @@
             "chipFamily": "ESP32",
             "parts": [
                 {
-                    "path": "common-esp-2.1672-16-bootloader.bin",
+                    "path": "common-esp-2.1681-16-bootloader.bin",
                     "offset": "0x1000"
                 },
                 {
-                    "path": "common-esp-2.1672-16-partition-table.bin",
+                    "path": "common-esp-2.1681-16-partition-table.bin",
                     "offset": "0x8000"
                 },
                 {
@@ -22,23 +22,23 @@
                     "offset": "0x9000"
                 },
                 {
-                    "path": "common-esp-2.1672-16-ota_data_initial.bin",
+                    "path": "common-esp-2.1681-16-ota_data_initial.bin",
                     "offset": "0xd000"
                 },
                 {
-                    "path": "common-esp-2.1672-16-recovery.bin",
+                    "path": "common-esp-2.1681-16-recovery.bin",
                     "offset": "0x10000"
                 },
                 {
-                    "path": "common-esp-2.1672-16-squeezelite.bin",
+                    "path": "common-esp-2.1681-16-squeezelite.bin",
                     "offset": "0x150000"
                 },
                 {
-                    "path": "loud-esp32-settings.bin",
+                    "path": "louder-esp-settings.bin",
                     "offset": "0x3f0000"
                 }
             ]
         }
     ],
-    "manifest_name": "manifest-loud-esp32-2.1672-16.json"
+    "manifest_name": "manifest-louder-esp-2.1681-16.json"
 }
