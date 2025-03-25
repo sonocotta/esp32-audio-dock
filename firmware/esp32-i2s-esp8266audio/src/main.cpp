@@ -1,17 +1,8 @@
 #include <Arduino.h>
-#ifdef ESP8266
-#include <ESP8266WiFi.h>
-#include <ESP8266HTTPClient.h>
-#endif
-#ifdef ESP32
-#include <WiFi.h>
-#endif
-#include <SD.h>
-#ifdef ESP32
-#include "SPIFFS.h"
-#endif
 
-#ifdef DAC_TAS5805M
+#define filesystem LittleFS
+
+#ifdef CONFIG_DAC_TAS5805M
 #include <Wire.h>
 #include <tas5805m.hpp>
 #include <Ticker.h>
@@ -19,48 +10,78 @@ tas5805m Tas5805m(&Wire);
 Ticker ticker;
 #endif
 
-#include <AudioOutputI2S.h>
-#include <AudioFileSourceSPIFFS.h>
-#include <AudioGeneratorWAV.h>
+const char *TAG = "MAIN";
 
-AudioOutputI2S *out;
-AudioFileSourceSPIFFS *file;
-AudioGeneratorWAV *wav;
+#include "player.hpp"
+Player player;
 
-const uint8_t audio_files_length = 1;
-const char **audio_files = (const char **)malloc(audio_files_length * sizeof(char *));
+#include "playlist.hpp"
+Playlist playlist;
 
-enum State
-{
-  STOP,
-  WAIT,
-  PLAY,
-  ERR,
-  END
-};
+#include <commandline.hpp>
+CommandLine cmd;
 
-State state = STOP;
-int seq = 0;
-
-#ifdef DAC_TAS5805M
+#ifdef CONFIG_DAC_TAS5805M
 void ticker_callback()
 {
-  uint8_t h70 = 0, h71 = 0, h72 = 0;
-  ESP_ERROR_CHECK(Tas5805m.getFaultState(&h70, &h71, &h72));
+  TAS5805M_FS_FREQ freq;
+  uint8_t ratio;
+  Tas5805m.getFsFreq(&freq);
+  Tas5805m.getBckRatio(&ratio);
 
-  if (h70 || h71 || h72)
+  TAS5805M_CTRL_STATE state;
+  Tas5805m.getPowerState(&state);
+
+  bool is_r_muted, is_l_muted;
+  Tas5805m.getAutomuteState(&is_r_muted, &is_l_muted);
+
+  ESP_LOGI(TAG, "FS Frequency: %s, BCK ratio: %d; Power state: %s; Automute: R: %d, L: %d",
+           tas5805m_map_fs_freq(freq), ratio,
+           tas5805m_map_amp_state(state),
+           is_r_muted, is_l_muted);
+
+  TAS5805M_FAULT fault;
+  Tas5805m.getFaultState(&fault);
+  Tas5805m.decodeFaults(fault);
+
+  if (fault.err0 || fault.err1 || fault.err2 || fault.ot_warn)
   {
-    log_w("Sending CLEAR FAULT");
-    ESP_ERROR_CHECK(Tas5805m.clearFaultState());
+    ESP_LOGI(TAG, "Clearing fault states");
+    Tas5805m.clearFaultState();
   }
-
-  uint8_t gain = 0, volume = 0;
-  ESP_ERROR_CHECK(Tas5805m.getGain(&gain));
-  ESP_ERROR_CHECK(Tas5805m.getVolume(&volume));
-
-  log_d("Fault registers: h70 = %d, h71 = %d, h72 = %d; Current GAIN = %d; VOLUME = %d", h70, h71, h72, gain, volume);
 }
 #endif
+
+void init_cmd_line()
+{
+  cmd.init();
+
+  cmd.addCommand("play", "Play the current track", [](int argc, char **argv)
+                 { return player.play(); });
+
+  cmd.addCommand("pause", "Pause the current track", [](int argc, char **argv)
+                 { return player.pause(); });
+
+  cmd.addCommand("resume", "Resume the current track", [](int argc, char **argv)
+                 { return player.resume(); });
+
+  cmd.addCommand("stop", "Stop the current track", [](int argc, char **argv)
+                 { return player.stop(); });
+
+  cmd.addCommand("next", "Play the next track", [](int argc, char **argv)
+                 { return player.next(); });
+
+  cmd.addCommand("prev", "Play the previous track", [](int argc, char **argv)
+                 { return player.prev(); });
+
+  cmd.addCommand("list", "List all tracks", [](int argc, char **argv)
+                 { return playlist.list(); });
+
+  cmd.addCommand("loop", "Loop the current track", [](int argc, char **argv)
+                 { return player.toggleLoop(); });
+
+  cmd.startLoopAsync();
+}
 
 void setup()
 {
@@ -69,58 +90,35 @@ void setup()
   Serial.begin(SERIAL_BAUD);
   Serial.println(F("Starting up...\n"));
 
-  if (!SPIFFS.begin())
-  {
-    Serial.println(F("An Error has occurred while mounting SPIFFS"));
-    while (1)
-      ;
-  }
-  else
-    Serial.println(F("SPIFFS mounted"));
+  esp_log_level_set("*", ESP_LOG_DEBUG);
 
-#ifdef DAC_TAS5805M
+  ESP_ERROR_CHECK(playlist.init());
+
+  // This should start I2S clock
+  ESP_ERROR_CHECK(player.init());
+
+#ifdef CONFIG_DAC_TAS5805M
   Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL);
+  // This will send default DSP init sequence
   Tas5805m.init();
-#endif
 
-  out = new AudioOutputI2S();
-  out->begin();
+  // alternative way is to run 'fault on' command
+  // ticker.attach_ms(10000, ticker_callback);
 
-#ifdef ESP32
-  Serial.printf("Setting I2S pins: clk = %d, ws = %d, data = %d\n", PIN_I2S_SCK, PIN_I2S_FS, PIN_I2S_SD);
-  if (!out->SetPinout(PIN_I2S_SCK, PIN_I2S_FS, PIN_I2S_SD))
-  {
-    Serial.println("Failed to set pinout");
-  }
-#endif
-
-#ifdef DAC_TAS5805M
   // I2S must be initialized by this time for DSP settings to apply
-  Tas5805m.begin();
-  ticker.attach_ms(10000, ticker_callback);
-
-  uint8_t newVolume = 100;
-  log_i("Setting VOLUME value to: %d", newVolume);
+  uint8_t newVolume = 78; //(-15 Db default volume)
+  ESP_LOGI(TAG, "Setting VOLUME value to: %d", newVolume);
   ESP_ERROR_CHECK(Tas5805m.setVolume(newVolume));
+
+  ESP_LOGI(TAG, "Setting GAIN value to: -15.5Db");
+  ESP_ERROR_CHECK(Tas5805m.setAnalogGain(TAS5805M_MIN_GAIN));
 #endif
 
-  wav = new AudioGeneratorWAV();
-
-  audio_files[0] = "/audiotest.wav";
-
-  file = new AudioFileSourceSPIFFS(audio_files[seq % audio_files_length]);
-  if (wav->begin(file, out))
-    Serial.printf("Start playing: %s", audio_files[seq % audio_files_length]);
+  ESP_ERROR_CHECK(player.play());
+  init_cmd_line();
 }
 
 void loop()
 {
-  if (wav->isRunning())
-  {
-    if (!wav->loop())
-    {
-      wav->stop();
-      state = WAIT;
-    }
-  }
+  player.loop();
 }

@@ -70,7 +70,7 @@ void Connect::init()
 
     if (wm->autoConnect())
     {
-        log_i("Connected with: %s", WiFi.SSID());
+        log_i("Connected with: %s", WiFi.SSID().c_str());
         log_i("Private IP Address: %s", WiFi.localIP().toString());
         setState(STATE_WIFI_CONNECTED);
     }
