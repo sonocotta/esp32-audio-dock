@@ -6,7 +6,8 @@
 #define filesystem LittleFS
 #define FSROOT "/littlefs"
 
-struct PlaylistEntry {
+struct PlaylistEntry
+{
     String url = "";
     String title = "";
 };
@@ -14,32 +15,30 @@ struct PlaylistEntry {
 class Playlist
 {
 private:
+    static inline const char *TAG = "PLAYLST";
+
 public:
-    PlaylistEntry* entries;
+    PlaylistEntry *entries;
     uint8_t entriesCount = 0;
 
-    bool init();
-};
-
-bool Playlist::init()
-{
-
-    if (!filesystem.begin())
+    esp_err_t init()
     {
-        log_e("An Error has occurred while mounting filesystem");
-        return false;
-    }
-    else
-        log_i("Filesystem mounted");
 
-    File root = filesystem.open("/");
-    if (!root)
-    {
-        log_e("Filesystem mount failed!");
-        return false;
-    }
-    else
-    {
+        if (!filesystem.begin())
+        {
+            ESP_LOGE(TAG, "An Error has occurred while mounting filesystem");
+            return ESP_FAIL;
+        }
+        else
+            ESP_LOGI(TAG, "Filesystem mounted");
+
+        File root = filesystem.open("/");
+        if (!root)
+        {
+            ESP_LOGE(TAG, "Filesystem mount failed!");
+            return ESP_FAIL;
+        }
+
         bool foundPls = false;
 
         File file = root.openNextFile();
@@ -57,17 +56,18 @@ bool Playlist::init()
 
                     // read file line by line to fill playlist
                     File playlist = filesystem.open(fullFilename, "r");
-                    log_i("Reading: %s, %d bytes", fullFilename, playlist.size());
+                    ESP_LOGI(TAG, "Reading: %s, %d bytes", fullFilename, playlist.size());
 
-                    if (!playlist) {
-                        log_e("Failed to open file for reading");
-                        return false;
+                    if (!playlist)
+                    {
+                        ESP_LOGE(TAG, "Failed to open file for reading");
+                        return ESP_FAIL;
                     }
-                    
+
                     while (playlist.available())
                     {
                         String line = playlist.readStringUntil('\n');
-                        log_v("read: %s", line);
+                        ESP_LOGV(TAG, "read: %s", line);
 
                         if (line.indexOf("numberofentries=") >= 0)
                         {
@@ -75,22 +75,27 @@ bool Playlist::init()
                             log_d("numberofentries = %s", counts.c_str());
                             entriesCount = atoi(counts.c_str());
                             entries = new PlaylistEntry[entriesCount];
-                        } else if (line.indexOf("=") >= 0) {  
+                        }
+                        else if (line.indexOf("=") >= 0)
+                        {
                             String key = line.substring(0, line.indexOf("="));
-                            String value =  line.substring(line.indexOf("=") + 1);
-                            log_d("%s = %s", key.c_str(), value.c_str());
+                            String value = line.substring(line.indexOf("=") + 1);
+                            ESP_LOGD(TAG, "%s = %s", key.c_str(), value.c_str());
 
-                            if (key.startsWith("File")) {
+                            if (key.startsWith("File"))
+                            {
                                 String index_s = key.substring(4);
                                 uint8_t index = atoi(index_s.c_str()) - 1;
-                                if ((index >=0) && (index < entriesCount))
+                                if ((index >= 0) && (index < entriesCount))
                                 {
                                     entries[index].url = value;
                                 }
-                            } else if (key.startsWith("Title")) {
+                            }
+                            else if (key.startsWith("Title"))
+                            {
                                 String index_s = key.substring(5);
                                 uint8_t index = atoi(index_s.c_str()) - 1;
-                                if ((index >=0) && (index < entriesCount))
+                                if ((index >= 0) && (index < entriesCount))
                                 {
                                     entries[index].title = value;
                                 }
@@ -98,9 +103,9 @@ bool Playlist::init()
                         }
                     }
 
-                    log_d("Closing file");
+                    ESP_LOGI(TAG, "Closing file");
                     file.close();
-                    
+
                     break;
                 }
             }
@@ -110,10 +115,26 @@ bool Playlist::init()
 
         if (!foundPls)
         {
-            log_e("Failed to find playlist file, please copy playlist file to data folder and upload with \"Upload Filesystem Image\"");
-            return false;
+            ESP_LOGE(TAG, "Failed to find playlist file, please copy playlist file to data folder and upload with \"Upload Filesystem Image\"");
+            return ESP_FAIL;
         }
+
+        return ESP_OK;
     }
 
-    return true;
-}
+    esp_err_t list()
+    {
+        if (entriesCount == 0)
+        {
+            ESP_LOGE(TAG, "No tracks found");
+            return ESP_FAIL;
+        }
+
+        ESP_LOGI(TAG, "Listing all tracks:");
+        for (uint8_t i = 0; i < entriesCount; i++)
+        {
+            ESP_LOGI(TAG, "[%d] Station %s: %s", i + 1, entries[i].title.c_str(), entries[i].url.c_str());   
+        }
+        return ESP_OK;
+    }
+};

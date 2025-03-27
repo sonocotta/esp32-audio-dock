@@ -4,6 +4,6 @@ Simple example demonstrates how to use [ESP8266Audio](https://github.com/earleph
 
 Library has plenty of examples on it's own, I selected self contained example, that plays test audio from flash storage
 
-To make it work you need to flash SPIFFS image by using `Upload Filesystem Image` task. It will automatically pick up all files from `data` folder.
+To make it work you need to flash LittleFS image by using `Upload Filesystem Image` task. It will automatically pick up all files from `data` folder.
 
 After applying power audio starts automatically.
