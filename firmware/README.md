@@ -4,11 +4,11 @@ This folder contains the test firmware for the ESP32 Audio Dock, a project desig
 
 I use this code to test different aspects of the boards, mostly TAS5805M DAC capabilities.
 
-There are few different ways this can be used
+There are a few different ways this can be used
 - [esp32-i2s-bare](/esp32-i2s-bare/) implementation, used bare naked I2S driver to sent samples to the DAC. I implemented a simple tone generator for testing purposes
-- [esp32-i2s-esp8266audio](/esp32-i2s-esp8266audio/) implements basic playback controls for a few WAV files stored at the device. These are timple tone and channel test files, that I use for board testing
-- [esp32-i2s-web-radio](/esp32-i2s-web-radio/), similar to the `esp32-i2s-esp8266audio` this example implements basic playback controls to play an audio stream from the web
-- [esphome](/esphome/) - ESPHome yaml config files that can be used with board with minimal changes
+- [esp32-i2s-esp8266audio](/esp32-i2s-esp8266audio/) implements basic playback controls for a few WAV files stored on the device. These are simple tone and channel test files that I use for board testing
+- [esp32-i2s-web-radio](/esp32-i2s-web-radio/), similar to the `esp32-i2s-esp8266audio`, this example implements basic playback controls to play an audio stream from the web
+- [esphome](/esphome/) - ESPHome yaml config files that can be used with the board with minimal changes
 - [squeezelite-esp32](/squeezelite-esp32/) - sdkconfig file for building `squeezelite-esp32` project for ESP32-S3
 
 ## Software Requirements
@@ -65,9 +65,9 @@ pio device monitor
 
 ### Command Line Interface (CLI)
 
-Below details are mostly applies to first 3 folders for clear reasons.
+The details below mostly apply to the first 3 folders for clear reasons.
 
-All of them built as a command line tool that allows controlling the board functions with the terminal inputs. Below is a quick summary, while more information available by typing `help` in the ESP32 console
+All of them were built as a command-line tool that allows controlling the board functions with terminal inputs. Below is a quick summary, while more information is available by typing `help` in the ESP32 console
 
 - `play`, `pause`, `resume`, `stop`, `prev`, `next` are the playback controls
 - `list` will display the items in the playlist
@@ -78,24 +78,24 @@ Specific to the `esp32-i2s-bare` code
 - `tone` command will play a square wave tone, with given frequency in Hz and amplitude in bits [0..16], `16` would mean rail-to-rail.
 
 Specific to TAS5805M DAC (more details at my [library](https://github.com/sonocotta/esp32-tas5805m-dac) repo)
-- `amp` will set an amp mode: play, mute, highz, sleep etc
-- `volume` and `vol` are digital volume controls in 8bit and percent values accordingly
+- `amp` will set an amp mode: play, mute, highz, sleep, etc
+- `volume` and `vol` are digital volume controls in 8-bit and percent values respectively
 - `gain` controls DAC analog gain
-- `dacmode` swtches between 2-channel and bridge mode
-- `eq` reads and write equilizer states for given band in the range of -15..15Db
+- `dacmode` switches between 2-channel and bridge mode
+- `eq` reads and writes equilizer states for the given band in the range of -15..+15 dB
 - `mod` controls the modulation and switching frequency
 - `mixer` switches between MONO, STEREO, LEFT, RIGHT modes
-- `fault` allows for reading DAC self seported errors and clearing them
+- `fault` allows for reading DAC self-reported errors and clearing them
 
 ![image](https://github.com/user-attachments/assets/83bab272-22bd-4fff-a174-ef4a81678c3e)
 
 ### Example CLI Commands
 
 ```bash
-amp play          # Set amplifier to play mode
-amp highz         # Set amplifier to high-impedance mode
-amp sleep         # Put amplifier into sleep mode
-amp deepsleep     # Put amplifier into deep sleep mode
+amp play          # Set the amplifier to play mode
+amp highz         # Set the amplifier to high-impedance mode
+amp sleep         # Put the amplifier into sleep mode
+amp deepsleep     # Put the amplifier into deep sleep mode
 ```
 
 ## Contributing
@@ -104,4 +104,4 @@ Contributions are welcome! Feel free to open issues or submit pull requests to i
 
 ## License
 
-This project is licensed under the Apache License v2.0 License. See the LICENSE file for details.
+This project is licensed under the Apache License v2.0. See the LICENSE file for details.
