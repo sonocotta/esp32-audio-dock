@@ -87,7 +87,7 @@ Specific to TAS5805M DAC (more details at my [library](https://github.com/sonoco
 - `mixer` switches between MONO, STEREO, LEFT, RIGHT modes
 - `fault` allows for reading DAC self seported errors and clearing them
 
-<screenshot>
+![image](https://github.com/user-attachments/assets/83bab272-22bd-4fff-a174-ef4a81678c3e)
 
 ### Example CLI Commands
 
