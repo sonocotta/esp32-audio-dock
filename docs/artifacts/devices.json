@@ -59,6 +59,14 @@
             },
             {
                 "images": [
+                    "https://github.com/user-attachments/assets/447a628c-9225-4beb-b8cc-054cc1d1a20d"
+                ],
+                "title": "Amped-ESP32",
+                "description": "As extension of the HiFi-ESP32 board, it adds a high quality D-class amp to the PCM5100 DAC. You can use either 3.5mm jack for line output (amp will be muted) or screw terminals to connect speakers.",
+                "manifest": "artifacts/manifest-amped-esp32-2.1681-16.json"
+            },
+            {
+                "images": [
                     "https://github.com/sonocotta/esp32-audio-dock/assets/5459747/e60cadb6-ace1-4141-92a5-171c640dc8ac"
                 ],
                 "title": "Louder-ESP32",
