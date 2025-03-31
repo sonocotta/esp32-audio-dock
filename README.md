@@ -349,8 +349,8 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 
 Every board has a header that allows for soldering in a W5500 SPI Ethernet module, which is very easy to find. The only downside is that with the module installed board will not fit the case, unless it is cut to accommodate extra height.
 
-| HiFi-ESP32(S3) | Loud-ESP32(S3) | Louder-ESP32(S3)  |
-|---|---|---|
+| HiFi-ESP32(S3) | Loud-ESP32(S3) | 
+|---|---|
 | ![DSC_0015](https://github.com/user-attachments/assets/7c71f12a-744c-4d25-bb3b-492df4cf5c78) | ![DSC_0026](https://github.com/user-attachments/assets/e688d75d-8e5d-4e58-8fec-fd900e44b3d8)
 
 squeezelite-esp32 nvs settings that you need to apply to enable it
