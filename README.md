@@ -33,7 +33,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [ESP Audio Duo](#esp-audio-duo)
     - [HiFi-ESP](#hifi-esp)
     - [Louder ESP](#louder-esp)
-    - [HiFi-ESP32](#hifi-esp32)
+    - [HiFi-ESP32 and Amped-ESP32](#hifi-esp32-and-amped-esp32)
     - [Loud-ESP32](#loud-esp32)
     - [Louder-ESP32](#louder-esp32)
     - [Ethernet (all boards)](#ethernet-all-boards)
@@ -45,15 +45,21 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
       - [Bonus - automation example](#bonus---automation-example)
     - [Squeezelite-ESP32](#squeezelite-esp32)
       - [How to flash and configure ("ESP Audio Duo", "HiFi-ESP" and "Louder ESP")](#how-to-flash-and-configure-esp-audio-duo-hifi-esp-and-louder-esp)
+      - [Ethernet configuration](#ethernet-configuration)
+        - [ESP32](#esp32)
+        - [ESP32S3](#esp32s3)
   - [Hardware](#hardware)
     - [ESP Audio Solo](#esp-audio-solo-1)
     - [ESP Audio Duo](#esp-audio-duo-1)
     - [HiFi-ESP](#hifi-esp-1)
     - [Louder ESP](#louder-esp-1)
-    - [HiFi-ESP32](#hifi-esp32-1)
+    - [HiFi-ESP32](#hifi-esp32)
     - [Loud-ESP32](#loud-esp32-1)
+    - [Amped-ESP32](#amped-esp32)
     - [Louder-ESP32 and Louder-ESP32S3](#louder-esp32-and-louder-esp32s3)
     - [Optional SPI Ethernet module](#optional-spi-ethernet-module)
+        - [ESP32](#esp32-1)
+        - [ESP32S3](#esp32s3-1)
     - [BTL and PBTL mode (TAS5805M DAC)](#btl-and-pbtl-mode-tas5805m-dac)
     - [TAS5805M DSP capabilities](#tas5805m-dsp-capabilities)
     - [Louder ESP power considerations](#louder-esp-power-considerations)
@@ -134,7 +140,7 @@ Audio streaming requires proper buffering to work, even with ESP32 500K of RAM i
 
 </details>
 
-### HiFi-ESP32
+### HiFi-ESP32 and Amped-ESP32
 
 |       | I2S CLK | I2S DATA | I2S WS | PSRAM RESERVED | 
 |-------|---------|----------|--------|----------|
@@ -328,6 +334,11 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 | ![image](https://github.com/user-attachments/assets/eb558181-9d9a-4b62-9acb-b8de41450554)
 | ![image](https://github.com/user-attachments/assets/99a27eb2-72de-4a96-8b84-8d4426176222)
 
+### Amped-ESP32
+
+| Image  |
+|---|
+
 
 ### Louder-ESP32 and Louder-ESP32S3
 
@@ -447,11 +458,13 @@ It is not recommended to go beyond the voltage your speakers can take, otherwise
 
 ### Case
 
-HiFi-ESP32(S3), Loud-ESP32(S3) and Louder-ESP32(S3) are mechanically compatible with Raspberry Pi 3/4 cases, tested with transparent ones. 
+HiFi-ESP32(S3), Loud-ESP32(S3), Amped-ESP32 and Louder-ESP32(S3) are mechanically compatible with Raspberry Pi 3/4 cases, tested with transparent ones. 
 
-| Hifi-ESP32 | Loud-ESP32 | Louder-ESP32 |
-|---|---|---|
-| ![DSC_0013](https://github.com/user-attachments/assets/3eb6bb16-e103-40e1-8142-a239dc5271ca) | ![DSC_0019](https://github.com/user-attachments/assets/79b78c61-b6bf-454d-91f6-9eb513bc06d8) | ![DSC_0001](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/68d5c2ab-d5f7-4f66-8ff7-4301ddaab7ed)
+| Hifi-ESP32 | Loud-ESP32 |
+|---|---|
+| ![DSC_0013](https://github.com/user-attachments/assets/3eb6bb16-e103-40e1-8142-a239dc5271ca) | ![DSC_0019](https://github.com/user-attachments/assets/79b78c61-b6bf-454d-91f6-9eb513bc06d8) | 
+|Amped-ESP32 | Louder-ESP32 |
+| | ![DSC_0001](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/68d5c2ab-d5f7-4f66-8ff7-4301ddaab7ed)
 
 Also, community members created a few 3-D printable designs for Louder-ESP32 boards that can be found below 
 
