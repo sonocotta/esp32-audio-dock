@@ -322,35 +322,32 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 
 ### HiFi-ESP32
 
-| Image  |
-|---|
-| ![image](https://github.com/user-attachments/assets/6cb02a5b-a0ef-4dce-b101-1cd92f6addc8)  |
-| ![image](https://github.com/user-attachments/assets/17c488ec-65b1-46df-a6f6-c0abaa99830c)  |
+| ESP32  | ESP32-S3
+|---|---|
+| ![image](https://github.com/user-attachments/assets/6cb02a5b-a0ef-4dce-b101-1cd92f6addc8)  | ![image](https://github.com/user-attachments/assets/17c488ec-65b1-46df-a6f6-c0abaa99830c)  |
 
 ### Loud-ESP32
 
-| Image  |
-|---|
-| ![image](https://github.com/user-attachments/assets/eb558181-9d9a-4b62-9acb-b8de41450554)
-| ![image](https://github.com/user-attachments/assets/99a27eb2-72de-4a96-8b84-8d4426176222)
+| ESP32  | ESP32-S3
+|---|---|
+| ![image](https://github.com/user-attachments/assets/eb558181-9d9a-4b62-9acb-b8de41450554) | ![image](https://github.com/user-attachments/assets/99a27eb2-72de-4a96-8b84-8d4426176222)
 
 ### Amped-ESP32
 
-| Image  |
-|---|
-| ![image](https://github.com/user-attachments/assets/6fd602a7-909f-4b33-8be1-623d2fec443b)
+| ESP32  | ESP32-S3
+|---|---|
+| ![image](https://github.com/user-attachments/assets/6fd602a7-909f-4b33-8be1-623d2fec443b) | coming soon
 
-### Louder-ESP32 and Louder-ESP32S3
+### Louder-ESP32
 
-| Image  |
-|---|
-| ![DSC_0013_small JPG-mh](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/c4947d1b-76f1-468b-81d9-68b46ef42851)
-| ![DSC_0012_small JPG-mh](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/6716a624-e44d-4f83-a8ee-91ab67b8411a)
+| ESP32  | ESP32-S3
+|---|---|
+| ![DSC_0013_small JPG-mh](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/c4947d1b-76f1-468b-81d9-68b46ef42851) | ![DSC_0012_small JPG-mh](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/6716a624-e44d-4f83-a8ee-91ab67b8411a)
 
 
 ### Optional SPI Ethernet module
 
-Every board has a header that allows to solder in W5500 SPI Ethernet module that is very easy to find. The only downside is that with the module installed board will not fit the case, unless it is cut to accomodate extra height.
+Every board has a header that allows for soldering in a W5500 SPI Ethernet module, which is very easy to find. The only downside is that with the module installed board will not fit the case, unless it is cut to accommodate extra height.
 
 | HiFi-ESP32(S3) | Loud-ESP32(S3) | Louder-ESP32(S3)  |
 |---|---|---|
