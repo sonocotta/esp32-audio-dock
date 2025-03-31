@@ -212,11 +212,11 @@ Next, navigate to your Home Assistant (assuming you have your [ESPHome integrati
 
 [ESPHome](/firmware/esphome/) will give you ESPHome configs for Solo board running with ESP32-S2/S3, as well as Duo/HiFi-ESP and Louder ESP working with ESP32.
 
-Few words of explanation.
+A few words of explanation.
 
-- `media_player` publishes the media player into the Home assistant, so you can use it together with the native player or Music Assistant. You have a volume knob in the HA as well.
+- `media_player` publishes the media player into the Home Assistant, so you can use it together with the native player or Music Assistant. You have a volume knob in the HA as well.
 - ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/f73a7347-672f-4dfc-afb8-35c7eb78e464)
-- Volume set up to 50% on player start. Especially for Louder-ESP32, this is helpful :) 
+- Volume is set up to 50% at the start of the player's play. Especially for Louder-ESP32, this is helpful :) 
 
 #### Bonus - automation example
 
@@ -228,7 +228,7 @@ The true power of the native speaker in the eHA is the use of automation. One ex
 
 ### Squeezelite-ESP32
 
-Squeezelite-ESP32 is a multimedia software suite, that started as a renderer (or player) of LMS (Logitech Media Server). Now it is extended with 
+Squeezelite-ESP32 is a multimedia software suite that started as a renderer (or player) of LMS (Logitech Media Server). Now it is extended with 
 - **Spotify** over-the-air player using SpotifyConnect (thanks to cspot)
 - **AirPlay** controller (iPhone, iTunes ...) and enjoy synchronization multiroom as well (although it's AirPlay 1 only)
 - Traditional **Bluetooth** device (iPhone, Android)
@@ -268,7 +268,7 @@ You can use it now
 
 #### Ethernet configuration
 
-If you have optional ethernet on the board, please put this config in the NVS settings
+If you have optional Ethernet on the board, please put this config in the NVS settings
 
 ##### ESP32
 
@@ -338,7 +338,7 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 
 | Image  |
 |---|
-
+| ![image](https://github.com/user-attachments/assets/6fd602a7-909f-4b33-8be1-623d2fec443b)
 
 ### Louder-ESP32 and Louder-ESP32S3
 
@@ -374,17 +374,17 @@ spi_config = mosi=11,clk=12,host=2,miso=13
 
 ### BTL and PBTL mode (TAS5805M DAC)
 
-[TAS5805M DAC](https://www.ti.com/lit/ds/symlink/tas5805m.pdf?ts=1701767947387) Allows 2 modes of operation - BTL (stereo) and PBTL (parallel, or mono). In Mono amp will use a completely different modulation scheme and basically will fully synchronize output drivers. Jumpers on the board allow both output drivers to connect to the same speaker. The most important step is to inform the Amp to change modulation in the first place via I2C comman. In the case of sqeezelite DAC controlsset value is the following:
+[TAS5805M DAC](https://www.ti.com/lit/ds/symlink/tas5805m.pdf?ts=1701767947387) Allows 2 modes of operation - BTL (stereo) and PBTL (parallel, or mono). In Mono, the amp will use a completely different modulation scheme and basically will fully synchronize output drivers. Jumpers on the board allow both output drivers to connect to the same speaker. The most important step is to inform the Amp to change modulation in the first place via I2C command. In the case of sqeezelite DAC control set value is the following:
 ```
 dac_controlset: `{"init":[{"reg":3,"val":2},{"reg":3,"val":3},{"reg":2,"val":4}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]}`
 ```
-compared to default:
+compared to the default:
 ```
 dac_controlset: `{"init":[{"reg":3,"val":2},{"reg":3,"val":3}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]}`
 
 ```
 
-One can test audio with a single speaker connected between L and R terminals (plus on one side and minus on the other). Optionally, jumpers on the board will effectively connect the second driver in parallel doubling the current capability.
+One can test audio with a single speaker connected between L and R terminals (plus on one side and minus on the other). Optionally, jumpers on the board will effectively connect the second driver in parallel, doubling the current capability.
 
 Important point, this simple setup will send only one channel to the output, that’s just how the basic DAC setup works. In case you want true mono (L + R)/2 or pure R or L audio, you need to apply a mixer configuration. Full config looks like below (thanks @frdfsnlght for helping me [here](https://github.com/sonocotta/esp32-audio-dock/issues/27))
 
@@ -410,7 +410,7 @@ Single speaker (PBTL mode), left input only:
 | Schematics | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/e7ada8c0-c906-4c08-ae99-be9dfe907574) | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/55f5315a-03eb-47c8-9aea-51e3eb3757fe)
 | Speaker Connection | ![image](https://github.com/user-attachments/assets/8e5e9c38-2696-419b-9c5b-d278c655b0db) | ![image](https://github.com/user-attachments/assets/8aba6273-84c4-45a8-9808-93317d794a44)
 
-Starting from Rev E, an additional header is exposed to allow datasheet-specced connectivity 
+Starting from Rev E, an additional header is exposed to allow datasheet-specified connectivity 
 
 | Image  | Legend  |
 |---|---|
@@ -419,7 +419,7 @@ Starting from Rev E, an additional header is exposed to allow datasheet-specced 
 
 ### TAS5805M DSP capabilities
 
-The TAS5805M DAC has a very powerful DSP, that allows doing lots of data processing on the silicon, that otherwise would take a considerable part of your CPU time. As of the moment of writing it is mostly an undiscovered part of the DAC, since unfortunately, TI is not making it very easy for developers. (A minute of complaint) To be more specific, you need to be (A) a proven hardware manufacturer to get access to the configuration software, namely PurePath. (B) you need to apply for a personal license and go through an approval process, and after a few weeks of waiting you get access to one DAC configuration you asked for. (C) You find out that it will work with TI's own evaluation board that will set you back $250 if you'd be able to find one. Otherwise, all you have is a list of I2C commands that you need to transfer to the device on your own cost. No wonder no one knows how to use it.
+The TAS5805M DAC has a very powerful DSP, which allows doing lots of data processing on the silicon, that otherwise would take a considerable part of your CPU time. As of the moment of writing, it is mostly an undiscovered part of the DAC, since unfortunately, TI is not making it very easy for developers. (A minute of complaint) To be more specific, you need to be (A) a proven hardware manufacturer to get access to the configuration software, namely PurePath. (B) You need to apply for a personal license and go through an approval process, and after a few weeks of waiting, you get access to the DAC configuration you asked for. (C) You find out that it will work with TI's own evaluation board, which will set you back $250 if you'd be able to find one. Otherwise, all you have is a list of I2C commands that you need to transfer to the device at your own cost. No wonder no one knows how to use it.
 
 But moanings aside, what do you get after:
 
@@ -430,21 +430,21 @@ But moanings aside, what do you get after:
 - Soft clipper
 - and a few other things
 
-At this moment it is very experimental. In the perfect world, you should be able to adjust all of those settings to make your speaker-enclosure setup work the best it can, and even apply your room factors into the equation. But with above disclaimer I can only deliver limited set of configurations corresponding to the most common use cases:
+At this moment, it is very experimental. In the perfect world, you should be able to adjust all of those settings to make your speaker-enclosure setup work the best it can, and even apply your room factors into the equation. But with the above disclaimer I can only deliver a limited set of configurations corresponding to the most common use cases:
 
 - Stereo mode with enabled DRC (Loudness) and AGL settings
 - Full range Mono mode with DRC (Loudness) and AGL settings
-- Subwoofer Mono mode with few filter frequency options
-- Bi-Amp configuration with few crossover frequency options
+- Subwoofer Mono mode with a few filter frequency options
+- Bi-Amp configuration with a few crossover frequency options
 
-All of the above are available right now for experimentation. I'm keen to hear your feedback while I moving forward with porting this to other software options
+All of the above are available right now for experimentation. I'm keen to hear your feedback while I move forward with porting this to other software options
 
 - [X] - Bare [I2S TAS5805M library](https://github.com/sonocotta/esp32-tas5805m-dac)
 - [X] - [espragus-snapclient](https://sonocotta.github.io/esparagus-snapclient/) software
 - [ ] - [squeezelite-esp32](https://sonocotta.github.io/esp32-audio-dock/) <- to do
 - [ ] - flexible configurations with on-the-fly configuration changes
 
-### Louder ESP power considerations
+### Louder-ESP32 and Amped-ESP32 power considerations
 
 [Barrel jack used](https://www.lcsc.com/product-detail/AC-DC-Power-Connectors_XKB-Connectivity-DC-044D-2-5A-2-0-SMT_C397342.html) is spaced at 6mm hole/2mm pin, which is typically 5.5/2.5mm jack on the male side. 
 
@@ -452,9 +452,13 @@ All of the above are available right now for experimentation. I'm keen to hear y
 
 The screw terminal is connected parallel to the barrel jack, you can use either interchangeably.
 
-The power adapter specs depend on the speaker you're planning to use. DAC efficiency is close to 100%, so just take the power rating of your speaker (say 2x10w), and impedance (say 8 ohms) and you'd need  at least 9 volts rated at 1.2 amps per channel, round up to 3 total amps. 
+On the latest boards (starting from Amped-ESP32), I switched to [barrel jack with thick middle pin](https://atta.szlcsc.com/upload/public/pdf/source/20200812/C720576_7B83670454B7C7E493B4E29DD30CFE1F.pdf) with a **2.5mm pin**, it’s a bit unusual but still common enough in the laptop world. It is far more comfortable in handling high currents, and importantly, much more sturdy and resistant to desoldering. 
 
-It is not recommended to go beyond the voltage your speakers can take, otherwise, the amp will blow your speakers in no time. 
+![image](https://github.com/user-attachments/assets/59acba9e-b447-4724-a6a1-bf777f053787)
+
+The power adapter specs depend on the speaker you're planning to use. DAC efficiency is close to 100%, so just take the power rating of your speaker (say 2x10w), and impedance (say 8 ohms), and you'd need  at least 9 volts rated at 1.2 amps per channel, round up to 3 total amps. 
+
+It is not recommended to go beyond the voltage your speakers can handle, otherwise, the amp will blow your speakers in no time. 
 
 ### Case
 
@@ -464,7 +468,7 @@ HiFi-ESP32(S3), Loud-ESP32(S3), Amped-ESP32 and Louder-ESP32(S3) are mechanicall
 |---|---|
 | ![DSC_0013](https://github.com/user-attachments/assets/3eb6bb16-e103-40e1-8142-a239dc5271ca) | ![DSC_0019](https://github.com/user-attachments/assets/79b78c61-b6bf-454d-91f6-9eb513bc06d8) | 
 |Amped-ESP32 | Louder-ESP32 |
-| | ![DSC_0001](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/68d5c2ab-d5f7-4f66-8ff7-4301ddaab7ed)
+| ![DSC_0007](https://github.com/user-attachments/assets/afc3c4b4-3f50-4755-b970-ad58130ec94d) | ![DSC_0001](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/68d5c2ab-d5f7-4f66-8ff7-4301ddaab7ed)
 
 Also, community members created a few 3-D printable designs for Louder-ESP32 boards that can be found below 
 
@@ -481,5 +485,6 @@ You may support my work by ordering these products at Tindie and Elecrow
 - [ESP Audio Dock](https://www.tindie.com/products/sonocotta/esp-audio-dock/) at Tindie
 - [HiFi-ESP32 and HiFi-ESP32S3](https://www.tindie.com/products/sonocotta/hifi-esp32/)
 - [Loud-ESP32 and Loud-ESP32S3](https://www.tindie.com/products/sonocotta/loud-esp32/)
+- Amped-ESP32 - coming soon
 - [Louder-ESP32 and Louder-ESP32S3](https://www.tindie.com/products/sonocotta/louder-esp32/) at Tindie
 - [Louder ESP32](https://www.elecrow.com/louder-esp32.html) at Elecrow
