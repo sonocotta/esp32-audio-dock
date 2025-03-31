@@ -72,6 +72,30 @@ I spent the last few years developing different solutions based on ESP devices. 
 
 I created those docks and subsequently development boards to be able to quickly prototype for the whole range of ESP8266 and ESP32 chips, starting with the simplest finger-sized toys and going all the way up to full-sized speakers.
 
+## HiFi-ESP32 
+
+The HiFi-ESP32 is a first-in-line product that uses the legendary PCM5100 series DAC with supreme audio quality. It exposes line-level output that you can plug into a stereo amplifier. Analog power comes through an Ultra-low-noise LDO, making sure no interference from the MCU comes through to your speakers. Spend as much as you need on the external amp to deliver the sound you like (personally I prefer late 80's audio gear).
+
+![DSC_0002](https://github.com/user-attachments/assets/d025ef42-daa3-4ad0-aeec-6ddf309c267b)
+
+## Loud-ESP32
+
+The Loud-ESP32 uses a dual MAX98357 HiFi DAC with a built-in highly efficient D-class amp to deliver 3 to 5W of music power directly to your speakers. It is not too loud, but also very simple to use and fun to play with. When DAC is not in use, it goes into shutdown mode, making sure no hissing will keep you up at night. It powers from a standard USB-C power source, like a phone charger, etc.
+
+![DSC_0002](https://github.com/user-attachments/assets/7d351d02-7e7f-4974-9a12-ee353c239654) 
+
+## Amped-ESP32
+
+The PCM5100 HiFi DAC is combined with a highly efficient TPA3110D2 D-class amplifier. It brings all the best from the HiFi model and adds an onboard amp to form a complete solution that can be paired with speakers directly. It uses an external power source to feed hungry amps and the host MCU using an onboard drop-down converter. It has similar power capabilities to the Louder model, but it is much simpler to use since it only needs a valid I2S signal to operate, so a simple book example code will do it.
+
+![DSC_0003](https://github.com/user-attachments/assets/447a628c-9225-4beb-b8cc-054cc1d1a20d)
+
+## Louder-ESP32
+
+The Louder-ESP32 is a top-of-the-range model that uses a modern, highly capable TAS5805M DAC and is aimed to be paired with medium-to-large speaker systems. With 25W per channel stereo output, it packs a punch and can easily enliven living quarters or dorm rooms. It is highly efficient, but much more demanding for power when cranked; therefore, it also uses an external power adapter using a standard barrel jack. This DAC has a built-in DSP, so you can have a lot of fun with complex EQ, soft-clipping, DRC compression, and AGL tools among other things.
+
+![DSC_0013](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/46ea4f10-c363-4623-b5d6-29e1135e5983)
+
 ## Features
 
 <details>
@@ -96,8 +120,8 @@ I created those docks and subsequently development boards to be able to quickly 
 | Image (ESP32-S3) | ![DSC_0005](https://github.com/user-attachments/assets/6f0482a2-7e08-475c-b6f0-0fe631a8e2f4) | ![DSC_0009](https://github.com/user-attachments/assets/e732f7a9-77e5-4182-b808-bf12ff35a8b7) | coming soon | ![DSC_0012](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/0e0c2146-79da-41e7-96da-63cf37637bce) |
 | MCU (S3) | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard |
 | DAC | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC  -100 dB typical noise level | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC working with <br /> [TPA3110D2](https://www.ti.com/product/TPA3110D2) D-Class amp | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with   built in D-Class amp |
-| Output (4Ω) | Non-amplified stereo output, 2.1V RMS | 2x 5W | 2x 22W (4Ω, 1% THD+N) at 16V <br /> 1x 40W (4Ω, 1% THD+N) at 20V | 2x 32W (4Ω, 1% THD+N) |
-| Output (8Ω) | Non-amplified stereo output | 2x 3W | 2x 25W (8Ω, 1% THD+N) at 22V | 2x 22W (8Ω, 1% THD+N) |
+| Output (4Ω) | Non-amplified stereo output, 2.1V RMS | 2x 5W | 2x 22W (4Ω, 1% THD+N) at 16V <br /> 2x 32W (4Ω, 1% THD+N) at 20V <br/> 1x 40W (4Ω, 1% THD+N) at 20V (bridged) | 2x 22W (4Ω, 1% THD+N) at 16V <br /> 2x 32W (4Ω, 1% THD+N) at 20V <br/> 1x 40W (4Ω, 1% THD+N) at 20V (bridged) |
+| Output (8Ω) | Non-amplified stereo output | 2x 3W | 2x 25W (8Ω, 1% THD+N) at 22V | 2x 25W (8Ω, 1% THD+N) at 22V |
 | PSRAM | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br/>ESP32S3: 8MB PSRAM over 80MHz QSPI | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br/>ESP32S3: 8MB PSRAM over 80MHz QSPI | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br/>ESP32S3: 8MB PSRAM over 80MHz QSPI | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br/>ESP32S3: 8MB PSRAM over 80MHz QSPI |
 | Power | 5V over USB-C, 2x [LP5907](https://www.ti.com/lit/ds/symlink/lp5907.pdf) 3.3 V Ultra-Low-Noise LDO for analog section | 5V (up to 2.5A) from USB-C | Up to 26V from external PSU | Up to 26V from external PSU |
 | Connectivity | WiFi + BT4.2 (except S3) + BLE <br/> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br/> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br/> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br/> Ethernet (optional module) |
