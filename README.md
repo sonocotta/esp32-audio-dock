@@ -15,9 +15,11 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
 
 </details>
 
-| HiFi-ESP32 | Loud-ESP32 | Louder-ESP32
-|---|---|---|
-| ![DSC_0009](https://github.com/user-attachments/assets/0ac16dd2-0bd2-42e4-9e07-c2dd8b2b0266) | ![DSC_0017](https://github.com/user-attachments/assets/94ffe10e-e206-4ced-aa2c-32b60508b280) | ![DSC_0019](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/26c98a87-cd12-466d-990c-05dfb163390c)
+| **HiFi-ESP32** | **Loud-ESP32** |
+|---|---|
+| ![DSC_0009](https://github.com/user-attachments/assets/0ac16dd2-0bd2-42e4-9e07-c2dd8b2b0266) | ![DSC_0017](https://github.com/user-attachments/assets/94ffe10e-e206-4ced-aa2c-32b60508b280) | 
+| **Amped-ESP32** | **Louder-ESP32** |
+| ![DSC_0005](https://github.com/user-attachments/assets/e457b78c-c841-4764-90db-f25091f652ad) | ![DSC_0019](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/26c98a87-cd12-466d-990c-05dfb163390c)
 
 ## Table of Contents
 
@@ -60,9 +62,9 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
 
 ## Motivation
 
-I spent the last few years developing different solutions based on ESP devices. It all started with ESP8266, where CPU power is not really sufficient to do real-time decoding, so you're limited to a rather simple ding-dong business. Then ESP32 came, bringing two much more capable cores, so you have a powerhouse to handle communication and decoding at the same time. Perhaps most importantly it also came with SPIRAM, so you can do decent buffering (essential for streamed content). Now new ESP32 C-Series and S-Series chips are entering the market, and their potential is mostly unrealized as of today.
+I spent the last few years developing different solutions based on ESP devices. It all started with ESP8266, where CPU power is not really sufficient to do real-time decoding, so you're limited to a rather simple ding-dong business. Then ESP32 came, bringing two much more capable cores, so you have a powerhouse to handle communication and decoding at the same time. Perhaps most importantly, it also came with SPIRAM, so you can do decent buffering (essential for streamed content). Now, new ESP32 C-Series and S-Series chips are entering the market, and their potential is mostly unrealized as of today.
 
-I created those docks and subsequently development boards, to be able to quickly prototype for the whole range of ESP8266 and ESP32 chips, starting with the simplest finger-sized toys and going all the way up to full-sized speakers.
+I created those docks and subsequently development boards to be able to quickly prototype for the whole range of ESP8266 and ESP32 chips, starting with the simplest finger-sized toys and going all the way up to full-sized speakers.
 
 ## Features
 
@@ -81,16 +83,18 @@ I created those docks and subsequently development boards, to be able to quickly
 
 </details>
 
-|  | HiFi-ESP32 | HiFi-ESP32S3 | Loud-ESP32 | Loud-ESP32S3 | Louder-ESP32 | Louder-ESP32S3 |
-|---|---|---|---|---|---|---|
-| | ![DSC_0002](https://github.com/user-attachments/assets/d025ef42-daa3-4ad0-aeec-6ddf309c267b) | ![DSC_0005](https://github.com/user-attachments/assets/6f0482a2-7e08-475c-b6f0-0fe631a8e2f4) |![DSC_0002](https://github.com/user-attachments/assets/7d351d02-7e7f-4974-9a12-ee353c239654) | ![DSC_0009](https://github.com/user-attachments/assets/e732f7a9-77e5-4182-b808-bf12ff35a8b7) | ![DSC_0013](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/46ea4f10-c363-4623-b5d6-29e1135e5983) | ![DSC_0012](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/0e0c2146-79da-41e7-96da-63cf37637bce) |
-| MCU | ESP32-WROVER-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-WROVER-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-WROVER-N8R8 | ESP32-S3-WROOM-N8R8 |
-| DAC | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC <br/> -100 dB typical noise level | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC <br/> -100 dB typical noise level | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with   built in D-Class amp | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with   built in D-Class amp |
-| Output (4Ω) | Non-amplified stereo output, 2.1V RMS | Non-amplified stereo output, 2.1V RMS | 2x 5W | 2x 5W | 2x 32W (4Ω, 1% THD+N) | 2x 32W (4Ω, 1% THD+N) |
-| Output (8Ω) | Non-amplified stereo output | Non-amplified stereo output | 2x 3W | 2x 3W | 2x 22W (8Ω, 1% THD+N) | 2x 22W (8Ω, 1% THD+N) |
-| PSRAM | 8MB PSRAM (4MB usable) over 40MHz SPI | 8MB PSRAM over 80MHz QSPI | 8MB PSRAM (4MB usable) over 40MHz SPI | 8MB PSRAM over 80MHz QSPI | 8MB PSRAM (4MB usable) over 40MHz SPI | 8MB PSRAM over 80MHz QSPI |
-| Power | 5V over USB-C, 2x [LP5907](https://www.ti.com/lit/ds/symlink/lp5907.pdf) 3.3 V Ultra-Low-Noise LDO for analog section | 5V over USB-C, 2x [LP5907](https://www.ti.com/lit/ds/symlink/lp5907.pdf) 3.3 V Ultra-Low-Noise LDO for analog section | 5V (up to 2.5A) from USB-C | 5V (up to 2.5A) from USB-C | Up to 26V from external PSU <br/> 5V over USB-C with power limited to 2x5W | Up to 26V from external PSU <br/> 5V over USB-C with power limited to 2x5W |
-| Connectivity | WiFi + BT4.2 + BLE <br/> [W5500](https://www.wiznet.io/product-item/w5500/) Ethernet (optional module) | WiFi + BLE  <br/> [W5500](https://www.wiznet.io/product-item/w5500/) Ethernet (optional module) | WiFi + BT4.2 + BLE <br/> [W5500](https://www.wiznet.io/product-item/w5500/) Ethernet (optional module) | WiFi + BLE  <br/> [W5500](https://www.wiznet.io/product-item/w5500/) Ethernet (optional module) | WiFi + BT4.2 + BLE <br/> [W5500](https://www.wiznet.io/product-item/w5500/) Ethernet (optional module) | WiFi + BLE  <br/> [W5500](https://www.wiznet.io/product-item/w5500/) Ethernet (optional module) |
+|  | HiFi-ESP32 | Loud-ESP32 | Amped-ESP32 | Louder-ESP32 |
+|---|---|---|---|---|
+| Image (ESP32 | ![DSC_0002](https://github.com/user-attachments/assets/d025ef42-daa3-4ad0-aeec-6ddf309c267b) | ![DSC_0002](https://github.com/user-attachments/assets/7d351d02-7e7f-4974-9a12-ee353c239654) | ![DSC_0003](https://github.com/user-attachments/assets/447a628c-9225-4beb-b8cc-054cc1d1a20d) | ![DSC_0013](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/46ea4f10-c363-4623-b5d6-29e1135e5983) |
+| MCU | ESP32-WROVER-N8R8 onboard | ESP32-WROVER-N8R8 onboard | ESP32-WROVER-N8R8 onboard | ESP32-WROVER-N8R8 onboard |
+| Image (ESP32-S3) | ![DSC_0005](https://github.com/user-attachments/assets/6f0482a2-7e08-475c-b6f0-0fe631a8e2f4) | ![DSC_0009](https://github.com/user-attachments/assets/e732f7a9-77e5-4182-b808-bf12ff35a8b7) | coming soon | ![DSC_0012](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/0e0c2146-79da-41e7-96da-63cf37637bce) |
+| MCU (S3) | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard |
+| DAC | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC  -100 dB typical noise level | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC working with <br /> [TPA3110D2](https://www.ti.com/product/TPA3110D2) D-Class amp | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with   built in D-Class amp |
+| Output (4Ω) | Non-amplified stereo output, 2.1V RMS | 2x 5W | 2x 22W (4Ω, 1% THD+N) at 16V <br /> 1x 40W (4Ω, 1% THD+N) at 20V | 2x 32W (4Ω, 1% THD+N) |
+| Output (8Ω) | Non-amplified stereo output | 2x 3W | 2x 25W (8Ω, 1% THD+N) at 22V | 2x 22W (8Ω, 1% THD+N) |
+| PSRAM | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br/>ESP32S3: 8MB PSRAM over 80MHz QSPI | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br/>ESP32S3: 8MB PSRAM over 80MHz QSPI | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br/>ESP32S3: 8MB PSRAM over 80MHz QSPI | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br/>ESP32S3: 8MB PSRAM over 80MHz QSPI |
+| Power | 5V over USB-C, 2x [LP5907](https://www.ti.com/lit/ds/symlink/lp5907.pdf) 3.3 V Ultra-Low-Noise LDO for analog section | 5V (up to 2.5A) from USB-C | Up to 26V from external PSU | Up to 26V from external PSU |
+| Connectivity | WiFi + BT4.2 (except S3) + BLE <br/> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br/> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br/> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br/> Ethernet (optional module) |
 
 ### Onboard PSRAM
 
