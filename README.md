@@ -506,6 +506,6 @@ You may support my work by ordering these products at Tindie and Elecrow
 - [ESP Audio Dock](https://www.tindie.com/products/sonocotta/esp-audio-dock/) at Tindie
 - [HiFi-ESP32 and HiFi-ESP32S3](https://www.tindie.com/products/sonocotta/hifi-esp32/)
 - [Loud-ESP32 and Loud-ESP32S3](https://www.tindie.com/products/sonocotta/loud-esp32/)
-- Amped-ESP32 - coming soon
+- [Amped-ESP32](https://www.tindie.com/products/sonocotta/amped-esp32/) at Tindie
 - [Louder-ESP32 and Louder-ESP32S3](https://www.tindie.com/products/sonocotta/louder-esp32/) at Tindie
 - [Louder ESP32](https://www.elecrow.com/louder-esp32.html) at Elecrow
