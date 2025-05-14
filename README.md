@@ -491,27 +491,19 @@ It is not recommended to go beyond the voltage your speakers can handle, otherwi
 
 ### OLED screen
 
-Starting May 2025, all boards have an OLED screen solder-less connector. Originally I added the OLED header on the back side of the PCB that would require carefull and skillfull soldering (It is quite nice when using squeezelite since you can get quite a lot with existing plugins and settings). Later on I mamnged to find the right model of the screen and corresponing connector for a reasonable price, and decided to equip every board with the connector as standard. 
+Starting May 2025, all boards will have an OLED screen solder-less connector. Originally, I added the OLED header on the back side of the PCB that would require careful and skillful soldering (It is quite nice when using squeezelite since you can get quite a lot with existing plugins and settings). Later on, I managed to find the right model of the screen and corresponding connector for a reasonable price, and decided to equip every board with the connector as standard. 
 
-At this moment one can simply throw in a compatible OLED screen and use a small strap of double-sided adhesive to fix it mechanically.
+At this moment, one can simply throw in a compatible OLED screen and use a small strap of double-sided adhesive to fix it mechanically. The final result is a nice and finished look
 
-| A | B | C |
-|---|---|---|
-| ![DSC_0107](https://github.com/user-attachments/assets/74b72617-f7c8-4e7c-8f39-96c83af6af6f) | ![DSC_0109](https://github.com/user-attachments/assets/cd55ecc0-f884-4a85-827e-e0dea42fe750) | ![DSC_0111](https://github.com/user-attachments/assets/697ca174-d1ab-4376-8fbc-f7fa966cfd18)
-
-The final result is a nice and finished look
-
-![DSC_0101](https://github.com/user-attachments/assets/1404f035-0554-4969-87dd-745ff6022150)
+![image](https://github.com/user-attachments/assets/01a3fbf3-63ea-41b6-baa6-3a454053e15e)
 
 #### OLED models
 
 Most of the 64x128 pixel OLED screen models that are very common among hobbyists will use compatible 30-pin ribbon connector with 0.5mm pin spacing, and they are really easy to find.
 
-![image](https://github.com/user-attachments/assets/711c8085-8d32-48c6-a58e-6f68809e8b97)
-
 |  Model | Image |
 |---|---|
-| [1.3" OLED Display 128X64 SH1106](https://www.aliexpress.com/item/1005001836449023.html) | ![image](https://github.com/user-attachments/assets/bb228e84-07ab-45b5-af5b-ecae94656be8)
+| [1.3" OLED Screen 128x64 SH1106 30Pin](https://www.aliexpress.com/item/1005003801387081.html) | ![image](https://github.com/user-attachments/assets/78b44c8d-484a-4c07-9f9f-fb1f86689fac)
 
 #### Software side
 
@@ -520,7 +512,7 @@ Although you're free to use it your way using the pinout above, I'd expect the m
 | # | Description | Image |
 |---|---|---|
 | 1 | Update NVS settings in the Web UI (switch to recovery mode first) <br/> `display_config` = `SPI,width=128,height=64,cs=15,reset=32,driver=SH1106` <br/> `spi_config` = `mosi=23,clk=18,host=2,miso=19,dc=4` <br/> You may need to replace `SH1106` with `SSD1306` depending on your model. | ![image](https://github.com/user-attachments/assets/f42af7a5-2fda-42b4-80b6-4ca025bac29b)
-| 1 (S3) | In case o fESP32-S3, it is `display_config` = `SPI,width=128,height=64,cs=47,reset=48,driver=SH1106` <br/> `spi_config` = `mosi=11,clk=12,host=1,miso=13,dc=38` | ![image](https://github.com/user-attachments/assets/f42af7a5-2fda-42b4-80b6-4ca025bac29b)
+| 1 (S3) | In case o fESP32-S3, it is `display_config` = `SPI,width=128,height=64,cs=47,reset=48,driver=SH1106` <br/> `spi_config` = `mosi=11,clk=12,host=1,miso=13,dc=38` | ![image](https://github.com/user-attachments/assets/b374d22f-1ac5-422c-a608-5e370057ff95)
 | 2 | In the LMS settings install the `SqueezeESP32` plugin | ![image](https://github.com/user-attachments/assets/5e32f271-cb66-4ea4-8a94-aaf1d0a73c5e)
 | 3 | Update each speaker's settings in the LMS, and navigate to `Display` settings | ![image](https://github.com/user-attachments/assets/ac970067-8b98-4294-af9a-80d0274e0558)
 
