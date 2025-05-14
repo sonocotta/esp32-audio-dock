@@ -26,6 +26,10 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
 - [ESP32 Audio Docks and Louder ESP](#esp32-audio-docks-and-louder-esp)
   - [Table of Contents](#table-of-contents)
   - [Motivation](#motivation)
+  - [HiFi-ESP32](#hifi-esp32)
+  - [Loud-ESP32](#loud-esp32)
+  - [Amped-ESP32](#amped-esp32)
+  - [Louder-ESP32](#louder-esp32)
   - [Features](#features)
     - [Onboard PSRAM](#onboard-psram)
   - [Boards Pinout](#boards-pinout)
@@ -34,8 +38,8 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [HiFi-ESP](#hifi-esp)
     - [Louder ESP](#louder-esp)
     - [HiFi-ESP32 and Amped-ESP32](#hifi-esp32-and-amped-esp32)
-    - [Loud-ESP32](#loud-esp32)
-    - [Louder-ESP32](#louder-esp32)
+    - [Loud-ESP32](#loud-esp32-1)
+    - [Louder-ESP32](#louder-esp32-1)
     - [Ethernet (all boards)](#ethernet-all-boards)
     - [Optional peripheral (all boards)](#optional-peripheral-all-boards)
   - [Software samples](#software-samples)
@@ -53,16 +57,19 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [ESP Audio Duo](#esp-audio-duo-1)
     - [HiFi-ESP](#hifi-esp-1)
     - [Louder ESP](#louder-esp-1)
-    - [HiFi-ESP32](#hifi-esp32)
-    - [Loud-ESP32](#loud-esp32-1)
-    - [Amped-ESP32](#amped-esp32)
-    - [Louder-ESP32](#louder-esp32-1)
+    - [HiFi-ESP32](#hifi-esp32-1)
+    - [Loud-ESP32](#loud-esp32-2)
+    - [Amped-ESP32](#amped-esp32-1)
+    - [Louder-ESP32](#louder-esp32-2)
     - [Optional SPI Ethernet module](#optional-spi-ethernet-module)
         - [ESP32](#esp32-1)
         - [ESP32S3](#esp32s3-1)
     - [BTL and PBTL mode (TAS5805M DAC)](#btl-and-pbtl-mode-tas5805m-dac)
     - [TAS5805M DSP capabilities](#tas5805m-dsp-capabilities)
     - [Louder-ESP32 and Amped-ESP32 power considerations](#louder-esp32-and-amped-esp32-power-considerations)
+    - [OLED screen](#oled-screen)
+      - [OLED models](#oled-models)
+      - [Software side](#software-side)
     - [Case](#case)
   - [Where to buy](#where-to-buy)
 
@@ -196,10 +203,11 @@ Audio streaming requires proper buffering to work, even with ESP32 500K of RAM i
 
 ### Optional peripheral (all boards)
 
-|       |  IR IN  | RGB OUT  | OLED SPI HOST/SPEED | OLED SPI CLK | OLED SPI MOSI | OLED SPI MISO | OLED SPI CS | OLED SPI DC | OLED RST | 
-|-------|---------|----------|---------------------|--------------|---------------|---------------|-------------|-------------|-------------|
-| ESP32 | 39      | 12       | 2/20MHz             | 18           | 23            | 19            | 15          | 4           | 32          |
-| ESP32-S3 | 7    | 9        | SPI2/20MHz          | 12           | 11            | 13            | 39          | (37)        | 38          |
+|                    |  IR IN  | RGB OUT  | OLED SPI HOST/SPEED | OLED SPI CLK | OLED SPI MOSI | OLED SPI MISO | OLED SPI CS | OLED SPI DC | OLED RST | 
+|--------------------|---------|----------|---------------------|--------------|---------------|---------------|-------------|-------------|-------------|
+| ESP32              | 39      | 12       | 2/20MHz             | 18           | 23            | 19            | 15          | 4           | 32          |
+| ESP32-S3           | 7       | 9        | SPI2/20MHz          | 12           | 11            | 13            | 39          | (37)        | 38          |
+| ESP32-S3 (Rev J3+) | 7       | 9        | SPI2/20MHz          | 12           | 11            | 13            | 47          | 38          | 48          |
 
 
 ## Software samples
@@ -480,6 +488,34 @@ On the latest boards (starting from Amped-ESP32), I switched to [barrel jack wit
 The power adapter specs depend on the speaker you're planning to use. DAC efficiency is close to 100%, so just take the power rating of your speaker (say 2x10w), and impedance (say 8 ohms), and you'd need  at least 9 volts rated at 1.2 amps per channel, round up to 3 total amps. 
 
 It is not recommended to go beyond the voltage your speakers can handle, otherwise, the amp will blow your speakers in no time. 
+
+### OLED screen
+
+Starting May 2025, all boards will have an OLED screen solder-less connector. Originally, I added the OLED header on the back side of the PCB that would require careful and skillful soldering (It is quite nice when using squeezelite since you can get quite a lot with existing plugins and settings). Later on, I managed to find the right model of the screen and corresponding connector for a reasonable price, and decided to equip every board with the connector as standard. 
+
+At this moment, one can simply throw in a compatible OLED screen and use a small strap of double-sided adhesive to fix it mechanically. The final result is a nice and finished look
+
+![image](https://github.com/user-attachments/assets/01a3fbf3-63ea-41b6-baa6-3a454053e15e)
+
+#### OLED models
+
+Most of the 64x128 pixel OLED screen models that are very common among hobbyists will use compatible 30-pin ribbon connector with 0.5mm pin spacing, and they are really easy to find.
+
+|  Model | Image |
+|---|---|
+| [1.3" OLED Screen 128x64 SH1106 30Pin](https://www.aliexpress.com/item/1005003801387081.html) | ![image](https://github.com/user-attachments/assets/78b44c8d-484a-4c07-9f9f-fb1f86689fac)
+
+#### Software side
+
+Although you're free to use it your way using the pinout above, I'd expect the most common case to be squeezelite, thus here are the steps you'd need to do
+
+| # | Description | Image |
+|---|---|---|
+| 1 | Update NVS settings in the Web UI (switch to recovery mode first) <br/> `display_config` = `SPI,width=128,height=64,cs=15,reset=32,driver=SH1106` <br/> `spi_config` = `mosi=23,clk=18,host=2,miso=19,dc=4` <br/> You may need to replace `SH1106` with `SSD1306` depending on your model. | ![image](https://github.com/user-attachments/assets/f42af7a5-2fda-42b4-80b6-4ca025bac29b)
+| 1 (S3) | In case o fESP32-S3, it is `display_config` = `SPI,width=128,height=64,cs=47,reset=48,driver=SH1106` <br/> `spi_config` = `mosi=11,clk=12,host=1,miso=13,dc=38` | ![image](https://github.com/user-attachments/assets/b374d22f-1ac5-422c-a608-5e370057ff95)
+| 2 | In the LMS settings install the `SqueezeESP32` plugin | ![image](https://github.com/user-attachments/assets/5e32f271-cb66-4ea4-8a94-aaf1d0a73c5e)
+| 3 | Update each speaker's settings in the LMS, and navigate to `Display` settings | ![image](https://github.com/user-attachments/assets/ac970067-8b98-4294-af9a-80d0274e0558)
+
 
 ### Case
 
