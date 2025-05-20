@@ -316,6 +316,18 @@ eth_config = model=w5500,cs=10,speed=20000000,intr=6,rst=5
 spi_config = mosi=11,clk=12,host=2,miso=13
 ```
 
+### Flashing ESP32-S3
+
+ESP32-S3 boards have two ways of firmware update: (1) similarly to classing ESP32, they can be flashed over built-in UART, or (2) uniquely for S3, over built-in USB host controller. Since it is firmware-controlled, and may be disabled if not used (or, more commonly, not available with factory default empty firmware). When come unflashed ESP32-S3 device comes into a boot loop, with a USB-CDC device appearing and disappearing every second, and **requires a special flashing initialisation sequence to get flashed**:
+
+- Press IO0 (FLASH) button and keep it pressed
+- Press RESET button and release FLASH button after
+- ESP32-S3 will enter download mode and USB-CDC device will appear and stay available
+- Run flashing routine as usual, either through web-serial or `esp_tool`
+- This time, it is not possible to reboot device over USB, so press RESET once more
+- Device will boot normally into firmware and if USB-CDC is enabled in the firmware, you will be able to flash it normally, download mode and reset sequence will work over USB.
+- If you manage to flash firmware without USB-CDC support, you need to go through above equence once more
+
 ## Hardware
 
 Please visit the [hardware](/hardware/) section for board schematics and PCB designs. Note that PCBs are shared as multi-layer PDFs.
@@ -515,7 +527,6 @@ Although you're free to use it your way using the pinout above, I'd expect the m
 | 1 (S3) | In case o fESP32-S3, it is `display_config` = `SPI,width=128,height=64,cs=47,reset=48,driver=SH1106` <br/> `spi_config` = `mosi=11,clk=12,host=1,miso=13,dc=38` | ![image](https://github.com/user-attachments/assets/b374d22f-1ac5-422c-a608-5e370057ff95)
 | 2 | In the LMS settings install the `SqueezeESP32` plugin | ![image](https://github.com/user-attachments/assets/5e32f271-cb66-4ea4-8a94-aaf1d0a73c5e)
 | 3 | Update each speaker's settings in the LMS, and navigate to `Display` settings | ![image](https://github.com/user-attachments/assets/ac970067-8b98-4294-af9a-80d0274e0558)
-
 
 ### Case
 
