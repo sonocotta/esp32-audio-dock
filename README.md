@@ -52,6 +52,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
       - [Ethernet configuration](#ethernet-configuration)
         - [ESP32](#esp32)
         - [ESP32S3](#esp32s3)
+    - [Flashing ESP32-S3](#flashing-esp32-s3)
   - [Hardware](#hardware)
     - [ESP Audio Solo](#esp-audio-solo-1)
     - [ESP Audio Duo](#esp-audio-duo-1)
