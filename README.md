@@ -317,6 +317,21 @@ eth_config = model=w5500,cs=10,speed=20000000,intr=6,rst=5
 spi_config = mosi=11,clk=12,host=2,miso=13
 ```
 
+#### Squeezelite-esp32 reboots and connection drops
+
+The default configuration of the squeezelite-esp32 runs automatic discovery of the available LMS server nearby. In fact it depends on it so much that in case the LMS service is not found on the network, it will reboot automatically (every few minutes). 
+
+![image](https://github.com/user-attachments/assets/7b91f9ef-054e-42a1-81ab-693315fb3b88)
+
+In many cases, if you use squeezelite for Airplay and Spotify only and don't have LMS servier, you need to disable discovery altogether. Currently disabling Squeezelite in the GUI does not work correctly, it places too much spaces between the commands in the autoexec command. Following `autoexec1` NVS setting can be used to disable it:
+
+```
+squeezelite -o i2s -s -disable -b 500:2000 -C 30 -d all=sdebug
+```
+
+![image](https://github.com/user-attachments/assets/6b4096bd-0793-458b-a0fe-3282418f773f)
+
+
 ### Flashing ESP32-S3
 
 ESP32-S3 boards have two ways of firmware update: (1) similarly to classing ESP32, they can be flashed over built-in UART, or (2) uniquely for S3, over built-in USB host controller. Since it is firmware-controlled, and may be disabled if not used (or, more commonly, not available with factory default empty firmware). When come unflashed ESP32-S3 device comes into a boot loop, with a USB-CDC device appearing and disappearing every second, and **requires a special flashing initialisation sequence to get flashed**:
