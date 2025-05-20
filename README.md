@@ -48,7 +48,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [ESPHome and Home Assistant](#esphome-and-home-assistant)
       - [Bonus - automation example](#bonus---automation-example)
     - [Squeezelite-ESP32](#squeezelite-esp32)
-      - [How to flash and configure ("ESP Audio Duo", "HiFi-ESP" and "Louder ESP")](#how-to-flash-and-configure-esp-audio-duo-hifi-esp-and-louder-esp)
+      - [How to flash and configure](#how-to-flash-and-configure)
       - [Ethernet configuration](#ethernet-configuration)
         - [ESP32](#esp32)
         - [ESP32S3](#esp32s3)
@@ -274,7 +274,7 @@ And LMS itself
 
 All ESP32-based boards are tested with [Squeezelite-ESP32](https://github.com/sle118/squeezelite-esp32) software, which can be flashed using nothing but a web browser. You can use [Squeezelite-ESP32 installer](https://sonocotta.github.io/esp32-audio-dock/) for that purpose.
 
-#### How to flash and configure ("ESP Audio Duo", "HiFi-ESP" and "Louder ESP")
+#### How to flash and configure
 
 Use [Installer for ESP Audio Dock](https://sonocotta.github.io/esp32-audio-dock/) to flash firmware first. It has been preconfigured to work with ESP Audio boards and will configure all hardware automatically.
 
