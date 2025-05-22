@@ -45,15 +45,18 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
   - [Software samples](#software-samples)
     - [Platformio IDE](#platformio-ide)
     - [Arduino IDE](#arduino-ide)
-    - [ESPHome and Home Assistant](#esphome-and-home-assistant)
-      - [Bonus - automation example](#bonus---automation-example)
-    - [Squeezelite-ESP32](#squeezelite-esp32)
-      - [How to flash and configure](#how-to-flash-and-configure)
-      - [Ethernet configuration](#ethernet-configuration)
-        - [ESP32](#esp32)
-        - [ESP32S3](#esp32s3)
-      - [Squeezelite-esp32 reboots and connection drops](#squeezelite-esp32-reboots-and-connection-drops)
-    - [Flashing ESP32-S3](#flashing-esp32-s3)
+  - [Using ESP32 Audio Boards with the Home Assistant](#using-esp32-audio-boards-with-the-home-assistant)
+    - [Configuring Home Assistant](#configuring-home-assistant)
+    - [LMS or Airplay](#lms-or-airplay)
+      - [Native HA integration](#native-ha-integration)
+      - [Integrate into Music Assistant directly](#integrate-into-music-assistant-directly)
+    - [ESPHome way](#esphome-way)
+    - [Snapcast way](#snapcast-way)
+  - [Squeezelite-ESP32](#squeezelite-esp32)
+    - [How to flash and configure](#how-to-flash-and-configure)
+    - [Ethernet configuration](#ethernet-configuration)
+    - [Squeezelite-esp32 reboots and connection drops](#squeezelite-esp32-reboots-and-connection-drops)
+  - [Flashing ESP32-S3](#flashing-esp32-s3)
   - [Hardware](#hardware)
     - [ESP Audio Solo](#esp-audio-solo-1)
     - [ESP Audio Duo](#esp-audio-duo-1)
@@ -64,8 +67,6 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [Amped-ESP32](#amped-esp32-1)
     - [Louder-ESP32](#louder-esp32-2)
     - [Optional SPI Ethernet module](#optional-spi-ethernet-module)
-        - [ESP32](#esp32-1)
-        - [ESP32S3](#esp32s3-1)
     - [BTL and PBTL mode (TAS5805M DAC)](#btl-and-pbtl-mode-tas5805m-dac)
     - [TAS5805M DSP capabilities](#tas5805m-dsp-capabilities)
     - [Louder-ESP32 and Amped-ESP32 power considerations](#louder-esp32-and-amped-esp32-power-considerations)
@@ -229,38 +230,109 @@ All samples are provided as [Plarformio IDE](https://platformio.org/platformio-i
 
 Follow the [ESP8266Audio](https://github.com/earlephilhower/ESP8266Audio) library guide. Default settings will work out of the box with ESP8266 and ESP32 boards. For ESP32C3 and ESP32S2 board please adjust the pinout according to the above section
 
-### ESPHome and Home Assistant
+## Using ESP32 Audio Boards with the Home Assistant
 
-Being an ESP32-based device, you can easily integrate it into your Home Assistant using ESPHome. Start with [esphome web installer](https://web.esphome.io/), which will give you ESPHome base install and WiFi configuration in minutes. Some S2/S3 boards have issues with we-installer, you may need to use [Adafruit flasher](https://adafruit.github.io/Adafruit_WebSerial_ESPTool/) instead with binaries pulled from the HA.
+There are several ways ESP32 Audio Boards can be integrated into the Home Assistant setup. Each of them gives a unique feature, losing some other in return. As usual, there is no perfect solution for everyone, but perhaps there is one for you. Below is the summary table of the methods known to me and tested by me.
+
+| Integration type                                                                                                          | Tested  | Description                                                                                                                      | Pros                                                                                                                   | Cons                                                                                                    |
+|---------------------------------------------------------------------------------------------------------------------------|---------|----------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
+| [LMS/Airplay](https://github.com/sle118/squeezelite-esp32)                                                                 | Yes     | Connect to Music Assistant as external protocol device. Can play your media library and internet radio                           | Still can use squeezelite, i.e. use Spotify Connect and Apple Airplay when HA is not using the device                  | No native integration into HA, only works with Music Assistant                                          |
+| [ESPHome way](https://www.espthings.io/index.php/2024/04/07/louder-esp32-a-hi-fi-class-d-audio-amplifier-running-esphome/) | Yes     | Connect as HA media device. Can be used with any HA integration, including Music Assistant, Text-to-Speach announcements, alarms, etc | More integrations with HA, more flexibility in use case                                                                | No longer works as Spotify, Airplay, etc.                                                                |
+| [Snapcast way](https://github.com/CarlosDerSeher/snapclient/issues/70#issuecomment-2034700037)                             | Yes | Connect to Music Assistant as snapcast protocol device. Can play your media library and internet radio.                          | Perfect for multiroom sync (Sonos-like, perhaps even better). Can be used with other Snapcast servers around the house | No longer works as Spotify, Airplay, etc. No native integration into HA only works with Music Assistant |
+
+Below are specific steps that you need to follow to spin up ESP32 Audio Boards in the Home Assistant
+
+### Configuring Home Assistant
+
+I prefer to use HA with the Music Assistant. This way you can integrate both your media library and internet radio and have a nice UI/UX at the same time (including mobile).
+
+Generally, you need to have supported HA (native) installation and follow [these steps](https://music-assistant.io/integration/installation/). I will place here a short version to have a reminder for future myself
+
+<details>
+  <summary>Install instructions</summary>
+
+| Step | Screenshot |
+|------|------------|
+| **Add SSH Addon** <br/> <br/> Navigate to Settings > Addons > Add Addon <br/> Search for SSH and install it. <br/> Enable `Show in sidebar` switch while you there | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/867a74db-7c50-472d-93da-d0e044818211)
+| **Start SSH Addon** <br/> <br/> SSH addon won't start until you add at least one SSH public key to it. So navigate to SSH Addon Settings and add a key (or password) to the config <br/> It should be able to start now | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/962e6a8d-7f7f-41ba-8545-ac747099940f)
+| **[Install Community Store](https://hacs.xyz/docs/setup/download/)** <br/> <br/> Run this command in the Terminal session <br> <code>wget -O - https://get.hacs.xyz &#124; bash -</code> <br/> You need to restart your HA after that | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/95eb9454-c7bf-43d2-b166-2a3dfd178479)
+| **[Add HACS](https://hacs.xyz/docs/configuration/basic)** <br/> <br/> Navigate to Settings > Devices as Services > Integrations > Add Integration, search for HACS, and add it to the HA </br> You'll need to authorize your extension to your GitHub account | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/5ac72cee-a2f8-413f-9e26-b77f269c172c)
+| **[Install Music Assistant via HACS](https://music-assistant.io/integration/installation/)** <br/> <br/> From the HACS menu search for Music Assistant and press the Download button <br/> You need to restart HA again <br/> In the Settings > Addons you should be able to see MA and enable sidebar navigation for it. | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/770c7087-fa02-4a08-9987-4b29eb8c06bd)
+| **Configure Music Assistant** <br/> <br/> Before you enable Integration (that will in turn add speaker devices) you need to enable MA providers <br/> Go to MA > Settings > Providers and enable both Music providers and Player providers that interests you. If not sure, enable all of them, you can disable them later on. | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/562a5619-4925-4daa-9af4-1eb766f93ea0)
+| **Add Music Assistant Integration** <br /> <br/> Navigate to HA Settings > Devices & services > Integrations. Click the big + ADD INTEGRATION button, look for Music Assistant, and click to add it. <br/> It should discover and add media devices based on the providers you're enabled in the previous step | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/3c2a0f95-5fdd-4513-b36d-3c662fc0f6fd)
+| **Add Music Devices discovered by MA** <br/> <br/> You should be able to add and use discovered devices. More details in below sections | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/bbf91ed0-3c91-4555-8119-fa9b45deb0af) 
+
+</details>
+  
+### LMS or Airplay
+
+[gh://sle118/squeezelite-esp32](https://github.com/sle118/squeezelite-esp32)
+
+When you have squeezelite-esp32 installed on your ESP32 Audio Board (either stock or manually going through [steps](#squeezelite-esp32)), it will announce itself by multiple protocols in the network:
+
+- Bluetooth
+- LMS or slimproto - auto-discovered by HA
+- Apple Airplay - auto-discovered by HA
+- Spotify Connect
+
+The power of this method is that you can use all four ways outside of HA, for example using your smartphone and Spotify app, and still have it integrated into HA at the same time.
 
 <details>
   <summary>Install instructions</summary>
   
-![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/abde451b-5619-4b32-a024-3f680999567f)
-![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/fc567914-0d0a-4402-a5c5-ddfad77f2b83)
+#### Native HA integration
 
+Make sure your MA Slimproto provider is disabled, it will conflict with the native HA integration 
 
-Next, navigate to your Home Assistant (assuming you have your [ESPHome integration](https://esphome.io/guides/getting_started_hassio.html) installed), and adopt the newly created node
+| Step | Screenshot |
+|------|------------|
+| **Add SlimProto Integration** <br/> <br/> Navigate to HA Settings > Devices & services > Integrations. Click the big + ADD INTEGRATION button, look for  SlimProto, and install it. | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/67c0efec-6774-404b-b63d-e13151025147)
+| **Add HA MediaPlayers provider to MA** | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/f652a565-05a1-4143-9e78-60ba3830ba5c)
 
-![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/299fb7ab-003e-4259-b0c1-9d13dd3e54ba)
+#### Integrate into Music Assistant directly 
 
-[ESPHome](/firmware/esphome/) will give you ESPHome configs for Solo board running with ESP32-S2/S3, as well as Duo/HiFi-ESP and Louder ESP working with ESP32.
-
-A few words of explanation.
-
-- `media_player` publishes the media player into the Home Assistant, so you can use it together with the native player or Music Assistant. You have a volume knob in the HA as well.
-- ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/f73a7347-672f-4dfc-afb8-35c7eb78e464)
-- Volume is set up to 50% at the start of the player's play. Especially for Louder-ESP32, this is helpful :) 
-
-#### Bonus - automation example
-
-The true power of the native speaker in the eHA is the use of automation. One example that I find useful. This simple automation will be pronounced every hour between 8 AM and 9 PM. Another one is used to pronounce bedtime, you get the point...
-
-![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/fd25fb6a-19a7-4957-a2cb-a723723fde4d)
+Disable SlimProto integration in the HA if you want to go the MA way. If you enabled SlimProto and AirPlay providers in the MA, you should find your device as both a Slimproto device and an Airplay device. It is up to you which protocol to use, generally, they both work perfectly well.
 
 </details>
 
-### Squeezelite-ESP32
+### ESPHome way
+
+[Louder-ESP32 running ESPHome](https://www.espthings.io/index.php/2024/04/07/louder-esp32-a-hi-fi-class-d-audio-amplifier-running-esphome/)
+
+Please find specific ESPHome configs in the [firmware](/firmware/esphome/) folder
+
+<details>
+  <summary>Install instructions</summary>
+
+| Step | Screenshot |
+|------|------------|
+| **Add ESPHome Addon** <br/> <br/> Navigate to HA Settings > Addons > Add Addon <br/> Search for SSH and install it.  <br/> Enable `Show in sidebar` switch while you there | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/9d9d0a44-ba2a-491f-bff8-e1c08b8754e0)
+| **Prepare ESP32 Audio Board for ESPHome onboarding** <br/> <br/> Use [Web Flasher](https://web.esphome.io/?dashboard_wizard) to flash stock ESPHome into device | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/8ad222e8-d992-4a75-9a93-596d67ac8cb0)
+| **Onboard ESP32 Audio Board ESPHome device into HA** <br/> <br/> Go to the HA ESPHome page and you should be able to find a new device. You need to onboard it with the below config (feel free to change names) <br/> This will take a moment or two | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/32b0c26a-3be1-4e15-b749-1176d46ff011)
+| **Validate device in the ESPHome** | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/92df6029-c777-47ce-8ff9-debec70f7e05)
+| **Add ESPHome Integration** <br /> <br/> Navigate to HA Settings > Devices & services > Integrations. Click the big + ADD INTEGRATION button, look for ESPHome, and click to add it. <br/> It should discover and add ESPHome media devices based on the previous step | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/c5d3bb12-8b07-4c49-a9e9-cdf2e6cad8ba)
+| **Use your media device in the HA** | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/40067959-04ad-498c-a64d-4353e3f96228)
+| **Use your media device in the MA** <br/> <br/> Add Music Assistant HA MediaPlayers provider to discover new Media device | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/6d19a972-83cf-4997-868c-1af0e4175c9b)
+
+</details>
+
+### Snapcast way
+
+Snapcast is a multi-room audio player that synchronizes playback across multiple devices, ensuring that audio streams play simultaneously in perfect sync. It consists of a server, which distributes audio streams, and clients, which receive and play the audio. There is a [snapcast](https://github.com/sonocotta/esparagus-snapclient) fork that was created to implement ESP32 Audio Board specific configuration on top of the ESP32 Snapcast client. This allows us to build flexible and extendable setups connected to various sources, like Mopidy, MPD or Home Assistant. 
+
+<details>
+  <summary>Install instructions</summary>
+
+| Step | Screenshot |
+|------|------------|
+| **[Flash Snapcast to the ESP32 Audio Boards](https://sonocotta.github.io/esparagus-snapclient/)** using web-flashing tool <br/> |  ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/47600e5e-16bf-4f4e-b4a5-e5ea531b64fb)
+| **Enable Snapcast in the MA** <br/> <br /> Got to the Ma and enable Snapcast provider. Your speaker will be discovered automatically, as long as it is running | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/ef87f8cf-3318-47c9-98b1-1a88ef4647b0)
+| **Use your media device in the MA** <br/> <br/> Play your audio into new device | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/9bc81bee-c412-4e00-a8dd-f63f4a412bf0)
+| **Use a group of speakers for multi-room setup** <br/><br/> In the MA settings > Players create a new group player and add as many Eparagus players as you need. Use that group speaker to get a synced audio | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/b371fb08-c900-451f-a1c9-35e25c8ae73b)
+
+</details>
+
+## Squeezelite-ESP32
 
 Squeezelite-ESP32 is a multimedia software suite that started as a renderer (or player) of LMS (Logitech Media Server). Now it is extended with 
 - **Spotify** over-the-air player using SpotifyConnect (thanks to cspot)
@@ -274,7 +346,7 @@ And LMS itself
 
 All ESP32-based boards are tested with [Squeezelite-ESP32](https://github.com/sle118/squeezelite-esp32) software, which can be flashed using nothing but a web browser. You can use [Squeezelite-ESP32 installer](https://sonocotta.github.io/esp32-audio-dock/) for that purpose.
 
-#### How to flash and configure
+### How to flash and configure
 
 Use [Installer for ESP Audio Dock](https://sonocotta.github.io/esp32-audio-dock/) to flash firmware first. It has been preconfigured to work with ESP Audio boards and will configure all hardware automatically.
 
@@ -300,25 +372,25 @@ You can use it now
 
 </details>
 
-#### Ethernet configuration
+### Ethernet configuration
 
 If you have optional Ethernet on the board, please put this config in the NVS settings
 
-##### ESP32
 
 ```
+# ESP32
 eth_config = model=w5500,cs=5,speed=20000000,intr=35,rst=14
 spi_config = mosi=23,clk=18,host=2,miso=19
 ```
 
-##### ESP32S3
 
 ```
+# ESP32S3
 eth_config = model=w5500,cs=10,speed=20000000,intr=6,rst=5
 spi_config = mosi=11,clk=12,host=2,miso=13
 ```
 
-#### Squeezelite-esp32 reboots and connection drops
+### Squeezelite-esp32 reboots and connection drops
 
 The default configuration of the squeezelite-esp32 runs automatic discovery of the available LMS server nearby. In fact it depends on it so much that in case the LMS service is not found on the network, it will reboot automatically (every few minutes). 
 
@@ -333,7 +405,7 @@ squeezelite -o i2s -s -disable -b 500:2000 -C 30 -d all=sdebug
 ![image](https://github.com/user-attachments/assets/6b4096bd-0793-458b-a0fe-3282418f773f)
 
 
-### Flashing ESP32-S3
+## Flashing ESP32-S3
 
 ESP32-S3 boards have two ways of firmware update: (1) similarly to classing ESP32, they can be flashed over built-in UART, or (2) uniquely for S3, over built-in USB host controller. Since it is firmware-controlled, and may be disabled if not used (or, more commonly, not available with factory default empty firmware). When come unflashed ESP32-S3 device comes into a boot loop, with a USB-CDC device appearing and disappearing every second, and **requires a special flashing initialisation sequence to get flashed**:
 
@@ -416,16 +488,14 @@ Every board has a header that allows for soldering in a W5500 SPI Ethernet modul
 
 squeezelite-esp32 nvs settings that you need to apply to enable it
 
-##### ESP32
-
 ```
+# ESP32
 eth_config = model=w5500,cs=5,speed=20000000,intr=35,rst=14
 spi_config = mosi=23,clk=18,host=2,miso=19
 ```
 
-##### ESP32S3
-
 ```
+# ESP32S3
 eth_config = model=w5500,cs=10,speed=20000000,intr=6,rst=5
 spi_config = mosi=11,clk=12,host=2,miso=13
 ```
