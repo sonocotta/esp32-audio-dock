@@ -594,7 +594,7 @@ Starting May 2025, all boards will have an OLED screen solder-less connector. Or
 
 At this moment, one can simply throw in a compatible OLED screen and use a small strap of double-sided adhesive to fix it mechanically. The final result is a nice and finished look
 
-![image](https://github.com/user-attachments/assets/01a3fbf3-63ea-41b6-baa6-3a454053e15e)
+![DSC_0055](https://github.com/user-attachments/assets/b85551d0-bc2d-4ded-a24b-6ea0d6d0dc68)
 
 #### OLED models
 
