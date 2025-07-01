@@ -102,7 +102,7 @@ The PCM5100 HiFi DAC is combined with a highly efficient TPA3110D2 D-class ampli
 
 ## Louder-ESP32
 
-The Louder-ESP32 is a top-of-the-range model that uses a modern, highly capable TAS5805M DAC and is aimed to be paired with medium-to-large speaker systems. With 25W per channel stereo output, it packs a punch and can easily enliven living quarters or dorm rooms. It is highly efficient, but much more demanding for power when cranked; therefore, it also uses an external power adapter using a standard barrel jack. This DAC has a built-in DSP, so you can have a lot of fun with complex EQ, soft-clipping, DRC compression, and AGL tools among other things.
+The Louder-ESP32 is a top-of-the-range model that uses a modern, highly capable TAS5805M DAC and is aimed to be paired with medium-to-large speaker systems. With 25W per channel stereo output, it packs a punch and can easily enliven living quarters or dorm rooms. It is highly efficient, but much more demanding for power when cranked; therefore, it also uses an external power adapter using a standard  jack. This DAC has a built-in DSP, so you can have a lot of fun with complex EQ, soft-clipping, DRC compression, and AGL tools among other things.
 
 ![DSC_0013](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/46ea4f10-c363-4623-b5d6-29e1135e5983)
 
@@ -584,7 +584,7 @@ On the latest boards (starting from Amped-ESP32), I switched to [barrel jack wit
 
 ![image](https://github.com/user-attachments/assets/59acba9e-b447-4724-a6a1-bf777f053787)
 
-The power adapter specs depend on the speaker you're planning to use. DAC efficiency is close to 100%, so just take the power rating of your speaker (say 2x10w), and impedance (say 8 ohms), and you'd need  at least 9 volts rated at 1.2 amps per channel, round up to 3 total amps. 
+The power adapter specs depend on the speaker you're planning to use. DAC efficiency is close to 100%, so just take the power rating of your speaker (say 2x10w), and impedance (say 8 ohms), and you'd need  at least `sqrt(10W * 8Ω) ≈ 9V` rated at `9V / 8Ω ≈ 1.2A` per channel, round up to 3 total Amps. 
 
 It is not recommended to go beyond the voltage your speakers can handle, otherwise, the amp will blow your speakers in no time. 
 
