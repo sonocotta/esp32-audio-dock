@@ -33,10 +33,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
   - [Features](#features)
     - [Onboard PSRAM](#onboard-psram)
   - [Boards Pinout](#boards-pinout)
-    - [ESP Audio Solo](#esp-audio-solo)
-    - [ESP Audio Duo](#esp-audio-duo)
-    - [HiFi-ESP](#hifi-esp)
-    - [Louder ESP](#louder-esp)
+    - [Legacy boards](#legacy-boards)
     - [HiFi-ESP32 and Amped-ESP32](#hifi-esp32-and-amped-esp32)
     - [Loud-ESP32](#loud-esp32-1)
     - [Louder-ESP32](#louder-esp32-1)
@@ -47,21 +44,21 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [Arduino IDE](#arduino-ide)
   - [Using ESP32 Audio Boards with the Home Assistant](#using-esp32-audio-boards-with-the-home-assistant)
     - [Configuring Home Assistant](#configuring-home-assistant)
-    - [LMS or Airplay](#lms-or-airplay)
+    - [Home Assistant: LMS or Airplay](#home-assistant-lms-or-airplay)
       - [Native HA integration](#native-ha-integration)
       - [Integrate into Music Assistant directly](#integrate-into-music-assistant-directly)
-    - [ESPHome way](#esphome-way)
-    - [Snapcast way](#snapcast-way)
+    - [Home Assistant: ESPHome way](#home-assistant-esphome-way)
+    - [Home Assistant: Snapcast](#home-assistant-snapcast)
   - [Squeezelite-ESP32](#squeezelite-esp32)
     - [How to flash and configure](#how-to-flash-and-configure)
     - [Ethernet configuration](#ethernet-configuration)
     - [Squeezelite-esp32 reboots and connection drops](#squeezelite-esp32-reboots-and-connection-drops)
   - [Flashing ESP32-S3](#flashing-esp32-s3)
   - [Hardware](#hardware)
-    - [ESP Audio Solo](#esp-audio-solo-1)
-    - [ESP Audio Duo](#esp-audio-duo-1)
-    - [HiFi-ESP](#hifi-esp-1)
-    - [Louder ESP](#louder-esp-1)
+    - [ESP Audio Solo](#esp-audio-solo)
+    - [ESP Audio Duo](#esp-audio-duo)
+    - [HiFi-ESP](#hifi-esp)
+    - [Louder ESP](#louder-esp)
     - [HiFi-ESP32](#hifi-esp32-1)
     - [Loud-ESP32](#loud-esp32-2)
     - [Amped-ESP32](#amped-esp32-1)
@@ -142,10 +139,12 @@ Audio streaming requires proper buffering to work, even with ESP32 500K of RAM i
 
 ## Boards Pinout
 
+### Legacy boards
+
 <details>
   <summary>First generation docks</summary>
 
-### ESP Audio Solo
+**ESP Audio Solo**
 
 |         | I2S CLK | I2S DATA | I2S WS |
 |---------|---------|----------|--------|
@@ -153,19 +152,19 @@ Audio streaming requires proper buffering to work, even with ESP32 500K of RAM i
 | ESP32-C3 | 5       | 20       | 6      |
 | ESP32-S2 | 12      | 37       | 16     |
 
-### ESP Audio Duo
+**ESP Audio Duo**
 
 |       | I2S CLK | I2S DATA | I2S WS | PSRAM CE | PSRAM CLK |
 |-------|---------|----------|--------|----------|-----------|
 | ESP32 | 26      | 22       | 25     | 16       | 17        |
 
-### HiFi-ESP
+**HiFi-ESP**
 
 |       | I2S CLK | I2S DATA | I2S WS | PSRAM CE | PSRAM CLK |
 |-------|---------|----------|--------|----------|-----------|
 | ESP32 | 26      | 22       | 25     | 16       | 17        |
 
-### Louder ESP
+**Louder ESP**
 
 |       | I2S CLK | I2S DATA | I2S WS | PSRAM CE | PSRAM CLK | TAS5805 SDA | TAS5805 SCL | TAS5805 PWDN | TAS5805 FAULT |
 |-------|---------|----------|--------|----------|-----------|-------------|-------------|--------------|---------------|
@@ -264,7 +263,7 @@ Generally, you need to have supported HA (native) installation and follow [these
 
 </details>
   
-### LMS or Airplay
+### Home Assistant: LMS or Airplay
 
 [gh://sle118/squeezelite-esp32](https://github.com/sle118/squeezelite-esp32)
 
@@ -295,11 +294,18 @@ Disable SlimProto integration in the HA if you want to go the MA way. If you ena
 
 </details>
 
-### ESPHome way
+### Home Assistant: ESPHome way
 
 [Louder-ESP32 running ESPHome](https://www.espthings.io/index.php/2024/04/07/louder-esp32-a-hi-fi-class-d-audio-amplifier-running-esphome/)
 
-Please find specific ESPHome configs in the [firmware](/firmware/esphome/) folder
+Please find specific ESPHome configs in the [firmware](/firmware/esphome/) folder. It should be noted that generally esp-idf-based configurations are preferred over the Arduino counterparts, since they are lighter, faster, and more stable, which is important for audio streaming. However, many components do not work with esp-idf; thus, Arduino examples are also provided. Due to the complexity of the TAS5805M driver, it only exists in the esp-idf variant.
+
+- [hifi-esp32-arduino](/firmware/esphome/hifi-esp32-arduino.yaml) and [hifi-esp32-idf](/firmware/esphome/hifi-esp32-idf.yaml) for HiFi-ESP32
+- [hifi-esp32-s3-arduino](/firmware/esphome/hifi-esp32-s3-arduino.yaml) and [hifi-esp32-s3-idf](/firmware/esphome/hifi-esp32-s3-idf.yaml) for HiFi-ESP32-S3
+- [loud-esp32-arduino](/firmware/esphome/loud-esp32-arduino.yaml) and [loud-esp32-idf](/firmware/esphome/loud-esp32-idf.yaml) for Loud-ESP32
+- [amped-esp32-arduino](/firmware/esphome/amped-esp32-arduino.yaml) and [amped-esp32-idf](/firmware/esphome/amped-esp32-idf.yaml) for Amped-Esparagus
+- [louder-esp32-idf](/firmware/esphome/louder-esp32-idf.yaml) for Louder-ESP32
+- [louder-esp32-s3-idf](/firmware/esphome/louder-esp32-s3-idf.yaml) for Louder-ESP32-S3
 
 <details>
   <summary>Install instructions</summary>
@@ -316,7 +322,23 @@ Please find specific ESPHome configs in the [firmware](/firmware/esphome/) folde
 
 </details>
 
-### Snapcast way
+The latest changes in the ESPHome (deprecation of the custom components) triggered a work to implement an external [TAS5805M DAC ESPHome component](https://github.com/mrtoy-me/esphome-tas5805m). It took some time, but this driver implements a few very important features of the TAS5805M DAC that can not only be used in the device configuration, but also in various automations and complex logic. Worth noting:
+
+- Possibility to configure Analog Gain (depending on the power supply you have, more details [here](https://github.com/sonocotta/esp32-tas5805m-dac/#digital-volume-and-analog-gain)) | 
+- Advanced digital volume configuration (set minimum, maximum, and step value)
+- <img width="252" height="324" alt="image" src="https://github.com/user-attachments/assets/ea81f985-ef8d-48c7-8a52-b3d22d1eea2b" />
+- Automatic powersave modes based on playback state
+- DAC mode: 2 channel, or 1 channel bridged mode (more details [here](https://github.com/sonocotta/esp32-tas5805m-dac/#setting-and-getting-dac-mode))
+- Mixer mode: MONO, STEREO, INVERTED, LEFT, RIGHT (more details [here](https://github.com/sonocotta/esp32-tas5805m-dac/#mixer-controls))
+- My favorite: 15 band equalizer with [-15 dB .. +15 dB] range, which is an absolute treat to configure your speakers to your audio taste
+- <img width="252" height="619" alt="image" src="https://github.com/user-attachments/assets/9400f057-3e42-441e-aa96-14f551bb9c3e" />
+- For the first time: read and reset fault states, no need to reboot the device. Not only reports them back to HA, but also allows automatic correction (reduce volume on overheat, etc)
+- <img width="252" height="515" alt="image" src="https://github.com/user-attachments/assets/6863d353-dac2-40b3-8782-4747f04e729d" />
+
+We have some plans for further development of the ESPHome driver, implementing subwoofer and satellite profiles (for 2.1 and bi-amp configs), enabling soft-clipping, and perhaps even unleashing the power of all BQ-parameters (to enable speaker-specific compensation of the DAC). Stay tuned!
+
+
+### Home Assistant: Snapcast
 
 Snapcast is a multi-room audio player that synchronizes playback across multiple devices, ensuring that audio streams play simultaneously in perfect sync. It consists of a server, which distributes audio streams, and clients, which receive and play the audio. There is a [snapcast](https://github.com/sonocotta/esparagus-snapclient) fork that was created to implement ESP32 Audio Board specific configuration on top of the ESP32 Snapcast client. This allows us to build flexible and extendable setups connected to various sources, like Mopidy, MPD or Home Assistant. 
 
@@ -331,6 +353,8 @@ Snapcast is a multi-room audio player that synchronizes playback across multiple
 | **Use a group of speakers for multi-room setup** <br/><br/> In the MA settings > Players create a new group player and add as many Eparagus players as you need. Use that group speaker to get a synced audio | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/b371fb08-c900-451f-a1c9-35e25c8ae73b)
 
 </details>
+
+As of mid-2025 work is ongoing ([1](https://github.com/c-MM/esphome-snapclient/), [2](https://github.com/esphome/esphome/pull/8350)) to add snapcast component to ESPHome. This is based on the [original implementation](https://github.com/CarlosDerSeher/snapclient) done by CarlosDerSeher. This has the benefit of enabling all the DAC features implemented by the ESPHome driver. As soon as it is ready, I will add ESPHome configs that implement it.
 
 ## Squeezelite-ESP32
 
@@ -625,14 +649,15 @@ HiFi-ESP32(S3), Loud-ESP32(S3), Amped-ESP32 and Louder-ESP32(S3) are mechanicall
 |Amped-ESP32 | Louder-ESP32 |
 | ![DSC_0007](https://github.com/user-attachments/assets/afc3c4b4-3f50-4755-b970-ad58130ec94d) | ![DSC_0001](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/68d5c2ab-d5f7-4f66-8ff7-4301ddaab7ed)
 
-Also, community members created a few 3-D printable designs for Louder-ESP32 boards that can be found below 
+Also, community members created a few 3D-printable designs for Louder-ESP32 boards that can be found below 
 
 | #  | Image |
 |----|----|
 | [#1](https://www.printables.com/model/1268717-louder-esp32-enclosure) | ![image](https://github.com/user-attachments/assets/30842324-77e4-40f5-a326-fcf68f8feed2)
 | [#2](https://www.printables.com/model/1058552-louder-esp32-s3-playeramplifier-case/comments) | ![image](https://github.com/user-attachments/assets/ad4a30d6-953b-461e-b108-9c6155ce2477)
-| [#3](https://www.thingiverse.com/thing:6333131) | ![image](https://github.com/user-attachments/assets/6e37b6ce-443e-4067-8a7a-e3b49e5e8ad3)
-| [#4](https://www.thingiverse.com/thing:6326927) | ![image](https://github.com/user-attachments/assets/cf2983fa-0c92-4798-9cb5-5e4e97d70970)
+| [#3](https://www.thingiverse.com/thing:7016604) | <img width="639" height="426" alt="image" src="https://github.com/user-attachments/assets/10ba6360-2e99-4690-83a4-fef0e1cad23d" />
+| [#4](https://www.thingiverse.com/thing:6333131) | ![image](https://github.com/user-attachments/assets/6e37b6ce-443e-4067-8a7a-e3b49e5e8ad3)
+| [#5](https://www.thingiverse.com/thing:6326927) | ![image](https://github.com/user-attachments/assets/cf2983fa-0c92-4798-9cb5-5e4e97d70970)
 
 
 ## Where to buy
