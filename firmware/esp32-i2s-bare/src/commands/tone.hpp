@@ -10,7 +10,7 @@ extern Generator generator;
 
 class ToneCommand : public Command
 {
-    static inline const char *TAG = "CMD.TONE";
+    static constexpr const char *TAG = "CMD.TONE";
 
 private:
 
