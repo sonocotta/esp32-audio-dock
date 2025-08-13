@@ -81,11 +81,6 @@ public:
         arg_end(3)
     };
 
-    String getName()
-    {
-        return "tone";
-    };
-
     esp_console_cmd_t getCommand()
     {
         return {
