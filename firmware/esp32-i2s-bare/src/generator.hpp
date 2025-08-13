@@ -8,7 +8,7 @@ i2s_mode_t mode = I2S_PHILIPS_MODE; // I2S decoder is needed
 class Generator
 {
 private:
-    static inline const char *TAG = "TONE";
+    static constexpr const char *TAG = "TONE";
 
     const int sampleRate = 16000; // sample rate in Hz
     const int bps = 16;

@@ -25,7 +25,7 @@ void setup()
   delay(500);
 #endif
 
-  esp_log_level_set("*", ESP_LOG_DEBUG);
+  esp_log_level_set("*", ESP_LOG_INFO);
 
   // initializes I2S, important!
   generator.init();
@@ -36,9 +36,9 @@ void setup()
   Tas5805m.init();
 
   // I2S must be initialized by this time for DSP settings to apply
-  uint8_t newVolume = 80;
-  ESP_LOGI(TAG, "Setting VOLUME value to: %d", newVolume);
-  ESP_ERROR_CHECK(Tas5805m.setVolume(newVolume));
+  uint8_t newVolume = 100;
+  ESP_LOGI(TAG, "Setting VOLUME to: %d%", newVolume);
+  ESP_ERROR_CHECK(Tas5805m.setVolume100(newVolume));
 
   ESP_LOGI(TAG, "Setting GAIN value to: -15.5Db");
   ESP_ERROR_CHECK(Tas5805m.setAnalogGain(TAS5805M_MIN_GAIN));
@@ -46,6 +46,8 @@ void setup()
 
   cmd.init();
   cmd.registerCommandHandler(&toneCmd);
+
+  
 }
 
 void loop()

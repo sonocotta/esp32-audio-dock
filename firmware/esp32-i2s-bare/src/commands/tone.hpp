@@ -10,7 +10,7 @@ extern Generator generator;
 
 class ToneCommand : public Command
 {
-    static inline const char *TAG = "CMD.TONE";
+    static constexpr const char *TAG = "CMD.TONE";
 
 private:
 
@@ -79,11 +79,6 @@ public:
         arg_int0(NULL, NULL, "[freq]", "Frequency in Hz (1-8000)"),
         arg_int0(NULL, NULL, "[volume]", "Volume level (0-16, default: 10)"),
         arg_end(3)
-    };
-
-    String getName()
-    {
-        return "tone";
     };
 
     esp_console_cmd_t getCommand()

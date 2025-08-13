@@ -10,7 +10,7 @@ extern tas5805m Tas5805m;
 
 class GainCommand : public Command
 {
-    static inline const char *TAG = "CMD.GAIN";
+    static constexpr const char *TAG = "CMD.GAIN";
 
 private:
 
