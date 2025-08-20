@@ -30,6 +30,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
   - [Loud-ESP32](#loud-esp32)
   - [Amped-ESP32](#amped-esp32)
   - [Louder-ESP32](#louder-esp32)
+  - [Which device is right for me](#which-device-is-right-for-me)
   - [Features](#features)
     - [Onboard PSRAM](#onboard-psram)
   - [Boards Pinout](#boards-pinout)
@@ -39,6 +40,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [Louder-ESP32](#louder-esp32-1)
     - [Ethernet (all boards)](#ethernet-all-boards)
     - [Optional peripheral (all boards)](#optional-peripheral-all-boards)
+  - [Which software is right for me](#which-software-is-right-for-me)
   - [Software samples](#software-samples)
     - [Platformio IDE](#platformio-ide)
     - [Arduino IDE](#arduino-ide)
@@ -102,6 +104,10 @@ The PCM5100 HiFi DAC is combined with a highly efficient TPA3110D2 D-class ampli
 The Louder-ESP32 is a top-of-the-range model that uses a modern, highly capable TAS5805M DAC and is aimed to be paired with medium-to-large speaker systems. With 25W per channel stereo output, it packs a punch and can easily enliven living quarters or dorm rooms. It is highly efficient, but much more demanding for power when cranked; therefore, it also uses an external power adapter using a standard  jack. This DAC has a built-in DSP, so you can have a lot of fun with complex EQ, soft-clipping, DRC compression, and AGL tools among other things.
 
 ![DSC_0013](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/46ea4f10-c363-4623-b5d6-29e1135e5983)
+
+## Which device is right for me
+
+<img width="1047" height="1112" alt="Esparagus Lineup-Device Select Map (ESP32) drawio (1)" src="https://github.com/user-attachments/assets/79e9bcd5-f621-416e-8a61-c49d2770f2e1" />
 
 ## Features
 
@@ -211,6 +217,9 @@ Audio streaming requires proper buffering to work, even with ESP32 500K of RAM i
 | ESP32-S3           | 7       | 9        | SPI2/20MHz          | 12           | 11            | 13            | 39          | (37)        | 38          |
 | ESP32-S3 (Rev J3+) | 7       | 9        | SPI2/20MHz          | 12           | 11            | 13            | 47          | 38          | 48          |
 
+## Which software is right for me
+
+<img width="1062" height="852" alt="image" src="https://github.com/user-attachments/assets/77612aca-5ca4-4052-b1b4-3467b012ad30" />
 
 ## Software samples
 
@@ -336,7 +345,6 @@ The latest changes in the ESPHome (deprecation of the custom components) trigger
 - <img width="252" height="515" alt="image" src="https://github.com/user-attachments/assets/6863d353-dac2-40b3-8782-4747f04e729d" />
 
 We have some plans for further development of the ESPHome driver, implementing subwoofer and satellite profiles (for 2.1 and bi-amp configs), enabling soft-clipping, and perhaps even unleashing the power of all BQ-parameters (to enable speaker-specific compensation of the DAC). Stay tuned!
-
 
 ### Home Assistant: Snapcast
 
