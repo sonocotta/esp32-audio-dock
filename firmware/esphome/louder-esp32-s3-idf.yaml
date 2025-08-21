@@ -155,7 +155,7 @@ media_player:
     name: Louder Mediaplayer
     id: louder_mediaplayer
     task_stack_in_psram: ${task_stack_in_psram}
-    volume_increment: 5%
+    volume_increment: 2%
     volume_initial: 45%
     media_pipeline:
       speaker: media_spk_resampling_input
@@ -310,6 +310,7 @@ binary_sensor:
       name: Over Temperature Shutdown Fault
     over_temp_warning:
       name: Over Temperature Warning
+      id: over_temperature_warning
 
 ### Send DAC to shutdown mode after 2 minutes of inactivity
 # This is to save power, since DAC will draw under 100mA in idle state
@@ -327,6 +328,16 @@ interval:
                     - media_player.is_paused: louder_mediaplayer
           then:
             - switch.turn_off: enable_louder
+  # Optional: when DAC reports overheating warning, reduce volume to prevent shutdown
+  - interval: 1s
+    then:
+      - if:
+          condition:
+            - binary_sensor.is_on: over_temperature_warning
+            - lambda: 'return (id(louder_mediaplayer).volume != 0.0f);'
+            - lambda: 'return !(id(louder_mediaplayer).is_muted());'
+          then:
+            - media_player.volume_down
 
 ### RGB light config
 light:

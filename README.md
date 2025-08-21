@@ -341,7 +341,7 @@ The latest changes in the ESPHome (deprecation of the custom components) trigger
 - Mixer mode: MONO, STEREO, INVERTED, LEFT, RIGHT (more details [here](https://github.com/sonocotta/esp32-tas5805m-dac/#mixer-controls))
 - My favorite: 15 band equalizer with [-15 dB .. +15 dB] range, which is an absolute treat to configure your speakers to your audio taste
 - <img width="252" height="619" alt="image" src="https://github.com/user-attachments/assets/9400f057-3e42-441e-aa96-14f551bb9c3e" />
-- For the first time: read and reset fault states, no need to reboot the device. Not only reports them back to HA, but also allows automatic correction (reduce volume on overheat, etc)
+- For the first time: read and reset fault states, no need to reboot the device. Not only reports them back to HA, but also example of automatic correction is provided (slowly reduce volume on overheat)
 - <img width="252" height="515" alt="image" src="https://github.com/user-attachments/assets/6863d353-dac2-40b3-8782-4747f04e729d" />
 
 We have some plans for further development of the ESPHome driver, implementing subwoofer and satellite profiles (for 2.1 and bi-amp configs), enabling soft-clipping, and perhaps even unleashing the power of all BQ-parameters (to enable speaker-specific compensation of the DAC). Stay tuned!
