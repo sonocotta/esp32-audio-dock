@@ -1,16 +1,16 @@
 #pragma once
 
 #include <string.h>
-#include "generator.hpp"
+#include "generators/generator.hpp"
 
 #include <commands/command.hpp>
 #include "argtable3/argtable3.h"
 
-extern Generator generator;
+extern SquareGenerator squareGenerator;
 
-class ToneCommand : public Command
+class SquareToneCommand : public Command
 {
-    static constexpr const char *TAG = "CMD.TONE";
+    static constexpr const char *TAG = "CMD.TONE.SQUARE";
 
 private:
 
@@ -40,9 +40,9 @@ private:
 
             ESP_LOGI("CMD", "Playing tone at %d Hz with amplitude %d bit", frequency, volume);
         
-            generator.setFrequency(frequency);
-            generator.setAmplitude(volume);
-            generator.start();
+            squareGenerator.setFrequency(frequency);
+            squareGenerator.setAmplitude(volume);
+            squareGenerator.start();
         }
         else if (strcmp(action, "stop") == 0)
         {
@@ -54,7 +54,7 @@ private:
             }
 
             ESP_LOGI("CMD", "Stopping tone");
-            generator.stop();
+            squareGenerator.stop();
         }
         else
         {
@@ -76,16 +76,16 @@ public:
 
     static inline ToneArgs tone_args = {
         arg_str1(NULL, NULL, "<play|stop>", "Action: play or stop"),
-        arg_int0(NULL, NULL, "[freq]", "Frequency in Hz (1-8000)"),
-        arg_int0(NULL, NULL, "[volume]", "Volume level (0-16, default: 10)"),
+        arg_int0(NULL, NULL, "[freq]", "Frequency in Hz (1..8000 Hz, default is 440 Hz)"),
+        arg_int0(NULL, NULL, "[volume]", "Volume level (0-16 bit, default: 10)"),
         arg_end(3)
     };
 
     esp_console_cmd_t getCommand()
     {
         return {
-            .command = "tone",
-            .help = "Control tone playback. Usage: tone play [freq] [volume] | tone stop",
+            .command = "sq",
+            .help = "Control square tone playback. Usage: tone play [freq] [volume] | tone stop",
             .hint = NULL,
             .func = &tone_cmd_handler,
             .argtable = &tone_args
