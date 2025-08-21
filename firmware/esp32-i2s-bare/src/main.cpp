@@ -7,14 +7,18 @@ const char *TAG = "MAIN";
 tas5805m Tas5805m(&Wire);
 #endif
 
-#include <generator.hpp>
-Generator generator;
+#include "generators/generator.hpp"
+SquareGenerator squareGenerator;
+SineGenerator sineGenerator;
 
 #include <commandline.hpp>
 CommandLine cmd;
 
-#include "commands/tone.hpp"
-ToneCommand toneCmd;
+#include "commands/squaretone.hpp"
+SquareToneCommand toneCmd1;
+
+#include "commands/sinetone.hpp"
+SineToneCommand toneCmd2;
 
 void setup()
 {
@@ -28,7 +32,7 @@ void setup()
   esp_log_level_set("*", ESP_LOG_INFO);
 
   // initializes I2S, important!
-  generator.init();
+  squareGenerator.init();
 
 #ifdef CONFIG_DAC_TAS5805M
   Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL);
@@ -45,9 +49,9 @@ void setup()
 #endif
 
   cmd.init();
-  cmd.registerCommandHandler(&toneCmd);
+  cmd.registerCommandHandler(&toneCmd1);
+  cmd.registerCommandHandler(&toneCmd2);
 
-  
 }
 
 void loop()
