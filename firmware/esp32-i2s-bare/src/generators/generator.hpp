@@ -243,7 +243,7 @@ public:
         {
             // lookup table with fixed-point phase
             size_t index = (phase >> 16) % wavetableSize;
-            int16_t sample = wavetable[index];
+            int32_t sample = wavetable[index];
 
             // if (slot == I2S_SLOT_MODE_STEREO)
             // {
