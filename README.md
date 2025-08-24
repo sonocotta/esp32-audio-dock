@@ -610,7 +610,7 @@ All of the above are available right now for experimentation. I'm keen to hear y
 
 ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/0b18f215-e4ce-4335-9217-d8859566c3a4)
 
-The screw terminal is connected parallel to the barrel jack, you can use either interchangeably.
+The screw terminal is connected in parallel to the barrel jack; you can use either interchangeably.
 
 On the latest boards (starting from Amped-ESP32), I switched to [barrel jack with thick middle pin](https://atta.szlcsc.com/upload/public/pdf/source/20200812/C720576_7B83670454B7C7E493B4E29DD30CFE1F.pdf) with a **2.5mm pin**, it’s a bit unusual but still common enough in the laptop world. It is far more comfortable in handling high currents, and importantly, much more sturdy and resistant to desoldering. 
 
@@ -618,7 +618,29 @@ On the latest boards (starting from Amped-ESP32), I switched to [barrel jack wit
 
 The power adapter specs depend on the speaker you're planning to use. DAC efficiency is close to 100%, so just take the power rating of your speaker (say 2x10w), and impedance (say 8 ohms), and you'd need  at least `sqrt(10W * 8Ω) ≈ 9V` rated at `9V / 8Ω ≈ 1.2A` per channel, round up to 3 total Amps. 
 
-It is not recommended to go beyond the voltage your speakers can handle, otherwise, the amp will blow your speakers in no time. 
+It is not recommended to go beyond the voltage your speakers can handle; otherwise, the amp will blow your speakers in no time.
+
+I performed Louder-ESP32 board load tests to analyze the thermal stability of the board under maximum load. These tests output a 100Hz sin-wave with a close to rail-to-rail signal (adjusting volume and gain) into an 8-Ohm load (both BD and 1SPW modulation). I started testing with bare naked DAC. As soon as I reached the point where DAC was entering thermal shutdown, I added a small radiator on top, and once more, a larger radiator on the back side (where the thermal pad is connected to the ground plane)
+
+| SIN wave, 100 Hz |  |  | BD-mode |  |  |  |  |  |  | 1-SPW mode |  |  |  |  |  |  |  |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| VCC, V | Speaker voltage | Ratio | Speakers power RMS, W | Consumed power, W | Efficiency, % | Losses, W | Naked chip, 1min run | Heat Sink 10x15mm (top cover) | Heat sink 32x32mm(back side) | Speaker voltage | Speakers power RMS, W | Consumed power, W | Efficiency, % | Losses, W | Naked chip, 1min run | Heat Sink 10x15mm (top cover) | Heat sink 32x32mm(back side) |
+| 5 | 3.09 | 1.62 | 2.4 | 3.2 | 75% | 0.8 | stable | - | - | 3.09 | 2.4 | 3.1 | 76% | 0.7 | stable | - | - |
+| 6 | 3.47 | 1.73 | 3.0 | 4.0 | 75% | 1.0 | stable | - | - | 3.49 | 3.0 | 3.9 | 78% | 0.9 | stable | - | - |
+| 7 | 3.92 | 1.78 | 3.8 | 5.0 | 77% | 1.2 | stable | - | - | 4.05 | 4.1 | 5.4 | 77% | 1.3 | stable | - | - |
+| 8 | 4.36 | 1.83 | 4.8 | 6.1 | 77% | 1.4 | stable | - | - | 4.37 | 4.8 | 5.9 | 80% | 1.2 | stable | - | - |
+| 9 | 5.49 | 1.64 | 7.5 | 9.4 | 80% | 1.9 | stable | - | - | 5.49 | 7.5 | 9.2 | 82% | 1.6 | stable | - | - |
+| 10 | 6.48 | 1.54 | 10.5 | 12.8 | 82% | 2.3 | stable | - | - | 6.48 | 10.5 | 12.7 | 83% | 2.2 | stable | - | - |
+| 11 | 6.90 | 1.59 | 11.9 | 14.7 | 81% | 2.8 | stable | - | - | 6.90 | 11.9 | 14.2 | 84% | 2.3 | stable | - | - |
+| 12 | 7.33 | 1.64 | 13.4 | 16.9 | 80% | 3.4 | stable | - | - | 7.33 | 13.4 | 16.4 | 82% | 3.0 | stable | - | - |
+| 13 | 7.64 | 1.70 | 14.6 | 18.8 | 78% | 4.2 | stable | - | - | 7.66 | 14.7 | 18.3 | 80% | 3.7 | stable | - | - |
+| 14 | 8.74 | 1.60 | 19.1 | 23.9 | 80% | 4.8 | stable | - | - | 8.74 | 19.1 | 23.2 | 82% | 4.1 | stable | - | - |
+| 15 | 9.22 | 1.63 | 21.3 | 27.0 | 79% | 5.7 | OT warning | stable | - | 9.21 | 21.2 | 25.8 | 82% | 4.6 | stable | - | - |
+| 16 | 9.70 | 1.65 | 23.5 | 30.0 | 78% | 6.5 | shutdown | OT warning | stable | 9.70 | 23.5 | 28.7 | 82% | 5.2 | OT warning | - | - |
+| 17 | 10.28 | 1.65 | 26.4 | 33.0 | 80% | 6.6 | - | shutdown | OT warning | 10.29 | 26.5 | 33.0 | 80% | 6.5 | OT warning | OT warning | - |
+| 18 | 11.40 | 1.58 | 32.5 | 41.0 | 79% | 8.5 | - | - | shutdown | 11.37 | 32.3 | 40.2 | 80% | 7.9 | shutdown | OT warning | OT warning |
+
+**Conclusion:** Long-term operation without an additional heatsink is only possible up to VCC=15V. Adding a passive heatsink only helps to sustain 1-2 more volts; more power requires active cooling.
 
 ### OLED screen
 
