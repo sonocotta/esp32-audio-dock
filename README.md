@@ -40,6 +40,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [Louder-ESP32](#louder-esp32-1)
     - [Ethernet (all boards)](#ethernet-all-boards)
     - [Optional peripheral (all boards)](#optional-peripheral-all-boards)
+    - [Mic header](#mic-header)
   - [Which software is right for me](#which-software-is-right-for-me)
   - [Software samples](#software-samples)
     - [Platformio IDE](#platformio-ide)
@@ -216,6 +217,17 @@ Audio streaming requires proper buffering to work, even with ESP32 500K of RAM i
 | ESP32              | 39      | 12       | 2/20MHz             | 18           | 23            | 19            | 15          | 4           | 32          |
 | ESP32-S3           | 7       | 9        | SPI2/20MHz          | 12           | 11            | 13            | 39          | (37)        | 38          |
 | ESP32-S3 (Rev J3+) | 7       | 9        | SPI2/20MHz          | 12           | 11            | 13            | 47          | 38          | 48          |
+
+### Mic header
+
+Both versions of the Louder-ESP32 boards (ESP32 Rev. H6+, ESP32-S3 Rev. K0+) have unsoldered header for external I2S mic: left and riggh channels. ESP32 uses the same I2S bus with extra DATA IN pin due to the pins limitations, while S3 uses dedicated I2S bus. It can be used for wakeword functionality in the Home Assistant or for custom firmware.
+
+|          | I2S CLK | I2S WS | I2S DATA |
+|----------|---------|--------|----------|
+| ESP32    | 26      | 25     | 13       |
+| ESP32-S3 | 41      | 40     | 39       |
+
+Mic model that I used for testing and validation is INMP441 MEMS microphone, the pinout is created for this model. Other models might be available.
 
 ## Which software is right for me
 
