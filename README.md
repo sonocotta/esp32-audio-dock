@@ -220,14 +220,16 @@ Audio streaming requires proper buffering to work, even with ESP32 500K of RAM i
 
 ### Mic header
 
-Both versions of the Louder-ESP32 boards (ESP32 Rev. H6+, ESP32-S3 Rev. K0+) have unsoldered header for external I2S mic: left and riggh channels. ESP32 uses the same I2S bus with extra DATA IN pin due to the pins limitations, while S3 uses dedicated I2S bus. It can be used for wakeword functionality in the Home Assistant or for custom firmware.
+Both versions of the Louder-ESP32 boards (ESP32 Rev. H6+, ESP32-S3 Rev. K0+) have an unsoldered header for external I2S mic: left and riggh channels. ESP32 uses the same I2S bus with an extra DATA IN pin due to the pin limitations, while S3 uses a dedicated I2S bus. It can be used for wake word functionality in the Home Assistant or for custom firmware.
 
 |          | I2S CLK | I2S WS | I2S DATA |
 |----------|---------|--------|----------|
 | ESP32    | 26      | 25     | 13       |
 | ESP32-S3 | 41      | 40     | 39       |
 
-Mic model that I used for testing and validation is INMP441 MEMS microphone, the pinout is created for this model. Other models might be available.
+The mic model that I used for testing and validation is the INMP441 MEMS microphone; the pinout is created for this model. Other models might be available.
+
+<img width="356" height="301" alt="image" src="https://github.com/user-attachments/assets/d7f3dbff-4d94-45f1-9305-beaac4166c8f" />
 
 ## Which software is right for me
 
