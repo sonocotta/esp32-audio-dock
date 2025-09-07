@@ -111,7 +111,7 @@ time:
   - platform: sntp
     id: esptime
 
-## Example display configuration, showing the current playback state
+## Example display configuration, showing the clock
 display:
   - platform: ssd1306_spi
     model: SH1106 128x64

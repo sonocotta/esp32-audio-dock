@@ -1,7 +1,7 @@
 substitutions:
-  name: esphome-web-76e714
-  friendly_name: Louder-ESP32-S3
-  task_stack_in_psram: "true" # important to disable this for non-S3 model
+  name: esphome-web-93c52c
+  friendly_name: Louder-ESP32
+  task_stack_in_psram: "false" # important to disable this for non-S3 model
 
 esphome:
   name: ${name}
@@ -10,28 +10,14 @@ esphome:
   name_add_mac_suffix: false
   platformio_options:
     board_build.flash_mode: dio
-  # Importnant! Play sound on boot required for DAC to capture clock signal and enable DSP configuration
-  # If any of the DSP configs are sent before clock signal, they are simply ignored. This applies to EQ and Mixer controls
-  on_boot:
-    priority: 220.0
-    then:
-      media_player.speaker.play_on_device_media_file: startup_sync_sound
 
 esp32:
-  board: esp32-s3-devkitc-1
-  variant: ESP32S3
-  flash_size: 16MB
+  board: mhetesp32minikit
+  flash_size: 8MB
   framework:
     type: esp-idf
     version: recommended
     sdkconfig_options:
-      CONFIG_ESP32S3_DEFAULT_CPU_FREQ_240: "y"
-      CONFIG_ESP32S3_DATA_CACHE_64KB: "y"
-      CONFIG_ESP32S3_DATA_CACHE_LINE_64B: "y"
-      CONFIG_ESP32S3_INSTRUCTION_CACHE_32KB: "y"
-
-      CONFIG_ESP32_S3_BOX_BOARD: "y"
-
       CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: "y"
       CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
 
@@ -59,32 +45,34 @@ ota:
 ### Optional if you want ethernet (then remove above wifi config)
 #ethernet:
 #  type: W5500
-#  clk_pin: GPIO12
-#  mosi_pin: GPIO11
-#  miso_pin: GPIO13
-#  cs_pin: GPIO10
-#  interrupt_pin: GPIO6
-#  reset_pin: GPIO5
+#  clk_pin: GPIO18
+#  mosi_pin: GPIO23
+#  miso_pin: GPIO19
+#  cs_pin: GPIO05
+#  interrupt_pin: GPIO35
+#  reset_pin: GPIO14
 
 # Enable Home Assistant API
 api:
 
 psram:
-  mode: octal
   speed: 80MHz
 
 external_components:
   - source: github://mrtoy-me/esphome-tas5805m@main
     components: [ tas5805m ]
     refresh: 60s
+  - source: github://c-MM/esphome-snapclient
+    components: [ snapclient ]
+    refresh: 0s
 
 globals:
   - id: current_volume
     type: float
 
 i2c:
-  sda: GPIO8
-  scl: GPIO9
+  sda: GPIO21
+  scl: GPIO27
   frequency: 400kHz
   scan: True
 
@@ -92,109 +80,29 @@ i2c:
 audio_dac:
   - platform: tas5805m
     id: tas5805m_dac
-    enable_pin: GPIO17  # Physical pin connected to PWDN pin
-    dac_mode: BTL       # 'BTL' / Bridge Tied Load - 2Ch Stereo, or 'PBTL' / Parallel Bridge Tied Load - 1Ch Mono (double power)
+    enable_pin: GPIO33  # Physical pin connected to PWDN pin
+    dac_mode:  BTL      # 'BTL' / Bridge Tied Load - 2Ch Stereo, or 'PBTL' / Parallel Bridge Tied Load - 1Ch Mono (double power)
     mixer_mode: STEREO  # STEREO, STEREO_INVERSE, MONO, LEFT, RIGHT
-    analog_gain: -9db   # Startup Gain or Output voltage swing - pick based on the power supply voltage: https://github.com/sonocotta/esp32-tas5805m-dac?tab=readme-ov-file#digital-volume-and-analog-gain
-    volume_max: -6dB    # Max HA volume mapping to Digital Volume control, goes as high as +24dB, but not recommend going much above 0 dB, risking to cause clipping on high volume
+    refresh_eq: BY_SWITCH
+    analog_gain: -6db   # Startup Gain or Output voltage swing - pick based on the power supply voltage: https://github.com/sonocotta/esp32-tas5805m-dac?tab=readme-ov-file#digital-volume-and-analog-gain
+    # volume_max: -6dB  # Max HA volume mapping to Digital Volume control, goes as high as +24dB, but not recommend going much above 0 dB, risking to cause clipping on high volume
     volume_min: -60db   # Min HA volume mapping to Digital Volume control, goes as low as -103dB, but prefer to set higher to have a reasonable volume range
     update_interval: 5s # How often fault registers are read and cleared
 
 i2s_audio:
-  i2s_lrclk_pin: GPIO15
-  i2s_bclk_pin: GPIO14
+  i2s_lrclk_pin: GPIO25
+  i2s_bclk_pin: GPIO26
 
-speaker:
-  - platform: i2s_audio
-    id: speaker_id
-    dac_type: external
-    i2s_dout_pin: GPIO16
-    audio_dac: tas5805m_dac
-    channel: stereo
-    sample_rate: 48000
-    timeout: never
-
-  - platform: mixer
-    id: mixer_speaker_id
-    task_stack_in_psram: ${task_stack_in_psram}
-    output_speaker: speaker_id
-    source_speakers:
-      - id: announcement_spk_mixer_input
-        timeout: never
-      - id: media_spk_mixer_input
-        timeout: never
-
-  - platform: resampler
-    id: media_spk_resampling_input
-    task_stack_in_psram: ${task_stack_in_psram}
-    output_speaker: media_spk_mixer_input
-
-  - platform: resampler
-    id: announcement_spk_resampling_input
-    task_stack_in_psram: ${task_stack_in_psram}
-    output_speaker: announcement_spk_mixer_input
-
-media_player:
-  - platform: speaker
-    name: Louder Mediaplayer
-    id: louder_mediaplayer
-    task_stack_in_psram: ${task_stack_in_psram}
-    volume_increment: 2%
-    volume_initial: 45%
-    media_pipeline:
-      speaker: media_spk_resampling_input
-      num_channels: 2
-    announcement_pipeline:
-      speaker: announcement_spk_resampling_input
-      num_channels: 1
-
-    files:
-      id: startup_sync_sound
-      file: https://github.com/mrtoy-me/esphome-tas5805m/raw/main/components/tas5805m/tas5805m_boot_louder.flac
-
-    on_play:
-      - if:
-          condition:
-            switch.is_off: enable_louder
-          then:
-            switch.turn_on: enable_louder
-
-    on_announcement:
-      - if:
-          condition:
-            switch.is_off: enable_louder
-          then:
-            switch.turn_on: enable_louder
-
-      - light.turn_on:
-          id: rgb_front_led
-          blue: 100%
-          red: 0%
-          green: 100%
-          brightness: 50%
-          
-      - lambda: id(current_volume) = id(tas5805m_dac).volume();
-
-      - mixer_speaker.apply_ducking:
-            id: media_spk_mixer_input
-            decibel_reduction: 40
-            duration: 0.0s
-      - wait_until:
-            media_player.is_announcing:
-      - delay: 0.75s
-      - lambda: id(tas5805m_dac).set_volume(id(announce_volume).state / 100);
-
-      - wait_until:
-          not:
-            media_player.is_announcing:
-      - mixer_speaker.apply_ducking:
-            id: media_spk_mixer_input
-            decibel_reduction: 0
-            duration: 1.0s
-      - lambda: id(tas5805m_dac).set_volume(id(current_volume));
-
-      - light.turn_off:
-          id: rgb_front_led
+### Snapclient component is a work in progress, not yet ready for production use
+# More details:
+# https://github.com/c-MM/esphome-snapclient/
+# https://github.com/esphome/esphome/pull/8350
+snapclient:
+  hostname: 192.168.1.49   # at this time auto-discovery does not work, so you need to specify the server IP address
+  port: 1704               # default port, no need to change unless you have changed it on the server side
+  name: $friendly_name     # this is the name that will appear in the snapcast clients list
+  i2s_dout_pin: GPIO22     # I2S data out pin
+  webserver_port: 8080     # start webserver for snapclient controls
 
 switch:
   - platform: tas5805m
@@ -322,14 +230,13 @@ interval:
             - lambda: 'return !(id(louder_mediaplayer).is_muted());'
           then:
             - media_player.volume_down
-
 ### RGB light config
 light:
   - platform: esp32_rmt_led_strip
     id: rgb_front_led
     name: "${friendly_name} LED"
     rgb_order: GRB
-    pin: GPIO21
+    pin: GPIO12
     num_leds: 1
     chipset: ws2812
     default_transition_length: 0s
@@ -337,7 +244,7 @@ light:
 ### IR reader config. Add your own IR codes as needed
 remote_receiver:
   pin: 
-    number: GPIO7
+    number: GPIO39
     inverted: true
     mode:
       input: true
@@ -360,9 +267,9 @@ button:
 #     glyphs: [' ', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
 # spi:
-#   clk_pin: GPIO12
-#   mosi_pin: GPIO11
-#   miso_pin: GPIO13
+#   clk_pin: GPIO18
+#   mosi_pin: GPIO23
+#   miso_pin: GPIO19
 
 # time:
 #   - platform: sntp
@@ -372,9 +279,9 @@ button:
 # display:
 #   - platform: ssd1306_spi
 #     model: SH1106 128x64
-#     cs_pin: GPIO47
-#     dc_pin: GPIO38
-#     reset_pin: GPIO48
+#     cs_pin: GPIO15
+#     dc_pin: GPIO04
+#     reset_pin: GPIO32
 #     rotation: 180
 #     update_interval: 1s
 #     lambda: |-

@@ -10,7 +10,10 @@ esphome:
   name_add_mac_suffix: false
   platformio_options:
     board_build.flash_mode: dio
-
+  on_boot: 
+    then:
+      - switch.turn_on: enable_dac
+      
 esp32:
   board: mhetesp32minikit
   flash_size: 8MB
@@ -48,13 +51,28 @@ api:
 psram:
   speed: 80MHz
 
-globals:
-  - id: current_volume
-    type: float
+network:
+  enable_ipv6: true
+
+external_components:
+  - source: github://c-MM/esphome-snapclient
+    components: [ snapclient ]
+    refresh: 0s
 
 i2s_audio:
   i2s_lrclk_pin: GPIO25
   i2s_bclk_pin: GPIO26
+
+### Snapclient component is a work in progress, not yet ready for production use
+# More details:
+# https://github.com/c-MM/esphome-snapclient/
+# https://github.com/esphome/esphome/pull/8350
+snapclient:
+  hostname: 192.168.1.49   # at this time auto-discovery does not work, so you need to specify the server IP address
+  port: 1704               # default port, no need to change unless you have changed it on the server side
+  name: $friendly_name     # this is the name that will appear in the snapcast clients list
+  i2s_dout_pin: GPIO22     # I2S data out pin
+  webserver_port: 8080     # start webserver for snapclient controls
 
 switch:
   - platform: gpio
@@ -64,95 +82,6 @@ switch:
     pin:
       number: GPIO13
     restore_mode: ALWAYS_OFF
-
-speaker:
-  - platform: i2s_audio
-    id: speaker_id
-    dac_type: external
-    i2s_dout_pin: GPIO22
-    channel: stereo
-    sample_rate: 48000
-    timeout: never
-
-  - platform: mixer
-    id: mixer_speaker_id
-    task_stack_in_psram: ${task_stack_in_psram}
-    output_speaker: speaker_id
-    source_speakers:
-      - id: announcement_spk_mixer_input
-        timeout: never
-      - id: media_spk_mixer_input
-        timeout: never
-
-  - platform: resampler
-    id: media_spk_resampling_input
-    task_stack_in_psram: ${task_stack_in_psram}
-    output_speaker: media_spk_mixer_input
-
-  - platform: resampler
-    id: announcement_spk_resampling_input
-    task_stack_in_psram: ${task_stack_in_psram}
-    output_speaker: announcement_spk_mixer_input
-
-media_player:
-  - platform: speaker
-    name: Loud Mediaplayer
-    id: loud_mediaplayer
-    task_stack_in_psram: ${task_stack_in_psram}
-    volume_increment: 5%
-    volume_initial: 45%
-    media_pipeline:
-      speaker: media_spk_resampling_input
-      num_channels: 2
-    announcement_pipeline:
-      speaker: announcement_spk_resampling_input
-      num_channels: 1
-
-    on_play:
-      - if:
-          condition:
-            switch.is_off: enable_dac
-          then:
-            switch.turn_on: enable_dac
-
-    on_announcement:
-      - if:
-          condition:
-            switch.is_off: enable_dac
-          then:
-            switch.turn_on: enable_dac
-
-      - light.turn_on:
-          id: rgb_front_led
-          blue: 100%
-          red: 0%
-          green: 100%
-          brightness: 50%
-          
-      - mixer_speaker.apply_ducking:
-            id: media_spk_mixer_input
-            decibel_reduction: 40
-            duration: 0.0s
-      - wait_until:
-            media_player.is_announcing:
-
-      - wait_until:
-          not:
-            media_player.is_announcing:
-      - mixer_speaker.apply_ducking:
-            id: media_spk_mixer_input
-            decibel_reduction: 0
-            duration: 1.0s
-
-      - light.turn_off:
-          id: rgb_front_led
-
-    on_idle:
-      - if:
-          condition:
-            switch.is_on: enable_dac
-          then:
-            switch.turn_off: enable_dac
 
 ### RGB light config  (if installed)
 light:
