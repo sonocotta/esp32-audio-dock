@@ -84,7 +84,7 @@ I created those docks and subsequently development boards to be able to quickly 
 
 ## HiFi-ESP32 
 
-The HiFi-ESP32 is a first-in-line product that uses the legendary PCM5100 series DAC with supreme audio quality. It exposes line-level output that you can plug into a stereo amplifier. Analog power comes through an Ultra-low-noise LDO, making sure no interference from the MCU comes through to your speakers. Spend as much as you need on the external amp to deliver the sound you like (personally I prefer late 80's audio gear).
+The HiFi-ESP32 is a first-in-line product that uses the legendary PCM5100 series DAC with supreme audio quality. It exposes line-level output that you can plug into a stereo amplifier. Analog power comes through an Ultra-low-noise LDO, making sure no interference from the MCU comes through to your speakers. Spend as much as you need on the external amp to deliver the sound you like (personally, I prefer late 80's audio gear).
 
 ![DSC_0002](https://github.com/user-attachments/assets/d025ef42-daa3-4ad0-aeec-6ddf309c267b)
 
@@ -142,7 +142,7 @@ The Louder-ESP32 is a top-of-the-range model that uses a modern, highly capable 
 
 ### Onboard PSRAM
 
-Audio streaming requires proper buffering to work, even with ESP32 500K of RAM it is a challenging task. For that reason, most of the projects will require WROVER modules that have onboard PSRAM chips.  All ESP32 Audio boards have an 8MB PSRAM chip onboard, connected via a high-speed interface. Any code using PSRAM with just work out-of-the box.
+Audio streaming requires proper buffering to work; even with the ESP32's 500K of RAM, it is a challenging task. For that reason, most of the projects will require WROVER modules that have onboard PSRAM chips.  All ESP32 Audio boards have an 8MB PSRAM chip onboard, connected via a high-speed interface. Any code using PSRAM just works out-of-the box.
 
 ## Boards Pinout
 
@@ -237,11 +237,11 @@ The mic model that I used for testing and validation is the INMP441 MEMS microph
 
 ## Software samples
 
-In the [software](/firmware) section two firmware examples are provided.
+In the [software](/firmware) section, two firmware examples are provided.
 
 - [esp32-i2s-bare](/firmware/esp32-i2s-bare/) is base I2S implementation based on ESP-IDF implementation directly.
 - [esp32-i2s-esp8266audio](/firmware/esp32-i2s-esp8266audio/) is based on excellent [ESP8266Audio](https://github.com/earlephilhower/ESP8266Audio) library (it works with the whole ESP range, don't get fooled by the name), providing minimum code implementation. 
-- [esp32-i2s-web-radio](/firmware/esp32-i2s-web-radio/) is based on the [same library](https://github.com/earlephilhower/ESP8266Audio), providing minimum web-readio stream player. It expects a playlist as an input in the 'data' folder.
+- [esp32-i2s-web-radio](/firmware/esp32-i2s-web-radio/) is based on the [same library](https://github.com/earlephilhower/ESP8266Audio), providing minimum web-readio stream player. It expects a playlist as input in the 'data' folder.
 - [Squeezelite-ESP32](https://github.com/sle118/squeezelite-esp32) - see more details [below](#Squeezelite-ESP32)
 
 ### Platformio IDE
@@ -250,7 +250,7 @@ All samples are provided as [Plarformio IDE](https://platformio.org/platformio-i
 
 ### Arduino IDE
 
-Follow the [ESP8266Audio](https://github.com/earlephilhower/ESP8266Audio) library guide. Default settings will work out of the box with ESP8266 and ESP32 boards. For ESP32C3 and ESP32S2 board please adjust the pinout according to the above section
+Follow the [ESP8266Audio](https://github.com/earlephilhower/ESP8266Audio) library guide. Default settings will work out of the box with ESP8266 and ESP32 boards. For the ESP32C3 and ESP32S2 board, please adjust the pinout according to the above section
 
 ## Using ESP32 Audio Boards with the Home Assistant
 
@@ -259,16 +259,16 @@ There are several ways ESP32 Audio Boards can be integrated into the Home Assist
 | Integration type                                                                                                          | Tested  | Description                                                                                                                      | Pros                                                                                                                   | Cons                                                                                                    |
 |---------------------------------------------------------------------------------------------------------------------------|---------|----------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
 | [LMS/Airplay](https://github.com/sle118/squeezelite-esp32)                                                                 | Yes     | Connect to Music Assistant as external protocol device. Can play your media library and internet radio                           | Still can use squeezelite, i.e. use Spotify Connect and Apple Airplay when HA is not using the device                  | No native integration into HA, only works with Music Assistant                                          |
-| [ESPHome way](https://www.espthings.io/index.php/2024/04/07/louder-esp32-a-hi-fi-class-d-audio-amplifier-running-esphome/) | Yes     | Connect as HA media device. Can be used with any HA integration, including Music Assistant, Text-to-Speach announcements, alarms, etc | More integrations with HA, more flexibility in use case                                                                | No longer works as Spotify, Airplay, etc.                                                                |
-| [Snapcast way](https://github.com/CarlosDerSeher/snapclient/issues/70#issuecomment-2034700037)                             | Yes | Connect to Music Assistant as snapcast protocol device. Can play your media library and internet radio.                          | Perfect for multiroom sync (Sonos-like, perhaps even better). Can be used with other Snapcast servers around the house | No longer works as Spotify, Airplay, etc. No native integration into HA only works with Music Assistant |
+| [ESPHome way](https://www.espthings.io/index.php/2024/04/07/louder-esp32-a-hi-fi-class-d-audio-amplifier-running-esphome/) | Yes     | Connect as HA media device. Can be used with any HA integration, including Music Assistant, Text-to-Speech announcements, alarms, etc | More integrations with HA, more flexibility in use case                                                                | No longer works as Spotify, Airplay, etc.                                                                |
+| [Snapcast way](https://github.com/CarlosDerSeher/snapclient/issues/70#issuecomment-2034700037)                             | Yes | Connect to Music Assistant as snapcast protocol device. Can play your media library and internet radio.                          | Perfect for multiroom sync (Sonos-like, perhaps even better). Can be used with other Snapcast servers around the house | No longer works with Spotify, AirPlay, etc. No native integration into HA only works with Music Assistant |
 
 Below are specific steps that you need to follow to spin up ESP32 Audio Boards in the Home Assistant
 
 ### Configuring Home Assistant
 
-I prefer to use HA with the Music Assistant. This way you can integrate both your media library and internet radio and have a nice UI/UX at the same time (including mobile).
+I prefer to use HA with the Music Assistant. This way, you can integrate both your media library and internet radio and have a nice UI/UX at the same time (including mobile).
 
-Generally, you need to have supported HA (native) installation and follow [these steps](https://music-assistant.io/integration/installation/). I will place here a short version to have a reminder for future myself
+Generally, you need to have a supported HA (native) installation and follow [these steps](https://music-assistant.io/integration/installation/). I will place here a short version to have a reminder for future self
 
 <details>
   <summary>Install instructions</summary>
@@ -279,8 +279,8 @@ Generally, you need to have supported HA (native) installation and follow [these
 | **Start SSH Addon** <br/> <br/> SSH addon won't start until you add at least one SSH public key to it. So navigate to SSH Addon Settings and add a key (or password) to the config <br/> It should be able to start now | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/962e6a8d-7f7f-41ba-8545-ac747099940f)
 | **[Install Community Store](https://hacs.xyz/docs/setup/download/)** <br/> <br/> Run this command in the Terminal session <br> <code>wget -O - https://get.hacs.xyz &#124; bash -</code> <br/> You need to restart your HA after that | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/95eb9454-c7bf-43d2-b166-2a3dfd178479)
 | **[Add HACS](https://hacs.xyz/docs/configuration/basic)** <br/> <br/> Navigate to Settings > Devices as Services > Integrations > Add Integration, search for HACS, and add it to the HA </br> You'll need to authorize your extension to your GitHub account | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/5ac72cee-a2f8-413f-9e26-b77f269c172c)
-| **[Install Music Assistant via HACS](https://music-assistant.io/integration/installation/)** <br/> <br/> From the HACS menu search for Music Assistant and press the Download button <br/> You need to restart HA again <br/> In the Settings > Addons you should be able to see MA and enable sidebar navigation for it. | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/770c7087-fa02-4a08-9987-4b29eb8c06bd)
-| **Configure Music Assistant** <br/> <br/> Before you enable Integration (that will in turn add speaker devices) you need to enable MA providers <br/> Go to MA > Settings > Providers and enable both Music providers and Player providers that interests you. If not sure, enable all of them, you can disable them later on. | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/562a5619-4925-4daa-9af4-1eb766f93ea0)
+| **[Install Music Assistant via HACS](https://music-assistant.io/integration/installation/)** <br/> <br/> From the HACS menu, search for Music Assistant and press the Download button <br/> You need to restart HA again <br/> In the Settings > Addons, you should be able to see MA and enable sidebar navigation for it. | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/770c7087-fa02-4a08-9987-4b29eb8c06bd)
+| **Configure Music Assistant** <br/> <br/> Before you enable Integration (that will in turn add speaker devices), you need to enable MA providers <br/> Go to MA > Settings > Providers and enable both Music providers and Player providers that interest you. If you're not sure, enable all of them; you can disable them later on. | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/562a5619-4925-4daa-9af4-1eb766f93ea0)
 | **Add Music Assistant Integration** <br /> <br/> Navigate to HA Settings > Devices & services > Integrations. Click the big + ADD INTEGRATION button, look for Music Assistant, and click to add it. <br/> It should discover and add media devices based on the providers you're enabled in the previous step | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/3c2a0f95-5fdd-4513-b36d-3c662fc0f6fd)
 | **Add Music Devices discovered by MA** <br/> <br/> You should be able to add and use discovered devices. More details in below sections | ![image](https://github.com/sonocotta/esparagus-media-center/assets/5459747/bbf91ed0-3c91-4555-8119-fa9b45deb0af) 
 
@@ -294,17 +294,17 @@ When you have squeezelite-esp32 installed on your ESP32 Audio Board (either stoc
 
 - Bluetooth
 - LMS or slimproto - auto-discovered by HA
-- Apple Airplay - auto-discovered by HA
+- Apple AirPlay - auto-discovered by HA
 - Spotify Connect
 
-The power of this method is that you can use all four ways outside of HA, for example using your smartphone and Spotify app, and still have it integrated into HA at the same time.
+The power of this method is that you can use all four ways outside of HA, for example, using your smartphone and Spotify app, and still have it integrated into HA at the same time.
 
 <details>
   <summary>Install instructions</summary>
   
 #### Native HA integration
 
-Make sure your MA Slimproto provider is disabled, it will conflict with the native HA integration 
+Make sure your MA Slimproto provider is disabled; it will conflict with the native HA integration 
 
 | Step | Screenshot |
 |------|------------|
@@ -313,7 +313,7 @@ Make sure your MA Slimproto provider is disabled, it will conflict with the nati
 
 #### Integrate into Music Assistant directly 
 
-Disable SlimProto integration in the HA if you want to go the MA way. If you enabled SlimProto and AirPlay providers in the MA, you should find your device as both a Slimproto device and an Airplay device. It is up to you which protocol to use, generally, they both work perfectly well.
+Disable SlimProto integration in the HA if you want to go the MA way. If you enabled SlimProto and AirPlay providers in the MA, you should find your device as both a Slimproto device and an AirPlay device. It is up to you which protocol to use; generally, they both work perfectly well.
 
 </details>
 
@@ -329,6 +329,16 @@ Please find specific ESPHome configs in the [firmware](/firmware/esphome/) folde
 - [amped-esp32-arduino](/firmware/esphome/amped-esp32-arduino.yaml) and [amped-esp32-idf](/firmware/esphome/amped-esp32-idf.yaml) for Amped-Esparagus
 - [louder-esp32-idf](/firmware/esphome/louder-esp32-idf.yaml) for Louder-ESP32
 - [louder-esp32-s3-idf](/firmware/esphome/louder-esp32-s3-idf.yaml) for Louder-ESP32-S3
+
+Also, experimental snapclient configs
+
+- [hifi-esp32-idf-snapclient](/firmware/esphome/hifi-esp32-idf-snapclient.yaml)
+- [hifi-esp32-s3-idf-snapclient](/firmware/esphome/hifi-esp32-s3-idf-snapclient.yaml)
+- [loud-esp32-idf-snapclient](/firmware/esphome/loud-esp32-idf-snapclient.yaml)
+- [amped-esp32-idf-snapclient](/firmware/esphome/amped-esp32-idf-snapclient.yaml)
+- [louder-esp32-idf-snapclient](/firmware/esphome/louder-esp32-idf-snapclient.yaml)
+- [louder-esp32-s3-idf-snapclient](/firmware/esphome/louder-esp32-s3-idf-snapclient.yaml)
+
 
 <details>
   <summary>Install instructions</summary>
@@ -362,7 +372,7 @@ We have some plans for further development of the ESPHome driver, implementing s
 
 ### Home Assistant: Snapcast
 
-Snapcast is a multi-room audio player that synchronizes playback across multiple devices, ensuring that audio streams play simultaneously in perfect sync. It consists of a server, which distributes audio streams, and clients, which receive and play the audio. There is a [snapcast](https://github.com/sonocotta/esparagus-snapclient) fork that was created to implement ESP32 Audio Board specific configuration on top of the ESP32 Snapcast client. This allows us to build flexible and extendable setups connected to various sources, like Mopidy, MPD or Home Assistant. 
+Snapcast is a multi-room audio player that synchronizes playback across multiple devices, ensuring that audio streams play simultaneously in perfect sync. It consists of a server, which distributes audio streams, and clients, which receive and play the audio. There is a [snapcast](https://github.com/sonocotta/esparagus-snapclient) fork that was created to implement ESP32 Audio Board-specific configuration on top of the ESP32 Snapcast client. This allows us to build flexible and extendable setups connected to various sources, like Mopidy, MPD, or Home Assistant. 
 
 <details>
   <summary>Install instructions</summary>
@@ -376,7 +386,9 @@ Snapcast is a multi-room audio player that synchronizes playback across multiple
 
 </details>
 
-As of mid-2025 work is ongoing ([1](https://github.com/c-MM/esphome-snapclient/), [2](https://github.com/esphome/esphome/pull/8350)) to add snapcast component to ESPHome. This is based on the [original implementation](https://github.com/CarlosDerSeher/snapclient) done by CarlosDerSeher. This has the benefit of enabling all the DAC features implemented by the ESPHome driver. As soon as it is ready, I will add ESPHome configs that implement it.
+As of mid-2025 work is ongoing ([1](https://github.com/c-MM/esphome-snapclient/), [2](https://github.com/esphome/esphome/pull/8350)) to add snapcast component to ESPHome. This is based on the [original implementation](https://github.com/CarlosDerSeher/snapclient) done by CarlosDerSeher. This has the benefit of enabling all the DAC features implemented by the ESPHome driver. At the moment of writing, there are quite a few issues to be solved in the code before it can be merged, but having tested this myself on a few S3-based boards as long as Louder-Esparagus and Louder-ESP32 boards, I can say it is stable and works really well. Also
+- This is the only implementation that works with ESP32-S3 (exciting!)
+- This implementation allows using advanced TAS5805M DAC features available in the Esphome driver, like bridge mode and 15-band EQ. If you have Home Assistant already, that's no brainer
 
 ## Squeezelite-ESP32
 
@@ -438,11 +450,11 @@ spi_config = mosi=11,clk=12,host=2,miso=13
 
 ### Squeezelite-esp32 reboots and connection drops
 
-The default configuration of the squeezelite-esp32 runs automatic discovery of the available LMS server nearby. In fact it depends on it so much that in case the LMS service is not found on the network, it will reboot automatically (every few minutes). 
+The default configuration of the squeezelite-esp32 runs automatic discovery of the available LMS server nearby. In fact, it depends on it so much that in case the LMS service is not found on the network, it will reboot automatically (every few minutes). 
 
 ![image](https://github.com/user-attachments/assets/7b91f9ef-054e-42a1-81ab-693315fb3b88)
 
-In many cases, if you use squeezelite for Airplay and Spotify only and don't have LMS servier, you need to disable discovery altogether. Currently disabling Squeezelite in the GUI does not work correctly, it places too much spaces between the commands in the autoexec command. Following `autoexec1` NVS setting can be used to disable it:
+In many cases, if you use squeezelite for AirPlay and Spotify only and don't have an LMS server, you need to disable discovery altogether. Currently, disabling Squeezelite in the GUI does not work correctly; it places too many spaces between the commands in the autoexec command. Following `autoexec1` NVS setting can be used to disable it:
 
 ```
 squeezelite -o i2s -s -disable -b 500:2000 -C 30 -d all=sdebug
@@ -453,15 +465,15 @@ squeezelite -o i2s -s -disable -b 500:2000 -C 30 -d all=sdebug
 
 ## Flashing ESP32-S3
 
-ESP32-S3 boards have two ways of firmware update: (1) similarly to classing ESP32, they can be flashed over built-in UART, or (2) uniquely for S3, over built-in USB host controller. Since it is firmware-controlled, and may be disabled if not used (or, more commonly, not available with factory default empty firmware). When come unflashed ESP32-S3 device comes into a boot loop, with a USB-CDC device appearing and disappearing every second, and **requires a special flashing initialisation sequence to get flashed**:
+ESP32-S3 boards have two ways of firmware update: (1) similarly to classic ESP32, they can be flashed over built-in UART, or (2) uniquely for S3, over built-in USB host controller. Since it is firmware-controlled, and may be disabled if not used (or, more commonly, not available with factory default empty firmware). When come unflashed ESP32-S3 device comes into a boot loop, with a USB-CDC device appearing and disappearing every second, and **requires a special flashing initialisation sequence to get flashed**:
 
-- Press IO0 (FLASH) button and keep it pressed
-- Press RESET button and release FLASH button after
-- ESP32-S3 will enter download mode and USB-CDC device will appear and stay available
+- Press the IO0 (FLASH) button and keep it pressed
+- Press the RESET button and release the FLASH button after
+- ESP32-S3 will enter download mode, and the USB-CDC device will appear and stay available
 - Run flashing routine as usual, either through web-serial or `esp_tool`
-- This time, it is not possible to reboot device over USB, so press RESET once more
-- Device will boot normally into firmware and if USB-CDC is enabled in the firmware, you will be able to flash it normally, download mode and reset sequence will work over USB.
-- If you manage to flash firmware without USB-CDC support, you need to go through above equence once more
+- This time, it is not possible to reboot the device over USB, so press RESET once more
+- Device will boot normally into firmware, and if USB-CDC is enabled in the firmware, you will be able to flash it normally, download mode and reset sequence will work over USB.
+- If you manage to flash firmware without USB-CDC support, you need to go through the above sequence once more
 
 ## Hardware
 
@@ -548,7 +560,7 @@ spi_config = mosi=11,clk=12,host=2,miso=13
 
 ### BTL and PBTL mode (TAS5805M DAC)
 
-[TAS5805M DAC](https://www.ti.com/lit/ds/symlink/tas5805m.pdf?ts=1701767947387) Allows 2 modes of operation - BTL (stereo) and PBTL (parallel, or mono). In Mono, the amp will use a completely different modulation scheme and basically will fully synchronize output drivers. Jumpers on the board allow both output drivers to connect to the same speaker. The most important step is to inform the Amp to change modulation in the first place via I2C command. In the case of sqeezelite DAC control set value is the following:
+[TAS5805M DAC](https://www.ti.com/lit/ds/symlink/tas5805m.pdf?ts=1701767947387) Allows 2 modes of operation - BTL (stereo) and PBTL (parallel, or mono). In Mono, the amp will use a completely different modulation scheme and basically will fully synchronize output drivers. Jumpers on the board allow both output drivers to connect to the same speaker. The most important step is to inform the Amp to change the modulation in the first place via the I2C command. In the case of sqeezelite DAC control set value is the following:
 ```
 dac_controlset: `{"init":[{"reg":3,"val":2},{"reg":3,"val":3},{"reg":2,"val":4}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]}`
 ```
@@ -593,7 +605,7 @@ Starting from Rev E, an additional header is exposed to allow datasheet-specifie
 
 ### TAS5805M DSP capabilities
 
-The TAS5805M DAC has a very powerful DSP, which allows doing lots of data processing on the silicon, that otherwise would take a considerable part of your CPU time. As of the moment of writing, it is mostly an undiscovered part of the DAC, since unfortunately, TI is not making it very easy for developers. (A minute of complaint) To be more specific, you need to be (A) a proven hardware manufacturer to get access to the configuration software, namely PurePath. (B) You need to apply for a personal license and go through an approval process, and after a few weeks of waiting, you get access to the DAC configuration you asked for. (C) You find out that it will work with TI's own evaluation board, which will set you back $250 if you'd be able to find one. Otherwise, all you have is a list of I2C commands that you need to transfer to the device at your own cost. No wonder no one knows how to use it.
+The TAS5805M DAC has a very powerful DSP, which allows doing lots of data processing on the silicon, that otherwise would take a considerable part of your CPU time. As of the moment of writing, it is mostly an undiscovered part of the DAC, since, unfortunately, TI is not making it very easy for developers. (A minute of complaint) To be more specific, you need to be (A) a proven hardware manufacturer to get access to the configuration software, namely PurePath. (B) You need to apply for a personal license and go through an approval process, and after a few weeks of waiting, you get access to the DAC configuration you asked for. (C) You find out that it will work with TI's own evaluation board, which will set you back $250 if you'd be able to find one. Otherwise, all you have is a list of I2C commands that you need to transfer to the device at your own cost. No wonder no one knows how to use it.
 
 But moanings aside, what do you get after:
 
@@ -666,7 +678,7 @@ At this moment, one can simply throw in a compatible OLED screen and use a small
 
 #### OLED models
 
-Most of the 64x128 pixel OLED screen models that are very common among hobbyists will use compatible 30-pin ribbon connector with 0.5mm pin spacing, and they are really easy to find.
+Most of the 64x128 pixel OLED screen models that are very common among hobbyists will use a compatible 30-pin ribbon connector with 0.5mm pin spacing, and they are really easy to find.
 
 |  Model | Image |
 |---|---|
@@ -674,7 +686,7 @@ Most of the 64x128 pixel OLED screen models that are very common among hobbyists
 
 #### Software side
 
-Although you're free to use it your way using the pinout above, I'd expect the most common case to be squeezelite, thus here are the steps you'd need to do
+Although you're free to use it your way, using the pinout above, I'd expect the most common case to be squeezelite, thus here are the steps you'd need to do
 
 | # | Description | Image |
 |---|---|---|

@@ -50,27 +50,9 @@ psram:
   mode: octal
   speed: 80MHz
 
-# network:
-#   enable_ipv6: true
-
-#external_components:
-  # - source: github://c-MM/esphome-snapclient
-  #   components: [ snapclient ]
-  #   refresh: 0s
-
 i2s_audio:
   i2s_lrclk_pin: GPIO15
   i2s_bclk_pin: GPIO14
-
-### Snapclient component is a work in progress, not yet ready for production use
-# Will be updated, as soon as snapclient component is ready
-# snapclient:
-#   hostname: 192.168.1.49
-#   port: 1704
-#   name: $friendly_name
-#   audio_dac: tas5805m_dac
-#   i2s_dout_pin: GPIO16
-#   webserver_port: 8080  # start webserver for equalizer
 
 speaker:
   - platform: i2s_audio
