@@ -56,6 +56,11 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [How to flash and configure](#how-to-flash-and-configure)
     - [Ethernet configuration](#ethernet-configuration)
     - [Squeezelite-esp32 reboots and connection drops](#squeezelite-esp32-reboots-and-connection-drops)
+  - [Other smart home options](#other-smart-home-options)
+    - [Building Tasmota with I2S support](#building-tasmota-with-i2s-support)
+    - [Connect to MQTT broker](#connect-to-mqtt-broker)
+    - [Connect Louder-ESP32 to the MQTT broker](#connect-louder-esp32-to-the-mqtt-broker)
+    - [Testing audio playback with MQTT controls](#testing-audio-playback-with-mqtt-controls)
   - [Flashing ESP32-S3](#flashing-esp32-s3)
   - [Hardware](#hardware)
     - [ESP Audio Solo](#esp-audio-solo)
@@ -462,6 +467,51 @@ squeezelite -o i2s -s -disable -b 500:2000 -C 30 -d all=sdebug
 
 ![image](https://github.com/user-attachments/assets/6b4096bd-0793-458b-a0fe-3282418f773f)
 
+
+## Other smart home options
+
+In case you use Domoticz or OpenHAB, or in fact any other system that supports MQTT integration, [Tasmota](https://tasmota.github.io/docs/) is a way ESP32 Audio Devices can be integrated into TTS, Media Player or Web-radio scenarios. Since HiFi-ESP32 and Loud-ESP32 devices only need I2S signal to work, setting them up would not differ from any other I2S-based device. With Louder-ESP32 it is a little more involved story, but in fact folks at Tasmota community did a heavy lifting of porting I2C driver and since mid-2025 it is a simple template that can be applied in few clicks.
+
+Unfortunately default configuration of the tasmota firmware would not include I2S by default, to building firmware from source is required (which makes it more fun, if you ask me). Below is an instruction that I did test with Louder-ESP32-S3 board (Non-S3 model will require only minor adjustments along the way)
+
+### Building Tasmota with I2S support
+
+| # | Description  | Image
+|---|---|---|
+| 1 | Pull the source code from the official repo. It is a [Platformio](https://platformio.org/) project, so if you didn't have it before, [install](https://platformio.org/platformio-ide) it now <br/> `git clone https://github.com/arendst/Tasmota/` |
+| 2 | In the code repository find a file named `user_config_override.h`, and add `USE_I2S_ALL` macro right before closing `#endif` |
+| 3 | Build and flash using the conifguration named `tasmota32s3` for the S3 model, or `tasmota32` for classic ESP32 |
+| 4 | Your device will need to connect to wifi network, and you do this as usual by connecting to hotspot wifi network and providing wifi credentials |
+
+### Connect to MQTT broker
+
+This step will depend on your specific setup, but since I have Home Assistant, I'll document the steps I had to do in the HA installation I have. Other brokers will fundamentally need  same steps but clearly every system would have it's own specific steps to do.
+
+| # | Description  | Image
+|---|---|---|
+| 1 | Install MQTT broker into HA, by installing MQTT Addon. As soon as installed, it will use HA user database, so credentials will be conifgured elsewhere |
+| 2 | Add `mqtt_user` in the HA User list. Keep the password nearby, as we will need it to connect ESP32 device to the broker |
+| 3 | Add MQTT integration to the HA. It will autodiscover local MQTT broker and connect automatically |
+| 4 | Add Tasmota integration to the HA. At this point it will only connect to MQTT but it would not find any devices just yet |
+
+### Connect Louder-ESP32 to the MQTT broker
+
+| # | Description  | Image
+|---|---|---|
+| 1 | Find out your device IP address (either from Serial logs or from your WiFi router), since we would need to access it's web-UI to conifgure the device |
+| 2 | Navigate to Configure > MQTT section and update your MQTT host, user and password settings | 
+| 3 | After device restarts it should be able to connect to broker. This can be confirmed in the Tasmota integration, as it will discover new device now. |
+| 4 | Navigate to Configure > Auto-conf section and apply `Louder-ESP32S3` config. After device restarts, you're all set. | 
+
+### Testing audio playback with MQTT controls
+
+| Description  | Image
+|---|---|
+| Using the commands described [here](https://tasmota.github.io/docs/I2S-Audio/#internal-dac) you can control device playback |
+| Start web-radio plaback <br /> topic: `cmnd/tasmota_F63C10/i2swr`, payload: `http://192.168.1.48:18000/bb` |
+| Stop playback <br/> topic: `cmnd/tasmota_F63C10/i2swr`, payload: `` |
+| Change volume <br/> topic: `cmnd/tasmota_F63C10/i2sgain`, payload: `85` |
+| Commands `I2SRtttl` and `I2Ssay` didn't work for me, unfortunately. I didn't have time yet to figure out what is the issue.
 
 ## Flashing ESP32-S3
 
