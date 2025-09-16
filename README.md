@@ -470,52 +470,52 @@ squeezelite -o i2s -s -disable -b 500:2000 -C 30 -d all=sdebug
 
 ## Other smart home options
 
-In case you use Domoticz or OpenHAB, or in fact any other system that supports MQTT integration, [Tasmota](https://tasmota.github.io/docs/) is a way ESP32 Audio Devices can be integrated into TTS, Media Player or Web-radio scenarios. Since HiFi-ESP32 and Loud-ESP32 devices only need I2S signal to work, setting them up would not differ from any other I2S-based device. With Louder-ESP32 it is a little more involved story, but in fact folks at Tasmota community did a heavy lifting of porting I2C driver and since mid-2025 it is a simple template that can be applied in few clicks.
+In case you use Domoticz or OpenHAB, or in fact any other system that supports MQTT integration, [Tasmota](https://tasmota.github.io/docs/) is a way to go with ESP32 Audio Devices, which can be integrated into TTS, Media Player, or Web-radio scenarios. Since HiFi-ESP32 and Loud-ESP32 devices only need an I2S signal to work, setting them up would not differ from any other I2S-based device. With Louder-ESP32, it is a little more involved story, but in fact, folks at the Tasmota community did a heavy lifting of porting the I2C driver, and since mid-2025, it is a simple template that can be applied in a few clicks.
 
-Unfortunately default configuration of the tasmota firmware would not include I2S by default, to building firmware from source is required (which makes it more fun, if you ask me). Below is an instruction that I did test with Louder-ESP32-S3 board (Non-S3 model will require only minor adjustments along the way)
+Unfortunately, the default configuration of the tasmota firmware would not include I2S by default; building firmware from source is required (which makes it more fun, if you ask me). Below is an instruction that I did test with the Louder-ESP32-S3 board (Non-S3 model will require only minor adjustments along the way)
 
 ### Building Tasmota with I2S support
 
 | # | Description  | Image
 |---|---|---|
-| 1 | Pull the source code from the official repo. It is a [Platformio](https://platformio.org/) project, so if you didn't have it before, [install](https://platformio.org/platformio-ide) it now <br/> `git clone https://github.com/arendst/Tasmota/` |
-| 2 | In the code repository find a file named `user_config_override.h`, and add `USE_I2S_ALL` macro right before closing `#endif` |
-| 3 | Build and flash using the conifguration named `tasmota32s3` for the S3 model, or `tasmota32` for classic ESP32 |
-| 4 | Your device will need to connect to wifi network, and you do this as usual by connecting to hotspot wifi network and providing wifi credentials |
+| 1 | Pull the source code from the official repo. It is a [Platformio](https://platformio.org/) project, so if you didn't have it before, [install](https://platformio.org/platformio-ide) it now <br/> `git clone https://github.com/arendst/Tasmota/` | 
+| 2 | In the code repository find a file named `user_config_override.h`, and add `USE_I2S_ALL` macro right before closing `#endif` | <img width="833" height="641" alt="image" src="https://github.com/user-attachments/assets/af259c97-151f-4233-892a-91ce4796a51c" />
+| 3 | Build and flash using the conifguration named `tasmota32s3` for the S3 model, or `tasmota32` for classic ESP32 | <img width="896" height="638" alt="image" src="https://github.com/user-attachments/assets/e7eec814-7f1f-4bcd-b751-ae37d487594e" />
+| 4 | Your device will need to connect to a Wi-Fi network, and you do this as usual by connecting to a Wi-Fi hotspot and providing wifi credentials | 
 
-### Connect to MQTT broker
+### Connect to the MQTT broker
 
-This step will depend on your specific setup, but since I have Home Assistant, I'll document the steps I had to do in the HA installation I have. Other brokers will fundamentally need  same steps but clearly every system would have it's own specific steps to do.
+This step will depend on your specific setup, but since I have Home Assistant, I'll document the steps I had to do in the HA installation I have. Other brokers will fundamentally need the same steps, but clearly every system would have its own specific steps to take.
 
 | # | Description  | Image
 |---|---|---|
-| 1 | Install MQTT broker into HA, by installing MQTT Addon. As soon as installed, it will use HA user database, so credentials will be conifgured elsewhere |
-| 2 | Add `mqtt_user` in the HA User list. Keep the password nearby, as we will need it to connect ESP32 device to the broker |
-| 3 | Add MQTT integration to the HA. It will autodiscover local MQTT broker and connect automatically |
-| 4 | Add Tasmota integration to the HA. At this point it will only connect to MQTT but it would not find any devices just yet |
+| 1 | Install the MQTT broker into HA by installing the MQTT Addon. As soon as it is installed, it will use the HA user database, so credentials will be configured elsewhere | <img width="1153" height="572" alt="image" src="https://github.com/user-attachments/assets/468ade87-d9d4-45fb-9aa5-fff0d1e7ab18" />
+| 2 | Add `mqtt_user` in the HA User list. Keep the password nearby, as we will need it to connect the ESP32 device to the broker | <img width="1103" height="570" alt="image" src="https://github.com/user-attachments/assets/04e41f62-3177-4d78-83c4-796bee8dbe7c" />
+| 3 | Add MQTT integration to the HA. It will autodiscover the local MQTT broker and connect automatically | <img width="1130" height="568" alt="image" src="https://github.com/user-attachments/assets/5c9bbe95-87b1-4e91-bf82-fa11e9288a6e" />
+| 4 | Add Tasmota integration to the HA. At this point, it will only connect to MQTT, but it will not find any devices just yet | <img width="1146" height="570" alt="image" src="https://github.com/user-attachments/assets/a580d9bd-e252-4a1e-aa3c-e4fd9ffe9162" />
 
 ### Connect Louder-ESP32 to the MQTT broker
 
 | # | Description  | Image
 |---|---|---|
-| 1 | Find out your device IP address (either from Serial logs or from your WiFi router), since we would need to access it's web-UI to conifgure the device |
-| 2 | Navigate to Configure > MQTT section and update your MQTT host, user and password settings | 
-| 3 | After device restarts it should be able to connect to broker. This can be confirmed in the Tasmota integration, as it will discover new device now. |
-| 4 | Navigate to Configure > Auto-conf section and apply `Louder-ESP32S3` config. After device restarts, you're all set. | 
+| 1 | Find out your device IP address (either from Serial logs or from your WiFi router), since we would need to access its web-UI to configure the device | <img width="983" height="247" alt="image" src="https://github.com/user-attachments/assets/db9e834d-98d3-4ad0-936e-4295b8d2b653" />
+| 2 | Navigate to Configure > MQTT section and update your MQTT host, user, and password settings | <img width="944" height="648" alt="image" src="https://github.com/user-attachments/assets/c5fda7dd-7106-4edb-9fc1-5c62c0024701" />
+| 3 | After the device restarts, it should be able to connect to the broker. This can be confirmed in the Tasmota integration, as it will discover a new device now. | <img width="1135" height="600" alt="image" src="https://github.com/user-attachments/assets/d6864ec6-af29-445a-b327-2ca752d904a9" />
+| 4 | Navigate to Configure > Auto-conf section and apply `Louder-ESP32S3` config. After the device restarts, you're all set. | <img width="1029" height="630" alt="image" src="https://github.com/user-attachments/assets/fd241d26-5c22-4a3a-9291-35916d8f2b43" />
 
 ### Testing audio playback with MQTT controls
 
 | Description  | Image
 |---|---|
-| Using the commands described [here](https://tasmota.github.io/docs/I2S-Audio/#internal-dac) you can control device playback |
-| Start web-radio plaback <br /> topic: `cmnd/tasmota_F63C10/i2swr`, payload: `http://192.168.1.48:18000/bb` |
-| Stop playback <br/> topic: `cmnd/tasmota_F63C10/i2swr`, payload: `` |
-| Change volume <br/> topic: `cmnd/tasmota_F63C10/i2sgain`, payload: `85` |
-| Commands `I2SRtttl` and `I2Ssay` didn't work for me, unfortunately. I didn't have time yet to figure out what is the issue.
+| Using the commands described [here](https://tasmota.github.io/docs/I2S-Audio/#internal-dac) you can control device playback | <img width="1104" height="603" alt="image" src="https://github.com/user-attachments/assets/e2320f99-421b-4deb-8ff0-4c58ec196106" />
+| Start web-radio plaback <br /> topic: `cmnd/tasmota_XXXXXX/i2swr`, payload: `http://192.168.1.48:18000/bb` | <img width="1024" height="341" alt="image" src="https://github.com/user-attachments/assets/fc289526-67ed-4982-9882-d2d6f254203c" />
+| Stop playback <br/> topic: `cmnd/tasmota_XXXXXX/i2swr`, payload: `` | <img width="1030" height="340" alt="image" src="https://github.com/user-attachments/assets/ae931d9f-715c-422e-aa49-dec72ef45675" />
+| Change volume <br/> topic: `cmnd/tasmota_XXXXXX/i2sgain`, payload: `85` | <img width="1021" height="338" alt="image" src="https://github.com/user-attachments/assets/a2ecc8ca-dade-4b19-a29d-2e0bbd7ac0b0" />
+| Commands `I2SRtttl` and `I2Ssay` didn't work for me, unfortunately. I didn't have time yet to figure out what the issue is.
 
 ## Flashing ESP32-S3
 
-ESP32-S3 boards have two ways of firmware update: (1) similarly to classic ESP32, they can be flashed over built-in UART, or (2) uniquely for S3, over built-in USB host controller. Since it is firmware-controlled, and may be disabled if not used (or, more commonly, not available with factory default empty firmware). When come unflashed ESP32-S3 device comes into a boot loop, with a USB-CDC device appearing and disappearing every second, and **requires a special flashing initialisation sequence to get flashed**:
+ESP32-S3 boards have two ways of firmware update: (1) similarly to classic ESP32, they can be flashed over built-in UART, or (2) uniquely for S3, over built-in USB host controller. Since it is firmware-controlled, it may be disabled if not used (or, more commonly, not available with factory default empty firmware). When an unflashed ESP32-S3 device comes into a boot loop, with a USB-CDC device appearing and disappearing every second, and **requires a special flashing initialisation sequence to get flashed**:
 
 - Press the IO0 (FLASH) button and keep it pressed
 - Press the RESET button and release the FLASH button after
