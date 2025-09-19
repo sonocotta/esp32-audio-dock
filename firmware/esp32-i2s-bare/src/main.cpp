@@ -29,7 +29,7 @@ void setup()
   delay(500);
 #endif
 
-  esp_log_level_set("*", ESP_LOG_DEBUG);
+  // esp_log_level_set("*", ESP_LOG_DEBUG);
 
   // initializes I2S, important!
   squareGenerator.init();
