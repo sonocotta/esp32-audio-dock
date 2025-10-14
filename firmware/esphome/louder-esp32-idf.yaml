@@ -129,6 +129,7 @@ media_player:
   - platform: speaker
     name: Louder Mediaplayer
     id: louder_mediaplayer
+    buffer_size: 100000
     task_stack_in_psram: ${task_stack_in_psram}
     volume_increment: 2%
     volume_initial: 45%
