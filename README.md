@@ -58,7 +58,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [Squeezelite-esp32 reboots and connection drops](#squeezelite-esp32-reboots-and-connection-drops)
   - [Other smart home options](#other-smart-home-options)
     - [Building Tasmota with I2S support](#building-tasmota-with-i2s-support)
-    - [Connect to MQTT broker](#connect-to-mqtt-broker)
+    - [Connect to the MQTT broker](#connect-to-the-mqtt-broker)
     - [Connect Louder-ESP32 to the MQTT broker](#connect-louder-esp32-to-the-mqtt-broker)
     - [Testing audio playback with MQTT controls](#testing-audio-playback-with-mqtt-controls)
   - [Flashing ESP32-S3](#flashing-esp32-s3)
@@ -75,6 +75,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [BTL and PBTL mode (TAS5805M DAC)](#btl-and-pbtl-mode-tas5805m-dac)
     - [TAS5805M DSP capabilities](#tas5805m-dsp-capabilities)
     - [Louder-ESP32 and Amped-ESP32 power considerations](#louder-esp32-and-amped-esp32-power-considerations)
+    - [Speakers selection](#speakers-selection)
     - [OLED screen](#oled-screen)
       - [OLED models](#oled-models)
       - [Software side](#software-side)
@@ -717,6 +718,17 @@ I performed Louder-ESP32 board load tests to analyze the thermal stability of th
 | 18 | 11.40 | 1.58 | 32.5 | 41.0 | 79% | 8.5 | - | - | shutdown | 11.37 | 32.3 | 40.2 | 80% | 7.9 | shutdown | OT warning | OT warning |
 
 **Conclusion:** Long-term operation without an additional heatsink is only possible up to VCC=15V. Adding a passive heatsink only helps to sustain 1-2 more volts; more power requires active cooling.
+
+### Speakers selection
+
+When choosing speakers, focus on realistic power ratings rather than the often-inflated numbers printed on labels.
+
+A good reference point is 10 watts at 1% THD (Total Harmonic Distortion) — this provides clean, pleasant audio without noticeable distortion. Many manufacturers, however, market their speakers based on higher distortion levels or theoretical peaks:
+	•	Nominal Power (e.g., 20W) — This is often measured at around 10% THD, which produces harsh, phone-like distortion.
+	•	Rated or “Maximum” Power (e.g., 40W) — The level a speaker can handle continuously, but without limiting distortion; sound quality is not measured. It is simply a scenario where speaker is used as a room heater.
+	•	Peak Power (e.g., 80–100W) — The absolute maximum a speaker can withstand for a very short burst (milliseconds), not suitable for sustained playback.
+
+In short, when a speaker claims “100W,” it typically translates to about 10W of clean, listenable power in real use. Always prioritize low-distortion ratings over inflated wattage numbers for the best listening experience.
 
 ### OLED screen
 
