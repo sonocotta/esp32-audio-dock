@@ -17,7 +17,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
 
 | **HiFi-ESP32** | **Loud-ESP32** |
 |---|---|
-| ![DSC_0009](https://github.com/user-attachments/assets/0ac16dd2-0bd2-42e4-9e07-c2dd8b2b0266) | ![DSC_0017](https://github.com/user-attachments/assets/94ffe10e-e206-4ced-aa2c-32b60508b280) | 
+| <img width="1626" height="855" alt="image" src="https://github.com/user-attachments/assets/00ae8698-e47f-4c8a-b83e-6300a79be120" /> | ![DSC_0017](https://github.com/user-attachments/assets/94ffe10e-e206-4ced-aa2c-32b60508b280) | 
 | **Amped-ESP32** | **Louder-ESP32** |
 | ![DSC_0005](https://github.com/user-attachments/assets/e457b78c-c841-4764-90db-f25091f652ad) | ![DSC_0019](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/26c98a87-cd12-466d-990c-05dfb163390c)
 
@@ -92,7 +92,7 @@ I created those docks and subsequently development boards to be able to quickly 
 
 The HiFi-ESP32 is a first-in-line product that uses the legendary PCM5100 series DAC with supreme audio quality. It exposes line-level output that you can plug into a stereo amplifier. Analog power comes through an Ultra-low-noise LDO, making sure no interference from the MCU comes through to your speakers. Spend as much as you need on the external amp to deliver the sound you like (personally, I prefer late 80's audio gear).
 
-![DSC_0002](https://github.com/user-attachments/assets/d025ef42-daa3-4ad0-aeec-6ddf309c267b)
+<img width="3644" height="2461" alt="image" src="https://github.com/user-attachments/assets/d082c6e7-688b-4f92-97a0-f747006fbccd" />
 
 ## Loud-ESP32
 
