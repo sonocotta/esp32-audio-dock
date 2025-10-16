@@ -188,18 +188,18 @@ Audio streaming requires proper buffering to work; even with the ESP32's 500K of
 
 ### HiFi-ESP32 and Amped-ESP32
 
-|       | I2S CLK | I2S DATA | I2S WS | PSRAM RESERVED | 
-|-------|---------|----------|--------|----------|
-| ESP32 | 26      | 22       | 25     | 16, 17        |
-| ESP32-S3 | 14      | 16       | 15     | 35, 36, 37 | 
+|          | I2S CLK | I2S DATA | I2S WS | PSRAM RESERVED | 
+|----------|---------|----------|--------|----------------|
+| ESP32    | 26      | 22       | 25     | 16, 17         |
+| ESP32-S3 | 14      | 16       | 15     | 35, 36, 37     | 
 
 
 ### Loud-ESP32
 
-|       | I2S CLK | I2S DATA | I2S WS | DAC EN | PSRAM RESERVED | 
-|-------|---------|----------|--------|----------|--------------|
-| ESP32 | 26      | 22       | 25     |    13    |  16, 17      |
-| ESP32-S3 | 14   | 16       | 15     |     8    |   35, 36, 37 | 
+|          | I2S CLK | I2S DATA | I2S WS | DAC EN | PSRAM RESERVED | 
+|----------|---------|----------|--------|----------|--------------|
+| ESP32    | 26      | 22       | 25     |    13    |  16, 17      |
+| ESP32-S3 | 14      | 16       | 15     |     8    |   35, 36, 37 | 
 
 
 ### Louder-ESP32
@@ -218,20 +218,22 @@ Audio streaming requires proper buffering to work; even with the ESP32's 500K of
 
 ### Optional peripheral (all boards)
 
-|                    |  IR IN  | RGB OUT  | OLED SPI HOST/SPEED | OLED SPI CLK | OLED SPI MOSI | OLED SPI MISO | OLED SPI CS | OLED SPI DC | OLED RST | 
-|--------------------|---------|----------|---------------------|--------------|---------------|---------------|-------------|-------------|-------------|
-| ESP32              | 39      | 12       | 2/20MHz             | 18           | 23            | 19            | 15          | 4           | 32          |
-| ESP32-S3           | 7       | 9        | SPI2/20MHz          | 12           | 11            | 13            | 39          | (37)        | 38          |
-| ESP32-S3 (Rev J3+) | 7       | 9        | SPI2/20MHz          | 12           | 11            | 13            | 47          | 38          | 48          |
+|                          |  IR IN  | RGB OUT  | OLED SPI HOST/SPEED | OLED SPI CLK | OLED SPI MOSI | OLED SPI MISO | OLED SPI CS | OLED SPI DC | OLED RST | 
+|--------------------------|---------|----------|---------------------|--------------|---------------|---------------|-------------|-------------|-------------|
+| ESP32                    | 39      | 12       | 2/20MHz             | 18           | 23            | 19            | 15          | 4           | 32          |
+| ESP32-S3                 | 7       | 9        | SPI2/20MHz          | 12           | 11            | 13            | 39          | (37)        | 38          |
+| ESP32-S3 (Rev J3+)       | 7       | 9        | SPI2/20MHz          | 12           | 11            | 13            | 47          | 38          | 48          |
+| HIFI-ESP32-S3 (Rev G2+)  | 7       | 9        | SPI2/20MHz          | 12           | 11            | 13            | 39          | 40          | 38          |
 
 ### Mic header
 
-Both versions of the Louder-ESP32 boards (ESP32 Rev. H6+, ESP32-S3 Rev. K0+) have an unsoldered header for external I2S mic: left and riggh channels. ESP32 uses the same I2S bus with an extra DATA IN pin due to the pin limitations, while S3 uses a dedicated I2S bus. It can be used for wake word functionality in the Home Assistant or for custom firmware.
+Both versions of the Louder-ESP32 boards (ESP32 Rev. H6+, ESP32-S3 Rev. K0+) and HiFi-ESP32 (ESP32 Rev. F3+, ESP32-S3 Rev. G2+) have an unsoldered header for external I2S mic: left and right channels. ESP32 uses the same I2S bus with an extra DATA IN pin due to the pin limitations, while S3 uses a dedicated I2S bus. It can be used for wake word functionality in the Home Assistant or for custom firmware.
 
-|          | I2S CLK | I2S WS | I2S DATA |
-|----------|---------|--------|----------|
-| ESP32    | 26      | 25     | 13       |
-| ESP32-S3 | 41      | 40     | 39       |
+|                         | I2S CLK | I2S WS | I2S DATA |
+|-------------------------|---------|--------|----------|
+| ESP32                   | 26      | 25     | 13       |
+| ESP32-S3                | 41      | 40     | 39       |
+| HIFI-ESP32-S3 (Rev G2+) | 17      | 18     | 8        |
 
 The mic model that I used for testing and validation is the INMP441 MEMS microphone; the pinout is created for this model. Other models might be available.
 
