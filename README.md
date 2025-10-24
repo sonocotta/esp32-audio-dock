@@ -70,6 +70,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [HiFi-ESP32](#hifi-esp32-1)
     - [Loud-ESP32](#loud-esp32-2)
     - [Amped-ESP32](#amped-esp32-1)
+    - [Amped-ESP32 with TPA3128 amp](#amped-esp32-with-tpa3128-amp)
     - [Louder-ESP32](#louder-esp32-2)
     - [Optional SPI Ethernet module](#optional-spi-ethernet-module)
     - [BTL and PBTL mode (TAS5805M DAC)](#btl-and-pbtl-mode-tas5805m-dac)
@@ -102,9 +103,9 @@ The Loud-ESP32 uses a dual MAX98357 HiFi DAC with a built-in highly efficient D-
 
 ## Amped-ESP32
 
-The PCM5100 HiFi DAC is combined with a highly efficient TPA3110D2 D-class amplifier. It brings all the best from the HiFi model and adds an onboard amp to form a complete solution that can be paired with speakers directly. It uses an external power source to feed hungry amps and the host MCU using an onboard drop-down converter. It has similar power capabilities to the Louder model, but it is much simpler to use since it only needs a valid I2S signal to operate, so a simple book example code will do it.
+The PCM5100 HiFi DAC is combined with a highly efficient TPA3110D2 D-class amplifier (replaced by TPA3128 starting Rev H). It brings all the best from the HiFi model and adds an onboard amp to form a complete solution that can be paired with speakers directly. It uses an external power source to feed hungry amps and the host MCU using an onboard drop-down converter. It has similar power capabilities to the Louder model, but it is much simpler to use since it only needs a valid I2S signal to operate, so a simple book example code will do it.
 
-![DSC_0003](https://github.com/user-attachments/assets/447a628c-9225-4beb-b8cc-054cc1d1a20d)
+<img width="1983" height="1286" alt="image" src="https://github.com/user-attachments/assets/c041834a-6996-4180-b355-14eb599ecf69" />
 
 ## Louder-ESP32
 
@@ -139,7 +140,7 @@ The Louder-ESP32 is a top-of-the-range model that uses a modern, highly capable 
 | MCU | ESP32-WROVER-N8R8 onboard | ESP32-WROVER-N8R8 onboard | ESP32-WROVER-N8R8 onboard | ESP32-WROVER-N8R8 onboard |
 | Image (ESP32-S3) | <img width="1162" height="852" alt="image" src="https://github.com/user-attachments/assets/d8c9cdaa-5c0d-4332-a307-e107e4a424d3" /> | ![DSC_0009](https://github.com/user-attachments/assets/e732f7a9-77e5-4182-b808-bf12ff35a8b7) | N/A | <img width="1739" height="1275" alt="image" src="https://github.com/user-attachments/assets/0b143999-959b-4a2a-af37-deddfa07670d" /> |
 | MCU (S3) | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard |
-| DAC | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC  -100 dB typical noise level | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC working with <br /> [TPA3110D2](https://www.ti.com/product/TPA3110D2) D-Class amp | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with   built in D-Class amp |
+| DAC | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC  -100 dB typical noise level | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC working with <br /> [TPA3110D2](https://www.ti.com/product/TPA3110D2) D-Class amp <br/> [TPA3128D2](https://www.ti.com/product/TPA3128D2) amp starting from Rev H | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with   built in D-Class amp |
 | Output (4Ω) | Non-amplified stereo output, 2.1V RMS | 2x 5W | 2x 22W (4Ω, 1% THD+N) at 16V <br /> 2x 32W (4Ω, 1% THD+N) at 20V <br/> 1x 40W (4Ω, 1% THD+N) at 20V (bridged) | 2x 22W (4Ω, 1% THD+N) at 16V <br /> 2x 32W (4Ω, 1% THD+N) at 20V <br/> 1x 40W (4Ω, 1% THD+N) at 20V (bridged) |
 | Output (8Ω) | Non-amplified stereo output | 2x 3W | 2x 25W (8Ω, 1% THD+N) at 22V | 2x 25W (8Ω, 1% THD+N) at 22V |
 | PSRAM | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br/>ESP32S3: 8MB PSRAM over 80MHz QSPI | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br/>ESP32S3: 8MB PSRAM over 80MHz QSPI | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br/>ESP32S3: 8MB PSRAM over 80MHz QSPI | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br/>ESP32S3: 8MB PSRAM over 80MHz QSPI |
@@ -188,10 +189,10 @@ Audio streaming requires proper buffering to work; even with the ESP32's 500K of
 
 ### HiFi-ESP32 and Amped-ESP32
 
-|          | I2S CLK | I2S DATA | I2S WS | PSRAM RESERVED | 
-|----------|---------|----------|--------|----------------|
-| ESP32    | 26      | 22       | 25     | 16, 17         |
-| ESP32-S3 | 14      | 16       | 15     | 35, 36, 37     | 
+|          | I2S CLK | I2S DATA | I2S WS | PSRAM RESERVED | AMP EN | 
+|----------|---------|----------|--------|----------------|--------|
+| ESP32    | 26      | 22       | 25     | 16, 17         | 13 (rev H+)
+| ESP32-S3 | 14      | 16       | 15     | 35, 36, 37     | N/A
 
 
 ### Loud-ESP32
@@ -582,6 +583,19 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 |---|---|
 | ![image](https://github.com/user-attachments/assets/6fd602a7-909f-4b33-8be1-623d2fec443b) | coming soon
 
+### Amped-ESP32 with TPA3128 amp
+
+Originally, I used the TPA3110 amp with Amped Esparagus and Amped-ESP32 boards for its simplicity and availability. The only issue with TAP3110 is that it lacks the MUTE pin. It does have an STBY pin, but as it turned out, it is not pop-free, meaning each time you switch it on and off, the amp makes a loud pop in the speakers. I tried changing the level slowly, but it didn't help.
+
+Help came with a newer TPA3128 amp with revision H of the Amped-ESP32
+
+- It does have a true MUTE pin, and now it is software-controlled on Amped-ESP32. It means that the board starts dead-quiet, and it stays quiet when the audio is paused
+- MUTE pin also disables PCM5100 DAC on rev H, so line-out is also dead quiet (not that it was noise before, but why not?)
+- It can work with 4.5V, so it plays even when powered from a simple USB-C, similar to Louder-ESP32. TPA3110 needs at least 8V to spin up
+- TPA3128 has a marginally better audio quality, as they say. I cannot hear the difference 😉
+
+<img width="1291" height="864" alt="image" src="https://github.com/user-attachments/assets/448377ee-ece4-443a-9b6c-31874d50568b" />
+
 ### Louder-ESP32
 
 | ESP32  | ESP32-S3
@@ -669,7 +683,7 @@ But moanings aside, what do you get after:
 - Soft clipper
 - and a few other things
 
-At this moment, it is very experimental. In the perfect world, you should be able to adjust all of those settings to make your speaker-enclosure setup work the best it can, and even apply your room factors into the equation. But with the above disclaimer I can only deliver a limited set of configurations corresponding to the most common use cases:
+At this moment, it is very experimental. In the perfect world, you should be able to adjust all of those settings to make your speaker-enclosure setup work the best it can, and even apply your room factors into the equation. But with the above disclaimer, I can only deliver a limited set of configurations corresponding to the most common use cases:
 
 - Stereo mode with enabled DRC (Loudness) and AGL settings
 - Full range Mono mode with DRC (Loudness) and AGL settings
