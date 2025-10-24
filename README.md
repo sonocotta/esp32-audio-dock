@@ -105,7 +105,7 @@ The Loud-ESP32 uses a dual MAX98357 HiFi DAC with a built-in highly efficient D-
 
 The PCM5100 HiFi DAC is combined with a highly efficient TPA3110D2 D-class amplifier (replaced by TPA3128 starting Rev H). It brings all the best from the HiFi model and adds an onboard amp to form a complete solution that can be paired with speakers directly. It uses an external power source to feed hungry amps and the host MCU using an onboard drop-down converter. It has similar power capabilities to the Louder model, but it is much simpler to use since it only needs a valid I2S signal to operate, so a simple book example code will do it.
 
-![DSC_0003](https://github.com/user-attachments/assets/447a628c-9225-4beb-b8cc-054cc1d1a20d)
+<img width="1983" height="1286" alt="image" src="https://github.com/user-attachments/assets/c041834a-6996-4180-b355-14eb599ecf69" />
 
 ## Louder-ESP32
 
@@ -585,14 +585,16 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 
 ### Amped-ESP32 with TPA3128 amp
 
-Originally I used TAP3110 amp with Amped Esparagus and Amped-ESP32 boards for it's simplicity and availability. The only issue with TAP3110 is that it lacks MUTE pin. It does have STBY pin, but as it turned out, it is not pop-free, meaning each time you switch it on and off, amp does loud pop in the speakers. I tried changing the level slowly, but it didn't help.
+Originally, I used the TPA3110 amp with Amped Esparagus and Amped-ESP32 boards for its simplicity and availability. The only issue with TAP3110 is that it lacks the MUTE pin. It does have an STBY pin, but as it turned out, it is not pop-free, meaning each time you switch it on and off, the amp makes a loud pop in the speakers. I tried changing the level slowly, but it didn't help.
 
 Help came with a newer TPA3128 amp with revision H of the Amped-ESP32
 
-- It does have true MUTE pin, and now it is softwqre controlled on Amped-ESP32. It means that board starts dead-quiet and it stays quiet when audio paused
-- MUTE pin also disables PCM5100 DAC on rev H, so line-out also dead quiet (not that it was noise before, but why not?)
-- It can work with 4.5V, so it plays even when powered from simple USB-C, similar to Louder-ESP32. TPA3110 needs at least 8V to spin up
-- TPA3128 have a marginally better audio quality, as they say. I cannot hear the difference 😉
+- It does have a true MUTE pin, and now it is software-controlled on Amped-ESP32. It means that the board starts dead-quiet, and it stays quiet when the audio is paused
+- MUTE pin also disables PCM5100 DAC on rev H, so line-out is also dead quiet (not that it was noise before, but why not?)
+- It can work with 4.5V, so it plays even when powered from a simple USB-C, similar to Louder-ESP32. TPA3110 needs at least 8V to spin up
+- TPA3128 has a marginally better audio quality, as they say. I cannot hear the difference 😉
+
+<img width="1291" height="864" alt="image" src="https://github.com/user-attachments/assets/448377ee-ece4-443a-9b6c-31874d50568b" />
 
 ### Louder-ESP32
 
@@ -681,7 +683,7 @@ But moanings aside, what do you get after:
 - Soft clipper
 - and a few other things
 
-At this moment, it is very experimental. In the perfect world, you should be able to adjust all of those settings to make your speaker-enclosure setup work the best it can, and even apply your room factors into the equation. But with the above disclaimer I can only deliver a limited set of configurations corresponding to the most common use cases:
+At this moment, it is very experimental. In the perfect world, you should be able to adjust all of those settings to make your speaker-enclosure setup work the best it can, and even apply your room factors into the equation. But with the above disclaimer, I can only deliver a limited set of configurations corresponding to the most common use cases:
 
 - Stereo mode with enabled DRC (Loudness) and AGL settings
 - Full range Mono mode with DRC (Loudness) and AGL settings
