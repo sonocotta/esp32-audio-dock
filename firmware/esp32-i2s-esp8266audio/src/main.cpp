@@ -10,6 +10,12 @@ tas5805m Tas5805m(&Wire);
 Ticker ticker;
 #endif
 
+#ifdef CONFIG_DAC_PCM5122
+#include <Wire.h>
+#include "PCM51xx.h"
+PCM51xx Pcm5122(Wire);
+#endif
+
 const char *TAG = "MAIN";
 
 #include "player.hpp"
@@ -112,6 +118,42 @@ void setup()
 
   ESP_LOGI(TAG, "Setting GAIN value to: -15.5Db");
   ESP_ERROR_CHECK(Tas5805m.setAnalogGain(TAS5805M_MIN_GAIN));
+#endif
+
+#ifdef CONFIG_DAC_PCM5122
+  Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL);
+  // This will send default DSP init sequence
+  if (!Pcm5122.begin(PCM51xx::SAMPLE_RATE_44_1K, PCM51xx::BITS_PER_SAMPLE_16))
+  {
+    // Serial.println("Failed to initialize PCM51xx.");
+    // uint8_t powerState = Pcm5122.getPowerState();
+    // if (powerState == PCM51xx::POWER_STATE_I2C_FAILURE)
+    // {
+    //   Serial.print("No answer on I2C bus at address ");
+    //   Serial.println(Pcm5122.getI2CAddr());
+    // }
+    // else
+    // {
+    //   while (1)
+    //   {
+    //     Serial.print("Power state : ");
+    //     Serial.println(Pcm5122.getPowerState());
+    //     Serial.println("Check that the sample rate / bit depth combination is supported.");
+    //     delay(1000);
+    //   }
+    // }   
+  }
+
+  pinMode(PIN_PCM5122_MUTE, OUTPUT);
+  digitalWrite(PIN_PCM5122_MUTE, HIGH); // unmute
+
+  // I2S must be initialized by this time for DSP settings to apply
+  // uint8_t newVolume = 78; //(-15 Db default volume)
+  // ESP_LOGI(TAG, "Setting VOLUME value to: %d", newVolume);
+  // ESP_ERROR_CHECK(Tas5805m.setVolume(newVolume));
+
+  // ESP_LOGI(TAG, "Setting GAIN value to: -15.5Db");
+  // ESP_ERROR_CHECK(Tas5805m.setAnalogGain(TAS5805M_MIN_GAIN));
 #endif
 
   ESP_ERROR_CHECK(player.play());
