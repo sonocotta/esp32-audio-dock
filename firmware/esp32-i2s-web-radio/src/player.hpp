@@ -68,12 +68,17 @@ public:
   esp_err_t init()
   {
 #ifdef ESP32
-    ESP_LOGI(TAG, "Setting I2S pins: clk = %d, ws = %d, data = %d\n", PIN_I2S_SCK, PIN_I2S_FS, PIN_I2S_SD);
-    if (!out.SetPinout(PIN_I2S_SCK, PIN_I2S_FS, PIN_I2S_SD))
-    {
-      ESP_LOGE(TAG, "Failed to set pinout");
-      return ESP_FAIL;
-    }
+      #ifdef PIN_I2S_MCLK
+      ESP_LOGD(TAG, "Setting I2S pins: clk=%d, ws=%d, data=%d, mclk=%d", PIN_I2S_SCK, PIN_I2S_FS, PIN_I2S_SD, PIN_I2S_MCLK);
+      if (!out.SetPinout(PIN_I2S_SCK, PIN_I2S_FS, PIN_I2S_SD, PIN_I2S_MCLK))
+      #else
+      ESP_LOGD(TAG, "Setting I2S pins: clk=%d, ws=%d, data=%d", PIN_I2S_SCK, PIN_I2S_FS, PIN_I2S_SD);
+      if (!out.SetPinout(PIN_I2S_SCK, PIN_I2S_FS, PIN_I2S_SD))
+      #endif   
+      {
+          ESP_LOGE(TAG, "Failed to set pinout");
+          return ESP_FAIL;
+      }
 #endif
     audioLogger = &Serial;
     out.begin();

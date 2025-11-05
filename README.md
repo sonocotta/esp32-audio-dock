@@ -20,6 +20,8 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
 | <img width="1626" height="855" alt="image" src="https://github.com/user-attachments/assets/00ae8698-e47f-4c8a-b83e-6300a79be120" /> | ![DSC_0017](https://github.com/user-attachments/assets/94ffe10e-e206-4ced-aa2c-32b60508b280) | 
 | **Amped-ESP32** | **Louder-ESP32** |
 | ![DSC_0005](https://github.com/user-attachments/assets/e457b78c-c841-4764-90db-f25091f652ad) | ![DSC_0019](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/26c98a87-cd12-466d-990c-05dfb163390c)
+| **HiFi-ESP32 Plus** | **Amped-ESP32 Plus** |
+| <img width="3685" height="2625" alt="image" src="https://github.com/user-attachments/assets/fefa3c37-62dd-4ffb-a6fa-cab602e6b5fb" /> | _Coming Soon_ |
 
 ## Table of Contents
 
@@ -30,12 +32,15 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
   - [Loud-ESP32](#loud-esp32)
   - [Amped-ESP32](#amped-esp32)
   - [Louder-ESP32](#louder-esp32)
+  - [HiFi-ESP32 Plus](#hifi-esp32-plus)
+  - [Amped-ESP32 Plus (Coming Soon)](#amped-esp32-plus-coming-soon)
   - [Which device is right for me](#which-device-is-right-for-me)
   - [Features](#features)
     - [Onboard PSRAM](#onboard-psram)
   - [Boards Pinout](#boards-pinout)
     - [Legacy boards](#legacy-boards)
     - [HiFi-ESP32 and Amped-ESP32](#hifi-esp32-and-amped-esp32)
+    - [HiFi-ESP32 Plus and Amped-ESP32 Plus](#hifi-esp32-plus-and-amped-esp32-plus)
     - [Loud-ESP32](#loud-esp32-1)
     - [Louder-ESP32](#louder-esp32-1)
     - [Ethernet (all boards)](#ethernet-all-boards)
@@ -51,6 +56,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
       - [Native HA integration](#native-ha-integration)
       - [Integrate into Music Assistant directly](#integrate-into-music-assistant-directly)
     - [Home Assistant: ESPHome way](#home-assistant-esphome-way)
+    - [PCM5122 DSP capabilities (HiFi-ESP32 Plus \& Amped-ESP32 Plus)](#pcm5122-dsp-capabilities-hifi-esp32-plus--amped-esp32-plus)
     - [Home Assistant: Snapcast](#home-assistant-snapcast)
   - [Squeezelite-ESP32](#squeezelite-esp32)
     - [How to flash and configure](#how-to-flash-and-configure)
@@ -72,6 +78,8 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [Amped-ESP32](#amped-esp32-1)
     - [Amped-ESP32 with TPA3128 amp](#amped-esp32-with-tpa3128-amp)
     - [Louder-ESP32](#louder-esp32-2)
+    - [HiFi-ESP32 Plus](#hifi-esp32-plus-1)
+    - [Amped-ESP32 Plus (Coming Soon)](#amped-esp32-plus-coming-soon-1)
     - [Optional SPI Ethernet module](#optional-spi-ethernet-module)
     - [BTL and PBTL mode (TAS5805M DAC)](#btl-and-pbtl-mode-tas5805m-dac)
     - [TAS5805M DSP capabilities](#tas5805m-dsp-capabilities)
@@ -113,6 +121,33 @@ The Louder-ESP32 is a top-of-the-range model that uses a modern, highly capable 
 
 <img width="2801" height="2105" alt="image" src="https://github.com/user-attachments/assets/4cfc5cd6-07bc-472d-95d2-36777389efe5" />
 
+## HiFi-ESP32 Plus
+
+The HiFi-ESP32 Plus represents the next evolution of HiFi-ESP32 boards, featuring the advanced PCM5122 DAC with built-in DSP capabilities. This board maintains the same audio quality as the original HiFi-ESP32 while adding powerful digital signal processing features, including parametric EQ (6 BQs per channel), DRC, and crossover functionality. The PCM5122's flexible DSP engine can be configured for various audio enhancement scenarios, making it ideal for projects requiring sound tuning (why would you not), and opening the path to create 2.1 systems with PCM5122+PCM5102 master-slave config.
+
+<img width="3685" height="2625" alt="image" src="https://github.com/user-attachments/assets/a49100e2-b8b8-41ef-b3b5-b89f59ac5558" />
+
+**Key Features:**
+
+- [PCM5122](https://www.ti.com/lit/ds/symlink/pcm5122.pdf) DAC with integrated DSP
+- Parametric EQ and crossover capabilities (for cascading DACs)
+- Digital volume control (avoids loss of resolution compared to software volume)
+- Advanced audio processing features (DRC)
+- Same form factor and connectivity as HiFi-ESP32
+
+## Amped-ESP32 Plus (Work in progress)
+
+Building upon the success of the Amped-ESP32, the upcoming Amped-ESP32 Plus will combine the powerful PCM5122 DAC with the efficient TPA3128 amplifier. This board will offer the same DSP capabilities as the HiFi-ESP32 Plus while providing built-in amplification for direct speaker connection. The PCM5122's DSP features will enable advanced audio processing, including speaker correction, room EQ, and the possibility to create 2.1 systems
+
+_Image Coming Soon_
+
+**Planned Features:**
+
+- [PCM5122](https://www.ti.com/lit/ds/symlink/pcm5122.pdf) DAC with integrated DSP + TPA3128 D-class amplifier
+- Advanced crossover capabilities for bi-amp configurations
+- Digital EQ and dynamic range processing
+- Same power output as Amped-ESP32 with enhanced audio quality
+
 ## Which device is right for me
 
 <img width="1047" height="1112" alt="Esparagus Lineup-Device Select Map (ESP32) drawio (1)" src="https://github.com/user-attachments/assets/79e9bcd5-f621-416e-8a61-c49d2770f2e1" />
@@ -134,18 +169,19 @@ The Louder-ESP32 is a top-of-the-range model that uses a modern, highly capable 
 
 </details>
 
-|  | HiFi-ESP32 | Loud-ESP32 | Amped-ESP32 | Louder-ESP32 |
-|---|---|---|---|---|
-| Image (ESP32) | <img width="1271" height="854" alt="image" src="https://github.com/user-attachments/assets/fa57efc4-1d78-4dc3-b021-2f66f417f138" /> | ![DSC_0002](https://github.com/user-attachments/assets/7d351d02-7e7f-4974-9a12-ee353c239654) | ![DSC_0003](https://github.com/user-attachments/assets/447a628c-9225-4beb-b8cc-054cc1d1a20d) | <img width="1712" height="1278" alt="image" src="https://github.com/user-attachments/assets/1bca97a9-0cc7-4658-8ecc-b73894c7579e" /> |
-| MCU | ESP32-WROVER-N8R8 onboard | ESP32-WROVER-N8R8 onboard | ESP32-WROVER-N8R8 onboard | ESP32-WROVER-N8R8 onboard |
-| Image (ESP32-S3) | <img width="1162" height="852" alt="image" src="https://github.com/user-attachments/assets/d8c9cdaa-5c0d-4332-a307-e107e4a424d3" /> | ![DSC_0009](https://github.com/user-attachments/assets/e732f7a9-77e5-4182-b808-bf12ff35a8b7) | N/A | <img width="1739" height="1275" alt="image" src="https://github.com/user-attachments/assets/0b143999-959b-4a2a-af37-deddfa07670d" /> |
-| MCU (S3) | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard |
-| DAC | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC  -100 dB typical noise level | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC working with <br /> [TPA3110D2](https://www.ti.com/product/TPA3110D2) D-Class amp <br/> [TPA3128D2](https://www.ti.com/product/TPA3128D2) amp starting from Rev H | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with   built in D-Class amp |
-| Output (4Ω) | Non-amplified stereo output, 2.1V RMS | 2x 5W | 2x 22W (4Ω, 1% THD+N) at 16V <br /> 2x 32W (4Ω, 1% THD+N) at 20V <br/> 1x 40W (4Ω, 1% THD+N) at 20V (bridged) | 2x 22W (4Ω, 1% THD+N) at 16V <br /> 2x 32W (4Ω, 1% THD+N) at 20V <br/> 1x 40W (4Ω, 1% THD+N) at 20V (bridged) |
-| Output (8Ω) | Non-amplified stereo output | 2x 3W | 2x 25W (8Ω, 1% THD+N) at 22V | 2x 25W (8Ω, 1% THD+N) at 22V |
-| PSRAM | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br/>ESP32S3: 8MB PSRAM over 80MHz QSPI | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br/>ESP32S3: 8MB PSRAM over 80MHz QSPI | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br/>ESP32S3: 8MB PSRAM over 80MHz QSPI | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br/>ESP32S3: 8MB PSRAM over 80MHz QSPI |
-| Power | 5V over USB-C, 2x [LP5907](https://www.ti.com/lit/ds/symlink/lp5907.pdf) 3.3 V Ultra-Low-Noise LDO for analog section | 5V (up to 2.5A) from USB-C | Up to 26V from external PSU | Up to 26V from external PSU |
-| Connectivity | WiFi + BT4.2 (except S3) + BLE <br/> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br/> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br/> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br/> Ethernet (optional module) |
+|  | HiFi-ESP32 | Loud-ESP32 | Amped-ESP32 | Louder-ESP32 | HiFi-ESP32 Plus | Amped-ESP32 Plus |
+|---|---|---|---|---|---|---|
+| Image (ESP32) | <img width="1271" height="854" alt="image" src="https://github.com/user-attachments/assets/fa57efc4-1d78-4dc3-b021-2f66f417f138" /> | ![DSC_0002](https://github.com/user-attachments/assets/7d351d02-7e7f-4974-9a12-ee353c239654) | ![DSC_0003](https://github.com/user-attachments/assets/447a628c-9225-4beb-b8cc-054cc1d1a20d) | <img width="1712" height="1278" alt="image" src="https://github.com/user-attachments/assets/1bca97a9-0cc7-4658-8ecc-b73894c7579e" /> | <img width="1602" height="1051" alt="image" src="https://github.com/user-attachments/assets/5d4a921c-b980-4acc-8963-972187e09133" /> | _Coming soon_ |
+| MCU | ESP32-WROVER-N8R8 onboard | ESP32-WROVER-N8R8 onboard | ESP32-WROVER-N8R8 onboard | ESP32-WROVER-N8R8 onboard | ESP32-WROVER-N8R8 onboard | ESP32-WROVER-N8R8 onboard |
+| Image (ESP32-S3) | <img width="1162" height="852" alt="image" src="https://github.com/user-attachments/assets/d8c9cdaa-5c0d-4332-a307-e107e4a424d3" /> | ![DSC_0009](https://github.com/user-attachments/assets/e732f7a9-77e5-4182-b808-bf12ff35a8b7) | N/A | <img width="1739" height="1275" alt="image" src="https://github.com/user-attachments/assets/0b143999-959b-4a2a-af37-deddfa07670d" /> | <img width="1673" height="1058" alt="image" src="https://github.com/user-attachments/assets/207c30e0-2939-432d-a8f9-7d008f5f428a" /> | _Coming Soon_ |
+| MCU (S3) | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard |
+| DAC | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC  -100 dB typical noise level | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC working with <br /> [TPA3110D2](https://www.ti.com/product/TPA3110D2) D-Class amp <br/> [TPA3128D2](https://www.ti.com/product/TPA3128D2) amp starting from Rev H | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with   built in D-Class amp | [PCM5122](https://www.ti.com/product/PCM5122) 32bit Stereo DAC with integrated DSP | [PCM5122](https://www.ti.com/product/PCM5122) 32bit Stereo DAC with DSP + [TPA3128D2](https://www.ti.com/product/TPA3128D2) amp |
+| Output (4Ω) | Non-amplified stereo output, 2.1V RMS | 2x 5W | 2x 22W (4Ω, 1% THD+N) at 16V <br /> 2x 32W (4Ω, 1% THD+N) at 20V <br/> 1x 40W (4Ω, 1% THD+N) at 20V (bridged) | 2x 22W (4Ω, 1% THD+N) at 16V <br /> 2x 32W (4Ω, 1% THD+N) at 20V <br/> 1x 40W (4Ω, 1% THD+N) at 20V (bridged) | Non-amplified stereo output, 2.1V RMS | 2x 22W (4Ω, 1% THD+N) at 16V <br /> 2x 32W (4Ω, 1% THD+N) at 20V <br/> 1x 40W (4Ω, 1% THD+N) at 20V (bridged) |
+| Output (8Ω) | Non-amplified stereo output | 2x 3W | 2x 25W (8Ω, 1% THD+N) at 22V | 2x 25W (8Ω, 1% THD+N) at 22V | Non-amplified stereo output | 2x 25W (8Ω, 1% THD+N) at 22V |
+| PSRAM | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br/>ESP32S3: 8MB PSRAM over 80MHz QSPI | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br/>ESP32S3: 8MB PSRAM over 80MHz QSPI | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br/>ESP32S3: 8MB PSRAM over 80MHz QSPI | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br/>ESP32S3: 8MB PSRAM over 80MHz QSPI | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br/>ESP32S3: 8MB PSRAM over 80MHz QSPI | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br/>ESP32S3: 8MB PSRAM over 80MHz QSPI |
+| Power | 5V over USB-C, 2x [LP5907](https://www.ti.com/lit/ds/symlink/lp5907.pdf) 3.3 V Ultra-Low-Noise LDO for analog section | 5V (up to 2.5A) from USB-C | Up to 26V from external PSU | Up to 26V from external PSU | 5V over USB-C, 2x [LP5907](https://www.ti.com/lit/ds/symlink/lp5907.pdf) 3.3 V Ultra-Low-Noise LDO for analog section | Up to 26V from external PSU |
+| Connectivity | WiFi + BT4.2 (except S3) + BLE <br/> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br/> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br/> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br/> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br/> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br/> Ethernet (optional module) |
+| DSP Features | None | None | None | Advanced (EQ, DRC, AGL, etc.) | Parametric EQ, crossover, DRC | Parametric EQ, crossover, DRC |
 
 ### Onboard PSRAM
 
@@ -192,8 +228,14 @@ Audio streaming requires proper buffering to work; even with the ESP32's 500K of
 |          | I2S CLK | I2S DATA | I2S WS | PSRAM RESERVED | AMP EN | 
 |----------|---------|----------|--------|----------------|--------|
 | ESP32    | 26      | 22       | 25     | 16, 17         | 13 (rev H+)
-| ESP32-S3 | 14      | 16       | 15     | 35, 36, 37     | N/A
+| ESP32-S3 | 14      | 16       | 15     | 35, 36, 37     | N/A.   |
 
+### HiFi-ESP32 Plus and Amped-ESP32 Plus
+
+|          | I2S CLK | I2S DATA | I2S WS | I2S MCLK (optional) | PSRAM RESERVED | DAC/AMP EN | I2C SDA | I2C CLK. |
+|----------|---------|----------|--------|---------------------|----------------|------------|---------|----------|
+| ESP32    | 26      | 22       | 25     | 0                   | 16, 17         | 13         |  21     |    27    |
+| ESP32-S3 | 14      | 16       | 15     | 0                   | 35, 36, 37     | 4          |  42     |    41    |
 
 ### Loud-ESP32
 
@@ -378,6 +420,37 @@ The latest changes in the ESPHome (deprecation of the custom components) trigger
 - <img width="252" height="515" alt="image" src="https://github.com/user-attachments/assets/6863d353-dac2-40b3-8782-4747f04e729d" />
 
 We have some plans for further development of the ESPHome driver, implementing subwoofer and satellite profiles (for 2.1 and bi-amp configs), enabling soft-clipping, and perhaps even unleashing the power of all BQ-parameters (to enable speaker-specific compensation of the DAC). Stay tuned!
+
+### PCM5122 DSP capabilities (HiFi-ESP32 Plus & Amped-ESP32 Plus)
+
+The PCM5122 DAC featured in the new Plus models brings advanced DSP capabilities that were previously unavailable in the PCM5100-based lineup. This powerful 32-bit DAC includes a flexible DSP engine that enables low-latency sophisticated audio processing directly on the chip, reducing CPU load and providing professional-grade audio enhancement features.
+
+**Key DSP Features:**
+
+- **Parametric EQ**: ^BQs per channel of parametric equalization for precise frequency response shaping
+- **Dynamic Range Control (DRC)**: Automatic volume management and dynamic compression
+- **Crossover Networks**: Digital crossover filters for bi-amp and multi-way speaker systems
+- **Bass/Treble Enhancement**: Dedicated low and high frequency boost/cut controls
+- **Volume Control**: High-resolution digital volume with soft mute functionality
+- **Sample Rate Conversion**: Automatic handling of different input sample rates
+
+**Planned Implementation:**
+
+- Integration with ESPHome for Home Assistant control of DSP parameters
+- Real-time EQ adjustment through UI
+- Preset management for different listening environments
+- Advanced crossover configurations for 2.1 setups
+
+The PCM5122's DSP features will be gradually unlocked through firmware updates, starting with basic EQ and volume control, and expanding to include advanced crossover and room correction features. This positions the HiFi-ESP32 Plus and Amped-ESP32 Plus as professional-grade audio development platforms suitable for high-end audio applications.
+
+**Development Status:**
+
+- [X] - Hardware design completed (HiFi-ESP32 Plus)
+- [X] - Basic I2C driver [implementation](https://github.com/tommag/PCM51xx_Arduino)
+- [ ] - ESPHome component development
+- [ ] - Advanced DSP feature implementation
+- [ ] - Hardware design (Amped-ESP32 Plus)
+- [ ] - Web interface for DSP control
 
 ### Home Assistant: Snapcast
 
@@ -602,6 +675,21 @@ Help came with a newer TPA3128 amp with revision H of the Amped-ESP32
 |---|---|
 | ![DSC_0013_small JPG-mh](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/c4947d1b-76f1-468b-81d9-68b46ef42851) | ![DSC_0012_small JPG-mh](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/6716a624-e44d-4f83-a8ee-91ab67b8411a)
 
+### HiFi-ESP32 Plus
+
+| ESP32  | ESP32-S3
+|---|---|
+| TBU | TBU |
+
+The HiFi-ESP32 Plus features the PCM5122 DAC with advanced DSP capabilities, maintaining the same high-quality analog output while adding digital signal processing features for enhanced audio control and customization.
+
+### Amped-ESP32 Plus (Coming Soon)
+
+| ESP32  | ESP32-S3
+|---|---|
+| TBU | TBU |
+
+The upcoming Amped-ESP32 Plus will combine the PCM5122 DAC's DSP features with the TPA3128 amplifier, providing both advanced audio processing and built-in amplification in a single board.
 
 ### Optional SPI Ethernet module
 
@@ -803,3 +891,9 @@ You may support my work by ordering these products at Tindie and Elecrow
 - [Amped-ESP32](https://www.tindie.com/products/sonocotta/amped-esp32/) at Tindie
 - [Louder-ESP32 and Louder-ESP32S3](https://www.tindie.com/products/sonocotta/louder-esp32/) at Tindie
 - [Louder ESP32](https://www.elecrow.com/louder-esp32.html) at Elecrow
+
+**New Products (Available Soon):**
+- **HiFi-ESP32 Plus** - Now available with PCM5122 DAC and DSP capabilities
+- **Amped-ESP32 Plus** - Coming soon with PCM5122 DAC + TPA3128 amplifier combination
+
+*Please check the store listings for current availability and pricing. The Plus models represent the next generation of ESP32 audio boards with advanced DSP features for professional audio applications.*

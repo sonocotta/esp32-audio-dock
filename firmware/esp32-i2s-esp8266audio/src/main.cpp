@@ -10,6 +10,12 @@ tas5805m Tas5805m(&Wire);
 Ticker ticker;
 #endif
 
+#ifdef CONFIG_DAC_PCM5122
+#include <Wire.h>
+#include "PCM51xx.h"
+PCM51xx Pcm5122(Wire);
+#endif
+
 const char *TAG = "MAIN";
 
 #include "player.hpp"
@@ -112,6 +118,17 @@ void setup()
 
   ESP_LOGI(TAG, "Setting GAIN value to: -15.5Db");
   ESP_ERROR_CHECK(Tas5805m.setAnalogGain(TAS5805M_MIN_GAIN));
+#endif
+
+#ifdef CONFIG_DAC_PCM5122
+  Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL);
+  // This will send default DSP init sequence
+  Pcm5122.begin(PCM51xx::SAMPLE_RATE_44_1K, PCM51xx::BITS_PER_SAMPLE_16);
+  // begin() returns false currently, but DAC is working. Why?
+  #ifdef PIN_PCM5122_MUTE
+  pinMode(PIN_PCM5122_MUTE, OUTPUT);
+  digitalWrite(PIN_PCM5122_MUTE, HIGH); // unmute
+  #endif
 #endif
 
   ESP_ERROR_CHECK(player.play());
