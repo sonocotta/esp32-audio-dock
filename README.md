@@ -21,7 +21,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
 | **Amped-ESP32** | **Louder-ESP32** |
 | ![DSC_0005](https://github.com/user-attachments/assets/e457b78c-c841-4764-90db-f25091f652ad) | ![DSC_0019](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/26c98a87-cd12-466d-990c-05dfb163390c)
 | **HiFi-ESP32 Plus** | **Amped-ESP32 Plus** |
-| [Placeholder for HiFi-ESP32 Plus image] | [Placeholder for Amped-ESP32 Plus image - Coming Soon] |
+| <img width="3685" height="2625" alt="image" src="https://github.com/user-attachments/assets/fefa3c37-62dd-4ffb-a6fa-cab602e6b5fb" /> | _Coming Soon_ |
 
 ## Table of Contents
 
@@ -123,9 +123,9 @@ The Louder-ESP32 is a top-of-the-range model that uses a modern, highly capable 
 
 ## HiFi-ESP32 Plus
 
-The HiFi-ESP32 Plus represents the next evolution of HiFi-ESP32 boards, featuring the advanced PCM5122 DAC with built-in DSP capabilities. This board maintains the same audio quality as the original HiFi-ESP32 while adding powerful digital signal processing features including parametric EQ (6 BQs per channel), DRC, and crossover functionality. The PCM5122's flexible DSP engine can be configured for various audio enhancement scenarios, making it ideal for projects requiring sound tuning (why would you not), and opening path to create 2.1 systems with PCM5122+PCM5102 master-slave config.
+The HiFi-ESP32 Plus represents the next evolution of HiFi-ESP32 boards, featuring the advanced PCM5122 DAC with built-in DSP capabilities. This board maintains the same audio quality as the original HiFi-ESP32 while adding powerful digital signal processing features, including parametric EQ (6 BQs per channel), DRC, and crossover functionality. The PCM5122's flexible DSP engine can be configured for various audio enhancement scenarios, making it ideal for projects requiring sound tuning (why would you not), and opening the path to create 2.1 systems with PCM5122+PCM5102 master-slave config.
 
-[Placeholder for HiFi-ESP32 Plus product image]
+<img width="3685" height="2625" alt="image" src="https://github.com/user-attachments/assets/a49100e2-b8b8-41ef-b3b5-b89f59ac5558" />
 
 **Key Features:**
 
@@ -135,11 +135,11 @@ The HiFi-ESP32 Plus represents the next evolution of HiFi-ESP32 boards, featurin
 - Advanced audio processing features (DRC)
 - Same form factor and connectivity as HiFi-ESP32
 
-## Amped-ESP32 Plus (Coming Soon)
+## Amped-ESP32 Plus (Work in progress)
 
-Building upon the success of the Amped-ESP32, the upcoming Amped-ESP32 Plus will combine the powerful PCM5122 DAC with the efficient TPA3128 amplifier. This board will offer the same DSP capabilities as the HiFi-ESP32 Plus while providing built-in amplification for direct speaker connection. The PCM5122's DSP features will enable advanced audio processing including speaker correction, room EQ, and possibility to create 2.1 systems
+Building upon the success of the Amped-ESP32, the upcoming Amped-ESP32 Plus will combine the powerful PCM5122 DAC with the efficient TPA3128 amplifier. This board will offer the same DSP capabilities as the HiFi-ESP32 Plus while providing built-in amplification for direct speaker connection. The PCM5122's DSP features will enable advanced audio processing, including speaker correction, room EQ, and the possibility to create 2.1 systems
 
-[Placeholder for Amped-ESP32 Plus product image - Coming Soon]
+_Image Coming Soon_
 
 **Planned Features:**
 
@@ -171,9 +171,9 @@ Building upon the success of the Amped-ESP32, the upcoming Amped-ESP32 Plus will
 
 |  | HiFi-ESP32 | Loud-ESP32 | Amped-ESP32 | Louder-ESP32 | HiFi-ESP32 Plus | Amped-ESP32 Plus |
 |---|---|---|---|---|---|---|
-| Image (ESP32) | <img width="1271" height="854" alt="image" src="https://github.com/user-attachments/assets/fa57efc4-1d78-4dc3-b021-2f66f417f138" /> | ![DSC_0002](https://github.com/user-attachments/assets/7d351d02-7e7f-4974-9a12-ee353c239654) | ![DSC_0003](https://github.com/user-attachments/assets/447a628c-9225-4beb-b8cc-054cc1d1a20d) | <img width="1712" height="1278" alt="image" src="https://github.com/user-attachments/assets/1bca97a9-0cc7-4658-8ecc-b73894c7579e" /> | [Placeholder Image] | [Coming Soon] |
+| Image (ESP32) | <img width="1271" height="854" alt="image" src="https://github.com/user-attachments/assets/fa57efc4-1d78-4dc3-b021-2f66f417f138" /> | ![DSC_0002](https://github.com/user-attachments/assets/7d351d02-7e7f-4974-9a12-ee353c239654) | ![DSC_0003](https://github.com/user-attachments/assets/447a628c-9225-4beb-b8cc-054cc1d1a20d) | <img width="1712" height="1278" alt="image" src="https://github.com/user-attachments/assets/1bca97a9-0cc7-4658-8ecc-b73894c7579e" /> | <img width="1602" height="1051" alt="image" src="https://github.com/user-attachments/assets/5d4a921c-b980-4acc-8963-972187e09133" /> | _Coming soon_ |
 | MCU | ESP32-WROVER-N8R8 onboard | ESP32-WROVER-N8R8 onboard | ESP32-WROVER-N8R8 onboard | ESP32-WROVER-N8R8 onboard | ESP32-WROVER-N8R8 onboard | ESP32-WROVER-N8R8 onboard |
-| Image (ESP32-S3) | <img width="1162" height="852" alt="image" src="https://github.com/user-attachments/assets/d8c9cdaa-5c0d-4332-a307-e107e4a424d3" /> | ![DSC_0009](https://github.com/user-attachments/assets/e732f7a9-77e5-4182-b808-bf12ff35a8b7) | N/A | <img width="1739" height="1275" alt="image" src="https://github.com/user-attachments/assets/0b143999-959b-4a2a-af37-deddfa07670d" /> | [Placeholder Image] | [Coming Soon] |
+| Image (ESP32-S3) | <img width="1162" height="852" alt="image" src="https://github.com/user-attachments/assets/d8c9cdaa-5c0d-4332-a307-e107e4a424d3" /> | ![DSC_0009](https://github.com/user-attachments/assets/e732f7a9-77e5-4182-b808-bf12ff35a8b7) | N/A | <img width="1739" height="1275" alt="image" src="https://github.com/user-attachments/assets/0b143999-959b-4a2a-af37-deddfa07670d" /> | <img width="1673" height="1058" alt="image" src="https://github.com/user-attachments/assets/207c30e0-2939-432d-a8f9-7d008f5f428a" /> | _Coming Soon_ |
 | MCU (S3) | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard |
 | DAC | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC  -100 dB typical noise level | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC working with <br /> [TPA3110D2](https://www.ti.com/product/TPA3110D2) D-Class amp <br/> [TPA3128D2](https://www.ti.com/product/TPA3128D2) amp starting from Rev H | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with   built in D-Class amp | [PCM5122](https://www.ti.com/product/PCM5122) 32bit Stereo DAC with integrated DSP | [PCM5122](https://www.ti.com/product/PCM5122) 32bit Stereo DAC with DSP + [TPA3128D2](https://www.ti.com/product/TPA3128D2) amp |
 | Output (4Ω) | Non-amplified stereo output, 2.1V RMS | 2x 5W | 2x 22W (4Ω, 1% THD+N) at 16V <br /> 2x 32W (4Ω, 1% THD+N) at 20V <br/> 1x 40W (4Ω, 1% THD+N) at 20V (bridged) | 2x 22W (4Ω, 1% THD+N) at 16V <br /> 2x 32W (4Ω, 1% THD+N) at 20V <br/> 1x 40W (4Ω, 1% THD+N) at 20V (bridged) | Non-amplified stereo output, 2.1V RMS | 2x 22W (4Ω, 1% THD+N) at 16V <br /> 2x 32W (4Ω, 1% THD+N) at 20V <br/> 1x 40W (4Ω, 1% THD+N) at 20V (bridged) |
@@ -679,7 +679,7 @@ Help came with a newer TPA3128 amp with revision H of the Amped-ESP32
 
 | ESP32  | ESP32-S3
 |---|---|
-| [Placeholder for HiFi-ESP32 Plus ESP32 image] | [Placeholder for HiFi-ESP32 Plus ESP32-S3 image] |
+| TBU | TBU |
 
 The HiFi-ESP32 Plus features the PCM5122 DAC with advanced DSP capabilities, maintaining the same high-quality analog output while adding digital signal processing features for enhanced audio control and customization.
 
@@ -687,10 +687,9 @@ The HiFi-ESP32 Plus features the PCM5122 DAC with advanced DSP capabilities, mai
 
 | ESP32  | ESP32-S3
 |---|---|
-| [Coming Soon - Amped-ESP32 Plus ESP32 image] | [Coming Soon - Amped-ESP32 Plus ESP32-S3 image] |
+| TBU | TBU |
 
 The upcoming Amped-ESP32 Plus will combine the PCM5122 DAC's DSP features with the TPA3128 amplifier, providing both advanced audio processing and built-in amplification in a single board.
-
 
 ### Optional SPI Ethernet module
 
