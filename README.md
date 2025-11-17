@@ -887,13 +887,13 @@ Also, community members created a few 3D-printable designs for Louder-ESP32 boar
 You may support my work by ordering these products at Tindie and Elecrow
 - [ESP Audio Dock](https://www.tindie.com/products/sonocotta/esp-audio-dock/) at Tindie
 - [HiFi-ESP32 and HiFi-ESP32S3](https://www.tindie.com/products/sonocotta/hifi-esp32/)
+- [HiFi-ESP32 Plus and HiFi-ESP32S3 Plus](https://www.tindie.com/products/sonocotta/hifi-esp32-plus/)
 - [Loud-ESP32 and Loud-ESP32S3](https://www.tindie.com/products/sonocotta/loud-esp32/)
 - [Amped-ESP32](https://www.tindie.com/products/sonocotta/amped-esp32/) at Tindie
 - [Louder-ESP32 and Louder-ESP32S3](https://www.tindie.com/products/sonocotta/louder-esp32/) at Tindie
 - [Louder ESP32](https://www.elecrow.com/louder-esp32.html) at Elecrow
 
-**New Products (Available Soon):**
-- **HiFi-ESP32 Plus** - Now available with PCM5122 DAC and DSP capabilities
+**New Products (Coming Soon):**
 - **Amped-ESP32 Plus** - Coming soon with PCM5122 DAC + TPA3128 amplifier combination
 
 *Please check the store listings for current availability and pricing. The Plus models represent the next generation of ESP32 audio boards with advanced DSP features for professional audio applications.*
