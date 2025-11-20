@@ -33,7 +33,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
   - [Amped-ESP32](#amped-esp32)
   - [Louder-ESP32](#louder-esp32)
   - [HiFi-ESP32 Plus](#hifi-esp32-plus)
-  - [Amped-ESP32 Plus (Coming Soon)](#amped-esp32-plus-coming-soon)
+  - [Amped-ESP32 Plus (Work in progress)](#amped-esp32-plus-work-in-progress)
   - [Which device is right for me](#which-device-is-right-for-me)
   - [Features](#features)
     - [Onboard PSRAM](#onboard-psram)
@@ -67,6 +67,8 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [Connect to the MQTT broker](#connect-to-the-mqtt-broker)
     - [Connect Louder-ESP32 to the MQTT broker](#connect-louder-esp32-to-the-mqtt-broker)
     - [Testing audio playback with MQTT controls](#testing-audio-playback-with-mqtt-controls)
+  - [Standalone Snapclient](#standalone-snapclient)
+    - [Snapclient benefits](#snapclient-benefits)
   - [Flashing ESP32-S3](#flashing-esp32-s3)
   - [Hardware](#hardware)
     - [ESP Audio Solo](#esp-audio-solo)
@@ -79,7 +81,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [Amped-ESP32 with TPA3128 amp](#amped-esp32-with-tpa3128-amp)
     - [Louder-ESP32](#louder-esp32-2)
     - [HiFi-ESP32 Plus](#hifi-esp32-plus-1)
-    - [Amped-ESP32 Plus (Coming Soon)](#amped-esp32-plus-coming-soon-1)
+    - [Amped-ESP32 Plus (Coming Soon)](#amped-esp32-plus-coming-soon)
     - [Optional SPI Ethernet module](#optional-spi-ethernet-module)
     - [BTL and PBTL mode (TAS5805M DAC)](#btl-and-pbtl-mode-tas5805m-dac)
     - [TAS5805M DSP capabilities](#tas5805m-dsp-capabilities)
@@ -589,6 +591,24 @@ This step will depend on your specific setup, but since I have Home Assistant, I
 | Stop playback <br/> topic: `cmnd/tasmota_XXXXXX/i2swr`, payload: `` | <img width="1030" height="340" alt="image" src="https://github.com/user-attachments/assets/ae931d9f-715c-422e-aa49-dec72ef45675" />
 | Change volume <br/> topic: `cmnd/tasmota_XXXXXX/i2sgain`, payload: `85` | <img width="1021" height="338" alt="image" src="https://github.com/user-attachments/assets/a2ecc8ca-dade-4b19-a29d-2e0bbd7ac0b0" />
 | Commands `I2SRtttl` and `I2Ssay` didn't work for me, unfortunately. I didn't have time yet to figure out what the issue is.
+
+## Standalone Snapclient
+
+Snapcast is a multi-room audio player that synchronizes playback across multiple devices, ensuring that audio streams play simultaneously in perfect sync. It consists of a server, which distributes audio streams, and clients, which receive and play the audio.
+
+**Standalone Snapclient is now available for all Esparagus boards.** The main implementation ([ESP32 Snapclient](https://github.com/CarlosDerSeher/snapclient)) is an ESP32 port of the Snapcast client. An installer repository maintained by me ([Esparagus Snapclient](https://github.com/sonocotta/esparagus-snapclient)) contains pre-configured settings for all Esparagus boards as well as a web-installer project.
+
+The [web-installer](https://sonocotta.github.io/esparagus-snapclient/) allows you to flash snapclient firmware using nothing but a browser - no additional software required. Once flashed, the Snapcast server will be auto-discovered on the same network (it can be hosted on Music Assistant, a standalone Raspberry Pi, or any other compatible server).
+
+### Snapclient benefits
+
+- **Perfect multi-room synchronization** - All speakers play in perfect sync across multiple rooms, similar to Sonos but with better accuracy
+- **Zero configuration** - Auto-discovers Snapcast servers on the network
+- **Browser-based flashing** - No need to install any tools, flash directly from the web
+- **Low latency** - Optimized for minimal audio delay
+- **Flexible server options** - Works with Music Assistant, standalone servers, or DIY Raspberry Pi setups
+- **Cost-effective** - Build a whole-home audio system at a fraction of commercial solutions
+- **Possibility to mix up client with diffrent architecture** - ESP32 side-by-side with Raspberries, etc.
 
 ## Flashing ESP32-S3
 
