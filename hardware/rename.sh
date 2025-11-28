@@ -1,6 +1,6 @@
 #!/bin/bash
 
-find . -type f \( -iname '[A-Z]*.pdf' -o -iname '[A-Z]*.zip' -o -iname '[A-Z]*.step' \) -print0 |
+find . -type f \( -iname '[A-Z]*.pdf' -o -iname '[A-Z]*.zip' -o -iname '[A-Z]*.csv' -o -iname '[A-Z]*.step' \) -print0 |
 while IFS= read -r -d '' f; do
     dir=$(dirname "$f")
     base=$(basename "$f")
