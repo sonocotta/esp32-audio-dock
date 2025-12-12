@@ -906,9 +906,9 @@ Two 10 W, 8 Ω speakers → `≈ 1.2 A per channel × 2 ≈ 2.4 A`, rounded up t
 
 For a pair of **10 W / 8 Ω** speakers, you need a power adapter rated for at least:
 
-- **Voltage:** ~9 V  
-- **Current:** **3 A** total  
-- **Power:** 25..30W
+- Voltage: **~9 V**
+- Current: **3 A** total  
+- Power: **25..30W**
 
 It is not recommended to go *far beyond* the voltage your speakers can handle; otherwise, the amp will blow your speakers in no time. Using 12V power source with 9V requirement probably will be totally fine, but getting 20V power source for 10W speakers is a waste of budget and added risk.
 
