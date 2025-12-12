@@ -83,9 +83,15 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [HiFi-ESP32 Plus](#hifi-esp32-plus-1)
     - [Amped-ESP32 Plus (Coming Soon)](#amped-esp32-plus-coming-soon)
     - [Optional SPI Ethernet module](#optional-spi-ethernet-module)
-    - [BTL and PBTL mode (TAS5805M DAC)](#btl-and-pbtl-mode-tas5805m-dac)
+    - [BTL and PBTL mode (Louder and Amped boards)](#btl-and-pbtl-mode-louder-and-amped-boards)
+      - [Power figures (comparison of BTL and PBTL modes)](#power-figures-comparison-of-btl-and-pbtl-modes)
+      - [Amped TPA3110 Amp](#amped-tpa3110-amp)
+      - [Amped TPA3128 Amp](#amped-tpa3128-amp)
+      - [Louder TAS5805M DAC](#louder-tas5805m-dac)
     - [TAS5805M DSP capabilities](#tas5805m-dsp-capabilities)
     - [Louder-ESP32 and Amped-ESP32 power considerations](#louder-esp32-and-amped-esp32-power-considerations)
+      - [Connector specs](#connector-specs)
+      - [Efficiency](#efficiency)
     - [Speakers selection](#speakers-selection)
     - [OLED screen](#oled-screen)
       - [OLED models](#oled-models)
@@ -747,9 +753,51 @@ eth_config = model=w5500,cs=10,speed=20000000,intr=6,rst=5
 spi_config = mosi=11,clk=12,host=2,miso=13
 ```
 
-### BTL and PBTL mode (TAS5805M DAC)
+### BTL and PBTL mode (Louder and Amped boards)
 
-[TAS5805M DAC](https://www.ti.com/lit/ds/symlink/tas5805m.pdf?ts=1701767947387) Allows 2 modes of operation - BTL (stereo) and PBTL (parallel, or mono). In Mono, the amp will use a completely different modulation scheme and basically will fully synchronize output drivers. Jumpers on the board allow both output drivers to connect to the same speaker. The most important step is to inform the Amp to change the modulation in the first place via the I2C command. In the case of sqeezelite DAC control set value is the following:
+The [TAS5805M DAC](https://www.ti.com/lit/ds/symlink/tas5805m.pdf) DAC used on Louder boards, and the [TPA3110D2](https://www.ti.com/product/TPA3110D2) / [TPA3128](https://www.ti.com/product/TPA3138D2) amplifiers used on Amped boards support PBTL (Parallel BTL), also known as bridge mode. In practice, this lets the amplifier deliver roughly double the current capability into a single speaker, enabling higher output power when paired with a lower-impedance load.
+
+A common misconception is that switching to PBTL will automatically double the power into the same speaker you used in normal 2-channel BTL/stereo mode. It won’t. Even in stereo BTL operation, each channel already drives the speaker across the full supply voltage (VCC), so the power is limited by both the supply voltage and the current capability of each output driver.
+
+In PBTL mode, both channels are paralleled and drive the same signal, effectively doubling the current capability. This allows you to safely connect a lower-impedance speaker, which is what actually increases the possible output power. If you keep the same speaker impedance you used in stereo mode, you only balance the load between the drivers — you do not gain additional output power.
+
+Summary:
+- Use 3–4 Ω speakers in PBTL mode for optimal performance
+- Use 6–8 Ω speakers in standard BTL (stereo) mode
+
+This ensures the amplifier can operate efficiently and deliver its intended power without overloading the output drivers.
+
+In either scenario, you'd need to inform DAC/AMP to change modulation for PBTL mode (via I2C command or physical pins) and connect speakers "across" channels, so both channel drivers can contribute. This can be done in 2 alternative ways:
+
+| Desc  | Image |
+|---|---|
+| Bridge outputs before the speaker connector either with jumpers or solder bridges, use (either) single wire for each speaker terminal | <img width="501" height="378" alt="image" src="https://github.com/user-attachments/assets/9d54fd37-cc08-4dd4-a765-53ece6b9317d" /> |
+| Wire both outputs of the speaker terminals together | <img width="501" height="376" alt="image" src="https://github.com/user-attachments/assets/47cceff1-32d0-40cb-96f3-d1cea6bef2ca" /> |
+
+#### Power figures (comparison of BTL and PBTL modes)
+
+| DAC  | BTL (4Ω) | BTL (8Ω) | PBTL (3-4Ω) |
+|---|---|---|---|
+| TAS5805M | <img width="413" height="333" alt="image" src="https://github.com/user-attachments/assets/0d166711-277b-4910-9a25-13e60922804f" /> | <img width="413" height="294" alt="image" src="https://github.com/user-attachments/assets/199e066e-c770-4f3f-8310-723737ad6e0e" /> | <img width="413" height="314" alt="image" src="https://github.com/user-attachments/assets/f38bd0f2-37fb-4810-bd82-68bc66eaf1c9" /> | 
+| TPA3110  | <img width="417" height="329" alt="image" src="https://github.com/user-attachments/assets/7540a54c-de87-4970-b6be-6bf104a5fd19" /> | <img width="416" height="339" alt="image" src="https://github.com/user-attachments/assets/dd599927-7027-4576-8ae7-92e1bf6eadf9" /> | <img width="418" height="327" alt="image" src="https://github.com/user-attachments/assets/bf7d8604-27f3-411a-83a9-4aaf9ff8d739" /> | 
+| TPA3128 | <img width="418" height="288" alt="image" src="https://github.com/user-attachments/assets/94de8cb3-1490-408d-893a-123cd244ace5" /> | <img width="417" height="288" alt="image" src="https://github.com/user-attachments/assets/02ebc1d8-0c1d-4b9c-9b53-e57e81a4a5a3" />| <img width="416" height="302" alt="image" src="https://github.com/user-attachments/assets/cf155c76-13c7-4c4f-afab-0c5f525695bd" /> | 
+
+#### Amped TPA3110 Amp
+
+Physical connections that need to be done on the board (using solder bridges - normally open bridges to be closed for PBTL mode).
+<img width="730" height="481" alt="image" src="https://github.com/user-attachments/assets/c1e7c5db-df2e-4813-84a5-9e839e970c2a" />
+
+Both drivers will play RIGHT channel signal
+
+#### Amped TPA3128 Amp
+
+<img width="724" height="477" alt="image" src="https://github.com/user-attachments/assets/1e2a686b-2bb2-4480-a439-a23535240f7b" />
+
+Both drivers will play RIGHT channel signal
+
+#### Louder TAS5805M DAC
+
+The most important step is to inform the Amp to change the modulation in the first place via the I2C command. In the case of sqeezelite DAC control set value is the following:
 ```
 dac_controlset: `{"init":[{"reg":3,"val":2},{"reg":3,"val":3},{"reg":2,"val":4}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]}`
 ```
@@ -758,39 +806,32 @@ compared to the default:
 dac_controlset: `{"init":[{"reg":3,"val":2},{"reg":3,"val":3}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]}`
 
 ```
-
 One can test audio with a single speaker connected between L and R terminals (plus on one side and minus on the other). Optionally, jumpers on the board will effectively connect the second driver in parallel, doubling the current capability.
 
-Important point, this simple setup will send only one channel to the output, that’s just how the basic DAC setup works. In case you want true mono (L + R)/2 or pure R or L audio, you need to apply a mixer configuration. Full config looks like below (thanks @frdfsnlght for helping me [here](https://github.com/sonocotta/esp32-audio-dock/issues/27))
+Important point, this simple setup will send only RIGHT channel to the output, that’s just how the basic DAC setup works. In case you want true mono (LEFT + RIGHT)/2 or pure RIGHT or LEFT audio, you need to apply a mixer configuration. Full config looks like below (thanks @frdfsnlght for helping me [here](https://github.com/sonocotta/esp32-audio-dock/issues/27))
 
-Single speaker (PBTL mode), mono mix (L+R)/2:
+Single speaker (PBTL mode), TRUE MONO mix (L+R)/2:
 ```
 {"init":[{"reg":3,"val":2},{"reg":3,"val":3},{"reg":2,"val":4},{"reg":0,"val":0},{"reg":127,"val":140},{"reg":0,"val":41},{"reg":24,"val":[0,64,38,231]},{"reg":28,"val":[0,64,38,231]},{"reg":32,"val":[0,0,0,0]},{"reg":36,"val":[0,0,0,0]},{"reg":0,"val":0},{"reg":127,"val":0}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]} 
 ```
 
-Single speaker (PBTL mode), right input only:
+Single speaker (PBTL mode), RIGHT input only:
 ```
 {"init":[{"reg":3,"val":2},{"reg":3,"val":3},{"reg":2,"val":4},{"reg":0,"val":0},{"reg":127,"val":140},{"reg":0,"val":41},{"reg":24,"val":[0,128,0,0]},{"reg":28,"val":[0,0,0,0]},{"reg":32,"val":[0,0,0,0]},{"reg":36,"val":[0,0,0,0]},{"reg":0,"val":0},{"reg":127,"val":0}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]} 
 ```
 
-Single speaker (PBTL mode), left input only:
+Single speaker (PBTL mode), LEFT input only:
 ```
 {"init":[{"reg":3,"val":2},{"reg":3,"val":3},{"reg":2,"val":4},{"reg":0,"val":0},{"reg":127,"val":140},{"reg":0,"val":41},{"reg":24,"val":[0,0,0,0]},{"reg":28,"val":[0,128,0,0]},{"reg":32,"val":[0,0,0,0]},{"reg":36,"val":[0,0,0,0]},{"reg":0,"val":0},{"reg":127,"val":0}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]} 
 ```
 
-|  | BTL | PBTL |
-|---|---|---|
-| Descriotion | Bridge Tied Load, Stereo | Parallel Bridge Tied Load, Mono |
-| Rated Power | 2×23W (8-Ω, 21 V, THD+N=1%) | 45W (4-Ω, 21 V, THD+N=1%) |
-| Schematics | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/e7ada8c0-c906-4c08-ae99-be9dfe907574) | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/55f5315a-03eb-47c8-9aea-51e3eb3757fe)
-| Speaker Connection | ![image](https://github.com/user-attachments/assets/8e5e9c38-2696-419b-9c5b-d278c655b0db) | ![image](https://github.com/user-attachments/assets/8aba6273-84c4-45a8-9808-93317d794a44)
+Physical connections:
 
-Starting from Rev E, an additional header is exposed to allow datasheet-specified connectivity 
-
-| Image  | Legend  |
+| Image  | Legend |
 |---|---|
-| Stereo Mode - leave open | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/8c06f495-f551-46ef-86c0-e390a6a63241) |
-| Mono (PBTL) Mode, close horisontally | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/a5c78b6a-84c3-4546-afc8-5f65ca268157)
+| Stereo Mode - leave open | <img width="574" height="410" alt="image" src="https://github.com/user-attachments/assets/a4d4d40d-47bb-4364-82d8-b0ebd9a240bc" /> |
+| (Option A) Mono (PBTL) Mode, close horizontally | <img width="590" height="438" alt="image" src="https://github.com/user-attachments/assets/c6490d23-f573-4e78-8ee0-3fdb05a51353" />
+| (Option B) Close at the speaker | <img width="587" height="437" alt="image" src="https://github.com/user-attachments/assets/e7fdc59c-7a21-4f32-949f-3f78653e6935" />
 
 ### TAS5805M DSP capabilities
 
@@ -815,11 +856,54 @@ At this moment, it is very experimental. In the perfect world, you should be abl
 All of the above are available right now for experimentation. I'm keen to hear your feedback while I move forward with porting this to other software options
 
 - [X] - Bare [I2S TAS5805M library](https://github.com/sonocotta/esp32-tas5805m-dac)
-- [X] - [espragus-snapclient](https://sonocotta.github.io/esparagus-snapclient/) software
-- [ ] - [squeezelite-esp32](https://sonocotta.github.io/esp32-audio-dock/) <- to do
-- [ ] - flexible configurations with on-the-fly configuration changes
+- [X] - [espragus-snapclient](https://sonocotta.github.io/esparagus-snapclient/) with self-hosted UI (WIP)
+- [X] - [ESPHome driver](https://github.com/mrtoy-me/esphome-tas5805m) with UI in the Home Assistant
+- [ ] - [squeezelite-esp32](https://sonocotta.github.io/esp32-audio-dock/)
 
 ### Louder-ESP32 and Amped-ESP32 power considerations
+
+The power adapter requirements depend on the **speaker power rating** and **impedance**.  
+Since the amplifier (DAC) operates at roughly **80% efficiency**, use the following method to determine the minimum voltage and current required.
+
+**Calculate the Required Voltage (per channel)**
+
+1. Take the **rated power** of one speaker (e.g., **10 W** for a 2×10 W setup).
+2. Take the **speaker impedance** (e.g., **8 Ω**).
+3. Compute the **RMS voltage** needed to deliver that power:
+   `V_RMS = sqrt(P * R)`
+
+   For a 10 W, 8 Ω speaker:
+   `V_RMS = sqrt(10W * 8Ohm} = ~9V`
+
+4. This RMS value is your **minimum supply voltage per channel**.
+
+**Calculate the Required Current (including efficiency)**
+
+1. Use the RMS voltage from Step 1.
+2. Compute the **output current per channel**:
+   `I_out = V_rms / R`
+
+   For 9 V RMS into 8 Ω:
+   `I_out = 9V / 8Ohm = ~1.2A`
+
+3. Adjust for amplifier efficiency (≈ 80%) to determine **input current**.
+4. Multiply by the number of channels (e.g., **2 channels**).
+5. Round up for safety and headroom.
+
+**Example:**  
+Two 10 W, 8 Ω speakers → `≈ 1.2 A per channel × 2 ≈ 2.4 A`, rounded up to **3 A total**.
+
+**Final Result**
+
+For a pair of **10 W / 8 Ω** speakers, you need a power adapter rated for at least:
+
+- Voltage: **~9 V**
+- Current: **3 A** total  
+- Power: **25..30 W**
+
+It is not recommended to go *far beyond* the voltage your speakers can handle; otherwise, the amp will blow your speakers in no time. Using 12V power source with 9V requirement probably will be totally fine, but getting 20V power source for 10W speakers is a waste of budget and added risk.
+
+#### Connector specs
 
 [Barrel jack used](https://www.lcsc.com/product-detail/AC-DC-Power-Connectors_XKB-Connectivity-DC-044D-2-5A-2-0-SMT_C397342.html) is spaced at 6mm hole/2mm pin, which is typically 5.5/2.5mm jack on the male side. 
 
@@ -831,9 +915,7 @@ On the latest boards (starting from Amped-ESP32), I switched to [barrel jack wit
 
 ![image](https://github.com/user-attachments/assets/59acba9e-b447-4724-a6a1-bf777f053787)
 
-The power adapter specs depend on the speaker you're planning to use. DAC efficiency is close to 100%, so just take the power rating of your speaker (say 2x10w), and impedance (say 8 ohms), and you'd need  at least `sqrt(10W * 8Ω) ≈ 9V` rated at `9V / 8Ω ≈ 1.2A` per channel, round up to 3 total Amps. 
-
-It is not recommended to go beyond the voltage your speakers can handle; otherwise, the amp will blow your speakers in no time.
+#### Efficiency
 
 I performed Louder-ESP32 board load tests to analyze the thermal stability of the board under maximum load. These tests output a 100Hz sin-wave with a close to rail-to-rail signal (adjusting volume and gain) into an 8-Ohm load (both BD and 1SPW modulation). I started testing with bare naked DAC. As soon as I reached the point where DAC was entering thermal shutdown, I added a small radiator on top, and once more, a larger radiator on the back side (where the thermal pad is connected to the ground plane)
 
@@ -891,7 +973,7 @@ Although you're free to use it your way, using the pinout above, I'd expect the 
 | # | Description | Image |
 |---|---|---|
 | 1 | Update NVS settings in the Web UI (switch to recovery mode first) <br/> `display_config` = `SPI,width=128,height=64,cs=15,reset=32,driver=SH1106` <br/> `spi_config` = `mosi=23,clk=18,host=2,miso=19,dc=4` <br/> You may need to replace `SH1106` with `SSD1306` depending on your model. | ![image](https://github.com/user-attachments/assets/f42af7a5-2fda-42b4-80b6-4ca025bac29b)
-| 1 (S3) | In case o fESP32-S3, it is `display_config` = `SPI,width=128,height=64,cs=47,reset=48,driver=SH1106` <br/> `spi_config` = `mosi=11,clk=12,host=1,miso=13,dc=38` | ![image](https://github.com/user-attachments/assets/b374d22f-1ac5-422c-a608-5e370057ff95)
+| 1 (S3) | In case of ESP32-S3, it is `display_config` = `SPI,width=128,height=64,cs=47,reset=48,driver=SH1106` <br/> `spi_config` = `mosi=11,clk=12,host=1,miso=13,dc=38` | ![image](https://github.com/user-attachments/assets/b374d22f-1ac5-422c-a608-5e370057ff95)
 | 2 | In the LMS settings install the `SqueezeESP32` plugin | ![image](https://github.com/user-attachments/assets/5e32f271-cb66-4ea4-8a94-aaf1d0a73c5e)
 | 3 | Update each speaker's settings in the LMS, and navigate to `Display` settings | ![image](https://github.com/user-attachments/assets/ac970067-8b98-4294-af9a-80d0274e0558)
 
@@ -909,11 +991,13 @@ Also, community members created a few 3D-printable designs for Louder-ESP32 boar
 
 | #  | Image |
 |----|----|
-| [#1](https://www.printables.com/model/1268717-louder-esp32-enclosure) | ![image](https://github.com/user-attachments/assets/30842324-77e4-40f5-a326-fcf68f8feed2)
-| [#2](https://www.printables.com/model/1058552-louder-esp32-s3-playeramplifier-case/comments) | ![image](https://github.com/user-attachments/assets/ad4a30d6-953b-461e-b108-9c6155ce2477)
-| [#3](https://www.thingiverse.com/thing:7016604) | <img width="639" height="426" alt="image" src="https://github.com/user-attachments/assets/10ba6360-2e99-4690-83a4-fef0e1cad23d" />
-| [#4](https://www.thingiverse.com/thing:6333131) | ![image](https://github.com/user-attachments/assets/6e37b6ce-443e-4067-8a7a-e3b49e5e8ad3)
-| [#5](https://www.thingiverse.com/thing:6326927) | ![image](https://github.com/user-attachments/assets/cf2983fa-0c92-4798-9cb5-5e4e97d70970)
+| [#1](https://www.printables.com/model/1469153-improved-parametric-louder-esp32-speaker) | <img width="1039" height="732" alt="image" src="https://github.com/user-attachments/assets/69de75b8-bd5c-46f0-9ffc-cb29446a4a79" />
+| [#2](https://www.printables.com/model/1498180-louder-esp32-speaker-cab) | <img width="637" height="781" alt="image" src="https://github.com/user-attachments/assets/d4edd687-3f66-442e-98e6-5052c3b91d84" />
+| [#3](https://www.printables.com/model/1268717-louder-esp32-enclosure) | ![image](https://github.com/user-attachments/assets/30842324-77e4-40f5-a326-fcf68f8feed2)
+| [#4](https://www.printables.com/model/1058552-louder-esp32-s3-playeramplifier-case/comments) | ![image](https://github.com/user-attachments/assets/ad4a30d6-953b-461e-b108-9c6155ce2477)
+| [#5](https://www.thingiverse.com/thing:7016604) | <img width="639" height="426" alt="image" src="https://github.com/user-attachments/assets/10ba6360-2e99-4690-83a4-fef0e1cad23d" />
+| [#6](https://www.thingiverse.com/thing:6333131) | ![image](https://github.com/user-attachments/assets/6e37b6ce-443e-4067-8a7a-e3b49e5e8ad3)
+| [#7](https://www.thingiverse.com/thing:6326927) | ![image](https://github.com/user-attachments/assets/cf2983fa-0c92-4798-9cb5-5e4e97d70970)
 
 
 ## Where to buy
