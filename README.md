@@ -747,9 +747,43 @@ eth_config = model=w5500,cs=10,speed=20000000,intr=6,rst=5
 spi_config = mosi=11,clk=12,host=2,miso=13
 ```
 
-### BTL and PBTL mode (TAS5805M DAC)
+### BTL and PBTL mode (Louder and Amped boards)
 
-[TAS5805M DAC](https://www.ti.com/lit/ds/symlink/tas5805m.pdf?ts=1701767947387) Allows 2 modes of operation - BTL (stereo) and PBTL (parallel, or mono). In Mono, the amp will use a completely different modulation scheme and basically will fully synchronize output drivers. Jumpers on the board allow both output drivers to connect to the same speaker. The most important step is to inform the Amp to change the modulation in the first place via the I2C command. In the case of sqeezelite DAC control set value is the following:
+The [TAS5805M DAC](https://www.ti.com/lit/ds/symlink/tas5805m.pdf) DAC used on Louder boards and the [TPA3110D2](https://www.ti.com/product/TPA3110D2) / [TPA3128](https://www.ti.com/product/TPA3138D2) amplifiers used on Amped boards support PBTL (Parallel BTL), also known as bridge mode. In practice, this lets the amplifier deliver roughly double the current capability into a single speaker, enabling higher output power when paired with a lower-impedance load.
+
+A common misconception is that switching to PBTL will automatically double the power into the same speaker you used in normal 2-channel BTL/stereo mode. It won’t. Even in stereo BTL operation, each channel already drives the speaker across the full supply voltage (VCC), so the power is limited by both the supply voltage and the current capability of each output driver.
+
+In PBTL mode, both channels are paralleled and drive the same signal, effectively doubling the current capability. This allows you to safely connect a lower-impedance speaker, which is what actually increases the possible output power. If you keep the same speaker impedance you used in stereo mode, you only balance the load between the drivers — you do not gain additional output power.
+
+Summary:
+	-	Use 3–4 Ω speakers in PBTL mode for optimal performance.
+	-	Use 6–8 Ω speakers in standard BTL (stereo) mode.
+
+This ensures the amplifier can operate efficiently and deliver its intended power without overloading the output drivers.
+
+In either scenario you'd need to inform DAC/AMP to change modulation for PBTL mode (via I2C command or physical pins) and connect spekers "across" channels, so both channel drivers can contrubute. This can be done in 2 alternative ways:
+- Bridge outputs before speaker connector either with jumpers or solder bridges, use (either) single wire of each speaker termianal
+  (image placeholder)
+- Wire both outputs of speaker termianals together
+  (image placeholder)
+
+#### Power figures (comparison of BTL and PBTL modes)
+
+| DAC  | BTL  | PBTL |
+|---|---|---|
+| TAS5805M | (image placeholder) | (image placeholder) | 
+| TPA3110  | (image placeholder) | (image placeholder) | 
+| TAS31328 | (image placeholder) | (image placeholder) | 
+
+### Amped TPA3110/3128 Amp
+
+Physical connections that needs to be done on the board (using solder bridges - normally open briges to be closed for PBTL mode).
+
+(image placeholder)
+
+#### Louder TAS5805M DAC
+
+ Allows 2 modes of operation - BTL (stereo) and PBTL (parallel, or mono). In Mono, the amp will use a completely different modulation scheme and basically will fully synchronize output drivers. Jumpers on the board allow both output drivers to connect to the same speaker. The most important step is to inform the Amp to change the modulation in the first place via the I2C command. In the case of sqeezelite DAC control set value is the following:
 ```
 dac_controlset: `{"init":[{"reg":3,"val":2},{"reg":3,"val":3},{"reg":2,"val":4}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]}`
 ```
@@ -891,7 +925,7 @@ Although you're free to use it your way, using the pinout above, I'd expect the 
 | # | Description | Image |
 |---|---|---|
 | 1 | Update NVS settings in the Web UI (switch to recovery mode first) <br/> `display_config` = `SPI,width=128,height=64,cs=15,reset=32,driver=SH1106` <br/> `spi_config` = `mosi=23,clk=18,host=2,miso=19,dc=4` <br/> You may need to replace `SH1106` with `SSD1306` depending on your model. | ![image](https://github.com/user-attachments/assets/f42af7a5-2fda-42b4-80b6-4ca025bac29b)
-| 1 (S3) | In case o fESP32-S3, it is `display_config` = `SPI,width=128,height=64,cs=47,reset=48,driver=SH1106` <br/> `spi_config` = `mosi=11,clk=12,host=1,miso=13,dc=38` | ![image](https://github.com/user-attachments/assets/b374d22f-1ac5-422c-a608-5e370057ff95)
+| 1 (S3) | In case of ESP32-S3, it is `display_config` = `SPI,width=128,height=64,cs=47,reset=48,driver=SH1106` <br/> `spi_config` = `mosi=11,clk=12,host=1,miso=13,dc=38` | ![image](https://github.com/user-attachments/assets/b374d22f-1ac5-422c-a608-5e370057ff95)
 | 2 | In the LMS settings install the `SqueezeESP32` plugin | ![image](https://github.com/user-attachments/assets/5e32f271-cb66-4ea4-8a94-aaf1d0a73c5e)
 | 3 | Update each speaker's settings in the LMS, and navigate to `Display` settings | ![image](https://github.com/user-attachments/assets/ac970067-8b98-4294-af9a-80d0274e0558)
 
@@ -909,11 +943,13 @@ Also, community members created a few 3D-printable designs for Louder-ESP32 boar
 
 | #  | Image |
 |----|----|
-| [#1](https://www.printables.com/model/1268717-louder-esp32-enclosure) | ![image](https://github.com/user-attachments/assets/30842324-77e4-40f5-a326-fcf68f8feed2)
-| [#2](https://www.printables.com/model/1058552-louder-esp32-s3-playeramplifier-case/comments) | ![image](https://github.com/user-attachments/assets/ad4a30d6-953b-461e-b108-9c6155ce2477)
-| [#3](https://www.thingiverse.com/thing:7016604) | <img width="639" height="426" alt="image" src="https://github.com/user-attachments/assets/10ba6360-2e99-4690-83a4-fef0e1cad23d" />
-| [#4](https://www.thingiverse.com/thing:6333131) | ![image](https://github.com/user-attachments/assets/6e37b6ce-443e-4067-8a7a-e3b49e5e8ad3)
-| [#5](https://www.thingiverse.com/thing:6326927) | ![image](https://github.com/user-attachments/assets/cf2983fa-0c92-4798-9cb5-5e4e97d70970)
+| [#1](https://www.printables.com/model/1469153-improved-parametric-louder-esp32-speaker) | (image placeholder)
+| [#2](https://www.printables.com/model/1498180-louder-esp32-speaker-cab) | (image placeholder)
+| [#3](https://www.printables.com/model/1268717-louder-esp32-enclosure) | ![image](https://github.com/user-attachments/assets/30842324-77e4-40f5-a326-fcf68f8feed2)
+| [#4](https://www.printables.com/model/1058552-louder-esp32-s3-playeramplifier-case/comments) | ![image](https://github.com/user-attachments/assets/ad4a30d6-953b-461e-b108-9c6155ce2477)
+| [#5](https://www.thingiverse.com/thing:7016604) | <img width="639" height="426" alt="image" src="https://github.com/user-attachments/assets/10ba6360-2e99-4690-83a4-fef0e1cad23d" />
+| [#6](https://www.thingiverse.com/thing:6333131) | ![image](https://github.com/user-attachments/assets/6e37b6ce-443e-4067-8a7a-e3b49e5e8ad3)
+| [#7](https://www.thingiverse.com/thing:6326927) | ![image](https://github.com/user-attachments/assets/cf2983fa-0c92-4798-9cb5-5e4e97d70970)
 
 
 ## Where to buy
