@@ -399,7 +399,8 @@ Please find specific ESPHome configs in the [firmware](/firmware/esphome/) folde
 - [hifi-esp32-arduino](/firmware/esphome/hifi-esp32-arduino.yaml) and [hifi-esp32-idf](/firmware/esphome/hifi-esp32-idf.yaml) for HiFi-ESP32
 - [hifi-esp32-s3-arduino](/firmware/esphome/hifi-esp32-s3-arduino.yaml) and [hifi-esp32-s3-idf](/firmware/esphome/hifi-esp32-s3-idf.yaml) for HiFi-ESP32-S3
 - [loud-esp32-arduino](/firmware/esphome/loud-esp32-arduino.yaml) and [loud-esp32-idf](/firmware/esphome/loud-esp32-idf.yaml) for Loud-ESP32
-- [amped-esp32-arduino](/firmware/esphome/amped-esp32-arduino.yaml) and [amped-esp32-idf](/firmware/esphome/amped-esp32-idf.yaml) for Amped-Esparagus
+- [amped-esp32-arduino](/firmware/esphome/amped-esp32-arduino.yaml) and [amped-esp32-idf](/firmware/esphome/amped-esp32-idf.yaml) for Amped-ESP32
+- [amped-esp32-s3-arduino](/firmware/esphome/amped-esp32-s3-arduino.yaml) and [amped-esp32-s3-idf](/firmware/esphome/amped-esp32-s3-idf.yaml) for Amped-ESP32-S3
 - [louder-esp32-idf](/firmware/esphome/louder-esp32-idf.yaml) for Louder-ESP32
 - [louder-esp32-s3-idf](/firmware/esphome/louder-esp32-s3-idf.yaml) for Louder-ESP32-S3
 
@@ -409,6 +410,7 @@ Also, experimental snapclient configs
 - [hifi-esp32-s3-idf-snapclient](/firmware/esphome/hifi-esp32-s3-idf-snapclient.yaml)
 - [loud-esp32-idf-snapclient](/firmware/esphome/loud-esp32-idf-snapclient.yaml)
 - [amped-esp32-idf-snapclient](/firmware/esphome/amped-esp32-idf-snapclient.yaml)
+- [amped-esp32-s3-idf-snapclient](/firmware/esphome/amped-esp32-s3-idf-snapclient.yaml)
 - [louder-esp32-idf-snapclient](/firmware/esphome/louder-esp32-idf-snapclient.yaml)
 - [louder-esp32-s3-idf-snapclient](/firmware/esphome/louder-esp32-s3-idf-snapclient.yaml)
 
