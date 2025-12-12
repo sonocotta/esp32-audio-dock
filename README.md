@@ -879,16 +879,10 @@ Since the amplifier (DAC) operates at roughly **80% efficiency**, use the follow
 1. Take the **rated power** of one speaker (e.g., **10 W** for a 2×10 W setup).
 2. Take the **speaker impedance** (e.g., **8 Ω**).
 3. Compute the **RMS voltage** needed to deliver that power:
-
-   \[
-   V_{\text{RMS}} = \sqrt{P \times R}
-   \]
+   `V_RMS = sqrt(P * R)`
 
    For a 10 W, 8 Ω speaker:
-
-   \[
-   V_{\text{RMS}} = \sqrt{10 \text{ W} \times 8 \Omega} \approx 9 \text{ V}
-   \]
+   `V_RMS = sqrt(10W * 8Ohm} = ~9V`
 
 4. This RMS value is your **minimum supply voltage per channel**.
 
@@ -896,26 +890,17 @@ Since the amplifier (DAC) operates at roughly **80% efficiency**, use the follow
 
 1. Use the RMS voltage from Step 1.
 2. Compute the **output current per channel**:
-
-   \[
-   I_{\text{out}} = \frac{V_{\text{RMS}}}{R}
-   \]
+   `I_out = V_rms / R`
 
    For 9 V RMS into 8 Ω:
-
-   \[
-   I_{\text{out}} \approx \frac{9}{8} \approx 1.2 \text{ A}
-   \]
+   `I_out = 9V / 8Ohm = ~1.2A`
 
 3. Adjust for amplifier efficiency (≈ 80%) to determine **input current**.
 4. Multiply by the number of channels (e.g., **2 channels**).
-
 5. Round up for safety and headroom.
 
 **Example:**  
-Two 10 W, 8 Ω speakers →  
-`≈ 1.2 A per channel × 2 ≈ 2.4 A`,  
-rounded up to **3 A total**.
+Two 10 W, 8 Ω speakers → `≈ 1.2 A per channel × 2 ≈ 2.4 A`, rounded up to **3 A total**.
 
 **Final Result**
 
@@ -923,6 +908,7 @@ For a pair of **10 W / 8 Ω** speakers, you need a power adapter rated for at le
 
 - **Voltage:** ~9 V  
 - **Current:** **3 A** total  
+- **Power:** 25..30W
 
 It is not recommended to go *far beyond* the voltage your speakers can handle; otherwise, the amp will blow your speakers in no time. Using 12V power source with 9V requirement probably will be totally fine, but getting 20V power source for 10W speakers is a waste of budget and added risk.
 
