@@ -90,6 +90,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
       - [Louder TAS5805M DAC](#louder-tas5805m-dac)
     - [TAS5805M DSP capabilities](#tas5805m-dsp-capabilities)
     - [Louder-ESP32 and Amped-ESP32 power considerations](#louder-esp32-and-amped-esp32-power-considerations)
+      - [Louder-ESP32 power efficiency](#louder-esp32-power-efficiency)
     - [Speakers selection](#speakers-selection)
     - [OLED screen](#oled-screen)
       - [OLED models](#oled-models)
@@ -785,9 +786,13 @@ In either scenario, you'd need to inform DAC/AMP to change modulation for PBTL m
 Physical connections that need to be done on the board (using solder bridges - normally open bridges to be closed for PBTL mode).
 <img width="730" height="481" alt="image" src="https://github.com/user-attachments/assets/c1e7c5db-df2e-4813-84a5-9e839e970c2a" />
 
+Both drivers will play RIGHT channel signal
+
 #### Amped TPA3128 Amp
 
 <img width="724" height="477" alt="image" src="https://github.com/user-attachments/assets/1e2a686b-2bb2-4480-a439-a23535240f7b" />
+
+Both drivers will play RIGHT channel signal
 
 #### Louder TAS5805M DAC
 
@@ -802,19 +807,19 @@ dac_controlset: `{"init":[{"reg":3,"val":2},{"reg":3,"val":3}],"poweron":[{"reg"
 ```
 One can test audio with a single speaker connected between L and R terminals (plus on one side and minus on the other). Optionally, jumpers on the board will effectively connect the second driver in parallel, doubling the current capability.
 
-Important point, this simple setup will send only one channel to the output, that’s just how the basic DAC setup works. In case you want true mono (L + R)/2 or pure R or L audio, you need to apply a mixer configuration. Full config looks like below (thanks @frdfsnlght for helping me [here](https://github.com/sonocotta/esp32-audio-dock/issues/27))
+Important point, this simple setup will send only RIGHT channel to the output, that’s just how the basic DAC setup works. In case you want true mono (LEFT + RIGHT)/2 or pure RIGHT or LEFT audio, you need to apply a mixer configuration. Full config looks like below (thanks @frdfsnlght for helping me [here](https://github.com/sonocotta/esp32-audio-dock/issues/27))
 
-Single speaker (PBTL mode), mono mix (L+R)/2:
+Single speaker (PBTL mode), TRUE MONO mix (L+R)/2:
 ```
 {"init":[{"reg":3,"val":2},{"reg":3,"val":3},{"reg":2,"val":4},{"reg":0,"val":0},{"reg":127,"val":140},{"reg":0,"val":41},{"reg":24,"val":[0,64,38,231]},{"reg":28,"val":[0,64,38,231]},{"reg":32,"val":[0,0,0,0]},{"reg":36,"val":[0,0,0,0]},{"reg":0,"val":0},{"reg":127,"val":0}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]} 
 ```
 
-Single speaker (PBTL mode), right input only:
+Single speaker (PBTL mode), RIGHT input only:
 ```
 {"init":[{"reg":3,"val":2},{"reg":3,"val":3},{"reg":2,"val":4},{"reg":0,"val":0},{"reg":127,"val":140},{"reg":0,"val":41},{"reg":24,"val":[0,128,0,0]},{"reg":28,"val":[0,0,0,0]},{"reg":32,"val":[0,0,0,0]},{"reg":36,"val":[0,0,0,0]},{"reg":0,"val":0},{"reg":127,"val":0}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]} 
 ```
 
-Single speaker (PBTL mode), left input only:
+Single speaker (PBTL mode), LEFT input only:
 ```
 {"init":[{"reg":3,"val":2},{"reg":3,"val":3},{"reg":2,"val":4},{"reg":0,"val":0},{"reg":127,"val":140},{"reg":0,"val":41},{"reg":24,"val":[0,0,0,0]},{"reg":28,"val":[0,128,0,0]},{"reg":32,"val":[0,0,0,0]},{"reg":36,"val":[0,0,0,0]},{"reg":0,"val":0},{"reg":127,"val":0}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]} 
 ```
@@ -866,9 +871,62 @@ On the latest boards (starting from Amped-ESP32), I switched to [barrel jack wit
 
 ![image](https://github.com/user-attachments/assets/59acba9e-b447-4724-a6a1-bf777f053787)
 
-The power adapter specs depend on the speaker you're planning to use. DAC efficiency is close to 100%, so just take the power rating of your speaker (say 2x10w), and impedance (say 8 ohms), and you'd need  at least `sqrt(10W * 8Ω) ≈ 9V` rated at `9V / 8Ω ≈ 1.2A` per channel, round up to 3 total Amps. 
+The power adapter requirements depend on the **speaker power rating** and **impedance**.  
+Since the amplifier (DAC) operates at roughly **80% efficiency**, use the following method to determine the minimum voltage and current required.
 
-It is not recommended to go beyond the voltage your speakers can handle; otherwise, the amp will blow your speakers in no time.
+**Calculate the Required Voltage (per channel)**
+
+1. Take the **rated power** of one speaker (e.g., **10 W** for a 2×10 W setup).
+2. Take the **speaker impedance** (e.g., **8 Ω**).
+3. Compute the **RMS voltage** needed to deliver that power:
+
+   \[
+   V_{\text{RMS}} = \sqrt{P \times R}
+   \]
+
+   For a 10 W, 8 Ω speaker:
+
+   \[
+   V_{\text{RMS}} = \sqrt{10 \text{ W} \times 8 \Omega} \approx 9 \text{ V}
+   \]
+
+4. This RMS value is your **minimum supply voltage per channel**.
+
+**Calculate the Required Current (including efficiency)**
+
+1. Use the RMS voltage from Step 1.
+2. Compute the **output current per channel**:
+
+   \[
+   I_{\text{out}} = \frac{V_{\text{RMS}}}{R}
+   \]
+
+   For 9 V RMS into 8 Ω:
+
+   \[
+   I_{\text{out}} \approx \frac{9}{8} \approx 1.2 \text{ A}
+   \]
+
+3. Adjust for amplifier efficiency (≈ 80%) to determine **input current**.
+4. Multiply by the number of channels (e.g., **2 channels**).
+
+5. Round up for safety and headroom.
+
+**Example:**  
+Two 10 W, 8 Ω speakers →  
+`≈ 1.2 A per channel × 2 ≈ 2.4 A`,  
+rounded up to **3 A total**.
+
+**Final Result**
+
+For a pair of **10 W / 8 Ω** speakers, you need a power adapter rated for at least:
+
+- **Voltage:** ~9 V  
+- **Current:** **3 A** total  
+
+It is not recommended to go *far beyond* the voltage your speakers can handle; otherwise, the amp will blow your speakers in no time. Using 12V power source with 9V requirement probably will be totally fine, but getting 20V power source for 10W speakers is a waste of budget and added risk.
+
+#### Louder-ESP32 power efficiency
 
 I performed Louder-ESP32 board load tests to analyze the thermal stability of the board under maximum load. These tests output a 100Hz sin-wave with a close to rail-to-rail signal (adjusting volume and gain) into an 8-Ohm load (both BD and 1SPW modulation). I started testing with bare naked DAC. As soon as I reached the point where DAC was entering thermal shutdown, I added a small radiator on top, and once more, a larger radiator on the back side (where the thermal pad is connected to the ground plane)
 
