@@ -749,7 +749,7 @@ spi_config = mosi=11,clk=12,host=2,miso=13
 
 ### BTL and PBTL mode (Louder and Amped boards)
 
-The [TAS5805M DAC](https://www.ti.com/lit/ds/symlink/tas5805m.pdf) DAC used on Louder boards and the [TPA3110D2](https://www.ti.com/product/TPA3110D2) / [TPA3128](https://www.ti.com/product/TPA3138D2) amplifiers used on Amped boards support PBTL (Parallel BTL), also known as bridge mode. In practice, this lets the amplifier deliver roughly double the current capability into a single speaker, enabling higher output power when paired with a lower-impedance load.
+The [TAS5805M DAC](https://www.ti.com/lit/ds/symlink/tas5805m.pdf) DAC used on Louder boards, and the [TPA3110D2](https://www.ti.com/product/TPA3110D2) / [TPA3128](https://www.ti.com/product/TPA3138D2) amplifiers used on Amped boards support PBTL (Parallel BTL), also known as bridge mode. In practice, this lets the amplifier deliver roughly double the current capability into a single speaker, enabling higher output power when paired with a lower-impedance load.
 
 A common misconception is that switching to PBTL will automatically double the power into the same speaker you used in normal 2-channel BTL/stereo mode. It won’t. Even in stereo BTL operation, each channel already drives the speaker across the full supply voltage (VCC), so the power is limited by both the supply voltage and the current capability of each output driver.
 
@@ -761,29 +761,32 @@ Summary:
 
 This ensures the amplifier can operate efficiently and deliver its intended power without overloading the output drivers.
 
-In either scenario you'd need to inform DAC/AMP to change modulation for PBTL mode (via I2C command or physical pins) and connect spekers "across" channels, so both channel drivers can contrubute. This can be done in 2 alternative ways:
-- Bridge outputs before speaker connector either with jumpers or solder bridges, use (either) single wire of each speaker termianal
-  (image placeholder)
-- Wire both outputs of speaker termianals together
-  (image placeholder)
+In either scenario, you'd need to inform DAC/AMP to change modulation for PBTL mode (via I2C command or physical pins) and connect speakers "across" channels, so both channel drivers can contribute. This can be done in 2 alternative ways:
+- Bridge outputs before the speaker connector either with jumpers or solder bridges, use (either) single wire for each speaker terminal
+  <img width="501" height="378" alt="image" src="https://github.com/user-attachments/assets/9d54fd37-cc08-4dd4-a765-53ece6b9317d" />
+- Wire both outputs of the speaker terminals together
+  <img width="501" height="376" alt="image" src="https://github.com/user-attachments/assets/47cceff1-32d0-40cb-96f3-d1cea6bef2ca" />
 
 #### Power figures (comparison of BTL and PBTL modes)
 
 | DAC  | BTL  | PBTL |
 |---|---|---|
-| TAS5805M | (image placeholder) | (image placeholder) | 
-| TPA3110  | (image placeholder) | (image placeholder) | 
-| TAS31328 | (image placeholder) | (image placeholder) | 
+| TAS5805M | <img width="413" height="333" alt="image" src="https://github.com/user-attachments/assets/0d166711-277b-4910-9a25-13e60922804f" /> <img width="413" height="294" alt="image" src="https://github.com/user-attachments/assets/199e066e-c770-4f3f-8310-723737ad6e0e" /> | <img width="413" height="314" alt="image" src="https://github.com/user-attachments/assets/f38bd0f2-37fb-4810-bd82-68bc66eaf1c9" /> | 
+| TPA3110  | <img width="417" height="329" alt="image" src="https://github.com/user-attachments/assets/7540a54c-de87-4970-b6be-6bf104a5fd19" />  <img width="416" height="339" alt="image" src="https://github.com/user-attachments/assets/dd599927-7027-4576-8ae7-92e1bf6eadf9" /> | <img width="418" height="327" alt="image" src="https://github.com/user-attachments/assets/bf7d8604-27f3-411a-83a9-4aaf9ff8d739" /> | 
+| TAS31328 | <img width="418" height="288" alt="image" src="https://github.com/user-attachments/assets/94de8cb3-1490-408d-893a-123cd244ace5" /> <img width="417" height="288" alt="image" src="https://github.com/user-attachments/assets/02ebc1d8-0c1d-4b9c-9b53-e57e81a4a5a3" />| <img width="416" height="302" alt="image" src="https://github.com/user-attachments/assets/cf155c76-13c7-4c4f-afab-0c5f525695bd" /> | 
 
-### Amped TPA3110/3128 Amp
+#### Amped TPA3110 Amp
 
-Physical connections that needs to be done on the board (using solder bridges - normally open briges to be closed for PBTL mode).
+Physical connections that need to be done on the board (using solder bridges - normally open bridges to be closed for PBTL mode).
+<img width="730" height="481" alt="image" src="https://github.com/user-attachments/assets/c1e7c5db-df2e-4813-84a5-9e839e970c2a" />
 
-(image placeholder)
+#### Amped TPA3128 Amp
+
+<img width="724" height="477" alt="image" src="https://github.com/user-attachments/assets/1e2a686b-2bb2-4480-a439-a23535240f7b" />
 
 #### Louder TAS5805M DAC
 
- Allows 2 modes of operation - BTL (stereo) and PBTL (parallel, or mono). In Mono, the amp will use a completely different modulation scheme and basically will fully synchronize output drivers. Jumpers on the board allow both output drivers to connect to the same speaker. The most important step is to inform the Amp to change the modulation in the first place via the I2C command. In the case of sqeezelite DAC control set value is the following:
+The most important step is to inform the Amp to change the modulation in the first place via the I2C command. In the case of sqeezelite DAC control set value is the following:
 ```
 dac_controlset: `{"init":[{"reg":3,"val":2},{"reg":3,"val":3},{"reg":2,"val":4}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]}`
 ```
@@ -792,7 +795,6 @@ compared to the default:
 dac_controlset: `{"init":[{"reg":3,"val":2},{"reg":3,"val":3}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]}`
 
 ```
-
 One can test audio with a single speaker connected between L and R terminals (plus on one side and minus on the other). Optionally, jumpers on the board will effectively connect the second driver in parallel, doubling the current capability.
 
 Important point, this simple setup will send only one channel to the output, that’s just how the basic DAC setup works. In case you want true mono (L + R)/2 or pure R or L audio, you need to apply a mixer configuration. Full config looks like below (thanks @frdfsnlght for helping me [here](https://github.com/sonocotta/esp32-audio-dock/issues/27))
@@ -812,14 +814,7 @@ Single speaker (PBTL mode), left input only:
 {"init":[{"reg":3,"val":2},{"reg":3,"val":3},{"reg":2,"val":4},{"reg":0,"val":0},{"reg":127,"val":140},{"reg":0,"val":41},{"reg":24,"val":[0,0,0,0]},{"reg":28,"val":[0,128,0,0]},{"reg":32,"val":[0,0,0,0]},{"reg":36,"val":[0,0,0,0]},{"reg":0,"val":0},{"reg":127,"val":0}],"poweron":[{"reg":3,"val":3}],"poweroff":[{"reg":3,"val":0}]} 
 ```
 
-|  | BTL | PBTL |
-|---|---|---|
-| Descriotion | Bridge Tied Load, Stereo | Parallel Bridge Tied Load, Mono |
-| Rated Power | 2×23W (8-Ω, 21 V, THD+N=1%) | 45W (4-Ω, 21 V, THD+N=1%) |
-| Schematics | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/e7ada8c0-c906-4c08-ae99-be9dfe907574) | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/55f5315a-03eb-47c8-9aea-51e3eb3757fe)
-| Speaker Connection | ![image](https://github.com/user-attachments/assets/8e5e9c38-2696-419b-9c5b-d278c655b0db) | ![image](https://github.com/user-attachments/assets/8aba6273-84c4-45a8-9808-93317d794a44)
-
-Starting from Rev E, an additional header is exposed to allow datasheet-specified connectivity 
+Physical connections:
 
 | Image  | Legend  |
 |---|---|
@@ -943,8 +938,8 @@ Also, community members created a few 3D-printable designs for Louder-ESP32 boar
 
 | #  | Image |
 |----|----|
-| [#1](https://www.printables.com/model/1469153-improved-parametric-louder-esp32-speaker) | (image placeholder)
-| [#2](https://www.printables.com/model/1498180-louder-esp32-speaker-cab) | (image placeholder)
+| [#1](https://www.printables.com/model/1469153-improved-parametric-louder-esp32-speaker) | <img width="1039" height="732" alt="image" src="https://github.com/user-attachments/assets/69de75b8-bd5c-46f0-9ffc-cb29446a4a79" />
+| [#2](https://www.printables.com/model/1498180-louder-esp32-speaker-cab) | <img width="637" height="781" alt="image" src="https://github.com/user-attachments/assets/d4edd687-3f66-442e-98e6-5052c3b91d84" />
 | [#3](https://www.printables.com/model/1268717-louder-esp32-enclosure) | ![image](https://github.com/user-attachments/assets/30842324-77e4-40f5-a326-fcf68f8feed2)
 | [#4](https://www.printables.com/model/1058552-louder-esp32-s3-playeramplifier-case/comments) | ![image](https://github.com/user-attachments/assets/ad4a30d6-953b-461e-b108-9c6155ce2477)
 | [#5](https://www.thingiverse.com/thing:7016604) | <img width="639" height="426" alt="image" src="https://github.com/user-attachments/assets/10ba6360-2e99-4690-83a4-fef0e1cad23d" />
