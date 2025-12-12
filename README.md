@@ -762,18 +762,19 @@ Summary:
 This ensures the amplifier can operate efficiently and deliver its intended power without overloading the output drivers.
 
 In either scenario, you'd need to inform DAC/AMP to change modulation for PBTL mode (via I2C command or physical pins) and connect speakers "across" channels, so both channel drivers can contribute. This can be done in 2 alternative ways:
-- Bridge outputs before the speaker connector either with jumpers or solder bridges, use (either) single wire for each speaker terminal
-  <img width="501" height="378" alt="image" src="https://github.com/user-attachments/assets/9d54fd37-cc08-4dd4-a765-53ece6b9317d" />
-- Wire both outputs of the speaker terminals together
-  <img width="501" height="376" alt="image" src="https://github.com/user-attachments/assets/47cceff1-32d0-40cb-96f3-d1cea6bef2ca" />
+
+| Desc  | Image |
+|---|---|
+| Bridge outputs before the speaker connector either with jumpers or solder bridges, use (either) single wire for each speaker terminal | <img width="501" height="378" alt="image" src="https://github.com/user-attachments/assets/9d54fd37-cc08-4dd4-a765-53ece6b9317d" /> |
+| Wire both outputs of the speaker terminals together | <img width="501" height="376" alt="image" src="https://github.com/user-attachments/assets/47cceff1-32d0-40cb-96f3-d1cea6bef2ca" /> |
 
 #### Power figures (comparison of BTL and PBTL modes)
 
-| DAC  | BTL  | PBTL |
-|---|---|---|
-| TAS5805M | <img width="413" height="333" alt="image" src="https://github.com/user-attachments/assets/0d166711-277b-4910-9a25-13e60922804f" /> <img width="413" height="294" alt="image" src="https://github.com/user-attachments/assets/199e066e-c770-4f3f-8310-723737ad6e0e" /> | <img width="413" height="314" alt="image" src="https://github.com/user-attachments/assets/f38bd0f2-37fb-4810-bd82-68bc66eaf1c9" /> | 
-| TPA3110  | <img width="417" height="329" alt="image" src="https://github.com/user-attachments/assets/7540a54c-de87-4970-b6be-6bf104a5fd19" />  <img width="416" height="339" alt="image" src="https://github.com/user-attachments/assets/dd599927-7027-4576-8ae7-92e1bf6eadf9" /> | <img width="418" height="327" alt="image" src="https://github.com/user-attachments/assets/bf7d8604-27f3-411a-83a9-4aaf9ff8d739" /> | 
-| TAS31328 | <img width="418" height="288" alt="image" src="https://github.com/user-attachments/assets/94de8cb3-1490-408d-893a-123cd244ace5" /> <img width="417" height="288" alt="image" src="https://github.com/user-attachments/assets/02ebc1d8-0c1d-4b9c-9b53-e57e81a4a5a3" />| <img width="416" height="302" alt="image" src="https://github.com/user-attachments/assets/cf155c76-13c7-4c4f-afab-0c5f525695bd" /> | 
+| DAC  | BTL (4Ω) | BTL (8Ω) | PBTL (3-4Ω) |
+|---|---|---|---|
+| TAS5805M | <img width="413" height="333" alt="image" src="https://github.com/user-attachments/assets/0d166711-277b-4910-9a25-13e60922804f" /> | <img width="413" height="294" alt="image" src="https://github.com/user-attachments/assets/199e066e-c770-4f3f-8310-723737ad6e0e" /> | <img width="413" height="314" alt="image" src="https://github.com/user-attachments/assets/f38bd0f2-37fb-4810-bd82-68bc66eaf1c9" /> | 
+| TPA3110  | <img width="417" height="329" alt="image" src="https://github.com/user-attachments/assets/7540a54c-de87-4970-b6be-6bf104a5fd19" /> | <img width="416" height="339" alt="image" src="https://github.com/user-attachments/assets/dd599927-7027-4576-8ae7-92e1bf6eadf9" /> | <img width="418" height="327" alt="image" src="https://github.com/user-attachments/assets/bf7d8604-27f3-411a-83a9-4aaf9ff8d739" /> | 
+| TAS31328 | <img width="418" height="288" alt="image" src="https://github.com/user-attachments/assets/94de8cb3-1490-408d-893a-123cd244ace5" /> | <img width="417" height="288" alt="image" src="https://github.com/user-attachments/assets/02ebc1d8-0c1d-4b9c-9b53-e57e81a4a5a3" />| <img width="416" height="302" alt="image" src="https://github.com/user-attachments/assets/cf155c76-13c7-4c4f-afab-0c5f525695bd" /> | 
 
 #### Amped TPA3110 Amp
 
@@ -816,10 +817,11 @@ Single speaker (PBTL mode), left input only:
 
 Physical connections:
 
-| Image  | Legend  |
+| Image  | Legend |
 |---|---|
-| Stereo Mode - leave open | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/8c06f495-f551-46ef-86c0-e390a6a63241) |
-| Mono (PBTL) Mode, close horisontally | ![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/a5c78b6a-84c3-4546-afc8-5f65ca268157)
+| Stereo Mode - leave open | <img width="574" height="410" alt="image" src="https://github.com/user-attachments/assets/a4d4d40d-47bb-4364-82d8-b0ebd9a240bc" /> |
+| (Option A) Mono (PBTL) Mode, close horizontally | <img width="590" height="438" alt="image" src="https://github.com/user-attachments/assets/c6490d23-f573-4e78-8ee0-3fdb05a51353" />
+| (Option B) Close at the speaker | <img width="587" height="437" alt="image" src="https://github.com/user-attachments/assets/e7fdc59c-7a21-4f32-949f-3f78653e6935" />
 
 ### TAS5805M DSP capabilities
 
