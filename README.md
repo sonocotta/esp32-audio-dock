@@ -756,8 +756,8 @@ A common misconception is that switching to PBTL will automatically double the p
 In PBTL mode, both channels are paralleled and drive the same signal, effectively doubling the current capability. This allows you to safely connect a lower-impedance speaker, which is what actually increases the possible output power. If you keep the same speaker impedance you used in stereo mode, you only balance the load between the drivers — you do not gain additional output power.
 
 Summary:
-	-	Use 3–4 Ω speakers in PBTL mode for optimal performance.
-	-	Use 6–8 Ω speakers in standard BTL (stereo) mode.
+- Use 3–4 Ω speakers in PBTL mode for optimal performance
+- Use 6–8 Ω speakers in standard BTL (stereo) mode
 
 This ensures the amplifier can operate efficiently and deliver its intended power without overloading the output drivers.
 
