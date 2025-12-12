@@ -90,7 +90,8 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
       - [Louder TAS5805M DAC](#louder-tas5805m-dac)
     - [TAS5805M DSP capabilities](#tas5805m-dsp-capabilities)
     - [Louder-ESP32 and Amped-ESP32 power considerations](#louder-esp32-and-amped-esp32-power-considerations)
-      - [Louder-ESP32 power efficiency](#louder-esp32-power-efficiency)
+      - [Connector specs](#connector-specs)
+      - [Efficiency](#efficiency)
     - [Speakers selection](#speakers-selection)
     - [OLED screen](#oled-screen)
       - [OLED models](#oled-models)
@@ -861,16 +862,6 @@ All of the above are available right now for experimentation. I'm keen to hear y
 
 ### Louder-ESP32 and Amped-ESP32 power considerations
 
-[Barrel jack used](https://www.lcsc.com/product-detail/AC-DC-Power-Connectors_XKB-Connectivity-DC-044D-2-5A-2-0-SMT_C397342.html) is spaced at 6mm hole/2mm pin, which is typically 5.5/2.5mm jack on the male side. 
-
-![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/0b18f215-e4ce-4335-9217-d8859566c3a4)
-
-The screw terminal is connected in parallel to the barrel jack; you can use either interchangeably.
-
-On the latest boards (starting from Amped-ESP32), I switched to [barrel jack with thick middle pin](https://atta.szlcsc.com/upload/public/pdf/source/20200812/C720576_7B83670454B7C7E493B4E29DD30CFE1F.pdf) with a **2.5mm pin**, it’s a bit unusual but still common enough in the laptop world. It is far more comfortable in handling high currents, and importantly, much more sturdy and resistant to desoldering. 
-
-![image](https://github.com/user-attachments/assets/59acba9e-b447-4724-a6a1-bf777f053787)
-
 The power adapter requirements depend on the **speaker power rating** and **impedance**.  
 Since the amplifier (DAC) operates at roughly **80% efficiency**, use the following method to determine the minimum voltage and current required.
 
@@ -908,11 +899,23 @@ For a pair of **10 W / 8 Ω** speakers, you need a power adapter rated for at le
 
 - Voltage: **~9 V**
 - Current: **3 A** total  
-- Power: **25..30W**
+- Power: **25..30 W**
 
 It is not recommended to go *far beyond* the voltage your speakers can handle; otherwise, the amp will blow your speakers in no time. Using 12V power source with 9V requirement probably will be totally fine, but getting 20V power source for 10W speakers is a waste of budget and added risk.
 
-#### Louder-ESP32 power efficiency
+#### Connector specs
+
+[Barrel jack used](https://www.lcsc.com/product-detail/AC-DC-Power-Connectors_XKB-Connectivity-DC-044D-2-5A-2-0-SMT_C397342.html) is spaced at 6mm hole/2mm pin, which is typically 5.5/2.5mm jack on the male side. 
+
+![image](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/0b18f215-e4ce-4335-9217-d8859566c3a4)
+
+The screw terminal is connected in parallel to the barrel jack; you can use either interchangeably.
+
+On the latest boards (starting from Amped-ESP32), I switched to [barrel jack with thick middle pin](https://atta.szlcsc.com/upload/public/pdf/source/20200812/C720576_7B83670454B7C7E493B4E29DD30CFE1F.pdf) with a **2.5mm pin**, it’s a bit unusual but still common enough in the laptop world. It is far more comfortable in handling high currents, and importantly, much more sturdy and resistant to desoldering. 
+
+![image](https://github.com/user-attachments/assets/59acba9e-b447-4724-a6a1-bf777f053787)
+
+#### Efficiency
 
 I performed Louder-ESP32 board load tests to analyze the thermal stability of the board under maximum load. These tests output a 100Hz sin-wave with a close to rail-to-rail signal (adjusting volume and gain) into an 8-Ohm load (both BD and 1SPW modulation). I started testing with bare naked DAC. As soon as I reached the point where DAC was entering thermal shutdown, I added a small radiator on top, and once more, a larger radiator on the back side (where the thermal pad is connected to the ground plane)
 
