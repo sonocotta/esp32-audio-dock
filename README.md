@@ -199,9 +199,9 @@ _Image Coming Soon_
 | Connectivity | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) |
 | DSP Features | None | Parametric EQ, crossover, DRC | None | Advanced (EQ, DRC, AGL, etc.) | None | Parametric EQ, crossover, DRC |
 | **Software support** |  |  |  |  |  |  |
-| Squeezelite-ESP32 | Yes (S3 support is unofficial) | Work in progress | Yes | Yes (S3 support is unofficial) | Yes (S3 support is unofficial) | Work in progress |
-| Snapclient | Yes | Work in progress | Yes | Yes | Yes | Work in progress |
-| ESPHome (HA) | Yes | No (planned) | Yes | Yes | Yes | No (planned) |
+| Squeezelite-ESP32 | Yes (S3 support is unofficial) | Yes (S3 support is unofficial) | Yes (S3 support is unofficial) | Yes (S3 support is unofficial) | Yes (S3 support is unofficial) | Work in progress |
+| Snapclient | Yes | Yes | Yes | Yes | Yes | Work in progress |
+| ESPHome (HA) | Yes | No (Work in Progress) | Yes | Yes | Yes | No (Work in Progress) |
 
 ### Onboard PSRAM
 
