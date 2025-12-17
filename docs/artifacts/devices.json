@@ -125,7 +125,7 @@
                 ],
                 "title": "Amped-ESP32-S3",
                 "description": "<a href=\"https://www.tindie.com/products/sonocotta/amped-esp32\">Amped-ESP32-S3</a> is an ESP32-S3 version of the Amped-ESP32. It does not support Bluetooth, but have more accessible PSRAM running at higher speed.",
-                "manifest": "artifacts/manifest-louder-esp32s3-2.1681-16.json"
+                "manifest": "artifacts/manifest-amped-esp32s3-2.1681-16.json"
             }
         ]
     }
