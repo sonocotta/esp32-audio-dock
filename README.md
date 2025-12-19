@@ -201,7 +201,7 @@ _Image Coming Soon_
 | **Software support** |  |  |  |  |  |  |
 | Squeezelite-ESP32 | Yes (S3 support is unofficial) | Yes (S3 support is unofficial) | Yes (S3 support is unofficial) | Yes (S3 support is unofficial) | Yes (S3 support is unofficial) | Work in progress |
 | Snapclient | Yes | Yes | Yes | Yes | Yes | Work in progress |
-| ESPHome (HA) | Yes | No (Work in Progress) | Yes | Yes | Yes | No (Work in Progress) |
+| ESPHome (HA) | Yes | Yes | Yes | Yes | Yes | No (Work in Progress) |
 
 ### Onboard PSRAM
 
@@ -398,6 +398,7 @@ Please find specific ESPHome configs in the [firmware](/firmware/esphome/) folde
 
 - [hifi-esp32-arduino](/firmware/esphome/hifi-esp32-arduino.yaml) and [hifi-esp32-idf](/firmware/esphome/hifi-esp32-idf.yaml) for HiFi-ESP32
 - [hifi-esp32-s3-arduino](/firmware/esphome/hifi-esp32-s3-arduino.yaml) and [hifi-esp32-s3-idf](/firmware/esphome/hifi-esp32-s3-idf.yaml) for HiFi-ESP32-S3
+- [hifi-esp32-plus-idf](/firmware/esphome/hifi-esp32-plus-idf.yaml) and [hifi-esp32-s3-plus-idf](/firmware/esphome/hifi-esp32-s3-plus-idf.yaml) for HiFi-ESP32 Plus and HiFi-ESP32S3-Plus (uses [esphome-pcm5122](https://github.com/sonocotta/esphome-pcm5122/) component)
 - [loud-esp32-arduino](/firmware/esphome/loud-esp32-arduino.yaml) and [loud-esp32-idf](/firmware/esphome/loud-esp32-idf.yaml) for Loud-ESP32
 - [amped-esp32-arduino](/firmware/esphome/amped-esp32-arduino.yaml) and [amped-esp32-idf](/firmware/esphome/amped-esp32-idf.yaml) for Amped-ESP32
 - [amped-esp32-s3-arduino](/firmware/esphome/amped-esp32-s3-arduino.yaml) and [amped-esp32-s3-idf](/firmware/esphome/amped-esp32-s3-idf.yaml) for Amped-ESP32-S3
