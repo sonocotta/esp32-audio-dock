@@ -1,0 +1,180 @@
+esphome:
+  name: hifi-esp32-plus
+  friendly_name: HiFi-ESP32-Plus
+  min_version: 2025.7.2
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  board: mhetesp32minikit
+  variant: esp32
+  flash_size: 8MB
+  cpu_frequency: 240MHz
+  framework:
+    type: esp-idf
+    version: recommended
+    sdkconfig_options:
+      CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: "y"
+      CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
+      CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
+      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"  
+      
+# Enable logging
+logger:
+  level: DEBUG
+
+# Enable Home Assistant API
+api:
+
+ota:
+  platform: esphome
+  password: !secret esphome_ota_password
+
+wifi:
+  ssid: !secret esphome_wifi_ssid
+  password: !secret esphome_wifi_password
+  ap:
+    ssid: "$name Hotspot"
+    password: !secret esphome_ap_password
+
+psram:
+  speed: 80MHz
+
+external_components:
+  - source: github://sonocotta/esphome-pcm5122
+    components: [ pcm5122 ]
+    refresh: 0s
+
+globals:
+  - id: current_volume
+    type: float
+
+i2c:
+# Pins are swapped on the HiFi-ESP32-S3-Plus Rev J, these are for Rev J1+
+  sda: GPIO21
+  scl: GPIO27
+  frequency: 400kHz
+  scan: True
+
+audio_dac:
+  - platform: pcm5122
+    id: pcm5122_dac
+    enable_pin: GPIO13
+    volume_max: 0dB
+    volume_min: -60db
+    # analog_gain: -15.5db
+    # mixer_mode: STEREO
+
+i2s_audio:
+  i2s_lrclk_pin: GPIO25
+  i2s_bclk_pin: GPIO26
+
+speaker:
+  - platform: i2s_audio
+    id: speaker_id
+    dac_type: external
+    i2s_dout_pin: GPIO22
+    audio_dac: pcm5122_dac
+    channel: stereo
+    sample_rate: 48000
+    timeout: never
+
+  - platform: mixer
+    id: mixer_speaker_id
+    output_speaker: speaker_id
+    source_speakers:
+      - id: announcement_spk_mixer_input
+        timeout: never
+      - id: media_spk_mixer_input
+        timeout: never
+
+  - platform: resampler
+    id: media_spk_resampling_input
+    output_speaker: media_spk_mixer_input
+
+  - platform: resampler
+    id: announcement_spk_resampling_input
+    output_speaker: announcement_spk_mixer_input
+
+media_player:
+  - platform: speaker
+    name: Mediaplayer
+    id: hifi_mediaplayer
+    buffer_size: 100000
+    volume_increment: 10%
+    volume_initial: 10%
+    media_pipeline:
+      speaker: media_spk_resampling_input
+      num_channels: 2
+    announcement_pipeline:
+       speaker: announcement_spk_resampling_input
+       num_channels: 1
+
+    on_play:
+      - if:
+          condition:
+            switch.is_off: enable_dac
+          then:
+            switch.turn_on: enable_dac
+
+    on_announcement:
+      - if:
+          condition:
+            switch.is_off: enable_dac
+          then:
+            switch.turn_on: enable_dac
+
+      - lambda: id(current_volume) = id(pcm5122_dac).volume();
+
+      - mixer_speaker.apply_ducking:
+            id: media_spk_mixer_input
+            decibel_reduction: 40
+            duration: 0.00s
+      - wait_until:
+            media_player.is_announcing:
+      - delay: 0.75s
+      - lambda: id(pcm5122_dac).set_volume(id(announce_volume).state / 100);
+
+      - wait_until:
+          not:
+            media_player.is_announcing:
+      - mixer_speaker.apply_ducking:
+            id: media_spk_mixer_input
+            decibel_reduction: 0
+            duration: 1.0s
+      - lambda: id(pcm5122_dac).set_volume(id(current_volume));
+
+switch:
+  - platform: pcm5122
+    enable_dac:
+      name: Enable DAC
+      id: enable_dac
+      restore_mode: ALWAYS_ON
+
+number:
+  - platform: template
+    name: Announce Volume
+    id: announce_volume
+    icon: mdi:volume-source
+    unit_of_measurement: "%"
+    min_value: 0
+    max_value: 100
+    step: 1
+    restore_value: true
+    initial_value: 50
+    optimistic: true
+
+interval:
+  - interval: 60s
+    then:
+      - if:
+          condition:
+            - switch.is_on: enable_dac
+            - for:
+                time: 120s
+                condition:
+                  or:
+                    - media_player.is_idle: hifi_mediaplayer
+                    - media_player.is_paused: hifi_mediaplayer
+          then:
+            - switch.turn_off: enable_dac
