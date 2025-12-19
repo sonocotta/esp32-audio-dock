@@ -58,15 +58,16 @@ globals:
     type: float
 
 i2c:
-  sda: GPIO41
-  scl: GPIO42
+# Pins are swapped on the HiFi-ESP32-S3-Plus Rev H, these are for Rev H1+
+  sda: GPIO42 
+  scl: GPIO41
   frequency: 400kHz
   scan: True
 
 audio_dac:
   - platform: pcm5122
     id: pcm5122_dac
-    address: 0x4c
+    address: 0x4D           # I2C address of the DAC, it is 0x4C n the HiFi-ESP32 Rev H, and 0x4D on the rev H1+
     enable_pin: GPIO4       # optional, to enable/disable the DAC (XSMT pin)
     volume_max: 0dB         # maximum volume range 0dB, can go up to +24dB
     volume_min: -60dB       # minimum volume range -60dB, can go down to -103dB

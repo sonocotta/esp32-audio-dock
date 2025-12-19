@@ -50,6 +50,7 @@ globals:
     type: float
 
 i2c:
+# Pins are swapped on the HiFi-ESP32-S3-Plus Rev J, these are for Rev J1+
   sda: GPIO21
   scl: GPIO27
   frequency: 400kHz
