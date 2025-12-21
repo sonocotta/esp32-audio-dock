@@ -51,6 +51,14 @@
             },
             {
                 "images": [
+                    "https://github.com/user-attachments/assets/f021427a-6343-4e9d-84a4-9b28b5237c99"
+                ],
+                "title": "Hifi-ESP32-Plus (Rev J1+)",
+                "description": "<a href=\"https://www.tindie.com/products/sonocotta/hifi-esp32-plus\">HiFi-ESP32-Plus</a> represents the next evolution of HiFi-ESP32 boards, featuring the advanced PCM5122 DAC with built-in DSP capabilities. This board maintains the same audio quality as the original HiFi-ESP32 while adding powerful digital signal processing features, including parametric EQ (6 BQs per channel), DRC, and crossover functionality (with output to downstream DAC)",
+                "manifest": "artifacts/manifest-hifi-esp32-plus-latest.json"
+            },
+            {
+                "images": [
                     "https://github.com/user-attachments/assets/7d351d02-7e7f-4974-9a12-ee353c239654"
                 ],
                 "title": "Loud-ESP32",
@@ -59,19 +67,19 @@
             },
             {
                 "images": [
-                    "https://github.com/user-attachments/assets/447a628c-9225-4beb-b8cc-054cc1d1a20d"
-                ],
-                "title": "Amped-ESP32",
-                "description": "<a href=\"https://www.tindie.com/products/sonocotta/amped-esp32/\">Amped-ESP32</a> is an extension of the HiFi-ESP32 board, it adds a high quality D-class amp to the PCM5100 DAC. You can use either 3.5mm jack for line output (amp will be muted) or screw terminals to connect speakers.",
-                "manifest": "artifacts/manifest-amped-esp32-latest.json"
-            },
-            {
-                "images": [
                     "https://github.com/sonocotta/esp32-audio-dock/assets/5459747/e60cadb6-ace1-4141-92a5-171c640dc8ac"
                 ],
                 "title": "Louder-ESP32",
                 "description": "Reviewed design on the <a href=\"https://www.tindie.com/products/sonocotta/louder-esp32/\">Louder-ESP32</a> model includes onboard WROVER module with external Wifi antenna. It dramatically improved WiFi perception while usage of the WROVER module maintains lower device cost.",
                 "manifest": "artifacts/manifest-louder-esp32-latest.json"
+            },
+            {
+                "images": [
+                    "https://github.com/user-attachments/assets/447a628c-9225-4beb-b8cc-054cc1d1a20d"
+                ],
+                "title": "Amped-ESP32",
+                "description": "<a href=\"https://www.tindie.com/products/sonocotta/amped-esp32/\">Amped-ESP32</a> is an extension of the HiFi-ESP32 board, it adds a high quality D-class amp to the PCM5100 DAC. You can use either 3.5mm jack for line output (amp will be muted) or screw terminals to connect speakers.",
+                "manifest": "artifacts/manifest-amped-esp32-latest.json"
             }
         ]
     },
@@ -83,15 +91,23 @@
                 "images": [
                     "https://github.com/user-attachments/assets/6f0482a2-7e08-475c-b6f0-0fe631a8e2f4"
                 ],
-                "title": "HiFi-ESP32S3",
+                "title": "HiFi-ESP32-S3",
                 "description": "<a href=\"https://www.tindie.com/products/sonocotta/hifi-esp32/\">HiFi-ESP32S3</a> is an ESP32-S3 version of the HiFi-ESP32. It does not support Bluetooth, but have more accessible PSRAM running at higher speed. Note, that squeezelite-esp32 support is still experimental on the S3.",
                 "manifest": "artifacts/manifest-hifi-esp32s3-latest.json"
             },
             {
                 "images": [
+                    "https://github.com/user-attachments/assets/fefa3c37-62dd-4ffb-a6fa-cab602e6b5fb"
+                ],
+                "title": "HiFi-ESP32-S3-Plus (Rev H1+)",
+                "description": "<a href=\"https://www.tindie.com/products/sonocotta/hifi-esp32-plus\">HiFi-ESP32-S3-Plus</a> is an ESP32-S3 version of the HiFi-ESP32-Plus. It does not support Bluetooth, but have more accessible PSRAM running at higher speed.",
+                "manifest": "artifacts/manifest-hifi-esp32s3-plus-latest.json"
+            },
+            {
+                "images": [
                     "https://github.com/user-attachments/assets/e732f7a9-77e5-4182-b808-bf12ff35a8b7"
                 ],
-                "title": "Loud-ESP32S3",
+                "title": "Loud-ESP32-S3",
                 "description": "<a href=\"https://www.tindie.com/products/sonocotta/loud-esp32/\">Loud-ESP32S3</a> is an ESP32-S3 version of the Loud-ESP32. It does not support Bluetooth, but have more accessible PSRAM running at higher speed. Note, that squeezelite-esp32 support is still experimental on the S3.",
                 "manifest": "artifacts/manifest-loud-esp32s3-latest.json"
             },
@@ -99,9 +115,17 @@
                 "images": [
                     "https://github.com/sonocotta/esp32-audio-dock/assets/5459747/d0827984-5e3c-4ca3-9b60-3d6bc2901a74"
                 ],
-                "title": "Louder-ESP32S3",
+                "title": "Louder-ESP32-S3",
                 "description": "<a href=\"https://www.tindie.com/products/sonocotta/louder-esp32/\">Louder-ESP32S3</a> is an ESP32-S3 version of the Louder-ESP32. It is a top-of-the-range model that uses modern highly capable TAS5805M DAC. It does not support Bluetooth, but have more accessible PSRAM running at higher speed. Note, that squeezelite-esp32 support is still experimental on the S3.",
                 "manifest": "artifacts/manifest-louder-esp32s3-latest.json"
+            },
+            {
+                "images": [
+                    "https://github.com/user-attachments/assets/72a99b07-283e-4d83-9f4a-e61bcd9a1a28"
+                ],
+                "title": "Amped-ESP32-S3",
+                "description": "<a href=\"https://www.tindie.com/products/sonocotta/amped-esp32\">Amped-ESP32-S3</a> is an ESP32-S3 version of the Amped-ESP32. It does not support Bluetooth, but have more accessible PSRAM running at higher speed.",
+                "manifest": "artifacts/manifest-amped-esp32s3-latest.json"
             }
         ]
     }

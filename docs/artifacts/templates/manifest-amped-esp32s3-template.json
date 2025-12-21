@@ -1,6 +1,6 @@
 {
     "name": "amped-esp32s3",
-    "version": "2.1681",
+    "version": "$commitid",
     "home_assistant_domain": "slim_player",
     "funding_url": "https://esphome.io/guides/supporters.html",
     "new_install_prompt_erase": true,
@@ -10,35 +10,35 @@
             "chipFamily": "ESP32-S3",
             "parts": [
                 {
-                    "path": "common-esp32s3-2.1681-16-bootloader.bin",
+                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3/bootloader.bin",
                     "offset": "0x0"
                 },
                 {
-                    "path": "common-esp32s3-2.1681-16-partition-table.bin",
+                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3/partition-table.bin",
                     "offset": "0x8000"
                 },
                 {
-                    "path": "common-esp-nvs.bin",
+                    "path": "binaries/nvs-settings/common-esp-nvs.bin",
                     "offset": "0x9000"
                 },
                 {
-                    "path": "common-esp32s3-2.1681-16-ota_data_initial.bin",
+                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3/ota_data_initial.bin",
                     "offset": "0xd000"
                 },
                 {
-                    "path": "common-esp32s3-2.1681-16-recovery.bin",
+                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3/recovery.bin",
                     "offset": "0x10000"
                 },
                 {
-                    "path": "common-esp32s3-2.1681-16-squeezelite.bin",
+                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3/squeezelite.bin",
                     "offset": "0x150000"
                 },
                 {
-                    "path": "amped-esp32s3-settings.bin",
+                    "path": "binaries/nvs-settings/amped-esp32s3-settings.bin",
                     "offset": "0x3f0000"
                 }
             ]
         }
     ],
-    "manifest_name": "manifest-amped-esp32s3-2.1681-16.json"
+    "manifest_name": "manifest-amped-esp32s3-latest.json"
 }
