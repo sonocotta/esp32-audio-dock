@@ -9,7 +9,7 @@
           ],
           "title": "HiFi ESP",
           "description": "HiFi ESP is a handy low cost media device that uses the legendary PCM5100 series DAC with supreme audio quality.",
-          "manifest": "artifacts/manifest-hifi-esp-2.1681-16.json"
+          "manifest": "artifacts/manifest-hifi-esp-latest.json"
         },
         {
           "images": [
@@ -17,7 +17,7 @@
           ],
           "title": "ESP Audio Duo",
           "description": "ESP Audio Duo is aimed to be paired with small-to-medium sized speakers in a small room. It uses a dual MAX98357 Hi-Fi DAC that will output 3W per speaker.",
-          "manifest": "artifacts/manifest-esp-audio-duo-2.1681-16.json"
+          "manifest": "artifacts/manifest-esp-audio-duo-latest.json"
         },
         {
             "images": [
@@ -25,7 +25,7 @@
             ],
             "title": "Loud ESP",
             "description": "Loud ESP is an ESP32-powered, rich-audio development board. Available with or without a color touchscreen, Loud ESP has a wealth of peripherals to support a wide range of user interaction. It is compact, portable, battery-powered, and uses a dual MAX98357 Hi-Fi DAC that will output 3W per speaker.",
-            "manifest": "artifacts/manifest-loud-esp-2.1681-16.json"
+            "manifest": "artifacts/manifest-loud-esp-latest.json"
         },
         {
             "images": [
@@ -33,21 +33,21 @@
             ],
             "title": "Louder ESP",
             "description": "Louder ESP is a top-of-the-range model that uses modern highly capable TAS5805M DAC and is aimed to be paired with medium-to-large speaker systems. With 25W per channel stereo output it packs a punch and can easily enliven living quarters or dorm rooms.",
-            "manifest": "artifacts/manifest-louder-esp-2.1681-16.json"
+            "manifest": "artifacts/manifest-louder-esp-latest.json"
         }
       ]
     },
     {
         "id": "group-02",
-        "title": "ESP32 Audio Boards",
+        "title": "ESP32 Audio Boards (V2)",
         "devices": [
             {
                 "images": [
                     "https://github.com/user-attachments/assets/d025ef42-daa3-4ad0-aeec-6ddf309c267b"
                 ],
                 "title": "HiFi-ESP32",
-                "description": "Reviewed design on the HiFi-ESP32 model includes onboard WROVER module with external Wifi antenna. It dramatically improved WiFi perception while usage of the WROVER module maintains lower device cost.",
-                "manifest": "artifacts/manifest-hifi-esp32-2.1681-16.json"
+                "description": "Reviewed design on the <a href=\"https://www.tindie.com/products/sonocotta/hifi-esp32/\">HiFi-ESP32</a> model includes onboard WROVER module with external Wifi antenna. It dramatically improved WiFi perception while usage of the WROVER module maintains lower device cost.",
+                "manifest": "artifacts/manifest-hifi-esp32-latest.json"
             },
             {
                 "images": [
@@ -55,45 +55,45 @@
                 ],
                 "title": "Hifi-ESP32-Plus (Rev J1+)",
                 "description": "<a href=\"https://www.tindie.com/products/sonocotta/hifi-esp32-plus\">HiFi-ESP32-Plus</a> represents the next evolution of HiFi-ESP32 boards, featuring the advanced PCM5122 DAC with built-in DSP capabilities. This board maintains the same audio quality as the original HiFi-ESP32 while adding powerful digital signal processing features, including parametric EQ (6 BQs per channel), DRC, and crossover functionality (with output to downstream DAC)",
-                "manifest": "artifacts/manifest-hifi-esp32-plus-2.1681-16.json"
+                "manifest": "artifacts/manifest-hifi-esp32-plus-latest.json"
             },
             {
                 "images": [
                     "https://github.com/user-attachments/assets/7d351d02-7e7f-4974-9a12-ee353c239654"
                 ],
                 "title": "Loud-ESP32",
-                "description": "Reviewed design on the ESP Audio Duo model includes onboard WROVER module with external Wifi antenna. It dramatically improved WiFi perception while usage of the WROVER module maintains lower device cost.",
-                "manifest": "artifacts/manifest-loud-esp32-2.1681-16.json"
+                "description": "Reviewed design on the <a href=\"https://www.tindie.com/products/sonocotta/loud-esp32/\">Loud-ESP32</a> model includes onboard WROVER module with external Wifi antenna. It dramatically improved WiFi perception while usage of the WROVER module maintains lower device cost.",
+                "manifest": "artifacts/manifest-loud-esp32-latest.json"
             },
             {
                 "images": [
                     "https://github.com/sonocotta/esp32-audio-dock/assets/5459747/e60cadb6-ace1-4141-92a5-171c640dc8ac"
                 ],
                 "title": "Louder-ESP32",
-                "description": "Reviewed design on the Louder-ESP32 model includes onboard WROVER module with external Wifi antenna. It dramatically improved WiFi perception while usage of the WROVER module maintains lower device cost.",
-                "manifest": "artifacts/manifest-louder-esp32-2.1681-16.json"
+                "description": "Reviewed design on the <a href=\"https://www.tindie.com/products/sonocotta/louder-esp32/\">Louder-ESP32</a> model includes onboard WROVER module with external Wifi antenna. It dramatically improved WiFi perception while usage of the WROVER module maintains lower device cost.",
+                "manifest": "artifacts/manifest-louder-esp32-latest.json"
             },
             {
                 "images": [
                     "https://github.com/user-attachments/assets/447a628c-9225-4beb-b8cc-054cc1d1a20d"
                 ],
                 "title": "Amped-ESP32",
-                "description": "As extension of the HiFi-ESP32 board, it adds a high quality D-class amp to the PCM5100 DAC. You can use either 3.5mm jack for line output (amp will be muted) or screw terminals to connect speakers.",
-                "manifest": "artifacts/manifest-amped-esp32-2.1681-16.json"
+                "description": "<a href=\"https://www.tindie.com/products/sonocotta/amped-esp32/\">Amped-ESP32</a> is an extension of the HiFi-ESP32 board, it adds a high quality D-class amp to the PCM5100 DAC. You can use either 3.5mm jack for line output (amp will be muted) or screw terminals to connect speakers.",
+                "manifest": "artifacts/manifest-amped-esp32-latest.json"
             }
         ]
     },
     {
         "id": "group-03",
-        "title": "ESP32-S3 Audio Boards",
+        "title": "ESP32-S3 Audio Boards (V2)",
         "devices": [
             {
                 "images": [
                     "https://github.com/user-attachments/assets/6f0482a2-7e08-475c-b6f0-0fe631a8e2f4"
                 ],
-                "title": "HiFi-ESP32S3",
-                "description": "HiFi-ESP32S3 is an ESP32-S3 version of the HiFi-ESP32. It does not support Bluetooth, but have more accessible PSRAM running at higher speed. Note, that squeezelite-esp32 support is still experimental on the S3.",
-                "manifest": "artifacts/manifest-hifi-esp32s3-2.1681-16.json"
+                "title": "HiFi-ESP32-S3",
+                "description": "<a href=\"https://www.tindie.com/products/sonocotta/hifi-esp32/\">HiFi-ESP32S3</a> is an ESP32-S3 version of the HiFi-ESP32. It does not support Bluetooth, but have more accessible PSRAM running at higher speed. Note, that squeezelite-esp32 support is still experimental on the S3.",
+                "manifest": "artifacts/manifest-hifi-esp32s3-latest.json"
             },
             {
                 "images": [
@@ -101,23 +101,23 @@
                 ],
                 "title": "HiFi-ESP32-S3-Plus (Rev H1+)",
                 "description": "<a href=\"https://www.tindie.com/products/sonocotta/hifi-esp32-plus\">HiFi-ESP32-S3-Plus</a> is an ESP32-S3 version of the HiFi-ESP32-Plus. It does not support Bluetooth, but have more accessible PSRAM running at higher speed.",
-                "manifest": "artifacts/manifest-hifi-esp32s3-plus-2.1681-16.json"
+                "manifest": "artifacts/manifest-hifi-esp32s3-plus-latest.json"
             },
             {
                 "images": [
                     "https://github.com/user-attachments/assets/e732f7a9-77e5-4182-b808-bf12ff35a8b7"
                 ],
-                "title": "Loud-ESP32",
-                "description": "Loud-ESP32S3 is an ESP32-S3 version of the Loud-ESP32. It does not support Bluetooth, but have more accessible PSRAM running at higher speed. Note, that squeezelite-esp32 support is still experimental on the S3.",
-                "manifest": "artifacts/manifest-loud-esp32s3-2.1681-16.json"
+                "title": "Loud-ESP32-S3",
+                "description": "<a href=\"https://www.tindie.com/products/sonocotta/loud-esp32/\">Loud-ESP32S3</a> is an ESP32-S3 version of the Loud-ESP32. It does not support Bluetooth, but have more accessible PSRAM running at higher speed. Note, that squeezelite-esp32 support is still experimental on the S3.",
+                "manifest": "artifacts/manifest-loud-esp32s3-latest.json"
             },
             {
                 "images": [
                     "https://github.com/sonocotta/esp32-audio-dock/assets/5459747/d0827984-5e3c-4ca3-9b60-3d6bc2901a74"
                 ],
-                "title": "Louder-ESP32S3",
-                "description": "Louder-ESP32S3 is an ESP32-S3 version of the Louder-ESP32. It is a top-of-the-range model that uses modern highly capable TAS5805M DAC. It does not support Bluetooth, but have more accessible PSRAM running at higher speed. Note, that squeezelite-esp32 support is still experimental on the S3.",
-                "manifest": "artifacts/manifest-louder-esp32s3-2.1681-16.json"
+                "title": "Louder-ESP32-S3",
+                "description": "<a href=\"https://www.tindie.com/products/sonocotta/louder-esp32/\">Louder-ESP32S3</a> is an ESP32-S3 version of the Louder-ESP32. It is a top-of-the-range model that uses modern highly capable TAS5805M DAC. It does not support Bluetooth, but have more accessible PSRAM running at higher speed. Note, that squeezelite-esp32 support is still experimental on the S3.",
+                "manifest": "artifacts/manifest-louder-esp32s3-latest.json"
             },
             {
                 "images": [
@@ -125,7 +125,7 @@
                 ],
                 "title": "Amped-ESP32-S3",
                 "description": "<a href=\"https://www.tindie.com/products/sonocotta/amped-esp32\">Amped-ESP32-S3</a> is an ESP32-S3 version of the Amped-ESP32. It does not support Bluetooth, but have more accessible PSRAM running at higher speed.",
-                "manifest": "artifacts/manifest-amped-esp32s3-2.1681-16.json"
+                "manifest": "artifacts/manifest-amped-esp32s3-latest.json"
             }
         ]
     }

@@ -1,0 +1,44 @@
+{
+  "name": "amped-esp32",
+  "version": "752cfbf3",
+  "home_assistant_domain": "slim_player",
+  "funding_url": "https://esphome.io/guides/supporters.html",
+  "new_install_prompt_erase": true,
+  "new_install_improv_wait_time": 20,
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "parts": [
+        {
+          "path": "binaries/I2S-4MFlash-sdkconfig.esp32/bootloader-752cfbf3.bin",
+          "offset": "0x1000"
+        },
+        {
+          "path": "binaries/I2S-4MFlash-sdkconfig.esp32/partition-table-752cfbf3.bin",
+          "offset": "0x8000"
+        },
+        {
+          "path": "binaries/nvs-settings/common-esp-nvs.bin",
+          "offset": "0x9000"
+        },
+        {
+          "path": "binaries/I2S-4MFlash-sdkconfig.esp32/ota_data_initial-752cfbf3.bin",
+          "offset": "0xd000"
+        },
+        {
+          "path": "binaries/I2S-4MFlash-sdkconfig.esp32/recovery-752cfbf3.bin",
+          "offset": "0x10000"
+        },
+        {
+          "path": "binaries/I2S-4MFlash-sdkconfig.esp32/squeezelite-752cfbf3.bin",
+          "offset": "0x150000"
+        },
+        {
+          "path": "binaries/nvs-settings/amped-esp32-settings.bin",
+          "offset": "0x3f0000"
+        }
+      ]
+    }
+  ],
+  "manifest_name": "manifest-amped-esp32-latest.json"
+}

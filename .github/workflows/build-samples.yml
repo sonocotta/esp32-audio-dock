@@ -5,7 +5,8 @@ on:
     paths: 
     - ./firmware
   pull_request:
-  workflow_dispatch:
+    paths:
+    - ./firmware
 
 jobs:
   build:

@@ -1,0 +1,190 @@
+name: Build Squeezelite Binaries
+
+on:
+  push:
+    branches:
+      - main
+      - features/*
+    paths-ignore:
+        - 'installer/**'
+        - 'doc/**'
+        - 'docs/**'
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      docker_image: ${{ steps.setenv.outputs.docker_image }}
+      build_number: ${{ steps.submodule_rev.outputs.commit }}
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        submodules: true
+    - name: Mark repo safe for git (fix dubious ownership in containers)
+      run: |
+        git config --global --add safe.directory /__w/esp32-audio-dock/esp32-audio-dock || true
+        git config --global --add safe.directory /__w/esp32-audio-dock/esp32-audio-dock/firmware/squeezelite-esp32 || true
+
+    - name: Set Docker image and build metadata
+      id: setenv
+      run: |
+        echo "DOCKER_IMAGE_NAME=sle118/squeezelite-esp32-idfv4-master" >> $GITHUB_ENV
+        echo "docker_image=sle118/squeezelite-esp32-idfv4-master" >> $GITHUB_OUTPUT
+    - name: Get squeezelite-esp32 submodule commit
+      id: submodule_rev
+      run: |
+        COMMIT="unknown"
+        if [ -d firmware/squeezelite-esp32 ]; then
+          pushd firmware/squeezelite-esp32 >/dev/null 2>&1 || true
+          COMMIT=$(git rev-parse --short=8 HEAD 2>/dev/null || echo "unknown")
+          popd >/dev/null 2>&1 || true
+        fi
+        echo "commit=$COMMIT" >> $GITHUB_OUTPUT
+        echo "SUBMODULE_COMMIT=$COMMIT" >> $GITHUB_ENV
+
+    - name: Show GITHUB_ENV contents
+      shell: bash
+      run: |
+        echo "--- GITHUB_ENV path: $GITHUB_ENV ---"
+        if [ -f "$GITHUB_ENV" ]; then
+        echo "Contents of GITHUB_ENV:";
+        sed -n '1,200p' "$GITHUB_ENV" || true
+        else
+        echo "GITHUB_ENV file not found"
+        fi
+
+  build:
+    needs: prepare
+    runs-on: ubuntu-latest
+    container:
+      image: sle118/squeezelite-esp32-idfv435
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Mark repo safe for git (fix dubious ownership in containers)
+      shell: bash
+      run: |
+        git config --global --add safe.directory /__w/esp32-audio-dock/esp32-audio-dock || true
+        git config --global --add safe.directory /__w/esp32-audio-dock/esp32-audio-dock/firmware/squeezelite-esp32 || true
+
+    - name: Set defaults
+      run: |
+        echo "TARGET_BUILD_NAME=I2S-4MFlash" >> $GITHUB_ENV
+        echo "DEPTH=16" >> $GITHUB_ENV
+
+    - name: Build for both sdkconfigs sequentially (inside container)
+      shell: bash
+      env:
+        SUBMODULE_COMMIT: ${{ needs.prepare.outputs.build_number }}
+      run: |
+        set -euo pipefail
+        . /opt/esp/python_env/idf4.3_py3.8_env/bin/activate || true
+        SDK_LIST=("squeezelite-configs/sdkconfig.esp32")
+        for SDK in "${SDK_LIST[@]}"; do
+          echo "=== Building with $SDK ==="
+          SDK_BASENAME=$(basename "$SDK")
+          # Use a stable numeric build number for build_tools.py and the submodule commit as reference
+          BUILD_NUMBER=1
+          export TARGET_BUILD_NAME DEPTH BUILD_NUMBER SDKCONFIG_SOURCE="$SDK"
+
+          # call build_tools.py to populate $GITHUB_ENV like Platform_build does (use numeric BUILD_NUMBER)
+          build_tools.py environment --build "$BUILD_NUMBER" --env_file "$GITHUB_ENV" --node "$TARGET_BUILD_NAME" --depth "$DEPTH" --major 2 --docker sle118/squeezelite-esp32-idfv435 || true
+
+          # compute tag using the submodule commit id we captured in the prepare job
+          SHORT_COMMIT="${SUBMODULE_COMMIT:-unknown}"
+          tag="${TARGET_BUILD_NAME}.${SDK_BASENAME}.latest.${SHORT_COMMIT}"
+          echo "tag=$tag" >> $GITHUB_ENV
+
+          # Map chosen sdkconfig into the submodule's expected build-scripts name
+          case "$SDK_BASENAME" in
+            sdkconfig.esp32) DSTNAME="I2S-4MFlash-sdkconfig.defaults" ;; 
+            sdkconfig.esp32s3) DSTNAME="I2S-4MFlash-sdkconfig.defaults" ;; 
+            *) DSTNAME="I2S-4MFlash-sdkconfig.defaults" ;;
+          esac
+          echo "Copying $SDK to firmware/squeezelite-esp32/build-scripts/$DSTNAME"
+          cp "$SDK" firmware/squeezelite-esp32/build-scripts/$DSTNAME
+
+          # Ensure IDF target matches the sdkconfig (esp32 vs esp32s3)
+          if [[ "$SDK_BASENAME" == *esp32s3* ]]; then
+            echo "Setting IDF target to esp32s3"
+            pushd firmware/squeezelite-esp32
+            idf.py set-target esp32s3 || true
+            popd
+          else
+            echo "Setting IDF target to esp32"
+            pushd firmware/squeezelite-esp32
+            idf.py set-target esp32 || true
+            popd
+          fi
+
+          # Build project using idf.py (container already has IDF installed)
+          echo "Copying target sdkconfig"
+          cp firmware/squeezelite-esp32/build-scripts/${TARGET_BUILD_NAME}-sdkconfig.defaults firmware/squeezelite-esp32/sdkconfig
+          pushd firmware/squeezelite-esp32
+          idf.py fullclean || true
+          idf.py build -DDEPTH=${DEPTH} -DBUILD_NUMBER=${BUILD_NUMBER}-${DEPTH}
+          popd
+
+          # Collect produced binaries per-sdk with SHORT_COMMIT suffix
+          SHORT_COMMIT="${SUBMODULE_COMMIT:-unknown}"
+          OUT_DIR="docs/artifacts/binaries/${TARGET_BUILD_NAME}-${SDK_BASENAME}"
+          mkdir -p "$OUT_DIR"
+          # Copy binaries and rename with short commit suffix
+          [ -f firmware/squeezelite-esp32/build/squeezelite.bin ] && cp firmware/squeezelite-esp32/build/squeezelite.bin "$OUT_DIR/squeezelite-${SHORT_COMMIT}.bin" || true
+          [ -f firmware/squeezelite-esp32/build/bootloader/bootloader.bin ] && cp firmware/squeezelite-esp32/build/bootloader/bootloader.bin "$OUT_DIR/bootloader-${SHORT_COMMIT}.bin" || true
+          [ -f firmware/squeezelite-esp32/build/partition_table/partition-table.bin ] && cp firmware/squeezelite-esp32/build/partition_table/partition-table.bin "$OUT_DIR/partition-table-${SHORT_COMMIT}.bin" || true
+          [ -f firmware/squeezelite-esp32/build/ota_data_initial.bin ] && cp firmware/squeezelite-esp32/build/ota_data_initial.bin "$OUT_DIR/ota_data_initial-${SHORT_COMMIT}.bin" || true
+          [ -f firmware/squeezelite-esp32/build/recovery.bin ] && cp firmware/squeezelite-esp32/build/recovery.bin "$OUT_DIR/recovery-${SHORT_COMMIT}.bin" || true
+          # Debug: show what was produced and copied
+          echo "--- Debug: build output in firmware/squeezelite-esp32/build ---"
+          ls -la firmware/squeezelite-esp32/build || true
+          echo "--- Debug: contents of $OUT_DIR ---"
+          ls -la "$OUT_DIR" || true
+          echo "--- Debug: size summary for $OUT_DIR ---"
+          du -sh "$OUT_DIR" || true
+        done
+
+    - name: Generate latests templates
+      shell: bash
+      env:
+        SUBMODULE_COMMIT: ${{ needs.prepare.outputs.build_number }}
+      run: |
+        set -euo pipefail
+        TEMPLATE_DIR=docs/artifacts/templates
+        OUT_DIR=docs/artifacts
+        mkdir -p "$OUT_DIR"
+        SHORT_COMMIT="${SUBMODULE_COMMIT:-unknown}"
+        echo "--- Debug: listing template dir ($TEMPLATE_DIR) before generation ---"
+        ls -la "$TEMPLATE_DIR" || true
+        echo "--- Debug: using SHORT_COMMIT=$SHORT_COMMIT ---"
+        for tpl in "$TEMPLATE_DIR"/*.json; do
+          name=$(basename "$tpl")
+          # Replace $commitid placeholder with actual short commit and rename 'template' to 'latest'
+          outname=${name//-template/-latest}
+          jq --arg commitid "$SHORT_COMMIT" '.. |= if type == "string" then gsub("\\$commitid"; $commitid) else . end' "$tpl" > "$OUT_DIR/$outname" || cp "$tpl" "$OUT_DIR/$outname"
+        done
+        echo "--- Debug: listing generated latest templates in $OUT_DIR ---"
+        ls -la "$OUT_DIR" || true
+
+    - name: Commit all binaries and templates
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "Add built squeezelite binaries and latest templates (latest)"
+        file_pattern: "docs/artifacts/**"
+
+    - name: Debug() show generated files and git status
+      shell: bash
+      run: |
+        echo "--- Debug: git status (porcelain) ---"
+        git --no-pager status --porcelain || true
+        echo "--- Debug: list docs/artifacts tree ---"
+        ls -la docs/artifacts || true
+        find docs/artifacts -maxdepth 4 -type f -ls || true

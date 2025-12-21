@@ -1,0 +1,3 @@
+[submodule "firmware/squeezelite-esp32"]
+	path = firmware/squeezelite-esp32
+	url = https://github.com/sle118/squeezelite-esp32
