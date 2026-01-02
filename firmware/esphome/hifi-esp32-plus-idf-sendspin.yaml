@@ -1,0 +1,262 @@
+substitutions:
+  name: esphome-web-xxxxxx
+  friendly_name: HiFi-ESP32-Plus
+  task_stack_in_psram: "false"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  min_version: 2025.12.2
+  name_add_mac_suffix: false
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  board: mhetesp32minikit
+  flash_size: 8MB
+  framework:
+    type: esp-idf
+    version: recommended
+    sdkconfig_options:
+      CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: "y"
+      CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
+
+      CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
+      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"
+      
+# Enable logging
+logger:
+  level: DEBUG
+
+# Enable Home Assistant API
+api:
+
+http_request:
+
+ota:
+  platform: esphome
+  password: !secret esphome_ota_password
+
+wifi:
+  ssid: !secret esphome_wifi_ssid
+  password: !secret esphome_wifi_password
+  ap:
+    ssid: "$name Hotspot"
+    password: !secret esphome_ap_password
+
+psram:
+  speed: 80MHz
+  ignore_not_found: false
+
+external_components:
+  - source: github://sonocotta/esphome-pcm5122
+    components: [ pcm5122 ]
+    refresh: 0s
+
+  - source: github://pr#12253
+    components: [mixer]
+    refresh: 0s
+
+  - source: github://pr#12254
+    components: [resampler]
+    refresh: 0s
+
+  - source: github://pr#12256
+    components: [audio]
+    refresh: 0s
+
+  - source: github://pr#12258
+    components: [media_player]
+    refresh: 0s
+
+  - source: github://pr#12284
+    components: [mdns, sendspin]
+    refresh: 0s
+
+  - source: github://pr#12429
+    components: [file, http_request, media_source, speaker_source]
+    refresh: 0s
+
+i2c:
+# Pins are swapped on the HiFi-ESP32-S3-Plus Rev J, these are for Rev J1+
+  sda: GPIO21
+  scl: GPIO27
+  frequency: 400kHz
+  timeout: 100us
+  scan: True
+
+audio_dac:
+  - platform: pcm5122
+    id: pcm5122_dac
+    enable_pin: GPIO13
+    volume_max: 0dB
+    volume_min: -60db
+    # analog_gain: -15.5db
+    # mixer_mode: STEREO
+
+i2s_audio:
+  i2s_lrclk_pin: GPIO25
+  i2s_bclk_pin: GPIO26
+
+text_sensor:
+  - platform: sendspin
+    type: title
+    name: Track Title
+
+  - platform: sendspin
+    type: artist
+    name: Artist
+
+  - platform: sendspin
+    type: album
+    name: Album
+
+speaker:
+  - platform: i2s_audio
+    id: i2s_speaker_id
+    sample_rate: 48000
+    i2s_dout_pin: GPIO22
+    bits_per_sample: 32bit
+    dac_type: external
+    channel: stereo
+    timeout: never
+    buffer_duration: 100ms
+    audio_dac: pcm5122_dac
+
+  - platform: mixer
+    id: mixer_speaker_id
+    output_speaker: speaker_id
+    source_speakers:
+      - id: announcement_spk_mixer_input
+        timeout: never
+      - id: media_spk_mixer_input
+        timeout: never
+
+  - platform: resampler
+    id: media_resampling_speaker
+    output_speaker: media_mixer_input
+    sample_rate: 48000
+    bits_per_sample: 16
+
+  - platform: resampler
+    id: announcement_resampling_speaker
+    output_speaker: announcement_mixer_input
+    sample_rate: 48000
+    bits_per_sample: 16
+
+sendspin:
+  id: sendspin_hub
+  task_stack_in_psram: ${task_stack_in_psram}
+  kalman_process_error: 0.01
+
+media_source:
+  - platform: sendspin
+    id: sendspin_source
+  - platform: http_request
+    id: http_source
+    buffer_size: 200000
+
+media_player:
+  - platform: sendspin
+    id: sendspin_group_media_player
+
+  - platform: speaker_source
+    id: external_media_player
+    name: Media Player
+    announcement_speaker: announcement_resampling_speaker
+    media_speaker: media_resampling_speaker
+    announcement_pipeline:
+      format: FLAC     # FLAC is the least processor intensive codec
+      num_channels: 1  # Stereo audio is unnecessary for announcements
+      sample_rate: 48000
+    media_pipeline:
+      format: FLAC     # FLAC is the least processor intensive codec
+      num_channels: 2
+      sample_rate: 48000
+    volume_increment: 0.05
+    sources:
+      - file_source
+      - http_source
+      - sendspin_source
+    on_announcement:
+      - if:
+          condition:
+            - lambda: return (!id(announcement_triggered));
+          then:
+            - lambda: |-
+                id(announcement_triggered) = true;
+                id(current_volume) = id(external_media_player).volume;
+            - mixer_speaker.apply_ducking:
+                  id: media_mixer_input
+                  decibel_reduction: 40
+                  duration: 0.0s
+            - wait_until:
+                media_player.is_announcing: external_media_player
+            - delay: 0.75s
+            - media_player.volume_set:
+                id: external_media_player
+                volume: !lambda "return id(announce_volume).state / 100.0;"
+            - wait_until:
+                - not:
+                    media_player.is_announcing: external_media_player
+            - mixer_speaker.apply_ducking:
+                      id: media_mixer_input
+                      decibel_reduction: 0
+                      duration: 1.0s
+            - media_player.volume_set:
+                id: external_media_player
+                volume: !lambda "return id(current_volume);"
+            - lambda: id(announcement_triggered) = false;
+
+    on_state:
+      if:
+        condition:
+          and:
+            - lambda: return (!id(announcement_triggered));
+            - not:
+                media_player.is_announcing: external_media_player
+        then:
+          - mixer_speaker.apply_ducking:
+              id: media_mixer_input
+              decibel_reduction: 0
+              duration: 1.0s
+
+switch:
+  - platform: pcm5122
+    enable_dac:
+      name: Enable DAC
+      id: enable_dac
+      restore_mode: ALWAYS_ON
+
+number:
+  - platform: template
+    name: Announce Volume
+    id: announce_volume
+    icon: mdi:volume-source
+    unit_of_measurement: "%"
+    min_value: 0
+    max_value: 100
+    step: 1
+    restore_value: true
+    initial_value: 50
+    optimistic: true
+
+# interval:
+#   - interval: 60s
+#     then:
+#       - if:
+#           condition:
+#             - switch.is_on: enable_dac
+#             - for:
+#                 time: 120s
+#                 condition:
+#                   or:
+#                     - media_player.is_idle: hifi_mediaplayer
+#                     - media_player.is_paused: hifi_mediaplayer
+#           then:
+#             - switch.turn_off: enable_dac
+
+button:
+  - platform: restart
+    id: restart_btn
+    name: "${friendly_name} REBOOT"

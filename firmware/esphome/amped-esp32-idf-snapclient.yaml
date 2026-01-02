@@ -1,5 +1,5 @@
 substitutions:
-  name: esphome-web-26304c
+  name: esphome-web-xxxxxx
   friendly_name: Amped-ESP32
   task_stack_in_psram: "false" # important to disable this for non-S3 model
 

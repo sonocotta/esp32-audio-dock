@@ -1,5 +1,5 @@
 substitutions:
-  name: esphome-web-93c52c
+  name: esphome-web-xxxxxx
   friendly_name: Louder-ESP32
   task_stack_in_psram: "false" # important to disable this for non-S3 model
 

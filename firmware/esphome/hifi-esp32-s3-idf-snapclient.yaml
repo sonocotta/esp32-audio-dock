@@ -1,7 +1,7 @@
 substitutions:
   name: esphome-web-04dfa8
   friendly_name: HiFi-ESP32-S3
-  task_stack_in_psram: "false" # important to disable this for non-S3 model
+  task_stack_in_psram: "true" # important to disable this for non-S3 model
 
 esphome:
   name: ${name}

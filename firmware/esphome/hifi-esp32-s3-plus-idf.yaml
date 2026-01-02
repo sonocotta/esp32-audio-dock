@@ -49,7 +49,7 @@ psram:
   speed: 80MHz
 
 external_components:
-  - source: github://sonocotta/esphome-pcm5122@features/initial-component-code
+  - source: github://sonocotta/esphome-pcm5122
     components: [ pcm5122 ]
     refresh: 0s
 
