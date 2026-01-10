@@ -21,7 +21,7 @@ esphome:
 
 esp32:
   variant: ESP32S3
-  flash_size: 16MB
+  flash_size: 8MB
   cpu_frequency: 240MHz
   framework:
     type: esp-idf
