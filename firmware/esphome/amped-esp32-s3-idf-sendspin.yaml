@@ -116,7 +116,7 @@ switch:
     icon: "mdi:speaker"
     name: Enable DAC
     id: enable_dac
-    pin: GPIO4
+    pin: GPIO17
     restore_mode: ALWAYS_OFF
 
 speaker:
