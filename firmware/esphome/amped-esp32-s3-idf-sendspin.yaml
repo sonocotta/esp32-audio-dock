@@ -69,6 +69,14 @@ psram:
 network:
   enable_ipv6: true
 
+globals:
+  - id: current_volume
+    type: float
+    initial_value: '0.2'
+  - id: announcement_triggered
+    type: bool
+    initial_value: 'false'
+    
 external_components:
   - source: github://pr#12253
     components: [mixer]
