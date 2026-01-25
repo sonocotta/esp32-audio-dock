@@ -10,14 +10,6 @@ esphome:
   name_add_mac_suffix: false
   platformio_options:
     board_build.flash_mode: dio
-  # Importnant! Play sound on boot required for DAC to capture clock signal and enable DSP configuration
-  # If any of the DSP configs are sent before clock signal, they are simply ignored. This applies to EQ and Mixer controls
-  on_boot:
-    priority: 220.0
-    then:
-      media_player.play_media:
-        id: external_media_player
-        media_url: file://startup_sync_sound
 
 esp32:
   variant: ESP32S3
@@ -79,6 +71,14 @@ psram:
   speed: 80MHz
   ignore_not_found: false
 
+globals:
+  - id: current_volume
+    type: float
+    initial_value: '0.2'
+  - id: announcement_triggered
+    type: bool
+    initial_value: 'false'
+    
 external_components:
   - source: github://sonocotta/esphome-pcm5122
     components: [ pcm5122 ]
@@ -209,7 +209,6 @@ media_player:
       sample_rate: 48000
     volume_increment: 0.05
     sources:
-      - file_source
       - http_source
       - sendspin_source
     on_announcement:
