@@ -87,7 +87,7 @@ jobs:
       run: |
         set -euo pipefail
         . /opt/esp/python_env/idf4.3_py3.8_env/bin/activate || true
-        SDK_LIST=("squeezelite-configs/sdkconfig.esp32")
+        SDK_LIST=("squeezelite-configs/sdkconfig.esp32" "squeezelite-configs/sdkconfig.esp32s3")
         for SDK in "${SDK_LIST[@]}"; do
           echo "=== Building with $SDK ==="
           SDK_BASENAME=$(basename "$SDK")
@@ -106,7 +106,7 @@ jobs:
           # Map chosen sdkconfig into the submodule's expected build-scripts name
           case "$SDK_BASENAME" in
             sdkconfig.esp32) DSTNAME="I2S-4MFlash-sdkconfig.defaults" ;; 
-            sdkconfig.esp32s3) DSTNAME="I2S-4MFlash-sdkconfig.defaults" ;; 
+            sdkconfig.esp32s3) DSTNAME="I2S-S3-sdkconfig" ;; 
             *) DSTNAME="I2S-4MFlash-sdkconfig.defaults" ;;
           esac
           echo "Copying $SDK to firmware/squeezelite-esp32/build-scripts/$DSTNAME"
@@ -126,8 +126,8 @@ jobs:
           fi
 
           # Build project using idf.py (container already has IDF installed)
-          echo "Copying target sdkconfig"
-          cp firmware/squeezelite-esp32/build-scripts/${TARGET_BUILD_NAME}-sdkconfig.defaults firmware/squeezelite-esp32/sdkconfig
+          echo "Copying target sdkconfig: $DSTNAME"
+          cp firmware/squeezelite-esp32/build-scripts/$DSTNAME firmware/squeezelite-esp32/sdkconfig
           pushd firmware/squeezelite-esp32
           idf.py fullclean || true
           idf.py build -DDEPTH=${DEPTH} -DBUILD_NUMBER=${BUILD_NUMBER}-${DEPTH}
