@@ -1,6 +1,6 @@
 {
   "name": "loud-esp32s3",
-  "version": "752cfbf3",
+  "version": "a71aff68",
   "home_assistant_domain": "slim_player",
   "funding_url": "https://esphome.io/guides/supporters.html",
   "new_install_prompt_erase": true,
