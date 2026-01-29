@@ -91,8 +91,17 @@ jobs:
         echo "=== Building with $SDK ==="
         SDK_BASENAME=$(basename "$SDK")
         # Use a stable numeric build number for build_tools.py and the submodule commit as reference
-        BUILD_NUMBER=1
+        BUILD_NUMBER=500
         export TARGET_BUILD_NAME DEPTH BUILD_NUMBER SDKCONFIG_SOURCE="$SDK"
+        
+        echo "=== ESP32 Build Settings ==="
+        echo "TARGET_BUILD_NAME: $TARGET_BUILD_NAME"
+        echo "DEPTH: $DEPTH"
+        echo "BUILD_NUMBER: $BUILD_NUMBER"
+        echo "SDK: $SDK"
+        echo "SDK_BASENAME: $SDK_BASENAME"
+        echo "SUBMODULE_COMMIT: ${SUBMODULE_COMMIT:-unknown}"
+        echo "============================="
 
         # call build_tools.py to populate $GITHUB_ENV like Platform_build does (use numeric BUILD_NUMBER)
         build_tools.py environment --build "$BUILD_NUMBER" --env_file "$GITHUB_ENV" --node "$TARGET_BUILD_NAME" --depth "$DEPTH" --major 2 --docker sle118/squeezelite-esp32-idfv435 || true
@@ -182,6 +191,18 @@ jobs:
         SDK_BASENAME=$(basename "$SDK")
         SHORT_COMMIT="${SUBMODULE_COMMIT:-unknown}"
         TARGET_BUILD_NAME="I2S-4MFlash"
+        BUILD_NUMBER=500
+        DEPTH=16
+        
+        echo "=== ESP32-S3 Build Settings ==="
+        echo "TARGET_BUILD_NAME: $TARGET_BUILD_NAME"
+        echo "DEPTH: $DEPTH"
+        echo "BUILD_NUMBER: $BUILD_NUMBER"
+        echo "SDK: $SDK"
+        echo "SDK_BASENAME: $SDK_BASENAME"
+        echo "SUBMODULE_COMMIT: ${SUBMODULE_COMMIT:-unknown}"
+        echo "SHORT_COMMIT: $SHORT_COMMIT"
+        echo "==============================="
         
         echo "=== Building ESP32-S3 with $SDK ==="
         
