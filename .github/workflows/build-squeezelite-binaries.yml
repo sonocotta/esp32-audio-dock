@@ -79,6 +79,7 @@ jobs:
       run: |
         echo "TARGET_BUILD_NAME=I2S-4MFlash" >> $GITHUB_ENV
         echo "DEPTH=16" >> $GITHUB_ENV
+        echo "BUILD_NUMBER=500" >> $GITHUB_ENV
 
     - name: Build ESP32 (inside container)
       shell: bash
@@ -90,18 +91,7 @@ jobs:
         SDK="squeezelite-configs/sdkconfig.esp32"
         echo "=== Building with $SDK ==="
         SDK_BASENAME=$(basename "$SDK")
-        # Use a stable numeric build number for build_tools.py and the submodule commit as reference
-        BUILD_NUMBER=500
         export TARGET_BUILD_NAME DEPTH BUILD_NUMBER SDKCONFIG_SOURCE="$SDK"
-        
-        echo "=== ESP32 Build Settings ==="
-        echo "TARGET_BUILD_NAME: $TARGET_BUILD_NAME"
-        echo "DEPTH: $DEPTH"
-        echo "BUILD_NUMBER: $BUILD_NUMBER"
-        echo "SDK: $SDK"
-        echo "SDK_BASENAME: $SDK_BASENAME"
-        echo "SUBMODULE_COMMIT: ${SUBMODULE_COMMIT:-unknown}"
-        echo "============================="
 
         # call build_tools.py to populate $GITHUB_ENV like Platform_build does (use numeric BUILD_NUMBER)
         build_tools.py environment --build "$BUILD_NUMBER" --env_file "$GITHUB_ENV" --node "$TARGET_BUILD_NAME" --depth "$DEPTH" --major 2 --docker sle118/squeezelite-esp32-idfv435 || true
@@ -112,9 +102,19 @@ jobs:
         echo "tag=$tag" >> $GITHUB_ENV
 
         # Map chosen sdkconfig into the submodule's expected build-scripts name
-        DSTNAME="I2S-4MFlash-sdkconfig.defaults"
-        echo "Copying $SDK to firmware/squeezelite-esp32/build-scripts/$DSTNAME"
-        cp "$SDK" firmware/squeezelite-esp32/build-scripts/$DSTNAME
+        echo "Copying $SDK to firmware/squeezelite-esp32/build-scripts/I2S-4MFlash-sdkconfig.defaults"
+        cp "$SDK" firmware/squeezelite-esp32/build-scripts/I2S-4MFlash-sdkconfig.defaults
+        
+        echo "=== ESP32 Build Settings ==="
+        echo "TARGET_BUILD_NAME: $TARGET_BUILD_NAME"
+        echo "DEPTH: $DEPTH"
+        echo "BUILD_NUMBER: $BUILD_NUMBER"
+        echo "SDK: $SDK"
+        echo "SDK_BASENAME: $SDK_BASENAME"
+        echo "SUBMODULE_COMMIT: ${SUBMODULE_COMMIT:-unknown}"
+        echo "SHORT_COMMIT: $SHORT_COMMIT"
+        echo "tag: $tag"
+        echo "============================="
 
         # Ensure IDF target matches the sdkconfig
         echo "Setting IDF target to esp32"
@@ -123,9 +123,12 @@ jobs:
         popd
 
         # Build project using idf.py (container already has IDF installed)
-        echo "Copying target sdkconfig: $DSTNAME"
-        cp firmware/squeezelite-esp32/build-scripts/$DSTNAME firmware/squeezelite-esp32/sdkconfig
+        echo "Copying target sdkconfig"
+        cp firmware/squeezelite-esp32/build-scripts/I2S-4MFlash-sdkconfig.defaults firmware/squeezelite-esp32/sdkconfig
         pushd firmware/squeezelite-esp32
+        # Create version.txt with tag
+        echo "$tag" > version.txt
+        echo "Created version.txt with tag: $tag"
         idf.py fullclean || true
         idf.py build -DDEPTH=${DEPTH} -DBUILD_NUMBER=${BUILD_NUMBER}-${DEPTH}
         popd
@@ -176,6 +179,12 @@ jobs:
         git config user.name github-actions
         git config user.email github-actions@github.com
 
+    - name: Set defaults
+      run: |
+        echo "TARGET_BUILD_NAME=I2S-4MFlash" >> $GITHUB_ENV
+        echo "DEPTH=16" >> $GITHUB_ENV
+        echo "BUILD_NUMBER=500" >> $GITHUB_ENV
+
     - name: Build ESP32-S3
       shell: bash
       env:
@@ -190,9 +199,17 @@ jobs:
         SDK="squeezelite-configs/sdkconfig.esp32s3"
         SDK_BASENAME=$(basename "$SDK")
         SHORT_COMMIT="${SUBMODULE_COMMIT:-unknown}"
-        TARGET_BUILD_NAME="I2S-4MFlash"
-        BUILD_NUMBER=500
-        DEPTH=16
+        
+        # Compute tag using the submodule commit id
+        tag="${TARGET_BUILD_NAME}.${SDK_BASENAME}.latest.${SHORT_COMMIT}"
+        echo "tag=$tag" >> $GITHUB_ENV
+        
+        echo "=== Building ESP32-S3 with $SDK ==="
+        
+        cd firmware/squeezelite-esp32
+        
+        idf.py fullclean
+        cp ../../$SDK sdkconfig
         
         echo "=== ESP32-S3 Build Settings ==="
         echo "TARGET_BUILD_NAME: $TARGET_BUILD_NAME"
@@ -202,15 +219,14 @@ jobs:
         echo "SDK_BASENAME: $SDK_BASENAME"
         echo "SUBMODULE_COMMIT: ${SUBMODULE_COMMIT:-unknown}"
         echo "SHORT_COMMIT: $SHORT_COMMIT"
+        echo "tag: $tag"
         echo "==============================="
         
-        echo "=== Building ESP32-S3 with $SDK ==="
+        # Create version.txt with tag
+        echo "$tag" > version.txt
+        echo "Created version.txt with tag: $tag"
         
-        cd firmware/squeezelite-esp32
-        
-        idf.py fullclean
-        cp ../../$SDK sdkconfig
-        idf.py build
+        idf.py build -DDEPTH=${DEPTH} -DBUILD_NUMBER=${BUILD_NUMBER}-${DEPTH}
 
         # Collect produced binaries with SHORT_COMMIT suffix
         OUT_DIR="../../docs/artifacts/binaries/${TARGET_BUILD_NAME}-${SDK_BASENAME}"
