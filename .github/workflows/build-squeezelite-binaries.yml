@@ -85,6 +85,7 @@ jobs:
       shell: bash
       env:
         SUBMODULE_COMMIT: ${{ needs.prepare.outputs.build_number }}
+        SPOTIFY_SECRET: -DCLIENT_ID="${{ secrets.SPOTIFY_CLIENT_ID }}" -DCLIENT_SECRET="${{ secrets.SPOTIFY_CLIENT_SECRET }}"
       run: |
         set -euo pipefail
         . /opt/esp/python_env/idf4.3_py3.8_env/bin/activate || true
@@ -189,6 +190,7 @@ jobs:
       shell: bash
       env:
         SUBMODULE_COMMIT: ${{ needs.prepare.outputs.build_number }}
+        SPOTIFY_SECRET: -DCLIENT_ID="${{ secrets.SPOTIFY_CLIENT_ID }}" -DCLIENT_SECRET="${{ secrets.SPOTIFY_CLIENT_SECRET }}"
       run: |
         set -euo pipefail
         . $IDF_PATH/export.sh
