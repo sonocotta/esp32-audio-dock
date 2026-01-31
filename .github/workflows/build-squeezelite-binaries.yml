@@ -128,7 +128,7 @@ jobs:
         ls -la "$OUT_DIR" || true
 
     - name: Upload ESP32 artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: esp32-binaries
         path: docs/artifacts/binaries/
@@ -238,7 +238,7 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Download all artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v3
       with:
         name: esp32-binaries
         path: docs/artifacts/binaries/
