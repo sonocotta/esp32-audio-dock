@@ -43,7 +43,7 @@ jobs:
     needs: prepare
     runs-on: ubuntu-latest
     container:
-      image: espressif/idf:release-v4.3
+      image: sle118/squeezelite-esp32-idfv435
     permissions:
       contents: write
 
@@ -76,7 +76,7 @@ jobs:
         SPOTIFY_SECRET: -DCLIENT_ID="${{ secrets.SPOTIFY_CLIENT_ID }}" -DCLIENT_SECRET="${{ secrets.SPOTIFY_CLIENT_SECRET }}"
       run: |
         set -euo pipefail
-        . $IDF_PATH/export.sh
+        . /opt/esp/python_env/idf4.3_py3.8_env/bin/activate
         
         # Install dependencies
         pip install --upgrade protobuf grpcio-tools
