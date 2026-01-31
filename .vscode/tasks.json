@@ -30,8 +30,37 @@
 			},
 			"isBackground": false
 		},
-		{
+    {
 			"label": "ESP-IDF 4.3.5: Open Shell in Container",
+			"type": "shell",
+			"command": "docker",
+			"args": [
+				"run",
+				"-it",
+				"--rm",
+				"--privileged",
+				"-v",
+				"${workspaceFolder}/firmware/squeezelite-esp32:${workspaceFolder}/firmware/squeezelite-esp32",
+				"-v",
+				"/dev:/dev",
+				"-w",
+				"${workspaceFolder}/firmware/squeezelite-esp32",
+				"espressif/idf:v4.3.5",
+				"bash",
+				"-c",
+				". $IDF_PATH/export.sh && pip install protobuf grpcio-tools && exec bash"
+			],
+			"problemMatcher": [],
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "dedicated"
+			},
+			"isBackground": false
+		},
+		{
+			"label": "ESP-IDF 4.3.5 (sle118): Open Shell in Container",
 			"type": "shell",
 			"command": "docker",
 			"args": [
@@ -48,7 +77,7 @@
 				"sle118/squeezelite-esp32-idfv435",
 				"bash",
 				"-c",
-				". /opt/esp/python_env/idf4.3_py3.8_env/bin/activate && exec bash"
+				". /opt/esp/python_env/idf4.3_py3.8_env/bin/activate && pip install --upgrade protobuf grpcio-tools && exec bash"
 			],
 			"problemMatcher": [],
 			"presentation": {

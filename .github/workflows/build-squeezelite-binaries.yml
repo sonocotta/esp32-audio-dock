@@ -27,11 +27,6 @@ jobs:
         git config --global --add safe.directory /__w/esp32-audio-dock/esp32-audio-dock || true
         git config --global --add safe.directory /__w/esp32-audio-dock/esp32-audio-dock/firmware/squeezelite-esp32 || true
 
-    - name: Set Docker image and build metadata
-      id: setenv
-      run: |
-        echo "DOCKER_IMAGE_NAME=sle118/squeezelite-esp32-idfv4-master" >> $GITHUB_ENV
-        echo "docker_image=sle118/squeezelite-esp32-idfv4-master" >> $GITHUB_OUTPUT
     - name: Get squeezelite-esp32 submodule commit
       id: submodule_rev
       run: |
@@ -44,18 +39,99 @@ jobs:
         echo "commit=$COMMIT" >> $GITHUB_OUTPUT
         echo "SUBMODULE_COMMIT=$COMMIT" >> $GITHUB_ENV
 
-    - name: Show GITHUB_ENV contents
-      shell: bash
-      run: |
-        echo "--- GITHUB_ENV path: $GITHUB_ENV ---"
-        if [ -f "$GITHUB_ENV" ]; then
-        echo "Contents of GITHUB_ENV:";
-        sed -n '1,200p' "$GITHUB_ENV" || true
-        else
-        echo "GITHUB_ENV file not found"
-        fi
+  build-esp32:
+    needs: prepare
+    runs-on: ubuntu-latest
+    container:
+      image: espressif/idf:v4.3.5
+    permissions:
+      contents: write
 
-  build:
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Mark repo safe for git
+      run: |
+        git config --global --add safe.directory $GITHUB_WORKSPACE
+        git config --global --add safe.directory $GITHUB_WORKSPACE/firmware/squeezelite-esp32
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+
+    - name: Set defaults
+      run: |
+        echo "TARGET_BUILD_NAME=I2S-4MFlash" >> $GITHUB_ENV
+        echo "DEPTH=16" >> $GITHUB_ENV
+        echo "BUILD_NUMBER=500" >> $GITHUB_ENV
+
+    - name: Build ESP32
+      shell: bash
+      env:
+        SUBMODULE_COMMIT: ${{ needs.prepare.outputs.build_number }}
+        SPOTIFY_SECRET: -DCLIENT_ID="${{ secrets.SPOTIFY_CLIENT_ID }}" -DCLIENT_SECRET="${{ secrets.SPOTIFY_CLIENT_SECRET }}"
+      run: |
+        set -euo pipefail
+        . $IDF_PATH/export.sh
+        
+        # Install dependencies
+        pip install --upgrade protobuf grpcio-tools
+        
+        SDK="squeezelite-configs/sdkconfig.esp32"
+        SDK_BASENAME=$(basename "$SDK")
+        SHORT_COMMIT="${SUBMODULE_COMMIT:-unknown}"
+        
+        # Compute tag using the submodule commit id
+        tag="${TARGET_BUILD_NAME}.${SDK_BASENAME}.latest.${SHORT_COMMIT}"
+        echo "tag=$tag" >> $GITHUB_ENV
+        
+        cd firmware/squeezelite-esp32
+        
+        idf.py fullclean
+        cp ../../$SDK sdkconfig
+        
+        echo "=== ESP32 Build Settings ==="
+        echo "TARGET_BUILD_NAME: $TARGET_BUILD_NAME"
+        echo "DEPTH: $DEPTH"
+        echo "BUILD_NUMBER: $BUILD_NUMBER"
+        echo "SDK: $SDK"
+        echo "SDK_BASENAME: $SDK_BASENAME"
+        echo "SUBMODULE_COMMIT: ${SUBMODULE_COMMIT:-unknown}"
+        echo "SHORT_COMMIT: $SHORT_COMMIT"
+        echo "tag: $tag"
+        echo "==============================="
+        
+        # Create version.txt with tag
+        echo "$tag" > version.txt
+        echo "Created version.txt with tag: $tag"
+        
+        idf.py build -DDEPTH=${DEPTH} -DBUILD_NUMBER=${BUILD_NUMBER}-${DEPTH}
+
+        # Collect produced binaries with SHORT_COMMIT suffix
+        OUT_DIR="../../docs/artifacts/binaries/${TARGET_BUILD_NAME}-${SDK_BASENAME}"
+        mkdir -p "$OUT_DIR"
+        
+        cp build/squeezelite.bin "$OUT_DIR/squeezelite-${SHORT_COMMIT}.bin"
+        cp build/bootloader/bootloader.bin "$OUT_DIR/bootloader-${SHORT_COMMIT}.bin"
+        cp build/partition_table/partition-table.bin "$OUT_DIR/partition-table-${SHORT_COMMIT}.bin"
+        cp build/ota_data_initial.bin "$OUT_DIR/ota_data_initial-${SHORT_COMMIT}.bin" || true
+        cp build/recovery.bin "$OUT_DIR/recovery-${SHORT_COMMIT}.bin" || true
+        
+        # Debug: show what was produced
+        echo "--- Debug: build output ---"
+        ls -la build || true
+        echo "--- Debug: contents of $OUT_DIR ---"
+        ls -la "$OUT_DIR" || true
+
+    - name: Upload ESP32 artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: esp32-binaries
+        path: docs/artifacts/binaries/
+
+  build-esp32s3:
     needs: prepare
     runs-on: ubuntu-latest
     container:
@@ -83,7 +159,7 @@ jobs:
         echo "DEPTH=16" >> $GITHUB_ENV
         echo "BUILD_NUMBER=500" >> $GITHUB_ENV
 
-    - name: Build all variants
+    - name: Build ESP32-S3
       shell: bash
       env:
         SUBMODULE_COMMIT: ${{ needs.prepare.outputs.build_number }}
@@ -95,66 +171,60 @@ jobs:
         # Install dependencies in IDF virtual environment
         pip install protobuf grpcio-tools
         
-        SDK_LIST=("squeezelite-configs/sdkconfig.esp32" "squeezelite-configs/sdkconfig.esp32s3")
+        SDK="squeezelite-configs/sdkconfig.esp32s3"
+        SDK_BASENAME=$(basename "$SDK")
+        SHORT_COMMIT="${SUBMODULE_COMMIT:-unknown}"
         
-        for SDK in "${SDK_LIST[@]}"; do
-          echo "=== Building with $SDK ==="
-          SDK_BASENAME=$(basename "$SDK")
-          SHORT_COMMIT="${SUBMODULE_COMMIT:-unknown}"
-          
-          # Compute tag using the submodule commit id
-          tag="${TARGET_BUILD_NAME}.${SDK_BASENAME}.latest.${SHORT_COMMIT}"
-          echo "tag=$tag" >> $GITHUB_ENV
-          
-          cd firmware/squeezelite-esp32
-          
-          idf.py fullclean
-          cp ../../$SDK sdkconfig
-          
-          echo "=== Build Settings for $SDK_BASENAME ==="
-          echo "TARGET_BUILD_NAME: $TARGET_BUILD_NAME"
-          echo "DEPTH: $DEPTH"
-          echo "BUILD_NUMBER: $BUILD_NUMBER"
-          echo "SDK: $SDK"
-          echo "SDK_BASENAME: $SDK_BASENAME"
-          echo "SUBMODULE_COMMIT: ${SUBMODULE_COMMIT:-unknown}"
-          echo "SHORT_COMMIT: $SHORT_COMMIT"
-          echo "tag: $tag"
-          echo "==============================="
-          
-          # Create version.txt with tag
-          echo "$tag" > version.txt
-          echo "Created version.txt with tag: $tag"
-          
-          idf.py build -DDEPTH=${DEPTH} -DBUILD_NUMBER=${BUILD_NUMBER}-${DEPTH}
+        # Compute tag using the submodule commit id
+        tag="${TARGET_BUILD_NAME}.${SDK_BASENAME}.latest.${SHORT_COMMIT}"
+        echo "tag=$tag" >> $GITHUB_ENV
+        
+        cd firmware/squeezelite-esp32
+        
+        idf.py fullclean
+        cp ../../$SDK sdkconfig
+        
+        echo "=== ESP32-S3 Build Settings ==="
+        echo "TARGET_BUILD_NAME: $TARGET_BUILD_NAME"
+        echo "DEPTH: $DEPTH"
+        echo "BUILD_NUMBER: $BUILD_NUMBER"
+        echo "SDK: $SDK"
+        echo "SDK_BASENAME: $SDK_BASENAME"
+        echo "SUBMODULE_COMMIT: ${SUBMODULE_COMMIT:-unknown}"
+        echo "SHORT_COMMIT: $SHORT_COMMIT"
+        echo "tag: $tag"
+        echo "==============================="
+        
+        # Create version.txt with tag
+        echo "$tag" > version.txt
+        echo "Created version.txt with tag: $tag"
+        
+        idf.py build -DDEPTH=${DEPTH} -DBUILD_NUMBER=${BUILD_NUMBER}-${DEPTH}
 
-          # Collect produced binaries with SHORT_COMMIT suffix
-          OUT_DIR="../../docs/artifacts/binaries/${TARGET_BUILD_NAME}-${SDK_BASENAME}"
-          mkdir -p "$OUT_DIR"
-          
-          cp build/squeezelite.bin "$OUT_DIR/squeezelite-${SHORT_COMMIT}.bin"
-          cp build/bootloader/bootloader.bin "$OUT_DIR/bootloader-${SHORT_COMMIT}.bin"
-          cp build/partition_table/partition-table.bin "$OUT_DIR/partition-table-${SHORT_COMMIT}.bin"
-          cp build/ota_data_initial.bin "$OUT_DIR/ota_data_initial-${SHORT_COMMIT}.bin" || true
-          cp build/recovery.bin "$OUT_DIR/recovery-${SHORT_COMMIT}.bin" || true
-          
-          # Debug: show what was produced
-          echo "--- Debug: build output ---"
-          ls -la build || true
-          echo "--- Debug: contents of $OUT_DIR ---"
-          ls -la "$OUT_DIR" || true
-          
-          cd ../..
-        done
+        # Collect produced binaries with SHORT_COMMIT suffix
+        OUT_DIR="../../docs/artifacts/binaries/${TARGET_BUILD_NAME}-${SDK_BASENAME}"
+        mkdir -p "$OUT_DIR"
+        
+        cp build/squeezelite.bin "$OUT_DIR/squeezelite-${SHORT_COMMIT}.bin"
+        cp build/bootloader/bootloader.bin "$OUT_DIR/bootloader-${SHORT_COMMIT}.bin"
+        cp build/partition_table/partition-table.bin "$OUT_DIR/partition-table-${SHORT_COMMIT}.bin"
+        cp build/ota_data_initial.bin "$OUT_DIR/ota_data_initial-${SHORT_COMMIT}.bin" || true
+        cp build/recovery.bin "$OUT_DIR/recovery-${SHORT_COMMIT}.bin" || true
+        
+        # Debug: show what was produced
+        echo "--- Debug: build output ---"
+        ls -la build || true
+        echo "--- Debug: contents of $OUT_DIR ---"
+        ls -la "$OUT_DIR" || true
 
-    - name: Upload all artifacts
+    - name: Upload ESP32-S3 artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: all-binaries
+        name: esp32s3-binaries
         path: docs/artifacts/binaries/
 
   finalize:
-    needs: [prepare, build]
+    needs: [prepare, build-esp32, build-esp32s3]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -168,7 +238,13 @@ jobs:
     - name: Download all artifacts
       uses: actions/download-artifact@v4
       with:
-        name: all-binaries
+        name: esp32-binaries
+        path: docs/artifacts/binaries/
+        
+    - name: Download ESP32-S3 artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: esp32s3-binaries
         path: docs/artifacts/binaries/
 
     - name: Generate latests templates
