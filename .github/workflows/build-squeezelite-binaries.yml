@@ -49,10 +49,9 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v1
       with:
-        submodules: 'recursive'
-        token: ${{ secrets.GITHUB_TOKEN }}
+        submodules: true
         
     - name: Mark repo safe for git
       run: |
