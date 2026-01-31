@@ -53,6 +53,10 @@ jobs:
       with:
         submodules: true
         
+    - name: Initialize submodules
+      run: |
+        git submodule update --init --recursive
+        
     - name: Mark repo safe for git
       run: |
         git config --global --add safe.directory $GITHUB_WORKSPACE
