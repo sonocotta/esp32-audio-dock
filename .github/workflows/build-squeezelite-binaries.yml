@@ -53,16 +53,16 @@ jobs:
       with:
         submodules: true
         
-    - name: Initialize submodules
-      run: |
-        git submodule update --init --recursive
-        
     - name: Mark repo safe for git
       run: |
         git config --global --add safe.directory $GITHUB_WORKSPACE
         git config --global --add safe.directory $GITHUB_WORKSPACE/firmware/squeezelite-esp32
         git config user.name github-actions
         git config user.email github-actions@github.com
+        
+    - name: Initialize submodules
+      run: |
+        git submodule update --init --recursive
 
     - name: Set defaults
       run: |
