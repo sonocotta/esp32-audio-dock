@@ -10,11 +10,11 @@
             "chipFamily": "ESP32-S3",
             "parts": [
                 {
-                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3/bootloader.bin",
+                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3/bootloader-$commitid.bin",
                     "offset": "0x0"
                 },
                 {
-                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3/partition-table.bin",
+                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3/partition-table-$commitid.bin",
                     "offset": "0x8000"
                 },
                 {
@@ -22,15 +22,15 @@
                     "offset": "0x9000"
                 },
                 {
-                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3/ota_data_initial.bin",
+                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3/ota_data_initial-$commitid.bin",
                     "offset": "0xd000"
                 },
                 {
-                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3/recovery.bin",
+                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3/recovery-$commitid.bin",
                     "offset": "0x10000"
                 },
                 {
-                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3/squeezelite.bin",
+                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3/squeezelite-$commitid.bin",
                     "offset": "0x150000"
                 },
                 {
