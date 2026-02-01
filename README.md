@@ -15,13 +15,15 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
 
 </details>
 
-| **HiFi-ESP32** | **Loud-ESP32** |
+| **HiFi-ESP32** | **HiFi-ESP32-Plus** |
 |---|---|
-| <img width="1626" height="855" alt="image" src="https://github.com/user-attachments/assets/00ae8698-e47f-4c8a-b83e-6300a79be120" /> | ![DSC_0017](https://github.com/user-attachments/assets/94ffe10e-e206-4ced-aa2c-32b60508b280) | 
-| **Amped-ESP32** | **Louder-ESP32** |
-| ![DSC_0005](https://github.com/user-attachments/assets/e457b78c-c841-4764-90db-f25091f652ad) | ![DSC_0019](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/26c98a87-cd12-466d-990c-05dfb163390c)
-| **HiFi-ESP32 Plus** | **Amped-ESP32 Plus** |
-| <img width="3685" height="2625" alt="image" src="https://github.com/user-attachments/assets/fefa3c37-62dd-4ffb-a6fa-cab602e6b5fb" /> | <img width="3003" height="2144" alt="image" src="https://github.com/user-attachments/assets/f021427a-6343-4e9d-84a4-9b28b5237c99" /> |
+| <img width="1378" height="887" alt="image" src="https://github.com/user-attachments/assets/aa11ab7f-bea6-4eb4-bd88-5acc506fdeae" /> | <img width="1300" height="874" alt="image" src="https://github.com/user-attachments/assets/85233e6e-3fd1-41f3-a849-2aab72f074fa" /> |
+| **Loud-ESP32** | **Loud-ESP32-Plus**
+|  <img width="1305" height="875" alt="image" src="https://github.com/user-attachments/assets/49ee62ed-3290-4580-923f-d357a03c1c7f" /> | <img width="1168" height="849" alt="image" src="https://github.com/user-attachments/assets/e3be3e40-4989-4310-842f-8709e21af504" />
+| **Louder-ESP32** | **Louder-ESP32-Plus** |
+| <img width="1247" height="886" alt="image" src="https://github.com/user-attachments/assets/95c3c09d-e223-4a48-a39f-49aef12fbac7" /> | <img width="1249" height="842" alt="image" src="https://github.com/user-attachments/assets/06745d0b-ee1d-48fb-9883-347d742ff5f1" />
+| **Amped-ESP32** | **Amped-ESP32-Plus** | 
+| <img width="1300" height="903" alt="image" src="https://github.com/user-attachments/assets/625801a1-a66e-4ef8-ab90-5508d6f662cd" /> | <img width="1097" height="794" alt="image" src="https://github.com/user-attachments/assets/2c334973-66e3-47f7-860d-f835607408c0" />
 
 ## Table of Contents
 
