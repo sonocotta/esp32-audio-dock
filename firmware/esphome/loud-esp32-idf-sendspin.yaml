@@ -62,27 +62,29 @@ psram:
 external_components:
   - source: github://pr#12253
     components: [mixer]
-    refresh: 0s
+    refresh: 24h
 
   - source: github://pr#12254
     components: [resampler]
-    refresh: 0s
+    refresh: 24h
 
-  - source: github://pr#12256
+  - source:
+      type: git
+      url: https://github.com/esphome/esphome
+      ref: 9148832ea4e54907bad71a24d4ced1ce6c862433  # this is commit 9148832
     components: [audio]
-    refresh: 0s
+    refresh: 24h
 
   - source: github://pr#12258
     components: [media_player]
-    refresh: 0s
-
+    refresh: 24h
   - source: github://pr#12284
     components: [mdns, sendspin]
-    refresh: 0s
+    refresh: 24h
 
   - source: github://pr#12429
     components: [file, http_request, media_source, speaker_source]
-    refresh: 0s
+    refresh: 24h
 
 text_sensor:
   - platform: sendspin

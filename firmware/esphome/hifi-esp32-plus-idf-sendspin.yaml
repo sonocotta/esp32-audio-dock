@@ -48,6 +48,14 @@ psram:
   speed: 80MHz
   ignore_not_found: false
 
+globals:
+  - id: current_volume
+    type: float
+    initial_value: '0.2'
+  - id: announcement_triggered
+    type: bool
+    initial_value: 'false'
+    
 external_components:
   - source: github://sonocotta/esphome-pcm5122
     components: [ pcm5122 ]
@@ -55,27 +63,29 @@ external_components:
 
   - source: github://pr#12253
     components: [mixer]
-    refresh: 0s
+    refresh: 24h
 
   - source: github://pr#12254
     components: [resampler]
-    refresh: 0s
+    refresh: 24h
 
-  - source: github://pr#12256
+  - source:
+      type: git
+      url: https://github.com/esphome/esphome
+      ref: 9148832ea4e54907bad71a24d4ced1ce6c862433  # this is commit 9148832
     components: [audio]
-    refresh: 0s
+    refresh: 24h
 
   - source: github://pr#12258
     components: [media_player]
-    refresh: 0s
-
+    refresh: 24h
   - source: github://pr#12284
     components: [mdns, sendspin]
-    refresh: 0s
+    refresh: 24h
 
   - source: github://pr#12429
     components: [file, http_request, media_source, speaker_source]
-    refresh: 0s
+    refresh: 24h
 
 i2c:
 # Pins are swapped on the HiFi-ESP32-S3-Plus Rev J, these are for Rev J1+
