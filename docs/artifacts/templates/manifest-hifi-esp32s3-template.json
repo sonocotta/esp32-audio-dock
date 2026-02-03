@@ -30,7 +30,7 @@
                     "offset": "0x10000"
                 },
                 {
-                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3/squeezelite.bin",
+                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3/squeezelite-$commitid.bin",
                     "offset": "0x150000"
                 },
                 {
