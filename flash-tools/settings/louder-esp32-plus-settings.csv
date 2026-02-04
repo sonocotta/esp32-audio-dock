@@ -16,7 +16,7 @@ bt_sink_pin,data,string,1234
 bt_sink_volume,data,string,127
 bypass_wm,data,string,0
 cspot_config,data,string,"{""deviceName"":""louder-esp32-plus"",""bitrate"":160}"
-dac_config,data,string,"model=I2S,bck=26,ws=25,do=22,sda=21,scl=27,i2c=45"
+dac_config,data,string,"model=I2S,bck=26,ws=25,do=22,sda=21,scl=27,i2c=76"
 dac_controlset,data,string,"{""init"":[{""reg"":3,""val"":2},{""reg"":3,""val"":3}],""poweron"":[{""reg"":3,""val"":3}],""poweroff"":[{""reg"":3,""val"":0}]}"
 dhcp_tmout,data,string,8
 display_config,data,string,

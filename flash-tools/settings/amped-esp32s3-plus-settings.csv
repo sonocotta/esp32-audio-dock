@@ -43,7 +43,7 @@ pollmx,data,string,600
 rel_api,data,string,https://api.github.com/repos/sle118/squeezelite-esp32/releases
 release_url,data,string,CONFIG_SQUEEZELITE_ESP32_RELEASE_URL
 rotary_config,data,string,
-set_GPIO,data,string,"7=ir,17=vcc"
+set_GPIO,data,string,"7=ir,17=amp"
 sleep_config,data,string,
 spdif_config,data,string,
 spi_config,data,string,
