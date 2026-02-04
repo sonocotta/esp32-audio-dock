@@ -1,5 +1,5 @@
 {
-  "name": "hifi-esp32s3-plus",
+  "name": "louder-esp32s3",
   "version": "a71aff68",
   "home_assistant_domain": "slim_player",
   "funding_url": "https://esphome.io/guides/supporters.html",
@@ -34,11 +34,11 @@
           "offset": "0x150000"
         },
         {
-          "path": "binaries/nvs-settings/hifi-esp32s3-plus-settings.bin",
+          "path": "binaries/nvs-settings/louder-esp32s3-plus-settings.bin",
           "offset": "0x3f0000"
         }
       ]
     }
   ],
-  "manifest_name": "manifest-hifi-esp32s3-plus-latest.json"
+  "manifest_name": "manifest-louder-esp32s3-plus-latest.json"
 }

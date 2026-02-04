@@ -34,11 +34,11 @@
           "offset": "0x150000"
         },
         {
-          "path": "binaries/nvs-settings/hifi-esp32-plus-settings.bin",
+          "path": "binaries/nvs-settings/amped-esp32-plus-settings.bin",
           "offset": "0x3f0000"
         }
       ]
     }
   ],
-  "manifest_name": "manifest-hifi-esp32-plus-latest.json"
+  "manifest_name": "manifest-amped-esp32-plus-latest.json"
 }
