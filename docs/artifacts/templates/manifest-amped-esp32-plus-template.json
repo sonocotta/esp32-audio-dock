@@ -1,5 +1,5 @@
 {
-    "name": "hifi-esp32s3-plus",
+    "name": "hifi-esp32-plus",
     "version": "$commitid",
     "home_assistant_domain": "slim_player",
     "funding_url": "https://esphome.io/guides/supporters.html",
@@ -7,14 +7,14 @@
     "new_install_improv_wait_time": 20,
     "builds": [
         {
-            "chipFamily": "ESP32-S3",
+            "chipFamily": "ESP32",
             "parts": [
                 {
-                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3/bootloader-$commitid.bin",
-                    "offset": "0x0"
+                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32/bootloader-$commitid.bin",
+                    "offset": "0x1000"
                 },
                 {
-                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3/partition-table-$commitid.bin",
+                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32/partition-table-$commitid.bin",
                     "offset": "0x8000"
                 },
                 {
@@ -22,23 +22,23 @@
                     "offset": "0x9000"
                 },
                 {
-                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3/ota_data_initial-$commitid.bin",
+                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32/ota_data_initial-$commitid.bin",
                     "offset": "0xd000"
                 },
                 {
-                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3/recovery-$commitid.bin",
+                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32/recovery-$commitid.bin",
                     "offset": "0x10000"
                 },
                 {
-                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3/squeezelite-$commitid.bin",
+                    "path": "binaries/I2S-4MFlash-sdkconfig.esp32/squeezelite-$commitid.bin",
                     "offset": "0x150000"
                 },
                 {
-                    "path": "binaries/nvs-settings/hifi-esp32s3-plus-settings.bin",
+                    "path": "binaries/nvs-settings/amped-esp32-plus-settings.bin",
                     "offset": "0x3f0000"
                 }
             ]
         }
     ],
-    "manifest_name": "manifest-hifi-esp32s3-plus-latest.json"
+    "manifest_name": "manifest-amped-esp32-plus-latest.json"
 }
