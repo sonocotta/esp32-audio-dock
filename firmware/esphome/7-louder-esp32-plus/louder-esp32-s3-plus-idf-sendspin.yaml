@@ -1,0 +1,438 @@
+substitutions:
+  name: esphome-web-xxxxxx
+  friendly_name: Louder-ESP32-Plus
+  task_stack_in_psram: "true" # important to disable this for non-S3 model
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  min_version: 2025.11.0
+  name_add_mac_suffix: false
+  platformio_options:
+    board_build.flash_mode: dio
+  # Importnant! Play sound on boot required for DAC to capture clock signal and enable DSP configuration
+  # If any of the DSP configs are sent before clock signal, they are simply ignored. This applies to EQ and Mixer controls
+  on_boot:
+    priority: 220.0
+    then:
+      media_player.play_media:
+        id: external_media_player
+        media_url: file://startup_sync_sound
+
+esp32:
+  variant: ESP32S3
+  flash_size: 16MB
+  cpu_frequency: 240MHz
+  framework:
+    type: esp-idf
+    version: recommended
+    sdkconfig_options:
+      CONFIG_ESP32S3_DATA_CACHE_64KB: "y"
+      CONFIG_ESP32S3_DATA_CACHE_LINE_64B: "y"
+      CONFIG_ESP32S3_INSTRUCTION_CACHE_32KB: "y"
+
+      # Optional for ESP32-Louder used by Voice-PE
+      # Moves instructions and read only data from flash into PSRAM on boot.
+      # Both enabled allows instructions to execute while a flash operation is in progress without needing to be placed in IRAM.
+      # Considerably speeds up mWW at the cost of using more PSRAM.
+      CONFIG_SPIRAM_RODATA: "y"
+      CONFIG_SPIRAM_FETCH_INSTRUCTIONS: "y"
+
+      CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: "y"
+      CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
+
+      CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
+      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"  # TLS1.3 support isn't enabled by default in IDF 5.1.5
+
+# Enable logging
+logger:
+  level: DEBUG
+  
+wifi:
+  ssid: !secret esphome_wifi_ssid
+  password: !secret esphome_wifi_password
+  ap:
+    ssid: "$name Hotspot"
+    password: !secret esphome_ap_password
+
+captive_portal:
+
+# Allow Over-The-Air updates
+ota:
+  platform: esphome
+  password: !secret esphome_ota_password
+
+### Optional if you want ethernet (then remove above wifi config)
+#ethernet:
+#  type: W5500
+#  clk_pin: GPIO18
+#  mosi_pin: GPIO23
+#  miso_pin: GPIO19
+#  cs_pin: GPIO05
+#  interrupt_pin: GPIO35
+#  reset_pin: GPIO14
+
+# Enable Home Assistant API
+api:
+
+network:
+  enable_ipv6: true
+
+http_request:
+
+# network:
+#   enable_ipv6: true
+
+globals:
+  - id: current_volume
+    type: float
+    initial_value: '0.2'
+  - id: announcement_triggered
+    type: bool
+    initial_value: 'false'
+
+psram:
+  mode: octal
+  speed: 80MHz
+  ignore_not_found: false
+
+external_components:
+  - source: github://mrtoy-me/esphome-tas58xx@main
+    components: [ tas58xx ]
+    refresh: 24h
+
+  - source: github://pr#12253
+    components: [mixer]
+    refresh: 24h
+
+  - source: github://pr#12254
+    components: [resampler]
+    refresh: 24h
+
+  - source:
+      type: git
+      url: https://github.com/esphome/esphome
+      ref: 9148832ea4e54907bad71a24d4ced1ce6c862433  # this is commit 9148832
+    components: [audio]
+    refresh: 24h
+
+  - source: github://pr#12258
+    components: [media_player]
+    refresh: 24h
+
+  - source: github://pr#12284
+    components: [mdns, sendspin]
+    refresh: 24h
+
+  - source: github://pr#12429
+    components: [file, http_request, media_source, speaker_source]
+    refresh: 24h
+
+i2c:
+  sda: GPIO8
+  scl: GPIO9
+  frequency: 400kHz
+  scan: True
+  timeout: 100us
+
+### TAS58xx DAC configuration
+audio_dac:
+  - platform: tas58xx
+    id: tas58xx_dac
+    tas58xx_dac: TAS5825M
+    enable_pin: GPIO17  # Physical pin connected to PWDN pin
+    dac_mode: BTL       # 'BTL' / Bridge Tied Load - 2Ch Stereo, or 'PBTL' / Parallel Bridge Tied Load - 1Ch Mono (double power)
+    mixer_mode: STEREO  # STEREO, STEREO_INVERSE, MONO, LEFT, RIGHT
+    analog_gain: -6db   # Startup Gain or Output voltage swing - pick based on the power supply voltage: https://github.com/sonocotta/esp32-tas58xx-dac?tab=readme-ov-file#digital-volume-and-analog-gain
+    # volume_max: -6dB  # Max HA volume mapping to Digital Volume control, goes as high as +24dB, but not recommend going much above 0 dB, risking to cause clipping on high volume
+    volume_min: -60db   # Min HA volume mapping to Digital Volume control, goes as low as -103dB, but prefer to set higher to have a reasonable volume range
+    update_interval: 5s # How often fault registers are read and cleared
+
+i2s_audio:
+  i2s_lrclk_pin: GPIO15
+  i2s_bclk_pin: GPIO14
+
+text_sensor:
+  - platform: sendspin
+    type: title
+    name: Track Title
+
+  - platform: sendspin
+    type: artist
+    name: Artist
+
+  - platform: sendspin
+    type: album
+    name: Album
+
+speaker:
+  - platform: i2s_audio
+    id: i2s_speaker_id
+    sample_rate: 48000
+    i2s_dout_pin: GPIO16
+    bits_per_sample: 16bit
+    dac_type: external
+    channel: stereo
+    timeout: never
+    buffer_duration: 100ms
+    audio_dac: tas58xx_dac
+
+  - platform: mixer
+    id: mixer_speaker_id
+    output_speaker: i2s_speaker_id
+    num_channels: 2
+    task_stack_in_psram: ${task_stack_in_psram}
+    source_speakers:
+      - id: announcement_mixer_input
+        timeout: never
+      - id: media_mixer_input
+        timeout: never
+
+  - platform: resampler
+    id: media_resampling_speaker
+    output_speaker: media_mixer_input
+    sample_rate: 48000
+    bits_per_sample: 16
+
+  - platform: resampler
+    id: announcement_resampling_speaker
+    output_speaker: announcement_mixer_input
+    sample_rate: 48000
+    bits_per_sample: 16
+
+sendspin:
+  id: sendspin_hub
+  task_stack_in_psram: ${task_stack_in_psram}
+  kalman_process_error: 0.01
+
+media_source:
+  - platform: sendspin
+    id: sendspin_source
+  - platform: http_request
+    id: http_source
+    buffer_size: 200000
+  - platform: file
+    id: file_source
+    files:
+      id: startup_sync_sound
+      file: https://github.com/mrtoy-me/esphome-tas58xx/raw/main/components/tas58xx/tas58xx_boot.flac
+
+media_player:
+  - platform: sendspin
+    id: sendspin_group_media_player
+
+  - platform: speaker_source
+    id: external_media_player
+    name: Media Player
+    announcement_speaker: announcement_resampling_speaker
+    media_speaker: media_resampling_speaker
+    announcement_pipeline:
+      format: FLAC     # FLAC is the least processor intensive codec
+      num_channels: 1  # Stereo audio is unnecessary for announcements
+      sample_rate: 48000
+    media_pipeline:
+      format: FLAC     # FLAC is the least processor intensive codec
+      num_channels: 2
+      sample_rate: 48000
+    volume_increment: 0.05
+    sources:
+      - file_source
+      - http_source
+      - sendspin_source
+    on_announcement:
+      - if:
+          condition:
+            - lambda: return (!id(announcement_triggered));
+          then:
+            - lambda: |-
+                id(announcement_triggered) = true;
+                id(current_volume) = id(external_media_player).volume;
+            - mixer_speaker.apply_ducking:
+                  id: media_mixer_input
+                  decibel_reduction: 40
+                  duration: 0.0s
+            - wait_until:
+                media_player.is_announcing: external_media_player
+            - delay: 0.75s
+            - media_player.volume_set:
+                id: external_media_player
+                volume: !lambda "return id(announce_volume).state / 100.0;"
+            - wait_until:
+                - not:
+                    media_player.is_announcing: external_media_player
+            - mixer_speaker.apply_ducking:
+                      id: media_mixer_input
+                      decibel_reduction: 0
+                      duration: 1.0s
+            - media_player.volume_set:
+                id: external_media_player
+                volume: !lambda "return id(current_volume);"
+            - lambda: id(announcement_triggered) = false;
+
+    on_state:
+      if:
+        condition:
+          and:
+            - lambda: return (!id(announcement_triggered));
+            - not:
+                media_player.is_announcing: external_media_player
+        then:
+          - mixer_speaker.apply_ducking:
+              id: media_mixer_input
+              decibel_reduction: 0
+              duration: 1.0s
+
+number:
+  - platform: template
+    name: Announce Volume
+    id: announce_volume
+    icon: mdi:volume-source
+    unit_of_measurement: "%"
+    min_value: 0
+    max_value: 100
+    step: 1
+    restore_value: true
+    initial_value: 50
+    optimistic: true
+
+  - platform: tas58xx
+    left_eq_gain_20Hz:
+      name: Left Gain ---20Hz
+    left_eq_gain_31.5Hz:
+      name: Left Gain ---31.5Hz
+    left_eq_gain_50Hz:
+      name: Left Gain ---50Hz
+    left_eq_gain_80Hz:
+      name: Left Gain ---80Hz
+    left_eq_gain_125Hz:
+      name: Left Gain --125Hz
+    left_eq_gain_200Hz:
+      name: Left Gain --200Hz
+    left_eq_gain_315Hz:
+      name: Left Gain --315Hz
+    left_eq_gain_500Hz:
+      name: Left Gain --500Hz
+    left_eq_gain_800Hz:
+      name: Left Gain --800Hz
+    left_eq_gain_1250Hz:
+      name: Left Gain -1250Hz
+    left_eq_gain_2000Hz:
+      name: Left Gain -2000Hz
+    left_eq_gain_3150Hz:
+      name: Left Gain -3150Hz
+    left_eq_gain_5000Hz:
+      name: Left Gain -5000Hz
+    left_eq_gain_8000Hz:
+      name: Left Gain -8000Hz
+    left_eq_gain_16000Hz:
+      name: Left Gain 16000Hz
+
+switch:
+  - platform: tas58xx
+    # Will be operated automatially. When disabled DAC will drow dramatically less power
+    enable_dac:
+      name: Enable Louder
+      id: enable_louder
+      restore_mode: ALWAYS_ON
+    # Will be operated automatially. If you use EQ it is required to set it ON
+    enable_eq:
+      name: Enable EQ Control
+      restore_mode: RESTORE_DEFAULT_ON      
+
+sensor:
+  - platform: tas58xx
+    faults_cleared:
+      name: "Times Faults Cleared"
+
+binary_sensor:
+  - platform: tas58xx
+    have_fault:
+      name: Any Faults
+      exclude: CLOCK_FAULT
+    left_channel_dc_fault:
+      name: Left Channel DC Fault
+    right_channel_dc_fault:
+      name: Right Channel DC Fault
+    left_channel_over_current:
+      name: Left Channel Over Current
+    right_channel_over_current:
+      name: Right Channel Over Current
+    otp_crc_check:
+      name: CRC Check Fault
+    bq_write_failed:
+      name: BQ Write Failure
+    # I2S clock fault binary sensor is not really useful with speaker media player
+    # since it generates clock faults when it manipulates I2S.
+    # clock fault:
+    #   name: I2S Clock Fault
+    pcdd_over_voltage:
+      name: PCDD Over Voltage
+    pcdd_under_voltage:
+      name: PCDD Under Voltage
+    over_temp_shutdown:
+      name: Over Temperature Shutdown Fault
+    over_temp_warning:
+      name: Over Temperature Warning
+      id: over_temperature_warning
+
+# ### RGB light config (if installed)
+# light:
+#   - platform: esp32_rmt_led_strip
+#     id: rgb_front_led
+#     name: "${friendly_name} LED"
+#     rgb_order: GRB
+#     pin: GPIO21
+#     num_leds: 1
+#     chipset: ws2812
+#     default_transition_length: 0s
+
+### IR reader config (if installed). Add your own IR codes as needed
+remote_receiver:
+  pin: 
+    number: GPIO7
+    inverted: true
+    mode:
+      input: true
+  dump: all
+
+button:
+  - platform: restart
+    id: restart_btn
+    name: "${friendly_name} REBOOT"
+
+# ### Optional settings for OLED screen 
+# ## prerequisites:
+# font:
+#   - file:
+#       type: gfonts
+#       family: Roboto
+#       weight: regular
+#     id: roboto_medium
+#     size: 32
+#     glyphs: [' ', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+# spi:
+#   clk_pin: GPIO12
+#   mosi_pin: GPIO11
+#   miso_pin: GPIO13
+
+# time:
+#   - platform: sntp
+#     id: esptime
+
+# ## Example display configuration, showing the clock
+# display:
+#   - platform: ssd1306_spi
+#     model: SH1106 128x64
+#     cs_pin: GPIO47
+#     dc_pin: GPIO38
+#     reset_pin: GPIO48
+#     rotation: 180
+#     update_interval: 1s
+#     lambda: |-
+#         // display clock
+#         auto hours = id(esptime).now().hour;
+#         auto minutes = id(esptime).now().minute;
+#         auto seconds = id(esptime).now().second;
+#         auto dot = seconds % 2 == 0 ? " " : ":";
+#         it.printf(64, 32, id(roboto_medium), TextAlign::CENTER, "%d%s%02d", hours, dot ,minutes);

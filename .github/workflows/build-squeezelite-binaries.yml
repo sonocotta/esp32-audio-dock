@@ -9,6 +9,8 @@ on:
         - 'installer/**'
         - 'doc/**'
         - 'docs/**'
+        - 'hardware/**'
+        - '*.md'
 
 jobs:
   prepare:
