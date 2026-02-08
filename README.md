@@ -25,7 +25,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
 | **Amped-ESP32** | **Amped-ESP32-Plus** | 
 | <img width="1300" height="903" alt="image" src="https://github.com/user-attachments/assets/625801a1-a66e-4ef8-ab90-5508d6f662cd" /> | <img width="1097" height="794" alt="image" src="https://github.com/user-attachments/assets/2c334973-66e3-47f7-860d-f835607408c0" />
 
-⚠️_Looking for Esparagus boards? Check out sister repository: [Esapragus Media Center](https://github.com/sonocotta/esparagus-media-center/)_
+⚠️ _Looking for Esparagus boards? Check out sister repository: [Esapragus Media Center](https://github.com/sonocotta/esparagus-media-center/)_
 
 ## Table of Contents
 
