@@ -73,7 +73,7 @@ i2s_audio:
 snapclient:
   hostname: 192.168.1.49   # at this time auto-discovery does not work, so you need to specify the server IP address
   port: 1704               # default port, no need to change unless you have changed it on the server side
-  name: $friendly_name     # this is the name that will appear in the snapcast clients list
+  name: ${friendly_name}     # this is the name that will appear in the snapcast clients list
   i2s_dout_pin: GPIO16     # I2S data out pin
   webserver_port: 8080     # start webserver for snapclient controls
 

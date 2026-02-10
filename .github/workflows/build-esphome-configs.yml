@@ -82,6 +82,6 @@ jobs:
             -v "$(pwd)/firmware/esphome/secrets/secrets.yaml:/config/secrets.yaml:ro" \
             -v "$(pwd)/.esphome-cache:/cache" \
             -e PLATFORMIO_BUILD_CACHE_DIR=/cache/.pio-cache \
-            esphome/esphome \
+            esphome/esphome:dev \
             compile "/config/${CONFIG_FILE}"
             

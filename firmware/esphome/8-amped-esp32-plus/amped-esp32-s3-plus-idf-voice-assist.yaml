@@ -1,6 +1,6 @@
 substitutions:
-  name: esphome-web-2cc050
-  friendly_name: Amped-ESP32-S3-Plus-02
+  name: esphome-web-2cc030
+  friendly_name: Amped-ESP32-S3-Plus-03
   task_stack_in_psram: "true" # important to disable this for non-S3 model
   wake_word: okay_nabu
   speaker_volume: 30%  # Increased from 50%
@@ -56,7 +56,10 @@ esp32:
 # Enable logging
 logger:
   level: DEBUG
-  
+
+debug:
+  update_interval: 5s
+
 wifi:
   ssid: !secret esphome_wifi_ssid
   password: !secret esphome_wifi_password
@@ -510,12 +513,59 @@ button:
     id: restart_btn
     name: "${friendly_name} REBOOT"
 
+sensor:
+  - platform: wifi_signal
+    name: "${friendly_name} WiFi Signal"
+    update_interval: 60s
+  - platform: uptime
+    name: "${friendly_name} Uptime"
+    update_interval: 60s
+  - platform: internal_temperature
+    name: "${friendly_name} CPU Temperature"
+    update_interval: 60s
+  - platform: template
+    name: "${friendly_name} Free Heap"
+    lambda: |-
+      return heap_caps_get_free_size(MALLOC_CAP_INTERNAL) / 1024.0;
+    unit_of_measurement: 'kB'
+    update_interval: 10s
+  - platform: template
+    name: "${friendly_name} Free PSRAM"
+    lambda: |-
+      return heap_caps_get_free_size(MALLOC_CAP_SPIRAM) / 1024.0;
+    unit_of_measurement: 'kB'
+    update_interval: 10s
+  - platform: debug
+    loop_time:
+      name: "${friendly_name} Loop Time"
+
 text_sensor:
   - platform: wifi_info
     ip_address:
-      name: "${friendly_name} IP Address"
+      name: "${friendly_name} IP"
+    mac_address:
+      name: "${friendly_name} MAC"
+
   - platform: version
     name: "${friendly_name} ESPHome Version"
+    
+  - platform: template
+    name: "${friendly_name} Time"
+    lambda: |-
+      auto time = id(sntp_time).now();
+      if (!time.is_valid()) {
+        return {"Syncing..."};
+      }
+      char buf[20];
+      snprintf(buf, sizeof(buf), "%04d-%02d-%02d %02d:%02d:%02d",
+        time.year, time.month, time.day_of_month,
+        time.hour, time.minute, time.second);
+      return {buf};
+    update_interval: 60s
+
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
 
 ### Optional settings for OLED screen 
 ## prerequisites:
@@ -535,7 +585,7 @@ spi:
 
 time:
   - platform: sntp
-    id: esptime
+    id: sntp_time
 
 ## Example display configuration, showing the clock
 display:
@@ -548,8 +598,8 @@ display:
     update_interval: 1s
     lambda: |-
         // display clock
-        auto hours = id(esptime).now().hour;
-        auto minutes = id(esptime).now().minute;
-        auto seconds = id(esptime).now().second;
+        auto hours = id(sntp_time).now().hour;
+        auto minutes = id(sntp_time).now().minute;
+        auto seconds = id(sntp_time).now().second;
         auto dot = seconds % 2 == 0 ? " " : ":";
         it.printf(64, 32, id(roboto_medium), TextAlign::CENTER, "%d%s%02d", hours, dot ,minutes);

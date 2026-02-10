@@ -197,7 +197,7 @@ button:
 
 # time:
 #   - platform: sntp
-#     id: esptime
+#     id: sntp_time
 
 # ## Example display configuration, showing the clock
 # display:
@@ -210,8 +210,8 @@ button:
 #     update_interval: 1s
 #     lambda: |-
 #         // display clock
-#         auto hours = id(esptime).now().hour;
-#         auto minutes = id(esptime).now().minute;
-#         auto seconds = id(esptime).now().second;
+#         auto hours = id(sntp_time).now().hour;
+#         auto minutes = id(sntp_time).now().minute;
+#         auto seconds = id(sntp_time).now().second;
 #         auto dot = seconds % 2 == 0 ? " " : ":";
 #         it.printf(64, 32, id(roboto_medium), TextAlign::CENTER, "%d%s%02d", hours, dot ,minutes);

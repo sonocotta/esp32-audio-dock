@@ -111,7 +111,7 @@
 				"-e",
 				"PLATFORMIO_BUILD_CACHE_DIR=/cache/.pio-cache",
 				"-it",
-				"esphome/esphome",
+				"esphome/esphome:dev",
 				"compile",
 				"/config/${fileBasename}"
 			],
@@ -135,7 +135,7 @@
 				"-e",
 				"PLATFORMIO_BUILD_CACHE_DIR=/cache/.pio-cache",
 				"-it",
-				"esphome/esphome",
+				"esphome/esphome:dev",
 				"run",
 				"/config/${fileBasename}",
 				"--device",
