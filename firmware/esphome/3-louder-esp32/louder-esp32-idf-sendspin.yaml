@@ -10,7 +10,7 @@ esphome:
   name_add_mac_suffix: false
   platformio_options:
     board_build.flash_mode: dio
-  # Importnant! Play sound on boot required for DAC to capture clock signal and enable DSP configuration
+  # Important! Play sound on boot required for DAC to capture clock signal and enable DSP configuration
   # If any of the DSP configs are sent before clock signal, they are simply ignored. This applies to EQ and Mixer controls
   on_boot:
     priority: 220.0
@@ -86,7 +86,7 @@ psram:
 external_components:
   - source: github://mrtoy-me/esphome-tas5805m@beta
     components: [ tas5805m ]
-    refresh: 0s
+    refresh: 24h
 
   - source: github://pr#12253
     components: [mixer]

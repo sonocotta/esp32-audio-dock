@@ -76,7 +76,7 @@ external_components:
     refresh: 60s
   - source: github://c-MM/esphome-snapclient
     components: [ snapclient ]
-    refresh: 0s
+    refresh: 24h
 
 globals:
   - id: current_volume

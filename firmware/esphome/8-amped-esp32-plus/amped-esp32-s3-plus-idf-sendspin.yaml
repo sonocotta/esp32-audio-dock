@@ -1,6 +1,6 @@
 substitutions:
-  name: esphome-web-xxxxxx
-  friendly_name: Amped-ESP32-S3-Plus
+  name: esphome-web-2cc01c
+  friendly_name: Amped-ESP32-S3-Plus-01
   task_stack_in_psram: "true" # important to disable this for non-S3 model
 
 esphome:
@@ -42,6 +42,10 @@ logger:
 
 # Enable Home Assistant API
 api:
+  on_client_connected: 
+    then:
+      - display.page.show: page_clock
+      - component.update: spi_display
 
 http_request:
 
@@ -59,12 +63,12 @@ wifi:
 ### Optional if you want ethernet (then remove above wifi config)
 #ethernet:
 #  type: W5500
-#  clk_pin: GPIO18
-#  mosi_pin: GPIO23
-#  miso_pin: GPIO19
-#  cs_pin: GPIO05
-#  interrupt_pin: GPIO35
-#  reset_pin: GPIO14
+#  clk_pin: GPIO12
+#  mosi_pin: GPIO11
+#  miso_pin: GPIO13
+#  cs_pin: GPIO10
+#  interrupt_pin: GPIO6
+#  reset_pin: GPIO5
 
 psram:
   mode: octal
@@ -82,7 +86,7 @@ globals:
 external_components:
   - source: github://sonocotta/esphome-pcm5122
     components: [ pcm5122 ]
-    refresh: 0s
+    refresh: 24h
 
   - source: github://pr#12253
     components: [mixer]
@@ -111,7 +115,6 @@ external_components:
     refresh: 24h
 
 i2c:
-# Pins are swapped on the HiFi-ESP32-S3-Plus Rev H, these are for Rev H1+
   sda: GPIO18 
   scl: GPIO8
   frequency: 400kHz
@@ -132,17 +135,18 @@ i2s_audio:
   i2s_bclk_pin: GPIO14
 
 text_sensor:
+  # These don't have names, they don't need sharing back to HA (MA knows)
   - platform: sendspin
     type: title
-    name: Track Title
+    id: ss_title
 
   - platform: sendspin
     type: artist
-    name: Artist
+    id: ss_artist
 
   - platform: sendspin
     type: album
-    name: Album
+    id: ss_album
 
 speaker:
   - platform: i2s_audio
@@ -256,6 +260,11 @@ media_player:
               duration: 1.0s
 
     on_play:
+      - display.page.show: page_play
+      - component.update: spi_display
+      - switch.template.publish:
+          id: switch_screen
+          state: ON
       - if:
           condition:
             switch.is_off: enable_amp
@@ -263,6 +272,8 @@ media_player:
             switch.turn_on: enable_amp
 
     on_idle:
+      - display.page.show: page_clock
+      - component.update: spi_display
       - if:
           condition:
             switch.is_on: enable_amp
@@ -284,6 +295,28 @@ switch:
       number: GPIO17
     restore_mode: ALWAYS_OFF
 
+  - platform: template
+    name: "Screen"
+    id: switch_screen
+    optimistic: true
+    restore_mode: ALWAYS_ON
+    turn_on_action:
+      - if:
+          condition:
+            api.connected:
+          then:
+            - if:
+                condition:
+                  media_player.is_idle: external_media_player
+                then:
+                  - display.page.show: page_clock
+                else:
+                  - display.page.show: page_play
+            - component.update: spi_display
+    turn_off_action:
+      - display.page.show: page_off
+      - component.update: spi_display
+
 number:
   - platform: template
     name: Announce Volume
@@ -301,3 +334,164 @@ button:
   - platform: restart
     id: restart_btn
     name: "${friendly_name} REBOOT"
+
+### Optional settings for OLED screen 
+# prerequisites:
+time:
+  - platform: homeassistant
+    id: esptime
+
+font:
+  - file: 'gfonts://Material+Symbols+Outlined'
+    id: icons_small
+    size: 14
+    glyphs:
+      - "\ue019" # album
+      - "\ue01a" # artist
+      - "\U000fffd8" # music notes
+  - file:
+      type: gfonts
+      family: Ubuntu # TODO try 'Jersey 10 Charted'
+      weight: regular
+    id: text_small
+    size: 14
+    glyphsets: 
+      - GF_Latin_Core # European alphabets too
+  # For the clock page
+  - file:
+      type: gfonts
+      family: Roboto
+      weight: regular
+    id: text_big
+    size: 40
+    glyphs: [' ', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+spi:
+  clk_pin: GPIO12
+  mosi_pin: GPIO11
+  miso_pin: GPIO13
+  id: spi_bus_display
+
+### Example display configuration, showing the current playback state
+display:
+  - platform: ssd1306_spi
+    model: SH1106 128x64
+    id: spi_display
+    spi_id: spi_bus_display
+    cs_pin: GPIO47
+    dc_pin: GPIO38
+    reset_pin: GPIO48
+    update_interval: 200ms
+    data_rate: 20MHz
+    pages:
+      - id: page_startup
+        lambda: |-
+          it.printf(it.get_width() / 2, 20, 
+                    id(text_small), TextAlign::CENTER, "${friendly_name}");
+          it.printf(it.get_width() / 2, 40, 
+                    id(text_small), TextAlign::CENTER, "connecting...");
+
+      # Selected by api.on_connection
+      - id: page_clock
+        lambda: |-
+          // display clock
+          auto hours = id(esptime).now().hour;
+          auto minutes = id(esptime).now().minute;
+          auto seconds = id(esptime).now().second;
+          auto dot = seconds % 2 == 0 ? " " : ":";
+
+          it.printf(it.get_width() / 2, 
+                    it.get_height() / 2, 
+                    id(text_big), 
+                    TextAlign::CENTER, 
+                    "%d%s%02d", hours, dot, minutes);
+          
+      - id: page_off
+        lambda: return;
+
+      # Selected by the speaker on_play
+      - id: page_play
+        lambda: |-
+          const int PADDING_LEFT = 18, PADDING_RIGHT = 28;
+          const int LINE_HEIGHTS[] = {10, 32, 54};
+          int x1, y1, new_h, new_w, 
+              title_width_offset = PADDING_LEFT, 
+              artist_width_offset = PADDING_LEFT,
+              album_width_offset = PADDING_LEFT;
+          bool increment = false;
+          static int iteration = 0;
+
+          // Draw some icons
+          it.print(0, LINE_HEIGHTS[0], 
+                    id(icons_small), 
+                    TextAlign::CENTER_LEFT, 
+                    "\U000fffd8"); // music icon
+          it.print(0, LINE_HEIGHTS[1], 
+                  id(icons_small), 
+                  TextAlign::CENTER_LEFT, 
+                  "\ue01a"); // artist icon
+          it.print(0, LINE_HEIGHTS[2], 
+                  id(icons_small), 
+                  TextAlign::CENTER_LEFT, 
+                  "\ue019"); // album icon
+
+          // Don't scroll over the icons
+          it.start_clipping( Rect(PADDING_LEFT, 
+                                  0, 
+                                  it.get_width(), 
+                                  it.get_height()));
+
+          it.get_text_bounds(0, 0, 
+                            id(ss_title).state.c_str(), 
+                            id(text_small), 
+                            TextAlign::TOP_LEFT, 
+                            &x1, &y1, &new_w, &new_h);
+          if (new_w + PADDING_LEFT >= it.get_width()) {
+            auto missing_artist_text = new_w - it.get_width();
+            increment = true;
+            title_width_offset = PADDING_LEFT - (iteration % (missing_artist_text + PADDING_RIGHT));
+          }
+          it.print(title_width_offset, LINE_HEIGHTS[0], 
+                    id(text_small), 
+                    TextAlign::CENTER_LEFT, 
+                    id(ss_title).state.c_str());
+
+          // Do this again for the artist
+          it.get_text_bounds(0, 0, 
+                            id(ss_artist).state.c_str(), 
+                            id(text_small), 
+                            TextAlign::TOP_LEFT, 
+                            &x1, &y1, &new_w, &new_h);
+
+          if (new_w + PADDING_LEFT >= it.get_width()) {
+            auto missing_title_text = new_w - it.get_width();
+            increment = true;
+            artist_width_offset = PADDING_LEFT - (iteration % (missing_title_text + PADDING_RIGHT));
+          }
+          it.print(artist_width_offset, LINE_HEIGHTS[1], 
+                  id(text_small), 
+                  TextAlign::CENTER_LEFT, 
+                  id(ss_artist).state.c_str());
+
+          // And the album
+          it.get_text_bounds(0, 0, 
+                            id(ss_album).state.c_str(), 
+                            id(text_small), 
+                            TextAlign::TOP_LEFT, 
+                            &x1, &y1, &new_w, &new_h);
+
+          if (new_w + PADDING_LEFT >= it.get_width()) {
+            auto missing_album_text = new_w - it.get_width();
+            increment = true;
+            album_width_offset = PADDING_LEFT - (iteration % (missing_album_text + PADDING_RIGHT));
+          }
+          it.print(album_width_offset, LINE_HEIGHTS[2], 
+                  id(text_small), 
+                  TextAlign::CENTER_LEFT, 
+                  id(ss_album).state.c_str());
+
+          it.end_clipping();
+
+          if (increment) {
+            iteration++;
+          }

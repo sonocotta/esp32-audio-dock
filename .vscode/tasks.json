@@ -30,7 +30,7 @@
 			},
 			"isBackground": false
 		},
-    {
+		{
 			"label": "ESP-IDF 4.3.5: Open Shell in Container",
 			"type": "shell",
 			"command": "docker",
@@ -93,6 +93,54 @@
 			"type": "shell",
 			"command": "python3 -m http.server 8008 -d docs",
 			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "ESPHome: Build Current File",
+			"type": "shell",
+			"command": "docker",
+			"args": [
+				"run",
+				"--rm",
+				"-v",
+				"${fileDirname}:/config",
+				"-v",
+				"${workspaceFolder}/firmware/esphome/secrets/secrets.yaml:/config/secrets.yaml",
+				"-v",
+				"${workspaceFolder}/.esphome-cache:/cache",
+				"-e",
+				"PLATFORMIO_BUILD_CACHE_DIR=/cache/.pio-cache",
+				"-it",
+				"esphome/esphome",
+				"compile",
+				"/config/${fileBasename}"
+			],
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "ESPHome: Build and Upload OTA",
+			"type": "shell",
+			"command": "docker",
+			"args": [
+				"run",
+				"--rm",
+				"--network=host",
+				"-v",
+				"${fileDirname}:/config",
+				"-v",
+				"${workspaceFolder}/firmware/esphome/secrets/secrets.yaml:/config/secrets.yaml",
+				"-v",
+				"${workspaceFolder}/.esphome-cache:/cache",
+				"-e",
+				"PLATFORMIO_BUILD_CACHE_DIR=/cache/.pio-cache",
+				"-it",
+				"esphome/esphome",
+				"run",
+				"/config/${fileBasename}",
+				"--device",
+				"OTA"
+			],
 			"problemMatcher": []
 		}
 	]

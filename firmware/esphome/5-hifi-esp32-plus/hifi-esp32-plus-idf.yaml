@@ -43,7 +43,7 @@ psram:
 external_components:
   - source: github://sonocotta/esphome-pcm5122
     components: [ pcm5122 ]
-    refresh: 0s
+    refresh: 24h
 
 globals:
   - id: current_volume

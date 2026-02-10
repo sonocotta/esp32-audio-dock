@@ -1,6 +1,6 @@
 esphome:
-  name: hifi-esp32s3-plus
-  friendly_name: HiFi-ESP32S3-Plus
+  name: esphome-web-2cc030
+  friendly_name: Amped-ESP32-S3-Plus
   min_version: 2025.7.2
   platformio_options:
     board_build.flash_mode: dio
@@ -58,17 +58,16 @@ globals:
     type: float
 
 i2c:
-# Pins are swapped on the HiFi-ESP32-S3-Plus Rev H, these are for Rev H1+
-  sda: GPIO42 
-  scl: GPIO41
+  sda: GPIO18 
+  scl: GPIO8
   frequency: 400kHz
   scan: True
+  timeout: 100us
 
 audio_dac:
   - platform: pcm5122
     id: pcm5122_dac
     address: 0x4D           # I2C address of the DAC, it is 0x4C n the HiFi-ESP32 Rev H, and 0x4D on the rev H1+
-    enable_pin: GPIO4       # optional, to enable/disable the DAC (XSMT pin)
     volume_max: 0dB         # maximum volume range 0dB, can go up to +24dB
     volume_min: -60dB       # minimum volume range -60dB, can go down to -103dB
     analog_gain: -6dB       # or -6Db for 1V RMS output, default is 0dB = 2V RMS output
@@ -108,7 +107,7 @@ speaker:
 media_player:
   - platform: speaker
     name: Mediaplayer
-    id: hifi_mediaplayer
+    id: amped_media_player
     buffer_size: 100000
     volume_increment: 10%
     volume_initial: 10%
@@ -122,16 +121,25 @@ media_player:
     on_play:
       - if:
           condition:
-            switch.is_off: enable_dac
+            switch.is_off: enable_amp
           then:
-            switch.turn_on: enable_dac
+            switch.turn_on: enable_amp
+
+  
+    on_idle: 
+      - if:
+          condition:
+            switch.is_on: enable_amp
+          then:
+            switch.turn_off: enable_amp
+        
 
     on_announcement:
       - if:
           condition:
-            switch.is_off: enable_dac
+            switch.is_off: enable_amp
           then:
-            switch.turn_on: enable_dac
+            switch.turn_on: enable_amp
 
       - lambda: id(current_volume) = id(pcm5122_dac).volume();
 
@@ -154,11 +162,13 @@ media_player:
       - lambda: id(pcm5122_dac).set_volume(id(current_volume));
 
 switch:
-  - platform: pcm5122
-    enable_dac:
-      name: Enable DAC
-      id: enable_dac
-      restore_mode: ALWAYS_ON
+  - platform: gpio
+    icon: "mdi:speaker"
+    name: Enable AMP
+    id: enable_amp
+    pin:
+      number: GPIO17
+    restore_mode: ALWAYS_OFF
 
 number:
   - platform: template
@@ -174,16 +184,57 @@ number:
     optimistic: true
 
 interval:
-  - interval: 60s
+  - interval: 10s
     then:
       - if:
           condition:
-            - switch.is_on: enable_dac
+            - switch.is_on: enable_amp
             - for:
-                time: 120s
+                time: 5s
                 condition:
                   or:
-                    - media_player.is_idle: hifi_mediaplayer
-                    - media_player.is_paused: hifi_mediaplayer
+                    - media_player.is_idle: amped_media_player
+                    - media_player.is_paused: amped_media_player
           then:
-            - switch.turn_off: enable_dac
+            - switch.turn_off: enable_amp
+
+button:
+  - platform: restart
+    id: restart_btn
+    name: "${friendly_name} REBOOT"
+
+### Optional settings for OLED screen 
+# prerequisites:
+font:
+  - file:
+      type: gfonts
+      family: Roboto
+      weight: regular
+    id: roboto_medium
+    size: 32
+    glyphs: [' ', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+spi:
+  clk_pin: GPIO12
+  mosi_pin: GPIO11
+  miso_pin: GPIO13
+
+time:
+  - platform: sntp
+    id: esptime
+
+### Example display configuration, showing the current playback state
+display:
+  - platform: ssd1306_spi
+    model: SH1106 128x64
+    cs_pin: GPIO47
+    dc_pin: GPIO38
+    reset_pin: GPIO48
+    update_interval: 1s
+    lambda: |-
+        // display clock
+        auto hours = id(esptime).now().hour;
+        auto minutes = id(esptime).now().minute;
+        auto seconds = id(esptime).now().second;
+        auto dot = seconds % 2 == 0 ? " " : ":";
+        it.printf(64, 32, id(roboto_medium), TextAlign::CENTER, "%d%s%02d", hours, dot ,minutes);

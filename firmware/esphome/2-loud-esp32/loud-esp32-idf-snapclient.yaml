@@ -57,7 +57,7 @@ network:
 external_components:
   - source: github://c-MM/esphome-snapclient
     components: [ snapclient ]
-    refresh: 0s
+    refresh: 24h
 
 i2s_audio:
   i2s_lrclk_pin: GPIO25
