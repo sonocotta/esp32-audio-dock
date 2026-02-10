@@ -1,12 +1,58 @@
+# ============================================================
+# Louder-ESP32-S3-Plus - Sendspin Media Player Configuration
+# ============================================================
+# Media player using Sendspin protocol with OLED display
+# Features: TAS5825M DAC, I2S output, SSD1306 display with
+#           scrolling text, RGB LED, IR receiver
+# Requires: Sendspin server/sender on network
+# Board-specific pinouts are defined in substitutions section
+# ============================================================
 substitutions:
-  name: esphome-web-xxxxxx
-  friendly_name: Louder-ESP32-Plus
+  name: esphome-web-b4e96c
+  friendly_name: Louder-ESP32-S3-Plus
   task_stack_in_psram: "true" # important to disable this for non-S3 model
+
+# Board-specific pinout configuration
+  # I2C pins
+  i2c_sda_pin: GPIO8
+  i2c_scl_pin: GPIO9
+  
+  # I2S audio pins
+  i2s_lrclk_pin: GPIO15
+  i2s_bclk_pin: GPIO14
+  i2s_dout_pin: GPIO16
+  
+  # Amplifier control
+  dac_enable_pin: GPIO17
+  
+  # RGB LED
+  rgb_led_pin: GPIO21
+  
+  # IR receiver
+  ir_rx_pin: GPIO07
+
+  # SPI pins (for display)
+  spi_clk_pin: GPIO12
+  spi_mosi_pin: GPIO11
+  spi_miso_pin: GPIO13
+  
+  # Display control pins
+  display_cs_pin: GPIO47
+  display_dc_pin: GPIO38
+  display_reset_pin: GPIO48
+
+  # Ethernet pins (if using ethernet instead of wifi)
+  eth_cs_pin: GPIO10
+  eth_interrupt_pin: GPIO6
+  eth_reset_pin: GPIO5
+
+  # DAC mode
+  dac_model: "TAS5825M"
 
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
-  min_version: 2025.11.0
+  min_version: 2026.1.4
   name_add_mac_suffix: false
   platformio_options:
     board_build.flash_mode: dio
@@ -21,7 +67,7 @@ esphome:
 
 esp32:
   variant: ESP32S3
-  flash_size: 16MB
+  flash_size: 8MB
   cpu_frequency: 240MHz
   framework:
     type: esp-idf
@@ -47,6 +93,9 @@ esp32:
 # Enable logging
 logger:
   level: DEBUG
+
+debug:
+  update_interval: 5s
   
 wifi:
   ssid: !secret esphome_wifi_ssid
@@ -63,17 +112,21 @@ ota:
   password: !secret esphome_ota_password
 
 ### Optional if you want ethernet (then remove above wifi config)
-#ethernet:
-#  type: W5500
-#  clk_pin: GPIO12
-#  mosi_pin: GPIO11
-#  miso_pin: GPIO13
-#  cs_pin: GPIO10
-#  interrupt_pin: GPIO6
-#  reset_pin: GPIO5
+# ethernet:
+#   type: W5500
+#   clk_pin: ${spi_clk_pin}
+#   mosi_pin: ${spi_mosi_pin}
+#   miso_pin: ${spi_miso_pin}
+#   cs_pin: ${eth_cs_pin}
+#   interrupt_pin: ${eth_interrupt_pin}
+#   reset_pin: ${eth_reset_pin}
 
 # Enable Home Assistant API
 api:
+  on_client_connected: 
+    then:
+      - display.page.show: page_clock
+      - component.update: spi_display
 
 network:
   enable_ipv6: true
@@ -97,7 +150,7 @@ psram:
   ignore_not_found: false
 
 external_components:
-  - source: github://mrtoy-me/esphome-tas58xx@main
+  - source: github://mrtoy-me/esphome-tas58xx@dev
     components: [ tas58xx ]
     refresh: 24h
 
@@ -109,10 +162,7 @@ external_components:
     components: [resampler]
     refresh: 24h
 
-  - source:
-      type: git
-      url: https://github.com/esphome/esphome
-      ref: 9148832ea4e54907bad71a24d4ced1ce6c862433  # this is commit 9148832
+  - source: github://pr#12256
     components: [audio]
     refresh: 24h
 
@@ -129,8 +179,8 @@ external_components:
     refresh: 24h
 
 i2c:
-  sda: GPIO8
-  scl: GPIO9
+  sda: ${i2c_sda_pin}
+  scl: ${i2c_scl_pin}
   frequency: 400kHz
   scan: True
   timeout: 100us
@@ -139,37 +189,24 @@ i2c:
 audio_dac:
   - platform: tas58xx
     id: tas58xx_dac
-    tas58xx_dac: TAS5825M
-    enable_pin: GPIO17  # Physical pin connected to PWDN pin
-    dac_mode: BTL       # 'BTL' / Bridge Tied Load - 2Ch Stereo, or 'PBTL' / Parallel Bridge Tied Load - 1Ch Mono (double power)
-    mixer_mode: STEREO  # STEREO, STEREO_INVERSE, MONO, LEFT, RIGHT
-    analog_gain: -6db   # Startup Gain or Output voltage swing - pick based on the power supply voltage: https://github.com/sonocotta/esp32-tas58xx-dac?tab=readme-ov-file#digital-volume-and-analog-gain
-    # volume_max: -6dB  # Max HA volume mapping to Digital Volume control, goes as high as +24dB, but not recommend going much above 0 dB, risking to cause clipping on high volume
-    volume_min: -60db   # Min HA volume mapping to Digital Volume control, goes as low as -103dB, but prefer to set higher to have a reasonable volume range
-    update_interval: 5s # How often fault registers are read and cleared
+    tas58xx_dac: ${dac_model}
+    enable_pin: ${dac_enable_pin}  # Physical pin connected to PWDN pin
+    dac_mode: BTL                  # 'BTL' / Bridge Tied Load - 2Ch Stereo, or 'PBTL' / Parallel Bridge Tied Load - 1Ch Mono (double power)
+    mixer_mode: STEREO             # STEREO, STEREO_INVERSE, MONO, LEFT, RIGHT
+    analog_gain: -6db              # Startup Gain or Output voltage swing - pick based on the power supply voltage: https://github.com/sonocotta/esp32-tas58xx-dac?tab=readme-ov-file#digital-volume-and-analog-gain
+    # volume_max: -6dB             # Max HA volume mapping to Digital Volume control, goes as high as +24dB, but not recommend going much above 0 dB, risking to cause clipping on high volume
+    volume_min: -60db              # Min HA volume mapping to Digital Volume control, goes as low as -103dB, but prefer to set higher to have a reasonable volume range
+    update_interval: 5s            # How often fault registers are read and cleared
 
 i2s_audio:
-  i2s_lrclk_pin: GPIO15
-  i2s_bclk_pin: GPIO14
-
-text_sensor:
-  - platform: sendspin
-    type: title
-    name: Track Title
-
-  - platform: sendspin
-    type: artist
-    name: Artist
-
-  - platform: sendspin
-    type: album
-    name: Album
+  i2s_lrclk_pin: ${i2s_lrclk_pin}
+  i2s_bclk_pin: ${i2s_bclk_pin}
 
 speaker:
   - platform: i2s_audio
     id: i2s_speaker_id
     sample_rate: 48000
-    i2s_dout_pin: GPIO16
+    i2s_dout_pin: ${i2s_dout_pin}
     bits_per_sample: 16bit
     dac_type: external
     channel: stereo
@@ -281,6 +318,27 @@ media_player:
               id: media_mixer_input
               decibel_reduction: 0
               duration: 1.0s
+    
+    on_play:
+      - display.page.show: page_play
+      - component.update: spi_display
+      - switch.template.publish:
+          id: switch_screen
+          state: ON
+      - if:
+          condition:
+            switch.is_off: enable_dac
+          then:
+            switch.turn_on: enable_dac
+
+    on_idle:
+      - display.page.show: page_clock
+      - component.update: spi_display
+      - if:
+          condition:
+            switch.is_on: enable_dac
+          then:
+            switch.turn_off: enable_dac
 
 number:
   - platform: template
@@ -296,55 +354,104 @@ number:
     optimistic: true
 
   - platform: tas58xx
+    channel_gain_left:
+      name: Gain Left
+    channel_gain_right:
+      name: Gain Right
     left_eq_gain_20Hz:
-      name: Left Gain ---20Hz
+      name: Left ---20Hz
     left_eq_gain_31.5Hz:
-      name: Left Gain ---31.5Hz
+      name: Left ---31.5Hz
     left_eq_gain_50Hz:
-      name: Left Gain ---50Hz
+      name: Left ---50Hz
     left_eq_gain_80Hz:
-      name: Left Gain ---80Hz
+      name: Left ---80Hz
     left_eq_gain_125Hz:
-      name: Left Gain --125Hz
+      name: Left --125Hz
     left_eq_gain_200Hz:
-      name: Left Gain --200Hz
+      name: Left --200Hz
     left_eq_gain_315Hz:
-      name: Left Gain --315Hz
+      name: Left --315Hz
     left_eq_gain_500Hz:
-      name: Left Gain --500Hz
+      name: Left --500Hz
     left_eq_gain_800Hz:
-      name: Left Gain --800Hz
+      name: Left --800Hz
     left_eq_gain_1250Hz:
-      name: Left Gain -1250Hz
+      name: Left -1250Hz
     left_eq_gain_2000Hz:
-      name: Left Gain -2000Hz
+      name: Left -2000Hz
     left_eq_gain_3150Hz:
-      name: Left Gain -3150Hz
+      name: Left -3150Hz
     left_eq_gain_5000Hz:
-      name: Left Gain -5000Hz
+      name: Left -5000Hz
     left_eq_gain_8000Hz:
-      name: Left Gain -8000Hz
+      name: Left -8000Hz
     left_eq_gain_16000Hz:
-      name: Left Gain 16000Hz
-
+      name: Left 16000Hz
+    right_eq_gain_20Hz:
+      name: Right ---20Hz
+    right_eq_gain_31.5Hz:
+      name: Right ---31.5Hz
+    right_eq_gain_50Hz:
+      name: Right ---50Hz
+    right_eq_gain_80Hz:
+      name: Right ---80Hz
+    right_eq_gain_125Hz:
+      name: Right --125Hz
+    right_eq_gain_200Hz:
+      name: Right --200Hz
+    right_eq_gain_315Hz:
+      name: Right --315Hz
+    right_eq_gain_500Hz:
+      name: Right --500Hz
+    right_eq_gain_800Hz:
+      name: Right --800Hz
+    right_eq_gain_1250Hz:
+      name: Right -1250Hz
+    right_eq_gain_2000Hz:
+      name: Right -2000Hz
+    right_eq_gain_3150Hz:
+      name: Right -3150Hz
+    right_eq_gain_5000Hz:
+      name: Right -5000Hz
+    right_eq_gain_8000Hz:
+      name: Right -8000Hz
+    right_eq_gain_16000Hz:
+      name: Right 16000Hz
+      
 switch:
   - platform: tas58xx
-    # Will be operated automatially. When disabled DAC will drow dramatically less power
     enable_dac:
-      name: Enable Louder
-      id: enable_louder
-      restore_mode: ALWAYS_ON
-    # Will be operated automatially. If you use EQ it is required to set it ON
-    enable_eq:
-      name: Enable EQ Control
-      restore_mode: RESTORE_DEFAULT_ON      
+      name: Enable DAC
+      id: enable_dac
+      restore_mode: ALWAYS_ON 
 
-sensor:
-  - platform: tas58xx
-    faults_cleared:
-      name: "Times Faults Cleared"
+  - platform: template
+    name: "Screen"
+    id: switch_screen
+    optimistic: true
+    restore_mode: ALWAYS_ON
+    turn_on_action:
+      - if:
+          condition:
+            api.connected:
+          then:
+            - if:
+                condition:
+                  media_player.is_idle: external_media_player
+                then:
+                  - display.page.show: page_clock
+                else:
+                  - display.page.show: page_play
+            - component.update: spi_display
+    turn_off_action:
+      - display.page.show: page_off
+      - component.update: spi_display
 
 binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+
   - platform: tas58xx
     have_fault:
       name: Any Faults
@@ -375,64 +482,255 @@ binary_sensor:
       name: Over Temperature Warning
       id: over_temperature_warning
 
-# ### RGB light config (if installed)
-# light:
-#   - platform: esp32_rmt_led_strip
-#     id: rgb_front_led
-#     name: "${friendly_name} LED"
-#     rgb_order: GRB
-#     pin: GPIO21
-#     num_leds: 1
-#     chipset: ws2812
-#     default_transition_length: 0s
-
-### IR reader config (if installed). Add your own IR codes as needed
-remote_receiver:
-  pin: 
-    number: GPIO7
-    inverted: true
-    mode:
-      input: true
-  dump: all
-
 button:
   - platform: restart
     id: restart_btn
     name: "${friendly_name} REBOOT"
 
-# ### Optional settings for OLED screen 
-# ## prerequisites:
-# font:
-#   - file:
-#       type: gfonts
-#       family: Roboto
-#       weight: regular
-#     id: roboto_medium
-#     size: 32
-#     glyphs: [' ', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+sensor:
+  - platform: tas58xx
+    faults_cleared:
+      name: "Times Faults Cleared"
+  - platform: wifi_signal
+    name: "${friendly_name} WiFi Signal"
+    update_interval: 60s
+  - platform: uptime
+    name: "${friendly_name} Uptime"
+    update_interval: 60s
+  - platform: internal_temperature
+    name: "${friendly_name} CPU Temperature"
+    update_interval: 60s
+  - platform: template
+    name: "${friendly_name} Free Heap"
+    lambda: |-
+      return heap_caps_get_free_size(MALLOC_CAP_INTERNAL) / 1024.0;
+    unit_of_measurement: 'kB'
+    update_interval: 10s
+  - platform: template
+    name: "${friendly_name} Free PSRAM"
+    lambda: |-
+      return heap_caps_get_free_size(MALLOC_CAP_SPIRAM) / 1024.0;
+    unit_of_measurement: 'kB'
+    update_interval: 10s
+  - platform: debug
+    loop_time:
+      name: "${friendly_name} Loop Time"
 
-# spi:
-#   clk_pin: GPIO12
-#   mosi_pin: GPIO11
-#   miso_pin: GPIO13
+text_sensor:
+  # These don't have names, they don't need sharing back to HA (MA knows)
+  - platform: sendspin
+    type: title
+    id: ss_title
 
-# time:
-#   - platform: sntp
-#     id: sntp_time
+  - platform: sendspin
+    type: artist
+    id: ss_artist
 
-# ## Example display configuration, showing the clock
-# display:
-#   - platform: ssd1306_spi
-#     model: SH1106 128x64
-#     cs_pin: GPIO47
-#     dc_pin: GPIO38
-#     reset_pin: GPIO48
-#     rotation: 180
-#     update_interval: 1s
-#     lambda: |-
-#         // display clock
-#         auto hours = id(sntp_time).now().hour;
-#         auto minutes = id(sntp_time).now().minute;
-#         auto seconds = id(sntp_time).now().second;
-#         auto dot = seconds % 2 == 0 ? " " : ":";
-#         it.printf(64, 32, id(roboto_medium), TextAlign::CENTER, "%d%s%02d", hours, dot ,minutes);
+  - platform: sendspin
+    type: album
+    id: ss_album
+
+  - platform: wifi_info
+    ip_address:
+      name: "${friendly_name} IP"
+    mac_address:
+      name: "${friendly_name} MAC"
+
+  - platform: version
+    name: "${friendly_name} ESPHome Version"
+    
+  - platform: template
+    name: "${friendly_name} Time"
+    lambda: |-
+      auto time = id(sntp_time).now();
+      if (!time.is_valid()) {
+        return {"Syncing..."};
+      }
+      char buf[20];
+      snprintf(buf, sizeof(buf), "%04d-%02d-%02d %02d:%02d:%02d",
+        time.year, time.month, time.day_of_month,
+        time.hour, time.minute, time.second);
+      return {buf};
+    update_interval: 60s
+
+### RGB light config (if installed)
+light:
+  - platform: esp32_rmt_led_strip
+    id: rgb_front_led
+    name: "${friendly_name} LED"
+    rgb_order: GRB
+    pin: ${rgb_led_pin}
+    num_leds: 1
+    chipset: ws2812
+    default_transition_length: 0s
+
+### IR reader config (if installed). Add your own IR codes as needed
+remote_receiver:
+  pin: 
+    number: ${ir_rx_pin}
+    inverted: true
+    mode:
+      input: true
+  dump: all
+
+### Optional settings for OLED screen 
+# prerequisites:
+time:
+  - platform: homeassistant
+    id: sntp_time
+
+font:
+  - file: 'gfonts://Material+Symbols+Outlined'
+    id: icons_small
+    size: 14
+    glyphs:
+      - "\ue019" # album
+      - "\ue01a" # artist
+      - "\U000fffd8" # music notes
+  - file:
+      type: gfonts
+      family: Ubuntu # TODO try 'Jersey 10 Charted'
+      weight: regular
+    id: text_small
+    size: 14
+    glyphsets: 
+      - GF_Latin_Core # European alphabets too
+  # For the clock page
+  - file:
+      type: gfonts
+      family: Roboto
+      weight: regular
+    id: text_big
+    size: 40
+    glyphs: [' ', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+spi:
+  clk_pin: ${spi_clk_pin}
+  mosi_pin: ${spi_mosi_pin}
+  miso_pin: ${spi_miso_pin}
+  id: spi_bus_display
+
+### Example display configuration, showing the current playback state
+# Kinly developed by @TinheadNed (https://github.com/widget/esphome-esparagus-sendspin)
+display:
+  - platform: ssd1306_spi
+    model: SH1106 128x64
+    id: spi_display
+    spi_id: spi_bus_display
+    cs_pin: ${display_cs_pin}
+    dc_pin: ${display_dc_pin}
+    reset_pin: ${display_reset_pin}
+    update_interval: 200ms
+    data_rate: 20MHz
+    pages:
+      - id: page_startup
+        lambda: |-
+          it.printf(it.get_width() / 2, 20, 
+                    id(text_small), TextAlign::CENTER, "${friendly_name}");
+          it.printf(it.get_width() / 2, 40, 
+                    id(text_small), TextAlign::CENTER, "connecting...");
+
+      # Selected by api.on_connection
+      - id: page_clock
+        lambda: |-
+          // display clock
+          auto hours = id(sntp_time).now().hour;
+          auto minutes = id(sntp_time).now().minute;
+          auto seconds = id(sntp_time).now().second;
+          auto dot = seconds % 2 == 0 ? " " : ":";
+
+          it.printf(it.get_width() / 2, 
+                    it.get_height() / 2, 
+                    id(text_big), 
+                    TextAlign::CENTER, 
+                    "%d%s%02d", hours, dot, minutes);
+          
+      - id: page_off
+        lambda: return;
+
+      # Selected by the speaker on_play
+      - id: page_play
+        lambda: |-
+          const int PADDING_LEFT = 18, PADDING_RIGHT = 28;
+          const int LINE_HEIGHTS[] = {10, 32, 54};
+          int x1, y1, new_h, new_w, 
+              title_width_offset = PADDING_LEFT, 
+              artist_width_offset = PADDING_LEFT,
+              album_width_offset = PADDING_LEFT;
+          bool increment = false;
+          static int iteration = 0;
+
+          // Draw some icons
+          it.print(0, LINE_HEIGHTS[0], 
+                    id(icons_small), 
+                    TextAlign::CENTER_LEFT, 
+                    "\U000fffd8"); // music icon
+          it.print(0, LINE_HEIGHTS[1], 
+                  id(icons_small), 
+                  TextAlign::CENTER_LEFT, 
+                  "\ue01a"); // artist icon
+          it.print(0, LINE_HEIGHTS[2], 
+                  id(icons_small), 
+                  TextAlign::CENTER_LEFT, 
+                  "\ue019"); // album icon
+
+          // Don't scroll over the icons
+          it.start_clipping( Rect(PADDING_LEFT, 
+                                  0, 
+                                  it.get_width(), 
+                                  it.get_height()));
+
+          it.get_text_bounds(0, 0, 
+                            id(ss_title).state.c_str(), 
+                            id(text_small), 
+                            TextAlign::TOP_LEFT, 
+                            &x1, &y1, &new_w, &new_h);
+          if (new_w + PADDING_LEFT >= it.get_width()) {
+            auto missing_artist_text = new_w - it.get_width();
+            increment = true;
+            title_width_offset = PADDING_LEFT - (iteration % (missing_artist_text + PADDING_RIGHT));
+          }
+          it.print(title_width_offset, LINE_HEIGHTS[0], 
+                    id(text_small), 
+                    TextAlign::CENTER_LEFT, 
+                    id(ss_title).state.c_str());
+
+          // Do this again for the artist
+          it.get_text_bounds(0, 0, 
+                            id(ss_artist).state.c_str(), 
+                            id(text_small), 
+                            TextAlign::TOP_LEFT, 
+                            &x1, &y1, &new_w, &new_h);
+
+          if (new_w + PADDING_LEFT >= it.get_width()) {
+            auto missing_title_text = new_w - it.get_width();
+            increment = true;
+            artist_width_offset = PADDING_LEFT - (iteration % (missing_title_text + PADDING_RIGHT));
+          }
+          it.print(artist_width_offset, LINE_HEIGHTS[1], 
+                  id(text_small), 
+                  TextAlign::CENTER_LEFT, 
+                  id(ss_artist).state.c_str());
+
+          // And the album
+          it.get_text_bounds(0, 0, 
+                            id(ss_album).state.c_str(), 
+                            id(text_small), 
+                            TextAlign::TOP_LEFT, 
+                            &x1, &y1, &new_w, &new_h);
+
+          if (new_w + PADDING_LEFT >= it.get_width()) {
+            auto missing_album_text = new_w - it.get_width();
+            increment = true;
+            album_width_offset = PADDING_LEFT - (iteration % (missing_album_text + PADDING_RIGHT));
+          }
+          it.print(album_width_offset, LINE_HEIGHTS[2], 
+                  id(text_small), 
+                  TextAlign::CENTER_LEFT, 
+                  id(ss_album).state.c_str());
+
+          it.end_clipping();
+
+          if (increment) {
+            iteration++;
+          }

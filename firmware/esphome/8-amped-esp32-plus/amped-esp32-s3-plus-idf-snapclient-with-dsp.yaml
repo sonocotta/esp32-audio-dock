@@ -44,7 +44,12 @@ substitutions:
   display_cs_pin: GPIO47
   display_dc_pin: GPIO38
   display_reset_pin: GPIO48
-  
+
+  # Ethernet pins (if using ethernet instead of wifi)
+  eth_cs_pin: GPIO10
+  eth_interrupt_pin: GPIO6
+  eth_reset_pin: GPIO5
+    
   # DAC I2C address
   dac_i2c_address: "0x4D"
 
@@ -108,14 +113,14 @@ wifi:
 captive_portal:
 
 ### Optional if you want ethernet (then remove above wifi config)
-#ethernet:
-#  type: W5500
-#  clk_pin: GPIO12
-#  mosi_pin: GPIO11
-#  miso_pin: GPIO13
-#  cs_pin: GPIO10
-#  interrupt_pin: GPIO6
-#  reset_pin: GPIO5
+# ethernet:
+#   type: W5500
+#   clk_pin: ${spi_clk_pin}
+#   mosi_pin: ${spi_mosi_pin}
+#   miso_pin: ${spi_miso_pin}
+#   cs_pin: ${eth_cs_pin}
+#   interrupt_pin: ${eth_interrupt_pin}
+#   reset_pin: ${eth_reset_pin}
 
 # Allow Over-The-Air updates
 ota:
