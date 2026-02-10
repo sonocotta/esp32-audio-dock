@@ -1,7 +1,52 @@
+# ============================================================
+# Amped-ESP32-S3-Plus - Snapcast Client with DSP/EQ
+# ============================================================
+# Advanced Snapcast client with 18-band parametric equalizer
+# Features: ESP-DSP biquad filters, graphic EQ (40Hz-5kHz),
+#           EQ presets, PCM5122 DAC, RGB LED, IR receiver,
+#           OLED display
+# Frequencies: 40, 50, 60, 70, 80, 90, 100, 110, 120, 130,
+#              140, 200, 315, 500, 800, 1250, 2000, 5000 Hz
+# Range: -15dB to +15dB per band
+# Board-specific pinouts are defined in substitutions section
+# ============================================================
+
 substitutions:
   name: esphome-web-2cc050
-  friendly_name: Amped-ESP32-S3-Plus-02
+  friendly_name: Amped-ESP32-S3-Plus-DSP
   task_stack_in_psram: "true" # important to disable this for non-S3 model
+  
+  # Board-specific pinout configuration
+  # I2C pins
+  i2c_sda_pin: GPIO18
+  i2c_scl_pin: GPIO8
+  
+  # I2S audio pins
+  i2s_lrclk_pin: GPIO15
+  i2s_bclk_pin: GPIO14
+  i2s_dout_pin: GPIO16
+  
+  # Amplifier control
+  amp_enable_pin: GPIO17
+  
+  # RGB LED
+  rgb_led_pin: GPIO21
+  
+  # IR receiver
+  ir_rx_pin: GPIO07
+  
+  # SPI pins (for display)
+  spi_clk_pin: GPIO12
+  spi_mosi_pin: GPIO11
+  spi_miso_pin: GPIO13
+  
+  # Display control pins
+  display_cs_pin: GPIO47
+  display_dc_pin: GPIO38
+  display_reset_pin: GPIO48
+  
+  # DAC I2C address
+  dac_i2c_address: "0x4D"
 
 esphome:
   name: ${name}
@@ -115,8 +160,8 @@ external_components:
     refresh: 24h
 
 i2c:
-  sda: GPIO18 
-  scl: GPIO8
+  sda: ${i2c_sda_pin}
+  scl: ${i2c_scl_pin}
   frequency: 400kHz
   scan: True
   timeout: 100us
@@ -124,15 +169,15 @@ i2c:
 audio_dac:
   - platform: pcm5122
     id: pcm5122_dac
-    address: 0x4D           # I2C address of the DAC, it is 0x4C n the HiFi-ESP32 Rev H, and 0x4D on the rev H1+
+    address: ${dac_i2c_address}
     volume_max: 0dB         # maximum volume range 0dB, can go up to +24dB
     volume_min: -60dB       # minimum volume range -60dB, can go down to -103dB
     analog_gain: -6dB       # or -6Db for 1V RMS output, default is 0dB = 2V RMS output
     mixer_mode: STEREO      # MIXER MODE: STEREO, STEREO_INVERSE, LEFT, RIGHT
 
 i2s_audio:
-  i2s_lrclk_pin: GPIO15
-  i2s_bclk_pin: GPIO14
+  i2s_lrclk_pin: ${i2s_lrclk_pin}
+  i2s_bclk_pin: ${i2s_bclk_pin}
 
 ### Snapclient component is a work in progress, not yet ready for production use
 # More details:
@@ -142,7 +187,7 @@ snapclient:
   hostname: 192.168.1.49   # at this time auto-discovery does not work, so you need to specify the server IP address
   port: 1704               # default port, no need to change unless you have changed it on the server side
   name: ${friendly_name}     # this is the name that will appear in the snapcast clients list
-  i2s_dout_pin: GPIO16     # I2S data out pin
+  i2s_dout_pin: ${i2s_dout_pin}
 
 ### RGB light config (if installed)
 light:
@@ -150,7 +195,7 @@ light:
     id: rgb_front_led
     name: "${friendly_name} LED"
     rgb_order: GRB
-    pin: GPIO21
+    pin: ${rgb_led_pin}
     num_leds: 1
     chipset: ws2812
     default_transition_length: 0s
@@ -158,7 +203,7 @@ light:
 ### IR reader config (if installed). Add your own IR codes as needed
 remote_receiver:
   pin: 
-    number: GPIO07
+    number: ${ir_rx_pin}
     inverted: true
     mode:
       input: true
@@ -176,7 +221,7 @@ switch:
     name: Enable AMP
     id: enable_amp
     pin:
-      number: GPIO17
+      number: ${amp_enable_pin}
     restore_mode: ALWAYS_ON
 
 button:
@@ -700,17 +745,17 @@ font:
     glyphs: [' ', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
 spi:
-  clk_pin: GPIO12
-  mosi_pin: GPIO11
-  miso_pin: GPIO13
+  clk_pin: ${spi_clk_pin}
+  mosi_pin: ${spi_mosi_pin}
+  miso_pin: ${spi_miso_pin}
 
 ### Example display configuration, showing the current playback state
 display:
   - platform: ssd1306_spi
     model: SH1106 128x64
-    cs_pin: GPIO47
-    dc_pin: GPIO38
-    reset_pin: GPIO48
+    cs_pin: ${display_cs_pin}
+    dc_pin: ${display_dc_pin}
+    reset_pin: ${display_reset_pin}
     update_interval: 1s
     lambda: |-
         // display clock
