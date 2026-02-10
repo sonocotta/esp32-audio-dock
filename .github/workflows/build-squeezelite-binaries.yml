@@ -5,12 +5,18 @@ on:
     branches:
       - main
       - features/*
-    paths-ignore:
-        - 'installer/**'
-        - 'doc/**'
-        - 'docs/**'
-        - 'hardware/**'
-        - '*.md'
+    paths:
+      - 'firmware/squeezelite-esp32/**'
+      - '.github/workflows/build-squeezelite-binaries.yml'
+      - 'squeezelite-configs/**'
+  pull_request:
+    branches:
+      - main
+      - features/*
+    paths:
+      - 'firmware/squeezelite-esp32/**'
+      - '.github/workflows/build-squeezelite-binaries.yml'
+      - 'squeezelite-configs/**'
 
 jobs:
   prepare:

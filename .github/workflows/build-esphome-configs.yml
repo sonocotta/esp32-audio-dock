@@ -84,14 +84,4 @@ jobs:
             -e PLATFORMIO_BUILD_CACHE_DIR=/cache/.pio-cache \
             esphome/esphome \
             compile "/config/${CONFIG_FILE}"
-
-      - name: Upload build artifacts
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: firmware-${{ hashFiles(matrix.config) }}
-          path: |
-            ${{ matrix.config }}/.esphome/build/**/*.bin
-            ${{ matrix.config }}/.esphome/build/**/*.elf
-          retention-days: 7
-          if-no-files-found: warn
+            
