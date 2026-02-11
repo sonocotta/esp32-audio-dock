@@ -1,0 +1,387 @@
+substitutions:
+  name: esphome-web-76e714
+  friendly_name: Louder-ESP32-S3
+  task_stack_in_psram: "true" # important to disable this for non-S3 model
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  min_version: 2025.7.0
+  name_add_mac_suffix: false
+  platformio_options:
+    board_build.flash_mode: dio
+  # Important! Play sound on boot required for DAC to capture clock signal and enable DSP configuration
+  # If any of the DSP configs are sent before clock signal, they are simply ignored. This applies to EQ and Mixer controls
+  on_boot:
+    priority: 220.0
+    then:
+      media_player.speaker.play_on_device_media_file: startup_sync_sound
+
+esp32:
+  board: esp32-s3-devkitc-1
+  variant: ESP32S3
+  flash_size: 8MB
+  framework:
+    type: esp-idf
+    version: recommended
+    sdkconfig_options:
+      CONFIG_ESP32S3_DEFAULT_CPU_FREQ_240: "y"
+      CONFIG_ESP32S3_DATA_CACHE_64KB: "y"
+      CONFIG_ESP32S3_DATA_CACHE_LINE_64B: "y"
+      CONFIG_ESP32S3_INSTRUCTION_CACHE_32KB: "y"
+
+      CONFIG_ESP32_S3_BOX_BOARD: "y"
+
+      CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: "y"
+      CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
+
+      CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
+      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"  # TLS1.3 support isn't enabled by default in IDF 5.1.5
+
+# Enable logging
+logger:
+  level: DEBUG
+  
+wifi:
+  ssid: !secret esphome_wifi_ssid
+  password: !secret esphome_wifi_password
+  ap:
+    ssid: "$name Hotspot"
+    password: !secret esphome_ap_password
+
+captive_portal:
+
+# Allow Over-The-Air updates
+ota:
+  platform: esphome
+  password: !secret esphome_ota_password
+
+### Optional if you want ethernet (then remove above wifi config)
+#ethernet:
+#  type: W5500
+#  clk_pin: GPIO12
+#  mosi_pin: GPIO11
+#  miso_pin: GPIO13
+#  cs_pin: GPIO10
+#  interrupt_pin: GPIO6
+#  reset_pin: GPIO5
+
+# Enable Home Assistant API
+api:
+
+psram:
+  mode: octal
+  speed: 80MHz
+
+external_components:
+  - source: github://mrtoy-me/esphome-tas5805m@main
+    components: [ tas5805m ]
+    refresh: 60s
+
+globals:
+  - id: current_volume
+    type: float
+
+i2c:
+  sda: GPIO8
+  scl: GPIO9
+  frequency: 400kHz
+  scan: True
+
+### TAS5805M DAC configuration
+audio_dac:
+  - platform: tas5805m
+    id: tas5805m_dac
+    enable_pin: GPIO17  # Physical pin connected to PWDN pin
+    dac_mode: BTL       # 'BTL' / Bridge Tied Load - 2Ch Stereo, or 'PBTL' / Parallel Bridge Tied Load - 1Ch Mono (double power)
+    mixer_mode: STEREO  # STEREO, STEREO_INVERSE, MONO, LEFT, RIGHT
+    analog_gain: -9db   # Startup Gain or Output voltage swing - pick based on the power supply voltage: https://github.com/sonocotta/esp32-tas5805m-dac?tab=readme-ov-file#digital-volume-and-analog-gain
+    volume_max: -6dB    # Max HA volume mapping to Digital Volume control, goes as high as +24dB, but not recommend going much above 0 dB, risking to cause clipping on high volume
+    volume_min: -60db   # Min HA volume mapping to Digital Volume control, goes as low as -103dB, but prefer to set higher to have a reasonable volume range
+    update_interval: 5s # How often fault registers are read and cleared
+
+i2s_audio:
+  i2s_lrclk_pin: GPIO15
+  i2s_bclk_pin: GPIO14
+
+speaker:
+  - platform: i2s_audio
+    id: speaker_id
+    dac_type: external
+    i2s_dout_pin: GPIO16
+    audio_dac: tas5805m_dac
+    channel: stereo
+    sample_rate: 48000
+    timeout: never
+
+  - platform: mixer
+    id: mixer_speaker_id
+    task_stack_in_psram: ${task_stack_in_psram}
+    output_speaker: speaker_id
+    source_speakers:
+      - id: announcement_spk_mixer_input
+        timeout: never
+      - id: media_spk_mixer_input
+        timeout: never
+
+  - platform: resampler
+    id: media_spk_resampling_input
+    task_stack_in_psram: ${task_stack_in_psram}
+    output_speaker: media_spk_mixer_input
+
+  - platform: resampler
+    id: announcement_spk_resampling_input
+    task_stack_in_psram: ${task_stack_in_psram}
+    output_speaker: announcement_spk_mixer_input
+
+media_player:
+  - platform: speaker
+    name: Louder Mediaplayer
+    id: louder_mediaplayer
+    buffer_size: 100000
+    task_stack_in_psram: ${task_stack_in_psram}
+    volume_increment: 2%
+    volume_initial: 45%
+    media_pipeline:
+      speaker: media_spk_resampling_input
+      num_channels: 2
+    announcement_pipeline:
+      speaker: announcement_spk_resampling_input
+      num_channels: 1
+
+    files:
+      id: startup_sync_sound
+      file: https://github.com/mrtoy-me/esphome-tas5805m/raw/main/components/tas5805m/tas5805m_boot_louder.flac
+
+    on_play:
+      - if:
+          condition:
+            switch.is_off: enable_louder
+          then:
+            switch.turn_on: enable_louder
+
+    on_announcement:
+      - if:
+          condition:
+            switch.is_off: enable_louder
+          then:
+            switch.turn_on: enable_louder
+
+      - light.turn_on:
+          id: rgb_front_led
+          blue: 100%
+          red: 0%
+          green: 100%
+          brightness: 50%
+          
+      - lambda: id(current_volume) = id(tas5805m_dac).volume();
+
+      - mixer_speaker.apply_ducking:
+            id: media_spk_mixer_input
+            decibel_reduction: 40
+            duration: 0.0s
+      - wait_until:
+            media_player.is_announcing:
+      - delay: 0.75s
+      - lambda: id(tas5805m_dac).set_volume(id(announce_volume).state / 100);
+
+      - wait_until:
+          not:
+            media_player.is_announcing:
+      - mixer_speaker.apply_ducking:
+            id: media_spk_mixer_input
+            decibel_reduction: 0
+            duration: 1.0s
+      - lambda: id(tas5805m_dac).set_volume(id(current_volume));
+
+      - light.turn_off:
+          id: rgb_front_led
+
+switch:
+  - platform: tas5805m
+    # Will be operated automatially. When disabled DAC will drow dramatically less power
+    enable_dac:
+      name: Enable Louder
+      id: enable_louder
+      restore_mode: ALWAYS_ON
+    # Will be operated automatially. If you use EQ it is required to set it ON
+    enable_eq:
+      name: Enable EQ Control
+      restore_mode: RESTORE_DEFAULT_ON
+
+number:
+  # Volume for announcements only
+  - platform: template
+    name: Announce Volume
+    id: announce_volume
+    icon: mdi:volume-source
+    unit_of_measurement: "%"
+    min_value: 0
+    max_value: 100
+    step: 1
+    restore_value: true
+    initial_value: 50
+    optimistic: true
+
+  ### 15 Band EQ. At this point frequency and bandwidth are hard-wired, since BQ coefficients table are not calculated on the fly
+  # Each band regulates within [-15dB .. +15 dB] range
+  # Each band overlaps with nearby bands, so with extreme settings it can go as high or low as -/+30dB, so use with care
+  - platform: tas5805m
+    eq_gain_band20Hz:
+      name: Gain ---20Hz
+    eq_gain_band31.5Hz:
+      name: Gain ---31.5Hz
+    eq_gain_band50Hz:
+      name: Gain ---50Hz
+    eq_gain_band80Hz:
+      name: Gain ---80Hz
+    eq_gain_band125Hz:
+      name: Gain --125Hz
+    eq_gain_band200Hz:
+      name: Gain --200Hz
+    eq_gain_band315Hz:
+      name: Gain --315Hz
+    eq_gain_band500Hz:
+      name: Gain --500Hz
+    eq_gain_band800Hz:
+      name: Gain --800Hz
+    eq_gain_band1250Hz:
+      name: Gain -1250Hz
+    eq_gain_band2000Hz:
+      name: Gain -2000Hz
+    eq_gain_band3150Hz:
+      name: Gain -3150Hz
+    eq_gain_band5000Hz:
+      name: Gain -5000Hz
+    eq_gain_band8000Hz:
+      name: Gain -8000Hz
+    eq_gain_band16000Hz:
+      name: Gain 16000Hz
+
+### Faults clear registers read from TAS5805M
+# Every time fault is detected, it will be reported to HA and clears afterwards
+# This is to ensure that device will not stuck in the fault state until reboot
+sensor:
+  - platform: tas5805m
+    faults_cleared:
+      name: "Times Faults Cleared"
+    update_interval: 60s
+
+### Faults registers read directly from TAS5805M
+# TODO: Over Temperature Warning -> reduce volume automatically before it goes into shutdown
+binary_sensor:
+  - platform: tas5805m
+    have_fault:
+      name: Any Faults
+    left_channel_dc_fault:
+      name: Left Channel DC Fault
+    right_channel_dc_fault:
+      name: Right Channel DC Fault
+    left_channel_over_current:
+      name: Left Channel Over Current
+    right_channel_over_current:
+      name: Right Channel Over Current
+    otp_crc_check:
+      name: CRC Check Fault
+    bq_write_failed:
+      name: BQ Write Failure
+    clock fault:
+      name: I2S Clock Fault
+    pcdd_over_voltage:
+      name: PCDD Over Voltage
+    pcdd_under_voltage:
+      name: PCDD Under Voltage
+    over_temp_shutdown:
+      name: Over Temperature Shutdown Fault
+    over_temp_warning:
+      name: Over Temperature Warning
+      id: over_temperature_warning
+
+### Send DAC to shutdown mode after 2 minutes of inactivity
+# This is to save power, since DAC will draw under 100mA in idle state
+interval:
+  - interval: 30s
+    then:
+      - if:
+          condition:
+            - switch.is_on: enable_louder
+            - for:
+                time: 120s
+                condition:
+                  or:
+                    - media_player.is_idle: louder_mediaplayer
+                    - media_player.is_paused: louder_mediaplayer
+          then:
+            - switch.turn_off: enable_louder
+  # Optional: when DAC reports overheating warning, reduce volume to prevent shutdown
+  - interval: 1s
+    then:
+      - if:
+          condition:
+            - binary_sensor.is_on: over_temperature_warning
+            - lambda: 'return (id(louder_mediaplayer).volume != 0.0f);'
+            - lambda: 'return !(id(louder_mediaplayer).is_muted());'
+          then:
+            - media_player.volume_down
+
+### RGB light config
+light:
+  - platform: esp32_rmt_led_strip
+    id: rgb_front_led
+    name: "${friendly_name} LED"
+    rgb_order: GRB
+    pin: GPIO21
+    num_leds: 1
+    chipset: ws2812
+    default_transition_length: 0s
+
+### IR reader config. Add your own IR codes as needed
+remote_receiver:
+  pin: 
+    number: GPIO7
+    inverted: true
+    mode:
+      input: true
+  dump: all
+
+button:
+  - platform: restart
+    id: restart_btn
+    name: "${friendly_name} REBOOT"
+
+# ### Optional settings for OLED screen 
+# ## prerequisites:
+# font:
+#   - file:
+#       type: gfonts
+#       family: Roboto
+#       weight: regular
+#     id: roboto_medium
+#     size: 32
+#     glyphs: [' ', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+# spi:
+#   clk_pin: GPIO12
+#   mosi_pin: GPIO11
+#   miso_pin: GPIO13
+
+# time:
+#   - platform: sntp
+#     id: sntp_time
+
+# ## Example display configuration, showing the clock
+# display:
+#   - platform: ssd1306_spi
+#     model: SH1106 128x64
+#     cs_pin: GPIO47
+#     dc_pin: GPIO38
+#     reset_pin: GPIO48
+#     rotation: 180
+#     update_interval: 1s
+#     lambda: |-
+#         // display clock
+#         auto hours = id(sntp_time).now().hour;
+#         auto minutes = id(sntp_time).now().minute;
+#         auto seconds = id(sntp_time).now().second;
+#         auto dot = seconds % 2 == 0 ? " " : ":";
+#         it.printf(64, 32, id(roboto_medium), TextAlign::CENTER, "%d%s%02d", hours, dot ,minutes);

@@ -43,7 +43,7 @@ wifi:
 captive_portal:
 
 psram:
-  mode: octal
+  mode: quad
   speed: 80MHz
   
 i2s_audio:
@@ -53,7 +53,7 @@ i2s_audio:
 media_player:
   - platform: i2s_audio
     id: esp32duo
-    name: $friendly_name
+    name: ${friendly_name}
     dac_type: external
     i2s_dout_pin: GPIO22
     mode: stereo

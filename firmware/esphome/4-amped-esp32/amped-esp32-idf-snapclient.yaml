@@ -1,0 +1,134 @@
+substitutions:
+  name: esphome-web-xxxxxx
+  friendly_name: Amped-ESP32
+  task_stack_in_psram: "false" # important to disable this for non-S3 model
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  min_version: 2025.7.0
+  name_add_mac_suffix: false
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  board: mhetesp32minikit
+  flash_size: 8MB
+  framework:
+    type: esp-idf
+    version: recommended
+    sdkconfig_options:
+      CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: "y"
+      CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
+
+      CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
+      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"  # TLS1.3 support isn't enabled by default in IDF 5.1.5
+
+# Enable logging
+logger:
+  level: DEBUG
+  
+wifi:
+  ssid: !secret esphome_wifi_ssid
+  password: !secret esphome_wifi_password
+  ap:
+    ssid: "$name Hotspot"
+    password: !secret esphome_ap_password
+
+captive_portal:
+
+# Allow Over-The-Air updates
+ota:
+  platform: esphome
+  password: !secret esphome_ota_password
+
+# Enable Home Assistant API
+api:
+
+psram:
+  speed: 80MHz
+
+network:
+  enable_ipv6: true
+
+external_components:
+  - source: github://c-MM/esphome-snapclient
+    components: [ snapclient ]
+    refresh: 24h
+
+i2s_audio:
+  i2s_lrclk_pin: GPIO25
+  i2s_bclk_pin: GPIO26
+
+### Snapclient component is a work in progress, not yet ready for production use
+# More details:
+# https://github.com/c-MM/esphome-snapclient/
+# https://github.com/esphome/esphome/pull/8350
+snapclient:
+  hostname: 192.168.1.49   # at this time auto-discovery does not work, so you need to specify the server IP address
+  port: 1704               # default port, no need to change unless you have changed it on the server side
+  name: ${friendly_name}     # this is the name that will appear in the snapcast clients list
+  i2s_dout_pin: GPIO22     # I2S data out pin
+  webserver_port: 8080     # start webserver for snapclient controls
+
+### RGB light config (if installed)
+light:
+  - platform: esp32_rmt_led_strip
+    id: rgb_front_led
+    name: "${friendly_name} LED"
+    rgb_order: GRB
+    pin: GPIO12
+    num_leds: 1
+    chipset: ws2812
+    default_transition_length: 0s
+
+### IR reader config (if installed). Add your own IR codes as needed
+remote_receiver:
+  pin: 
+    number: GPIO39
+    inverted: true
+    mode:
+      input: true
+  dump: all
+
+button:
+  - platform: restart
+    id: restart_btn
+    name: "${friendly_name} REBOOT"
+
+# ### Optional settings for OLED screen (if installed)
+# ## prerequisites:
+# font:
+#   - file:
+#       type: gfonts
+#       family: Roboto
+#       weight: regular
+#     id: roboto_medium
+#     size: 32
+#     glyphs: [' ', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+# spi:
+#   clk_pin: GPIO18
+#   mosi_pin: GPIO23
+#   miso_pin: GPIO19
+
+# time:
+#   - platform: sntp
+#     id: sntp_time
+
+# ## Example display configuration, showing the clock
+# display:
+#   - platform: ssd1306_spi
+#     model: SH1106 128x64
+#     cs_pin: GPIO15
+#     dc_pin: GPIO04
+#     reset_pin: GPIO32
+#     rotation: 180
+#     update_interval: 1s
+#     lambda: |-
+#         // display clock
+#         auto hours = id(sntp_time).now().hour;
+#         auto minutes = id(sntp_time).now().minute;
+#         auto seconds = id(sntp_time).now().second;
+#         auto dot = seconds % 2 == 0 ? " " : ":";
+#         it.printf(64, 32, id(roboto_medium), TextAlign::CENTER, "%d%s%02d", hours, dot ,minutes);

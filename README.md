@@ -25,6 +25,8 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
 | **Amped-ESP32** | **Amped-ESP32-Plus** | 
 | <img width="1300" height="903" alt="image" src="https://github.com/user-attachments/assets/625801a1-a66e-4ef8-ab90-5508d6f662cd" /> | <img width="1097" height="794" alt="image" src="https://github.com/user-attachments/assets/2c334973-66e3-47f7-860d-f835607408c0" />
 
+⚠️ _Looking for Esparagus boards? Check out sister repository: [Esapragus Media Center](https://github.com/sonocotta/esparagus-media-center/)_
+
 ## Table of Contents
 
 - [ESP32 Audio Docks and Louder ESP](#esp32-audio-docks-and-louder-esp)
@@ -42,9 +44,10 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
   - [Boards Pinout](#boards-pinout)
     - [Legacy boards](#legacy-boards)
     - [HiFi-ESP32 and Amped-ESP32](#hifi-esp32-and-amped-esp32)
+    - [Amped-ESP32-Plus](#amped-esp32-plus)
     - [HiFi-ESP32 Plus and Amped-ESP32 Plus](#hifi-esp32-plus-and-amped-esp32-plus)
     - [Loud-ESP32](#loud-esp32-1)
-    - [Louder-ESP32](#louder-esp32-1)
+    - [Louder-ESP32 and Louder-ESP32-Plus](#louder-esp32-and-louder-esp32-plus)
     - [Ethernet (all boards)](#ethernet-all-boards)
     - [Optional peripheral (all boards)](#optional-peripheral-all-boards)
     - [Mic header](#mic-header)
@@ -84,7 +87,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [Loud-ESP32](#loud-esp32-2)
     - [Amped-ESP32](#amped-esp32-1)
     - [Amped-ESP32 with TPA3128 amp](#amped-esp32-with-tpa3128-amp)
-    - [Louder-ESP32](#louder-esp32-2)
+    - [Louder-ESP32](#louder-esp32-1)
     - [HiFi-ESP32 Plus](#hifi-esp32-plus-1)
     - [Amped-ESP32 Plus (Coming Soon)](#amped-esp32-plus-coming-soon)
     - [Optional SPI Ethernet module](#optional-spi-ethernet-module)
@@ -241,19 +244,25 @@ Audio streaming requires proper buffering to work; even with the ESP32's 500K of
 
 **Louder ESP**
 
-|       | I2S CLK | I2S DATA | I2S WS | PSRAM CE | PSRAM CLK | TAS5805 SDA | TAS5805 SCL | TAS5805 PWDN | TAS5805 FAULT |
-|-------|---------|----------|--------|----------|-----------|-------------|-------------|--------------|---------------|
-| ESP32 | 26      | 22       | 25     | 16       | 17        | 21          | 27          | 33           | 34            |
-| ESP32-S3 | 14      | 16       | 15     | -       | -        | 8          | 9          | 17           | 18            |
+|          | I2S CLK | I2S DATA | I2S WS | PSRAM CE | PSRAM CLK | TAS5805 SDA | TAS5805 SCL | TAS5805 PWDN | TAS5805 FAULT |
+|----------|---------|----------|--------|----------|-----------|-------------|-------------|--------------|---------------|
+| ESP32    | 26      | 22       | 25     | 16       | 17        | 21          | 27          | 33           | 34            |
+| ESP32-S3 | 14      | 16       | 15     | -        | -         | 8           | 9           | 17           | 18            |
 
 </details>
 
 ### HiFi-ESP32 and Amped-ESP32
 
-|          | I2S CLK | I2S DATA | I2S WS | PSRAM RESERVED | AMP EN | 
-|----------|---------|----------|--------|----------------|--------|
+|          | I2S CLK | I2S DATA | I2S WS | PSRAM RESERVED | AMP EN      | 
+|----------|---------|----------|--------|----------------|-------------|
 | ESP32    | 26      | 22       | 25     | 16, 17         | 13 (rev H+)
 | ESP32-S3 | 14      | 16       | 15     | 35, 36, 37     | 17 (rev J+)   
+
+### Amped-ESP32-Plus
+
+|          | I2C CLK | I2C DATA | PSRAM RESERVED | AMP EN      | 
+|----------|---------|----------|----------------|-------------|
+| ESP32-S3 | 08      | 18       | 35, 36, 37     | 17          |   
 
 ### HiFi-ESP32 Plus and Amped-ESP32 Plus
 
@@ -268,16 +277,16 @@ Audio streaming requires proper buffering to work; even with the ESP32's 500K of
 
 |          | I2S CLK | I2S DATA | I2S WS | DAC EN | PSRAM RESERVED | 
 |----------|---------|----------|--------|----------|--------------|
-| ESP32    | 26      | 22       | 25     |    13    |  16, 17      |
+| ESP32    | 26      | 22       | 25     |    13    |   16, 17     |
 | ESP32-S3 | 14      | 16       | 15     |     8    |   35, 36, 37 | 
 
 
-### Louder-ESP32
+### Louder-ESP32 and Louder-ESP32-Plus
 
-|       | I2S CLK | I2S DATA | I2S WS | PSRAM RESERVED |  TAS5805 SDA | TAS5805 SCL | TAS5805 PWDN | TAS5805 FAULT |
-|-------|---------|----------|--------|----------------|--------------|-------------|--------------|---------------|
-| ESP32 | 26      | 22       | 25     | 16, 1          | 21           | 27          | 33           | 34            |
-| ESP32-S3 | 14   | 16       | 15     | 35, 36, 37     | 8            | 9           | 17           | 18            |
+|          | I2S CLK | I2S DATA | I2S WS | PSRAM RESERVED |  I2C SDA     |    I2C SCL  | TAS58XX PWDN | TAS58XX FAULT |
+|----------|---------|----------|--------|----------------|--------------|-------------|--------------|---------------|
+| ESP32    | 26      | 22       | 25     | 16, 1          | 21           | 27          | 33           | 34            |
+| ESP32-S3 | 14      | 16       | 15     | 35, 36, 37     | 8            | 9           | 17           | 18            |
 
 ### Ethernet (all boards)
 

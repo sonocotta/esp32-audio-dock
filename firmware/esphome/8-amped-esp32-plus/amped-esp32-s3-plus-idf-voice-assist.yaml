@@ -1,0 +1,674 @@
+# ============================================================
+# Amped-ESP32-S3-Plus - Voice Assistant Configuration
+# ============================================================
+# Full-featured voice assistant with wake word detection
+# Features: Microphone input (I2S), speaker output (PCM5122),
+#           wake word detection, Home Assistant integration,
+#           announcements with ducking, RGB LED, IR receiver
+# Requires: Home Assistant with voice assistant setup
+# Board-specific pinouts are defined in substitutions section
+# ============================================================
+
+substitutions:
+  name: esphome-web-2cc030
+  friendly_name: Amped-ESP32-S3-Plus-VA
+  task_stack_in_psram: "true" # important to disable this for non-S3 model
+  wake_word: okay_nabu
+  speaker_volume: 30%  # Increased from 50%
+  voice_assist_idle_phase_id: '1'
+  voice_assist_listening_phase_id: '2'
+  voice_assist_thinking_phase_id: '3'
+  voice_assist_replying_phase_id: '4'
+  voice_assist_not_ready_phase_id: '10'
+  voice_assist_error_phase_id: '11'
+  voice_assist_muted_phase_id: '12'
+  
+  # Board-specific pinout configuration
+  # I2C pins
+  i2c_sda_pin: GPIO18
+  i2c_scl_pin: GPIO8
+  
+  # I2S audio output pins
+  i2s_out_lrclk_pin: GPIO15
+  i2s_out_bclk_pin: GPIO14
+  i2s_dout_pin: GPIO16
+  
+  # I2S audio input pins (microphone)
+  i2s_in_lrclk_pin: GPIO40
+  i2s_in_bclk_pin: GPIO41
+  i2s_din_pin: GPIO39
+  
+  # Amplifier control
+  amp_enable_pin: GPIO17
+
+  # RGB LED
+  rgb_led_pin: GPIO21
+  
+  # IR receiver
+  ir_rx_pin: GPIO07
+  
+  # SPI pins (for display)
+  spi_clk_pin: GPIO12
+  spi_mosi_pin: GPIO11
+  spi_miso_pin: GPIO13
+  
+  # Display control pins
+  display_cs_pin: GPIO47
+  display_dc_pin: GPIO38
+  display_reset_pin: GPIO48
+
+  # Ethernet pins (if using ethernet instead of wifi)
+  eth_cs_pin: GPIO10
+  eth_interrupt_pin: GPIO6
+  eth_reset_pin: GPIO5
+  
+  # DAC I2C address
+  dac_i2c_address: "0x4D"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  min_version: 2025.7.0
+  name_add_mac_suffix: false
+  platformio_options:
+    board_build.flash_mode: dio
+    build_flags: -DBOARD_HAS_PSRAM
+    board_upload.maximum_size: 16777216
+
+esp32:
+  board: esp32-s3-devkitc-1
+  variant: ESP32S3
+  flash_size: 16MB
+  framework:
+    type: esp-idf
+    version: recommended
+    sdkconfig_options:
+      CONFIG_ESP32S3_DEFAULT_CPU_FREQ_240: "y"
+      CONFIG_ESP32S3_DATA_CACHE_64KB: "y"
+      CONFIG_ESP32S3_DATA_CACHE_LINE_64B: "y"
+      CONFIG_ESP32S3_INSTRUCTION_CACHE_32KB: "y"
+      # OPTIMIZED WiFi buffers for streaming
+      CONFIG_ESP32_WIFI_STATIC_RX_BUFFER_NUM: "16"
+      CONFIG_ESP32_WIFI_DYNAMIC_RX_BUFFER_NUM: "32"
+      CONFIG_TCPIP_RECVMBOX_SIZE: "512"
+      CONFIG_TCP_SND_BUF_DEFAULT: "65535"
+      CONFIG_TCP_WND_DEFAULT: "512000"
+      CONFIG_TCP_RECVMBOX_SIZE: "512"
+      CONFIG_ESP32_S3_BOX_BOARD: "y"
+
+      CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: "y"
+      CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
+
+      CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
+      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"  # TLS1.3 support isn't enabled by default in IDF 5.1.5
+      # Bluetooth disabled
+      CONFIG_BT_ENABLED: "n"
+      CONFIG_BT_CONTROLLER_ENABLED: "n"
+      CONFIG_BT_CONTROLLER_DISABLED: "y"
+
+# Enable logging
+logger:
+  level: DEBUG
+
+debug:
+  update_interval: 5s
+
+wifi:
+  ssid: !secret esphome_wifi_ssid
+  password: !secret esphome_wifi_password
+  ap:
+    ssid: "$name Hotspot"
+    password: !secret esphome_ap_password
+
+captive_portal:
+
+### Optional if you want ethernet (then remove above wifi config)
+# ethernet:
+#   type: W5500
+#   clk_pin: ${spi_clk_pin}
+#   mosi_pin: ${spi_mosi_pin}
+#   miso_pin: ${spi_miso_pin}
+#   cs_pin: ${eth_cs_pin}
+#   interrupt_pin: ${eth_interrupt_pin}
+#   reset_pin: ${eth_reset_pin}
+
+# Allow Over-The-Air updates
+ota:
+  platform: esphome
+  password: !secret esphome_ota_password
+
+# Enable Home Assistant API
+api:
+
+psram:
+  mode: octal
+  speed: 80MHz
+
+network:
+  enable_ipv6: true
+
+globals:
+  - id: current_volume
+    type: float
+    initial_value: '0.2'
+  - id: init_in_progress
+    type: bool
+    restore_value: no
+    initial_value: 'true'
+  - id: voice_assistant_phase
+    type: int
+    restore_value: no
+    initial_value: ${voice_assist_not_ready_phase_id}
+    
+external_components:
+  - source: github://sonocotta/esphome-pcm5122
+    components: [ pcm5122 ]
+    refresh: 24h
+
+i2c:
+  sda: ${i2c_sda_pin}
+  scl: ${i2c_scl_pin}
+  frequency: 400kHz
+  scan: True
+  timeout: 100us
+
+audio_dac:
+  - platform: pcm5122
+    id: pcm5122_dac
+    address: ${dac_i2c_address}
+    volume_max: 0dB         # maximum volume range 0dB, can go up to +24dB
+    volume_min: -60dB       # minimum volume range -60dB, can go down to -103dB
+    analog_gain: -6dB       # or -6Db for 1V RMS output, default is 0dB = 2V RMS output
+    mixer_mode: STEREO      # MIXER MODE: STEREO, STEREO_INVERSE, LEFT, RIGHT
+
+i2s_audio:
+  - id: i2s_in
+    i2s_lrclk_pin: ${i2s_in_lrclk_pin}
+    i2s_bclk_pin: ${i2s_in_bclk_pin}
+  - id: i2s_out
+    i2s_lrclk_pin: ${i2s_out_lrclk_pin}
+    i2s_bclk_pin: ${i2s_out_bclk_pin}
+
+microphone:
+  - platform: i2s_audio
+    adc_type: external
+    id: voice_assistant_mic
+    i2s_audio_id: i2s_in
+    i2s_din_pin: ${i2s_din_pin}
+    pdm: false
+    channel: right
+    sample_rate: 16000
+    bits_per_sample: 32bit
+    use_apll: true              # Better clock accuracy
+    i2s_mode: primary
+
+speaker:
+  - platform: i2s_audio
+    id: speaker_id
+    i2s_audio_id: i2s_out
+    dac_type: external
+    i2s_dout_pin: ${i2s_dout_pin}
+    audio_dac: pcm5122_dac
+    channel: stereo
+    sample_rate: 48000
+    timeout: never
+
+  - platform: mixer
+    id: mixer_speaker_id
+    task_stack_in_psram: ${task_stack_in_psram}
+    output_speaker: speaker_id
+    source_speakers:
+      - id: announcement_spk_mixer_input
+        timeout: never
+      - id: media_spk_mixer_input
+        timeout: never
+
+  - platform: resampler
+    id: media_spk_resampling_input
+    task_stack_in_psram: ${task_stack_in_psram}
+    output_speaker: media_spk_mixer_input
+    sample_rate: 48000
+    bits_per_sample: 16
+  - platform: resampler
+    id: announcement_spk_resampling_input
+    task_stack_in_psram: ${task_stack_in_psram}
+    output_speaker: announcement_spk_mixer_input
+    sample_rate: 48000
+    bits_per_sample: 16
+    
+media_player:
+  - platform: speaker
+    name: Amped Mediaplayer
+    id: amped_mediaplayer
+    task_stack_in_psram: ${task_stack_in_psram}
+    buffer_size: 2000000         # INCREASED buffer (2MB vs default 1MB)
+    volume_increment: 2%
+    volume_initial: 45%
+    media_pipeline:
+      speaker: media_spk_resampling_input
+      num_channels: 2
+      sample_rate: 48000
+    announcement_pipeline:
+      speaker: announcement_spk_resampling_input
+      num_channels: 1
+      sample_rate: 48000
+
+    on_state:
+      if:
+        condition:
+          and:
+            - switch.is_off: timer_ringing
+            - not:
+                voice_assistant.is_running:
+            - not:
+                media_player.is_announcing:
+        then:
+          - mixer_speaker.apply_ducking:
+              id: media_spk_mixer_input
+              decibel_reduction: 0
+              duration: 1.0s
+    files:
+    - id: timer_finished_sound
+      file: https://github.com/esphome/home-assistant-voice-pe/raw/dev/sounds/timer_finished.flac
+    - id: wake_word_triggered_sound
+      file: https://github.com/esphome/home-assistant-voice-pe/raw/dev/sounds/wake_word_triggered.flac
+    on_play:
+      - if:
+          condition:
+            switch.is_off: enable_amp
+          then:
+            switch.turn_on: enable_amp
+
+    on_announcement:
+      - if:
+          condition:
+            switch.is_off: enable_amp
+          then:
+            switch.turn_on: enable_amp
+          
+      - lambda: id(current_volume) = id(pcm5122_dac).volume();
+
+      - mixer_speaker.apply_ducking:
+            id: media_spk_mixer_input
+            decibel_reduction: 40
+            duration: 0.0s
+      - wait_until:
+            media_player.is_announcing:
+      - delay: 0.75s
+      - lambda: id(pcm5122_dac).set_volume(id(announce_volume).state / 100);
+
+      - wait_until:
+          not:
+            media_player.is_announcing:
+      - mixer_speaker.apply_ducking:
+            id: media_spk_mixer_input
+            decibel_reduction: 0
+            duration: 1.0s
+      - lambda: id(pcm5122_dac).set_volume(id(current_volume));
+
+micro_wake_word:
+  id: mww
+  models:
+    - model: ${wake_word}
+  microphone: voice_assistant_mic
+  on_wake_word_detected:
+    - if:
+        condition:
+          switch.is_on: use_wake_word
+        then:
+          - if:
+              condition:
+                switch.is_on: timer_ringing
+              then:
+                - switch.turn_off: timer_ringing
+                - micro_wake_word.start:
+              else:
+                - if:
+                    condition:
+                      switch.is_off: ducking_switch
+                    then:
+                      media_player.stop:
+                - if:
+                    condition:
+                      voice_assistant.is_running:
+                    then:
+                      voice_assistant.stop:
+                    else:
+                      - if:
+                          condition:
+                            media_player.is_announcing:
+                          then:
+                            - media_player.stop:
+                                announcement: true
+                          else:
+                            - if:
+                                condition:
+                                  switch.is_on: wake_sound
+                                then:
+                                  - script.execute:
+                                      id: play_sound
+                                      priority: true
+                                      sound_file: !lambda return id(wake_word_triggered_sound);
+                                  - delay: 300ms
+                            - voice_assistant.start:
+
+voice_assistant:
+  id: va
+  microphone: voice_assistant_mic
+  media_player: amped_mediaplayer
+  use_wake_word: false
+  # Modern audio tuning
+  noise_suppression_level: 2        # 0–4
+  auto_gain: 21dBFS                # limit dynamic gain adjust, otherwise wake word not functional
+  volume_multiplier: 1.7           # constantly increase mic-volume
+  on_client_connected:
+    - lambda: id(init_in_progress) = false;
+    - if:
+        condition:
+          switch.is_on: use_wake_word
+        then:
+          - micro_wake_word.start:
+          - lambda: id(voice_assistant_phase) = ${voice_assist_idle_phase_id};
+        else:
+          - lambda: id(voice_assistant_phase) = ${voice_assist_muted_phase_id};
+  on_client_disconnected:
+    - lambda: id(voice_assistant_phase) = ${voice_assist_not_ready_phase_id};
+    - voice_assistant.stop
+    - micro_wake_word.stop
+#  on_listening:
+#  on_tts_start:
+  on_start:
+    - mixer_speaker.apply_ducking:
+        id: media_spk_mixer_input
+        decibel_reduction: 40 #increased, because music was disturbing speech-recognition
+        duration: 0.0s
+  on_end:
+      then:
+        - wait_until:
+            not:
+              voice_assistant.is_running:
+        - mixer_speaker.apply_ducking:
+            id: media_spk_mixer_input
+            decibel_reduction: 0
+            duration: 1.0s
+        - voice_assistant.stop
+        - if:
+            condition:
+              switch.is_on: use_wake_word
+            then:
+              - micro_wake_word.start:
+  on_error:
+    - delay: 1s
+    - lambda: |-
+        if (code == "wake-provider-missing" || code == "wake-engine-missing") {
+          id(use_wake_word).turn_off();
+        }
+    - if:
+        condition:
+          switch.is_on: use_wake_word
+        then:
+          - micro_wake_word.start:
+  on_timer_finished:
+    - switch.turn_on: timer_ringing
+
+script:
+  - id: play_sound
+    parameters:
+      priority: bool
+      sound_file: "audio::AudioFile*"
+    then:
+      - lambda: |-
+          if (priority) {
+            id(amped_mediaplayer)
+              ->make_call()
+              .set_command(media_player::MediaPlayerCommand::MEDIA_PLAYER_COMMAND_STOP)
+              .set_announcement(true)
+              .perform();
+          }
+          if ( (id(amped_mediaplayer).state != media_player::MediaPlayerState::MEDIA_PLAYER_STATE_ANNOUNCING ) || priority) {
+            id(amped_mediaplayer)
+              ->play_file(sound_file, true, false);
+          }
+  - id: enable_repeat_one
+    then:
+      - lambda: |-
+            id(amped_mediaplayer)
+              ->make_call()
+              .set_command(media_player::MediaPlayerCommand::MEDIA_PLAYER_COMMAND_REPEAT_ONE)
+              .set_announcement(true)
+              .perform();
+            id(amped_mediaplayer)->set_playlist_delay_ms(speaker::AudioPipelineType::ANNOUNCEMENT, 500);
+  - id: ring_timer
+    then:
+      - script.execute: enable_repeat_one
+      - script.execute:
+          id: play_sound
+          priority: true
+          sound_file: !lambda return id(timer_finished_sound);
+  - id: disable_repeat
+    then:
+      - lambda: |-
+            id(amped_mediaplayer)
+              ->make_call()
+              .set_command(media_player::MediaPlayerCommand::MEDIA_PLAYER_COMMAND_REPEAT_OFF)
+              .set_announcement(true)
+              .perform();
+            id(amped_mediaplayer)->set_playlist_delay_ms(speaker::AudioPipelineType::ANNOUNCEMENT, 0);
+
+
+switch:
+  - platform: pcm5122
+    enable_dac:
+      name: Enable DAC
+      id: enable_dac
+      restore_mode: ALWAYS_ON
+
+  - platform: gpio
+    icon: "mdi:speaker"
+    name: Enable AMP
+    id: enable_amp
+    pin:
+      number: ${amp_enable_pin}
+    restore_mode: ALWAYS_OFF
+
+  - platform: template
+    name: "${friendly_name} Enable Voice Assistant"
+    id: use_wake_word
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
+    icon: mdi:assistant
+    on_turn_on:
+      - logger.log: "switch on"
+      - if:
+          condition:
+            lambda: return !id(init_in_progress);
+          then:
+            - logger.log: "condition 1"
+            - lambda: id(voice_assistant_phase) = ${voice_assist_idle_phase_id};
+            - voice_assistant.stop
+            - delay: 1s
+            - if:
+                condition:
+                  not:
+                    - voice_assistant.is_running
+                then:
+                  - logger.log: "Starting micro wake word"
+                  - micro_wake_word.start:
+    on_turn_off:
+      - if:
+          condition:
+            lambda: return !id(init_in_progress);
+          then:
+            - voice_assistant.stop
+            - micro_wake_word.stop
+            - lambda: id(voice_assistant_phase) = ${voice_assist_muted_phase_id};
+
+  - platform: template
+    name: "${friendly_name} Enable Ducking"
+    id: ducking_switch
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
+    icon: mdi:volume-high
+
+  - platform: template
+    id: timer_ringing
+    optimistic: true
+    internal: true
+    restore_mode: ALWAYS_OFF
+    on_turn_on:
+      - mixer_speaker.apply_ducking:
+          id: media_spk_mixer_input
+          decibel_reduction: 40
+          duration: 0.0s
+      - script.execute: ring_timer
+      - delay: 15min
+      - switch.turn_off: timer_ringing
+    on_turn_off:
+      - script.execute: disable_repeat
+      - if:
+          condition:
+            media_player.is_announcing:
+          then:
+            media_player.stop:
+              announcement: true
+      - mixer_speaker.apply_ducking:
+          id: media_spk_mixer_input
+          decibel_reduction: 0
+          duration: 1.0s
+          
+  - platform: template
+    id: wake_sound
+    name: "${friendly_name} Wake Sound"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
+    icon: "mdi:bullhorn"
+
+number:
+  # Volume for announcements only
+  - platform: template
+    name: Announce Volume
+    id: announce_volume
+    icon: mdi:volume-source
+    unit_of_measurement: "%"
+    min_value: 0
+    max_value: 100
+    step: 1
+    restore_value: true
+    initial_value: 50
+    optimistic: true
+
+button:
+  - platform: restart
+    id: restart_btn
+    name: "${friendly_name} REBOOT"
+
+sensor:
+  - platform: wifi_signal
+    name: "${friendly_name} WiFi Signal"
+    update_interval: 60s
+  - platform: uptime
+    name: "${friendly_name} Uptime"
+    update_interval: 60s
+  - platform: internal_temperature
+    name: "${friendly_name} CPU Temperature"
+    update_interval: 60s
+  - platform: template
+    name: "${friendly_name} Free Heap"
+    lambda: |-
+      return heap_caps_get_free_size(MALLOC_CAP_INTERNAL) / 1024.0;
+    unit_of_measurement: 'kB'
+    update_interval: 10s
+  - platform: template
+    name: "${friendly_name} Free PSRAM"
+    lambda: |-
+      return heap_caps_get_free_size(MALLOC_CAP_SPIRAM) / 1024.0;
+    unit_of_measurement: 'kB'
+    update_interval: 10s
+  - platform: debug
+    loop_time:
+      name: "${friendly_name} Loop Time"
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: "${friendly_name} IP"
+    mac_address:
+      name: "${friendly_name} MAC"
+
+  - platform: version
+    name: "${friendly_name} ESPHome Version"
+    
+  - platform: template
+    name: "${friendly_name} Time"
+    lambda: |-
+      auto time = id(sntp_time).now();
+      if (!time.is_valid()) {
+        return {"Syncing..."};
+      }
+      char buf[20];
+      snprintf(buf, sizeof(buf), "%04d-%02d-%02d %02d:%02d:%02d",
+        time.year, time.month, time.day_of_month,
+        time.hour, time.minute, time.second);
+      return {buf};
+    update_interval: 60s
+
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+
+### RGB light config (if installed)
+light:
+  - platform: esp32_rmt_led_strip
+    id: rgb_front_led
+    name: "${friendly_name} LED"
+    rgb_order: GRB
+    pin: ${rgb_led_pin}
+    num_leds: 1
+    chipset: ws2812
+    default_transition_length: 0s
+
+### IR reader config (if installed). Add your own IR codes as needed
+remote_receiver:
+  pin: 
+    number: ${ir_rx_pin}
+    inverted: true
+    mode:
+      input: true
+  dump: all
+
+### Optional settings for OLED screen 
+## prerequisites:
+font:
+  - file:
+      type: gfonts
+      family: Roboto
+      weight: regular
+    id: roboto_medium
+    size: 32
+    glyphs: [' ', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+spi:
+  clk_pin: ${spi_clk_pin}
+  mosi_pin: ${spi_mosi_pin}
+  miso_pin: ${spi_miso_pin}
+
+time:
+  - platform: sntp
+    id: sntp_time
+
+## Example display configuration, showing the clock
+display:
+  - platform: ssd1306_spi
+    model: SH1106 128x64
+    cs_pin: ${display_cs_pin}
+    dc_pin: ${display_dc_pin}
+    reset_pin: ${display_reset_pin}
+    rotation: 180
+    update_interval: 1s
+    lambda: |-
+        // display clock
+        auto hours = id(sntp_time).now().hour;
+        auto minutes = id(sntp_time).now().minute;
+        auto seconds = id(sntp_time).now().second;
+        auto dot = seconds % 2 == 0 ? " " : ":";
+        it.printf(64, 32, id(roboto_medium), TextAlign::CENTER, "%d%s%02d", hours, dot ,minutes);

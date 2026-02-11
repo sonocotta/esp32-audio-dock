@@ -1,0 +1,112 @@
+substitutions:
+  name: esphome-web-04dfa8
+  friendly_name: Amped-ESP32-S3
+  task_stack_in_psram: "true" # important to disable this for non-S3 model
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  min_version: 2025.7.0
+  name_add_mac_suffix: false
+  platformio_options:
+    board_build.flash_mode: dio
+  on_boot: 
+    then:
+      - switch.turn_on: enable_dac
+      
+esp32:
+  board: esp32-s3-devkitc-1
+  variant: ESP32S3
+  flash_size: 8MB
+  framework:
+    type: esp-idf
+    version: recommended
+    sdkconfig_options:
+      CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: "y"
+      CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
+
+      CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
+      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"  # TLS1.3 support isn't enabled by default in IDF 5.1.5
+
+# Enable logging
+logger:
+  level: DEBUG
+  
+wifi:
+  ssid: !secret esphome_wifi_ssid
+  password: !secret esphome_wifi_password
+  ap:
+    ssid: "$name Hotspot"
+    password: !secret esphome_ap_password
+
+captive_portal:
+
+# Allow Over-The-Air updates
+ota:
+  platform: esphome
+  password: !secret esphome_ota_password
+
+# Enable Home Assistant API
+api:
+
+psram:
+  mode: octal
+  speed: 80MHz
+  ignore_not_found: false
+
+network:
+  enable_ipv6: true
+
+external_components:
+  - source: github://c-MM/esphome-snapclient
+    components: [ snapclient ]
+    refresh: 24h
+
+i2s_audio:
+  i2s_lrclk_pin: GPIO15
+  i2s_bclk_pin: GPIO14
+
+### Snapclient component is a work in progress, not yet ready for production use
+# More details:
+# https://github.com/c-MM/esphome-snapclient/
+# https://github.com/esphome/esphome/pull/8350
+snapclient:
+  hostname: 192.168.1.49   # at this time auto-discovery does not work, so you need to specify the server IP address
+  port: 1704               # default port, no need to change unless you have changed it on the server side
+  name: ${friendly_name}     # this is the name that will appear in the snapcast clients list
+  i2s_dout_pin: GPIO16     # I2S data out pin
+  webserver_port: 8080     # start webserver for snapclient controls
+
+switch:
+  - platform: gpio
+    icon: "mdi:speaker"
+    name: Enable DAC
+    id: enable_dac
+    pin:
+      number: GPIO17
+    restore_mode: ALWAYS_OFF
+
+### RGB light config (if installed)
+light:
+  - platform: esp32_rmt_led_strip
+    id: rgb_front_led
+    name: "${friendly_name} LED"
+    rgb_order: GRB
+    pin: GPIO9
+    num_leds: 1
+    chipset: ws2812
+    default_transition_length: 0s
+
+### IR reader config (if installed). Add your own IR codes as needed
+remote_receiver:
+  pin: 
+    number: GPIO07
+    inverted: true
+    mode:
+      input: true
+  dump: all
+
+button:
+  - platform: restart
+    id: restart_btn
+    name: "${friendly_name} REBOOT"

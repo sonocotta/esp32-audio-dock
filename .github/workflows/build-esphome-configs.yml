@@ -1,0 +1,87 @@
+name: Build ESPHome Configs
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'firmware/esphome/**/*.yaml'
+      - '.github/workflows/build-esphome-configs.yml'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'firmware/esphome/**/*.yaml'
+      - '.github/workflows/build-esphome-configs.yml'
+  workflow_dispatch:
+
+jobs:
+  find-configs:
+    name: Find ESPHome Configs
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Find all YAML configs
+        id: set-matrix
+        run: |
+          # Find all YAML files in esphome subdirectories, excluding secrets
+          configs=$(find firmware/esphome -type f -name "*.yaml" \
+            -not -path "*/secrets/*" \
+            -not -name "secrets.yaml" \
+            | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "matrix=${configs}" >> $GITHUB_OUTPUT
+          echo "Found configs:"
+          echo "${configs}" | jq -r '.[]'
+
+  build:
+    name: Build ${{ matrix.config }}
+    needs: find-configs
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config: ${{ fromJson(needs.find-configs.outputs.matrix) }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create mock secrets file
+        run: |
+          mkdir -p firmware/esphome/secrets
+          cat > firmware/esphome/secrets/secrets.yaml << 'EOF'
+          # Mock secrets for CI builds
+          wifi_ssid: "MockSSID"
+          wifi_password: "MockPassword"
+          esphome_wifi_ssid: "MockSSID"
+          esphome_wifi_password: "MockPassword"
+          esphome_ap_password: "MockAPPassword"
+          esphome_ota_password: "MockOTAPassword"
+          api_encryption_key: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+          EOF
+
+      - name: Set up cache directory
+        run: mkdir -p .esphome-cache
+
+      - name: Cache ESPHome build artifacts
+        uses: actions/cache@v4
+        with:
+          path: .esphome-cache
+          key: esphome-${{ hashFiles(matrix.config) }}
+          restore-keys: |
+            esphome-
+
+      - name: Build ESPHome config
+        run: |
+          CONFIG_DIR=$(dirname "${{ matrix.config }}")
+          CONFIG_FILE=$(basename "${{ matrix.config }}")
+          
+          docker run --rm \
+            -v "$(pwd)/${CONFIG_DIR}:/config" \
+            -v "$(pwd)/firmware/esphome/secrets/secrets.yaml:/config/secrets.yaml:ro" \
+            -v "$(pwd)/.esphome-cache:/cache" \
+            -e PLATFORMIO_BUILD_CACHE_DIR=/cache/.pio-cache \
+            esphome/esphome:dev \
+            compile "/config/${CONFIG_FILE}"
+            

@@ -1,0 +1,771 @@
+# ============================================================
+# Amped-ESP32-S3-Plus - Snapcast Client with DSP/EQ
+# ============================================================
+# Advanced Snapcast client with 18-band parametric equalizer
+# Features: ESP-DSP biquad filters, graphic EQ (40Hz-5kHz),
+#           EQ presets, PCM5122 DAC, RGB LED, IR receiver,
+#           OLED display
+# Frequencies: 40, 50, 60, 70, 80, 90, 100, 110, 120, 130,
+#              140, 200, 315, 500, 800, 1250, 2000, 5000 Hz
+# Range: -15dB to +15dB per band
+# Board-specific pinouts are defined in substitutions section
+# ============================================================
+
+substitutions:
+  name: esphome-web-2cc050
+  friendly_name: Amped-ESP32-S3-Plus-DSP
+  task_stack_in_psram: "true" # important to disable this for non-S3 model
+  
+  # Board-specific pinout configuration
+  # I2C pins
+  i2c_sda_pin: GPIO18
+  i2c_scl_pin: GPIO8
+  
+  # I2S audio pins
+  i2s_lrclk_pin: GPIO15
+  i2s_bclk_pin: GPIO14
+  i2s_dout_pin: GPIO16
+  
+  # Amplifier control
+  amp_enable_pin: GPIO17
+  
+  # RGB LED
+  rgb_led_pin: GPIO21
+  
+  # IR receiver
+  ir_rx_pin: GPIO07
+  
+  # SPI pins (for display)
+  spi_clk_pin: GPIO12
+  spi_mosi_pin: GPIO11
+  spi_miso_pin: GPIO13
+  
+  # Display control pins
+  display_cs_pin: GPIO47
+  display_dc_pin: GPIO38
+  display_reset_pin: GPIO48
+
+  # Ethernet pins (if using ethernet instead of wifi)
+  eth_cs_pin: GPIO10
+  eth_interrupt_pin: GPIO6
+  eth_reset_pin: GPIO5
+    
+  # DAC I2C address
+  dac_i2c_address: "0x4D"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  min_version: 2026.1.4
+  name_add_mac_suffix: false
+  platformio_options:
+    board_build.flash_mode: dio
+  on_boot: 
+    priority: 600
+    then:
+      - lambda: |-
+          esp_netif_set_hostname(esp_netif_get_handle_from_ifkey("WIFI_STA_DEF"), "${name}");
+      - logger.log: "Waiting 30s for NTP sync before starting snapclient..."
+      - delay: 30s
+      - lambda: |-
+          auto time = id(sntp_time).now();
+          if (time.is_valid()) {
+            ESP_LOGI("boot", "NTP synced");
+          } else {
+            ESP_LOGW("boot", "NTP not synced yet, but continuing...");
+          }
+      - switch.turn_on: enable_dac
+
+esp32:
+  board: esp32-s3-devkitc-1
+  variant: ESP32S3
+  flash_size: 8MB
+  cpu_frequency: 240MHz
+  framework:
+    type: esp-idf
+    version: recommended
+    log_level: info
+    sdkconfig_options:
+      CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: "y"
+      CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
+      CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
+      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"
+      CONFIG_SNAPCLIENT_DSP_FLOW_STEREO: "n"
+      CONFIG_SNAPCLIENT_DSP_FLOW_BASS_TREBLE_EQ: "n"
+      CONFIG_USE_DSP_PROCESSOR: "y"
+      CONFIG_DSP_OPTIMIZED: "y"
+      CONFIG_DSP_MAX_FFT_SIZE: "4096"
+
+# Enable logging
+logger:
+  level: DEBUG
+  
+debug:
+  update_interval: 5s
+
+wifi:
+  ssid: !secret esphome_wifi_ssid
+  password: !secret esphome_wifi_password
+  ap:
+    ssid: "$name Hotspot"
+    password: !secret esphome_ap_password
+
+captive_portal:
+
+### Optional if you want ethernet (then remove above wifi config)
+# ethernet:
+#   type: W5500
+#   clk_pin: ${spi_clk_pin}
+#   mosi_pin: ${spi_mosi_pin}
+#   miso_pin: ${spi_miso_pin}
+#   cs_pin: ${eth_cs_pin}
+#   interrupt_pin: ${eth_interrupt_pin}
+#   reset_pin: ${eth_reset_pin}
+
+# Allow Over-The-Air updates
+ota:
+  platform: esphome
+  password: !secret esphome_ota_password
+
+mdns:
+
+# Enable Home Assistant API
+api:
+
+web_server:
+  port: 80
+  version: 3
+
+time:
+  - platform: sntp
+    id: sntp_time
+    timezone: "CET-1CEST,M3.5.0,M10.5.0/3"
+    servers:
+      - 0.pool.ntp.org
+      - 1.pool.ntp.org
+    update_interval: 6h
+    on_time_sync:
+      then:
+        - logger.log: "Time synchronized with NTP!"
+
+psram:
+  mode: octal
+  speed: 80MHz
+
+network:
+  enable_ipv6: true
+
+external_components:
+  - source: github://sonocotta/esphome-pcm5122
+    components: [ pcm5122 ]
+    refresh: 24h
+
+  - source: github://farmed-switch/c-MM-esphome-snapclient@main
+    components: [ snapclient ]
+    refresh: 24h
+
+i2c:
+  sda: ${i2c_sda_pin}
+  scl: ${i2c_scl_pin}
+  frequency: 400kHz
+  scan: True
+  timeout: 100us
+
+audio_dac:
+  - platform: pcm5122
+    id: pcm5122_dac
+    address: ${dac_i2c_address}
+    volume_max: 0dB         # maximum volume range 0dB, can go up to +24dB
+    volume_min: -60dB       # minimum volume range -60dB, can go down to -103dB
+    analog_gain: -6dB       # or -6Db for 1V RMS output, default is 0dB = 2V RMS output
+    mixer_mode: STEREO      # MIXER MODE: STEREO, STEREO_INVERSE, LEFT, RIGHT
+
+i2s_audio:
+  i2s_lrclk_pin: ${i2s_lrclk_pin}
+  i2s_bclk_pin: ${i2s_bclk_pin}
+
+### Snapclient component is a work in progress, not yet ready for production use
+# More details:
+# https://github.com/c-MM/esphome-snapclient/
+# https://github.com/esphome/esphome/pull/8350
+snapclient:
+  hostname: 192.168.1.49   # at this time auto-discovery does not work, so you need to specify the server IP address
+  port: 1704               # default port, no need to change unless you have changed it on the server side
+  name: ${friendly_name}     # this is the name that will appear in the snapcast clients list
+  i2s_dout_pin: ${i2s_dout_pin}
+
+### RGB light config (if installed)
+light:
+  - platform: esp32_rmt_led_strip
+    id: rgb_front_led
+    name: "${friendly_name} LED"
+    rgb_order: GRB
+    pin: ${rgb_led_pin}
+    num_leds: 1
+    chipset: ws2812
+    default_transition_length: 0s
+
+### IR reader config (if installed). Add your own IR codes as needed
+remote_receiver:
+  pin: 
+    number: ${ir_rx_pin}
+    inverted: true
+    mode:
+      input: true
+  dump: all
+
+switch:
+  - platform: pcm5122
+    enable_dac:
+      name: Enable DAC
+      id: enable_dac
+      restore_mode: ALWAYS_ON
+
+  - platform: gpio
+    icon: "mdi:speaker"
+    name: Enable AMP
+    id: enable_amp
+    pin:
+      number: ${amp_enable_pin}
+    restore_mode: ALWAYS_ON
+
+button:
+  - platform: restart
+    id: restart_btn
+    name: "${friendly_name} REBOOT"
+
+sensor:
+  - platform: wifi_signal
+    name: "${friendly_name} WiFi Signal"
+    update_interval: 60s
+  - platform: uptime
+    name: "${friendly_name} Uptime"
+    update_interval: 60s
+  - platform: internal_temperature
+    name: "${friendly_name} CPU Temperature"
+    update_interval: 60s
+  - platform: template
+    name: "${friendly_name} Free Heap"
+    lambda: |-
+      return heap_caps_get_free_size(MALLOC_CAP_INTERNAL) / 1024.0;
+    unit_of_measurement: 'kB'
+    update_interval: 10s
+  - platform: template
+    name: "${friendly_name} Free PSRAM"
+    lambda: |-
+      return heap_caps_get_free_size(MALLOC_CAP_SPIRAM) / 1024.0;
+    unit_of_measurement: 'kB'
+    update_interval: 10s
+  - platform: debug
+    loop_time:
+      name: "${friendly_name} Loop Time"
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: "${friendly_name} IP"
+    mac_address:
+      name: "${friendly_name} MAC"
+  - platform: version
+    name: "${friendly_name} ESPHome Version"
+  - platform: template
+    name: "${friendly_name} Time"
+    lambda: |-
+      auto time = id(sntp_time).now();
+      if (!time.is_valid()) {
+        return {"Syncing..."};
+      }
+      char buf[20];
+      snprintf(buf, sizeof(buf), "%04d-%02d-%02d %02d:%02d:%02d",
+        time.year, time.month, time.day_of_month,
+        time.hour, time.minute, time.second);
+      return {buf};
+    update_interval: 60s
+
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+
+# ==================== GRAPHIC EQUALIZER ====================
+# 18-band parametric EQ using ESP-DSP biquad filters
+# Frequencies: 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 200, 315, 500, 800, 1250, 2000, 5000 Hz
+# Range: -15dB to +15dB, Q=1.0 (moderate bandwidth)
+# Default: Flat (0dB) on all bands
+
+number:
+  - platform: template
+    name: "${friendly_name} EQ 0040Hz"
+    id: eq_40hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(0, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0050Hz"
+    id: eq_50hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(1, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0060Hz"
+    id: eq_60hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(2, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0070Hz"
+    id: eq_70hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(3, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0080Hz"
+    id: eq_80hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(4, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0090Hz"
+    id: eq_90hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(5, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0100Hz"
+    id: eq_100hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(6, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0110Hz"
+    id: eq_110hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(7, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0120Hz"
+    id: eq_120hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(8, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0130Hz"
+    id: eq_130hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(9, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0140Hz"
+    id: eq_140hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(10, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0200Hz"
+    id: eq_200hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(11, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0315Hz"
+    id: eq_315hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(12, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0500Hz"
+    id: eq_500hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(13, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0800Hz"
+    id: eq_800hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(14, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 1250Hz"
+    id: eq_1250hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(15, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 2000Hz"
+    id: eq_2000hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(16, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 5000Hz"
+    id: eq_5000hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(17, x);
+
+select:
+  - platform: template
+    name: "${friendly_name} EQ Preset"
+    id: eq_preset
+    icon: mdi:tune-vertical
+    optimistic: true
+    options:
+      - "Flat (Bypass)"
+      - "Flat (Full Range)"
+      - "Subwoofer"
+      - "Bookshelf"
+      - "Floor Standing"
+      - "Near Field"
+      - "Small/Portable"
+      - "Custom"
+    initial_option: "Flat (Full Range)"
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void apply_eq_preset(const char* preset);
+          apply_eq_preset(x.c_str());
+          
+          // Update UI to reflect preset values
+          if (strcmp(x.c_str(), "Flat (Bypass)") == 0 || strcmp(x.c_str(), "Flat (Full Range)") == 0) {
+            id(eq_40hz).publish_state(0);
+            id(eq_50hz).publish_state(0);
+            id(eq_60hz).publish_state(0);
+            id(eq_70hz).publish_state(0);
+            id(eq_80hz).publish_state(0);
+            id(eq_90hz).publish_state(0);
+            id(eq_100hz).publish_state(0);
+            id(eq_110hz).publish_state(0);
+            id(eq_120hz).publish_state(0);
+            id(eq_130hz).publish_state(0);
+            id(eq_140hz).publish_state(0);
+            id(eq_200hz).publish_state(0);
+            id(eq_315hz).publish_state(0);
+            id(eq_500hz).publish_state(0);
+            id(eq_800hz).publish_state(0);
+            id(eq_1250hz).publish_state(0);
+            id(eq_2000hz).publish_state(0);
+            id(eq_5000hz).publish_state(0);
+          } else if (strcmp(x.c_str(), "Subwoofer") == 0) {
+            id(eq_40hz).publish_state(8);
+            id(eq_50hz).publish_state(7);
+            id(eq_60hz).publish_state(6);
+            id(eq_70hz).publish_state(5);
+            id(eq_80hz).publish_state(4);
+            id(eq_90hz).publish_state(3);
+            id(eq_100hz).publish_state(2);
+            id(eq_110hz).publish_state(1);
+            id(eq_120hz).publish_state(0);
+            id(eq_130hz).publish_state(-10);
+            id(eq_140hz).publish_state(-12);
+            id(eq_200hz).publish_state(-13);
+            id(eq_315hz).publish_state(-14);
+            id(eq_500hz).publish_state(-15);
+            id(eq_800hz).publish_state(-15);
+            id(eq_1250hz).publish_state(-15);
+            id(eq_2000hz).publish_state(-15);
+            id(eq_5000hz).publish_state(-15);
+          } else if (strcmp(x.c_str(), "Bookshelf") == 0) {
+            id(eq_40hz).publish_state(4);
+            id(eq_50hz).publish_state(4);
+            id(eq_60hz).publish_state(3);
+            id(eq_70hz).publish_state(3);
+            id(eq_80hz).publish_state(2);
+            id(eq_90hz).publish_state(2);
+            id(eq_100hz).publish_state(1);
+            id(eq_110hz).publish_state(1);
+            id(eq_120hz).publish_state(0);
+            id(eq_130hz).publish_state(0);
+            id(eq_140hz).publish_state(0);
+            id(eq_200hz).publish_state(0);
+            id(eq_315hz).publish_state(-1);
+            id(eq_500hz).publish_state(0);
+            id(eq_800hz).publish_state(1);
+            id(eq_1250hz).publish_state(2);
+            id(eq_2000hz).publish_state(2);
+            id(eq_5000hz).publish_state(3);
+          } else if (strcmp(x.c_str(), "Floor Standing") == 0) {
+            id(eq_40hz).publish_state(3);
+            id(eq_50hz).publish_state(2);
+            id(eq_60hz).publish_state(2);
+            id(eq_70hz).publish_state(1);
+            id(eq_80hz).publish_state(1);
+            id(eq_90hz).publish_state(1);
+            id(eq_100hz).publish_state(0);
+            id(eq_110hz).publish_state(0);
+            id(eq_120hz).publish_state(0);
+            id(eq_130hz).publish_state(0);
+            id(eq_140hz).publish_state(-1);
+            id(eq_200hz).publish_state(-1);
+            id(eq_315hz).publish_state(-1);
+            id(eq_500hz).publish_state(0);
+            id(eq_800hz).publish_state(0);
+            id(eq_1250hz).publish_state(1);
+            id(eq_2000hz).publish_state(1);
+            id(eq_5000hz).publish_state(2);
+          } else if (strcmp(x.c_str(), "Near Field") == 0) {
+            id(eq_40hz).publish_state(-1);
+            id(eq_50hz).publish_state(-1);
+            id(eq_60hz).publish_state(0);
+            id(eq_70hz).publish_state(0);
+            id(eq_80hz).publish_state(0);
+            id(eq_90hz).publish_state(0);
+            id(eq_100hz).publish_state(0);
+            id(eq_110hz).publish_state(0);
+            id(eq_120hz).publish_state(0);
+            id(eq_130hz).publish_state(0);
+            id(eq_140hz).publish_state(0);
+            id(eq_200hz).publish_state(0);
+            id(eq_315hz).publish_state(0);
+            id(eq_500hz).publish_state(0);
+            id(eq_800hz).publish_state(0);
+            id(eq_1250hz).publish_state(1);
+            id(eq_2000hz).publish_state(1);
+            id(eq_5000hz).publish_state(0);
+          } else if (strcmp(x.c_str(), "Small/Portable") == 0) {
+            id(eq_40hz).publish_state(-8);
+            id(eq_50hz).publish_state(-6);
+            id(eq_60hz).publish_state(-5);
+            id(eq_70hz).publish_state(-4);
+            id(eq_80hz).publish_state(-3);
+            id(eq_90hz).publish_state(-2);
+            id(eq_100hz).publish_state(-1);
+            id(eq_110hz).publish_state(0);
+            id(eq_120hz).publish_state(0);
+            id(eq_130hz).publish_state(1);
+            id(eq_140hz).publish_state(1);
+            id(eq_200hz).publish_state(2);
+            id(eq_315hz).publish_state(2);
+            id(eq_500hz).publish_state(2);
+            id(eq_800hz).publish_state(3);
+            id(eq_1250hz).publish_state(4);
+            id(eq_2000hz).publish_state(4);
+            id(eq_5000hz).publish_state(5);
+          }
+
+### Optional settings for OLED screen 
+# prerequisites:
+font:
+  - file:
+      type: gfonts
+      family: Roboto
+      weight: regular
+    id: roboto_medium
+    size: 32
+    glyphs: [' ', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+spi:
+  clk_pin: ${spi_clk_pin}
+  mosi_pin: ${spi_mosi_pin}
+  miso_pin: ${spi_miso_pin}
+
+### Example display configuration, showing the current playback state
+display:
+  - platform: ssd1306_spi
+    model: SH1106 128x64
+    cs_pin: ${display_cs_pin}
+    dc_pin: ${display_dc_pin}
+    reset_pin: ${display_reset_pin}
+    update_interval: 1s
+    lambda: |-
+        // display clock
+        auto hours = id(sntp_time).now().hour;
+        auto minutes = id(sntp_time).now().minute;
+        auto seconds = id(sntp_time).now().second;
+        auto dot = seconds % 2 == 0 ? " " : ":";
+        it.printf(64, 32, id(roboto_medium), TextAlign::CENTER, "%d%s%02d", hours, dot ,minutes);

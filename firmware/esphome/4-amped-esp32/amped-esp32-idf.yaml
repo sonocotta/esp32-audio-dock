@@ -1,0 +1,184 @@
+substitutions:
+  name: esphome-web-26304c
+  friendly_name: Amped-ESP32
+  task_stack_in_psram: "false" # important to disable this for non-S3 model
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  min_version: 2025.7.0
+  name_add_mac_suffix: false
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  board: mhetesp32minikit
+  flash_size: 8MB
+  framework:
+    type: esp-idf
+    version: recommended
+    sdkconfig_options:
+      CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: "y"
+      CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
+
+      CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
+      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"  # TLS1.3 support isn't enabled by default in IDF 5.1.5
+
+# Enable logging
+logger:
+  level: DEBUG
+  
+wifi:
+  ssid: !secret esphome_wifi_ssid
+  password: !secret esphome_wifi_password
+  ap:
+    ssid: "$name Hotspot"
+    password: !secret esphome_ap_password
+
+captive_portal:
+
+# Allow Over-The-Air updates
+ota:
+  platform: esphome
+  password: !secret esphome_ota_password
+
+# Enable Home Assistant API
+api:
+
+psram:
+  speed: 80MHz
+
+i2s_audio:
+  i2s_lrclk_pin: GPIO25
+  i2s_bclk_pin: GPIO26
+
+speaker:
+  - platform: i2s_audio
+    id: speaker_id
+    dac_type: external
+    i2s_dout_pin: GPIO22
+    channel: stereo
+    sample_rate: 48000
+    timeout: never
+
+  - platform: mixer
+    id: mixer_speaker_id
+    task_stack_in_psram: ${task_stack_in_psram}
+    output_speaker: speaker_id
+    source_speakers:
+      - id: announcement_spk_mixer_input
+        timeout: never
+      - id: media_spk_mixer_input
+        timeout: never
+
+  - platform: resampler
+    id: media_spk_resampling_input
+    task_stack_in_psram: ${task_stack_in_psram}
+    output_speaker: media_spk_mixer_input
+
+  - platform: resampler
+    id: announcement_spk_resampling_input
+    task_stack_in_psram: ${task_stack_in_psram}
+    output_speaker: announcement_spk_mixer_input
+
+media_player:
+  - platform: speaker
+    name: Amped Mediaplayer
+    id: amped_mediaplayer
+    task_stack_in_psram: ${task_stack_in_psram}
+    volume_increment: 5%
+    volume_initial: 45%
+    media_pipeline:
+      speaker: media_spk_resampling_input
+      num_channels: 2
+    announcement_pipeline:
+      speaker: announcement_spk_resampling_input
+      num_channels: 1
+
+    on_announcement:
+      - light.turn_on:
+          id: rgb_front_led
+          blue: 100%
+          red: 0%
+          green: 100%
+          brightness: 50%
+          
+      - mixer_speaker.apply_ducking:
+            id: media_spk_mixer_input
+            decibel_reduction: 40
+            duration: 0.0s
+      - wait_until:
+            media_player.is_announcing:
+
+      - wait_until:
+          not:
+            media_player.is_announcing:
+      - mixer_speaker.apply_ducking:
+            id: media_spk_mixer_input
+            decibel_reduction: 0
+            duration: 1.0s
+
+      - light.turn_off:
+          id: rgb_front_led
+
+### RGB light config (if installed)
+light:
+  - platform: esp32_rmt_led_strip
+    id: rgb_front_led
+    name: "${friendly_name} LED"
+    rgb_order: GRB
+    pin: GPIO12
+    num_leds: 1
+    chipset: ws2812
+    default_transition_length: 0s
+
+### IR reader config (if installed). Add your own IR codes as needed
+remote_receiver:
+  pin: 
+    number: GPIO39
+    inverted: true
+    mode:
+      input: true
+  dump: all
+
+button:
+  - platform: restart
+    id: restart_btn
+    name: "${friendly_name} REBOOT"
+
+# ### Optional settings for OLED screen (if installed)
+# ## prerequisites:
+# font:
+#   - file:
+#       type: gfonts
+#       family: Roboto
+#       weight: regular
+#     id: roboto_medium
+#     size: 32
+#     glyphs: [' ', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+# spi:
+#   clk_pin: GPIO18
+#   mosi_pin: GPIO23
+#   miso_pin: GPIO19
+
+# time:
+#   - platform: sntp
+#     id: sntp_time
+
+# ## Example display configuration, showing the clock
+# display:
+#   - platform: ssd1306_spi
+#     model: SH1106 128x64
+#     cs_pin: GPIO15
+#     dc_pin: GPIO04
+#     reset_pin: GPIO32
+#     rotation: 180
+#     update_interval: 1s
+#     lambda: |-
+#         // display clock
+#         auto hours = id(sntp_time).now().hour;
+#         auto minutes = id(sntp_time).now().minute;
+#         auto seconds = id(sntp_time).now().second;
+#         auto dot = seconds % 2 == 0 ? " " : ":";
+#         it.printf(64, 32, id(roboto_medium), TextAlign::CENTER, "%d%s%02d", hours, dot ,minutes);
