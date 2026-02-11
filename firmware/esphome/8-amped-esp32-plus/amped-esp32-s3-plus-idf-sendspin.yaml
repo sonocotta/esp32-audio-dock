@@ -7,6 +7,7 @@
 # Requires: Sendspin server/sender on network
 # Board-specific pinouts are defined in substitutions section
 # ============================================================
+
 substitutions:
   name: esphome-web-2cc01c
   friendly_name: Amped-ESP32-S3-Plus-SP
@@ -152,7 +153,7 @@ external_components:
   - source: github://pr#12258
     components: [media_player]
     refresh: 24h
-    
+
   - source: github://pr#12284
     components: [mdns, sendspin]
     refresh: 24h

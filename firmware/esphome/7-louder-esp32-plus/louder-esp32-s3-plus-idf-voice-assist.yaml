@@ -10,8 +10,8 @@
 # ============================================================
 
 substitutions:
-  name: esphome-web-2cc030
-  friendly_name: Amped-ESP32-S3-Plus-VA
+  name: esphome-web-b4e96c
+  friendly_name: Louder-ESP32-S3-Plus
   task_stack_in_psram: "true" # important to disable this for non-S3 model
   wake_word: okay_nabu
   speaker_volume: 30%  # Increased from 50%
@@ -22,11 +22,11 @@ substitutions:
   voice_assist_not_ready_phase_id: '10'
   voice_assist_error_phase_id: '11'
   voice_assist_muted_phase_id: '12'
-  
-  # Board-specific pinout configuration
+
+# Board-specific pinout configuration
   # I2C pins
-  i2c_sda_pin: GPIO18
-  i2c_scl_pin: GPIO8
+  i2c_sda_pin: GPIO8
+  i2c_scl_pin: GPIO9
   
   # I2S audio output pins
   i2s_out_lrclk_pin: GPIO15
@@ -39,14 +39,14 @@ substitutions:
   i2s_din_pin: GPIO39
   
   # Amplifier control
-  amp_enable_pin: GPIO17
-
+  dac_enable_pin: GPIO17
+  
   # RGB LED
   rgb_led_pin: GPIO21
   
   # IR receiver
   ir_rx_pin: GPIO07
-  
+
   # SPI pins (for display)
   spi_clk_pin: GPIO12
   spi_mosi_pin: GPIO11
@@ -61,24 +61,30 @@ substitutions:
   eth_cs_pin: GPIO10
   eth_interrupt_pin: GPIO6
   eth_reset_pin: GPIO5
-  
-  # DAC I2C address
-  dac_i2c_address: "0x4D"
+
+  # DAC mode
+  dac_model: "TAS5825M"
 
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
-  min_version: 2025.7.0
+  min_version: 2026.1.4
   name_add_mac_suffix: false
   platformio_options:
     board_build.flash_mode: dio
-    build_flags: -DBOARD_HAS_PSRAM
-    board_upload.maximum_size: 16777216
+  # Important! Play sound on boot required for DAC to capture clock signal and enable DSP configuration
+  # If any of the DSP configs are sent before clock signal, they are simply ignored. This applies to EQ and Mixer controls
+  on_boot:
+    priority: 220.0
+    then:
+      media_player.play_media:
+        id: external_media_player
+        media_url: file://startup_sync_sound
 
 esp32:
-  board: esp32-s3-devkitc-1
   variant: ESP32S3
-  flash_size: 16MB
+  flash_size: 8MB
+  cpu_frequency: 240MHz
   framework:
     type: esp-idf
     version: recommended
@@ -112,7 +118,7 @@ logger:
 
 debug:
   update_interval: 5s
-
+  
 wifi:
   ssid: !secret esphome_wifi_ssid
   password: !secret esphome_wifi_password
@@ -121,6 +127,11 @@ wifi:
     password: !secret esphome_ap_password
 
 captive_portal:
+
+# Allow Over-The-Air updates
+ota:
+  platform: esphome
+  password: !secret esphome_ota_password
 
 ### Optional if you want ethernet (then remove above wifi config)
 # ethernet:
@@ -132,17 +143,8 @@ captive_portal:
 #   interrupt_pin: ${eth_interrupt_pin}
 #   reset_pin: ${eth_reset_pin}
 
-# Allow Over-The-Air updates
-ota:
-  platform: esphome
-  password: !secret esphome_ota_password
-
 # Enable Home Assistant API
 api:
-
-psram:
-  mode: octal
-  speed: 80MHz
 
 network:
   enable_ipv6: true
@@ -159,10 +161,15 @@ globals:
     type: int
     restore_value: no
     initial_value: ${voice_assist_not_ready_phase_id}
-    
+
+psram:
+  mode: octal
+  speed: 80MHz
+  ignore_not_found: false
+
 external_components:
-  - source: github://sonocotta/esphome-pcm5122
-    components: [ pcm5122 ]
+  - source: github://mrtoy-me/esphome-tas58xx@dev
+    components: [ tas58xx ]
     refresh: 24h
 
 i2c:
@@ -172,14 +179,18 @@ i2c:
   scan: True
   timeout: 100us
 
+### TAS58xx DAC configuration
 audio_dac:
-  - platform: pcm5122
-    id: pcm5122_dac
-    address: ${dac_i2c_address}
-    volume_max: 0dB         # maximum volume range 0dB, can go up to +24dB
-    volume_min: -60dB       # minimum volume range -60dB, can go down to -103dB
-    analog_gain: -6dB       # or -6Db for 1V RMS output, default is 0dB = 2V RMS output
-    mixer_mode: STEREO      # MIXER MODE: STEREO, STEREO_INVERSE, LEFT, RIGHT
+  - platform: tas58xx
+    id: tas58xx_dac
+    tas58xx_dac: ${dac_model}
+    enable_pin: ${dac_enable_pin}  # Physical pin connected to PWDN pin
+    dac_mode: BTL                  # 'BTL' / Bridge Tied Load - 2Ch Stereo, or 'PBTL' / Parallel Bridge Tied Load - 1Ch Mono (double power)
+    mixer_mode: STEREO             # STEREO, STEREO_INVERSE, MONO, LEFT, RIGHT
+    analog_gain: -6db              # Startup Gain or Output voltage swing - pick based on the power supply voltage: https://github.com/sonocotta/esp32-tas58xx-dac?tab=readme-ov-file#digital-volume-and-analog-gain
+    # volume_max: -6dB             # Max HA volume mapping to Digital Volume control, goes as high as +24dB, but not recommend going much above 0 dB, risking to cause clipping on high volume
+    volume_min: -60db              # Min HA volume mapping to Digital Volume control, goes as low as -103dB, but prefer to set higher to have a reasonable volume range
+    update_interval: 5s            # How often fault registers are read and cleared
 
 i2s_audio:
   - id: i2s_in
@@ -208,7 +219,7 @@ speaker:
     i2s_audio_id: i2s_out
     dac_type: external
     i2s_dout_pin: ${i2s_dout_pin}
-    audio_dac: pcm5122_dac
+    audio_dac: tas58xx_dac
     channel: stereo
     sample_rate: 48000
     timeout: never
@@ -238,8 +249,8 @@ speaker:
     
 media_player:
   - platform: speaker
-    name: Amped Mediaplayer
-    id: amped_mediaplayer
+    name: Louder Mediaplayer
+    id: external_media_player
     task_stack_in_psram: ${task_stack_in_psram}
     buffer_size: 2000000         # INCREASED buffer (2MB vs default 1MB)
     volume_increment: 2%
@@ -272,21 +283,23 @@ media_player:
       file: https://github.com/esphome/home-assistant-voice-pe/raw/dev/sounds/timer_finished.flac
     - id: wake_word_triggered_sound
       file: https://github.com/esphome/home-assistant-voice-pe/raw/dev/sounds/wake_word_triggered.flac
+    - id: startup_sync_sound
+      file: https://github.com/mrtoy-me/esphome-tas5805m/raw/main/components/tas5805m/tas5805m_boot_louder.flac
     on_play:
       - if:
           condition:
-            switch.is_off: enable_amp
+            switch.is_off: enable_dac
           then:
-            switch.turn_on: enable_amp
+            switch.turn_on: enable_dac
 
     on_announcement:
       - if:
           condition:
-            switch.is_off: enable_amp
+            switch.is_off: enable_dac
           then:
-            switch.turn_on: enable_amp
+            switch.turn_on: enable_dac
           
-      - lambda: id(current_volume) = id(pcm5122_dac).volume();
+      - lambda: id(current_volume) = id(tas58xx_dac).volume();
 
       - mixer_speaker.apply_ducking:
             id: media_spk_mixer_input
@@ -295,7 +308,7 @@ media_player:
       - wait_until:
             media_player.is_announcing:
       - delay: 0.75s
-      - lambda: id(pcm5122_dac).set_volume(id(announce_volume).state / 100);
+      - lambda: id(tas58xx_dac).set_volume(id(announce_volume).state / 100);
 
       - wait_until:
           not:
@@ -304,7 +317,7 @@ media_player:
             id: media_spk_mixer_input
             decibel_reduction: 0
             duration: 1.0s
-      - lambda: id(pcm5122_dac).set_volume(id(current_volume));
+      - lambda: id(tas58xx_dac).set_volume(id(current_volume));
 
 micro_wake_word:
   id: mww
@@ -355,7 +368,7 @@ micro_wake_word:
 voice_assistant:
   id: va
   microphone: voice_assistant_mic
-  media_player: amped_mediaplayer
+  media_player: external_media_player
   use_wake_word: false
   # Modern audio tuning
   noise_suppression_level: 2        # 0–4
@@ -419,25 +432,25 @@ script:
     then:
       - lambda: |-
           if (priority) {
-            id(amped_mediaplayer)
+            id(external_media_player)
               ->make_call()
               .set_command(media_player::MediaPlayerCommand::MEDIA_PLAYER_COMMAND_STOP)
               .set_announcement(true)
               .perform();
           }
-          if ( (id(amped_mediaplayer).state != media_player::MediaPlayerState::MEDIA_PLAYER_STATE_ANNOUNCING ) || priority) {
-            id(amped_mediaplayer)
+          if ( (id(external_media_player).state != media_player::MediaPlayerState::MEDIA_PLAYER_STATE_ANNOUNCING ) || priority) {
+            id(external_media_player)
               ->play_file(sound_file, true, false);
           }
   - id: enable_repeat_one
     then:
       - lambda: |-
-            id(amped_mediaplayer)
+            id(external_media_player)
               ->make_call()
               .set_command(media_player::MediaPlayerCommand::MEDIA_PLAYER_COMMAND_REPEAT_ONE)
               .set_announcement(true)
               .perform();
-            id(amped_mediaplayer)->set_playlist_delay_ms(speaker::AudioPipelineType::ANNOUNCEMENT, 500);
+            id(external_media_player)->set_playlist_delay_ms(speaker::AudioPipelineType::ANNOUNCEMENT, 500);
   - id: ring_timer
     then:
       - script.execute: enable_repeat_one
@@ -448,28 +461,99 @@ script:
   - id: disable_repeat
     then:
       - lambda: |-
-            id(amped_mediaplayer)
+            id(external_media_player)
               ->make_call()
               .set_command(media_player::MediaPlayerCommand::MEDIA_PLAYER_COMMAND_REPEAT_OFF)
               .set_announcement(true)
               .perform();
-            id(amped_mediaplayer)->set_playlist_delay_ms(speaker::AudioPipelineType::ANNOUNCEMENT, 0);
+            id(external_media_player)->set_playlist_delay_ms(speaker::AudioPipelineType::ANNOUNCEMENT, 0);
 
+number:
+  # Volume for announcements only
+  - platform: template
+    name: Announce Volume
+    id: announce_volume
+    icon: mdi:volume-source
+    unit_of_measurement: "%"
+    min_value: 0
+    max_value: 100
+    step: 1
+    restore_value: true
+    initial_value: 50
+    optimistic: true
 
+  - platform: tas58xx
+    channel_gain_left:
+      name: Gain Left
+    channel_gain_right:
+      name: Gain Right
+    left_eq_gain_20Hz:
+      name: Left ---20Hz
+    left_eq_gain_31.5Hz:
+      name: Left ---31.5Hz
+    left_eq_gain_50Hz:
+      name: Left ---50Hz
+    left_eq_gain_80Hz:
+      name: Left ---80Hz
+    left_eq_gain_125Hz:
+      name: Left --125Hz
+    left_eq_gain_200Hz:
+      name: Left --200Hz
+    left_eq_gain_315Hz:
+      name: Left --315Hz
+    left_eq_gain_500Hz:
+      name: Left --500Hz
+    left_eq_gain_800Hz:
+      name: Left --800Hz
+    left_eq_gain_1250Hz:
+      name: Left -1250Hz
+    left_eq_gain_2000Hz:
+      name: Left -2000Hz
+    left_eq_gain_3150Hz:
+      name: Left -3150Hz
+    left_eq_gain_5000Hz:
+      name: Left -5000Hz
+    left_eq_gain_8000Hz:
+      name: Left -8000Hz
+    left_eq_gain_16000Hz:
+      name: Left 16000Hz
+    right_eq_gain_20Hz:
+      name: Right ---20Hz
+    right_eq_gain_31.5Hz:
+      name: Right ---31.5Hz
+    right_eq_gain_50Hz:
+      name: Right ---50Hz
+    right_eq_gain_80Hz:
+      name: Right ---80Hz
+    right_eq_gain_125Hz:
+      name: Right --125Hz
+    right_eq_gain_200Hz:
+      name: Right --200Hz
+    right_eq_gain_315Hz:
+      name: Right --315Hz
+    right_eq_gain_500Hz:
+      name: Right --500Hz
+    right_eq_gain_800Hz:
+      name: Right --800Hz
+    right_eq_gain_1250Hz:
+      name: Right -1250Hz
+    right_eq_gain_2000Hz:
+      name: Right -2000Hz
+    right_eq_gain_3150Hz:
+      name: Right -3150Hz
+    right_eq_gain_5000Hz:
+      name: Right -5000Hz
+    right_eq_gain_8000Hz:
+      name: Right -8000Hz
+    right_eq_gain_16000Hz:
+      name: Right 16000Hz
+      
 switch:
-  - platform: pcm5122
+  - platform: tas58xx
     enable_dac:
       name: Enable DAC
       id: enable_dac
-      restore_mode: ALWAYS_ON
-
-  - platform: gpio
-    icon: "mdi:speaker"
-    name: Enable AMP
-    id: enable_amp
-    pin:
-      number: ${amp_enable_pin}
-    restore_mode: ALWAYS_OFF
+      restore_mode: ALWAYS_ON 
 
   - platform: template
     name: "${friendly_name} Enable Voice Assistant"
@@ -543,19 +627,39 @@ switch:
     restore_mode: RESTORE_DEFAULT_ON
     icon: "mdi:bullhorn"
 
-number:
-  # Volume for announcements only
-  - platform: template
-    name: Announce Volume
-    id: announce_volume
-    icon: mdi:volume-source
-    unit_of_measurement: "%"
-    min_value: 0
-    max_value: 100
-    step: 1
-    restore_value: true
-    initial_value: 50
-    optimistic: true
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+
+  - platform: tas58xx
+    have_fault:
+      name: Any Faults
+      exclude: CLOCK_FAULT
+    left_channel_dc_fault:
+      name: Left Channel DC Fault
+    right_channel_dc_fault:
+      name: Right Channel DC Fault
+    left_channel_over_current:
+      name: Left Channel Over Current
+    right_channel_over_current:
+      name: Right Channel Over Current
+    otp_crc_check:
+      name: CRC Check Fault
+    bq_write_failed:
+      name: BQ Write Failure
+    # I2S clock fault binary sensor is not really useful with speaker media player
+    # since it generates clock faults when it manipulates I2S.
+    # clock fault:
+    #   name: I2S Clock Fault
+    pcdd_over_voltage:
+      name: PCDD Over Voltage
+    pcdd_under_voltage:
+      name: PCDD Under Voltage
+    over_temp_shutdown:
+      name: Over Temperature Shutdown Fault
+    over_temp_warning:
+      name: Over Temperature Warning
+      id: over_temperature_warning
 
 button:
   - platform: restart
@@ -563,6 +667,9 @@ button:
     name: "${friendly_name} REBOOT"
 
 sensor:
+  - platform: tas58xx
+    faults_cleared:
+      name: "Times Faults Cleared"
   - platform: wifi_signal
     name: "${friendly_name} WiFi Signal"
     update_interval: 60s
@@ -612,10 +719,6 @@ text_sensor:
       return {buf};
     update_interval: 60s
 
-binary_sensor:
-  - platform: status
-    name: "${friendly_name} Status"
-
 ### RGB light config (if installed)
 light:
   - platform: esp32_rmt_led_strip
@@ -637,34 +740,38 @@ remote_receiver:
   dump: all
 
 ### Optional settings for OLED screen 
-## prerequisites:
+# prerequisites:
+time:
+  - platform: homeassistant
+    id: sntp_time
+
 font:
   - file:
       type: gfonts
       family: Roboto
       weight: regular
     id: roboto_medium
-    size: 32
+    size: 40
     glyphs: [' ', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
 spi:
   clk_pin: ${spi_clk_pin}
   mosi_pin: ${spi_mosi_pin}
   miso_pin: ${spi_miso_pin}
+  id: spi_bus_display
 
-time:
-  - platform: sntp
-    id: sntp_time
-
-## Example display configuration, showing the clock
+### Example display configuration, showing the current playback state
+# Kinly developed by @TinheadNed (https://github.com/widget/esphome-esparagus-sendspin)
 display:
   - platform: ssd1306_spi
     model: SH1106 128x64
+    id: spi_display
+    spi_id: spi_bus_display
     cs_pin: ${display_cs_pin}
     dc_pin: ${display_dc_pin}
     reset_pin: ${display_reset_pin}
-    rotation: 180
-    update_interval: 1s
+    update_interval: 200ms
+    data_rate: 20MHz
     lambda: |-
         // display clock
         auto hours = id(sntp_time).now().hour;

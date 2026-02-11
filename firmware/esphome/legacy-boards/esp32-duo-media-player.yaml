@@ -43,7 +43,7 @@ wifi:
 captive_portal:
 
 psram:
-  mode: octal
+  mode: quad
   speed: 80MHz
   
 i2s_audio:
