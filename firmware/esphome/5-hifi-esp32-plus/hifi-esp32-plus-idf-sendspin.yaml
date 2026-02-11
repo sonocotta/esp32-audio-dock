@@ -69,16 +69,14 @@ external_components:
     components: [resampler]
     refresh: 24h
 
-  - source:
-      type: git
-      url: https://github.com/esphome/esphome
-      ref: 9148832ea4e54907bad71a24d4ced1ce6c862433  # this is commit 9148832
+  - source: github://pr#12256
     components: [audio]
     refresh: 24h
 
   - source: github://pr#12258
     components: [media_player]
     refresh: 24h
+
   - source: github://pr#12284
     components: [mdns, sendspin]
     refresh: 24h
@@ -135,11 +133,13 @@ speaker:
 
   - platform: mixer
     id: mixer_speaker_id
-    output_speaker: speaker_id
+    output_speaker: i2s_speaker_id
+    num_channels: 2
+    task_stack_in_psram: ${task_stack_in_psram}
     source_speakers:
-      - id: announcement_spk_mixer_input
+      - id: announcement_mixer_input
         timeout: never
-      - id: media_spk_mixer_input
+      - id: media_mixer_input
         timeout: never
 
   - platform: resampler
@@ -185,7 +185,6 @@ media_player:
       sample_rate: 48000
     volume_increment: 0.05
     sources:
-      - file_source
       - http_source
       - sendspin_source
     on_announcement:

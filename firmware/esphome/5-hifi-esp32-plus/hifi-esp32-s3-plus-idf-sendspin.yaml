@@ -92,16 +92,14 @@ external_components:
     components: [resampler]
     refresh: 24h
 
-  - source:
-      type: git
-      url: https://github.com/esphome/esphome
-      ref: 9148832ea4e54907bad71a24d4ced1ce6c862433  # this is commit 9148832
+  - source: github://pr#12256
     components: [audio]
     refresh: 24h
 
   - source: github://pr#12258
     components: [media_player]
     refresh: 24h
+
   - source: github://pr#12284
     components: [mdns, sendspin]
     refresh: 24h
