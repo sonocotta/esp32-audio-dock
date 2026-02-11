@@ -65,7 +65,7 @@
         "devices": [
             {
                 "images": [
-                    "https://github.com/sonocotta/esp32-audio-dock/assets/5459747/e60cadb6-ace1-4141-92a5-171c640dc8ac"
+                    "https://github.com/user-attachments/assets/95c3c09d-e223-4a48-a39f-49aef12fbac7"
                 ],
                 "title": "Louder-ESP32",
                 "description": "Reviewed design on the <a href=\"https://www.tindie.com/products/sonocotta/louder-esp32/\">Louder-ESP32</a> model includes onboard WROVER module with external Wifi antenna. It dramatically improved WiFi perception while usage of the WROVER module maintains lower device cost.",
@@ -81,7 +81,7 @@
             },  
             {
                 "images": [
-                    "https://github.com/sonocotta/esp32-audio-dock/assets/5459747/d0827984-5e3c-4ca3-9b60-3d6bc2901a74"
+                    "https://github.com/user-attachments/assets/e141bb97-36ec-415b-b776-10ee6c9611bf"
                 ],
                 "title": "Louder-ESP32-S3",
                 "description": "<a href=\"https://www.tindie.com/products/sonocotta/louder-esp32/\">Louder-ESP32S3</a> is an ESP32-S3 version of the Louder-ESP32. It is a top-of-the-range model that uses modern highly capable TAS5805M DAC. It does not support Bluetooth, but have more accessible PSRAM running at higher speed. Note, that squeezelite-esp32 support is still experimental on the S3.",
