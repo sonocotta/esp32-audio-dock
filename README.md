@@ -114,13 +114,13 @@ I created those docks and subsequently development boards to be able to quickly 
 
 ## HiFi-ESP32 
 
-The HiFi-ESP32 is a first-in-line product that uses the legendary PCM5100 series DAC with supreme audio quality. It exposes line-level output that you can plug into a stereo amplifier. Analog power comes through an Ultra-low-noise LDO, making sure no interference from the MCU comes through to your speakers. Spend as much as you need on the external amp to deliver the sound you like (personally, I prefer late 80's audio gear).
+The **HiFi-ESP32** is a first-in-line product that uses the legendary PCM5100 series DAC with supreme audio quality. It exposes line-level output that you can plug into a stereo amplifier. Analog power comes through an Ultra-low-noise LDO, making sure no interference from the MCU comes through to your speakers. Spend as much as you need on the external amp to deliver the sound you like (personally, I prefer late 80's audio gear).
 
 <img width="3644" height="2461" alt="image" src="https://github.com/user-attachments/assets/d082c6e7-688b-4f92-97a0-f747006fbccd" />
 
 ## HiFi-ESP32 Plus
 
-The HiFi-ESP32 Plus represents the next evolution of HiFi-ESP32 boards, featuring the advanced PCM5122 DAC with built-in DSP capabilities. This board maintains the same audio quality as the original HiFi-ESP32 while adding powerful digital signal processing features, including parametric EQ (6 BQs per channel), DRC, and crossover functionality (with output to downstream DAC). The PCM5122's flexible DSP engine can be configured for various audio enhancement scenarios, making it ideal for projects requiring sound tuning (why would you not), and opening the path to create 2.1 systems with PCM5122+PCM5102 master-slave config.
+The **HiFi-ESP32 Plus** represents the next evolution of HiFi-ESP32 boards, featuring the advanced PCM5122 DAC with built-in DSP capabilities. This board maintains the same audio quality as the original HiFi-ESP32 while adding powerful digital signal processing features, including parametric EQ (6 BQs per channel), DRC, and crossover functionality (with output to downstream DAC). The PCM5122's flexible DSP engine can be configured for various audio enhancement scenarios, making it ideal for projects requiring sound tuning (why would you not), and opening the path to create 2.1 systems with PCM5122+PCM5102 master-slave config.
 
 <img width="3003" height="2144" alt="image" src="https://github.com/user-attachments/assets/64a7b96f-d0c1-4572-9fd7-8407753628cf" />
 
@@ -134,16 +134,28 @@ The HiFi-ESP32 Plus represents the next evolution of HiFi-ESP32 boards, featurin
 
 ## Loud-ESP32
 
-The Loud-ESP32 uses a dual MAX98357 HiFi DAC with a built-in highly efficient D-class amp to deliver 3 to 5W of music power directly to your speakers. It is not too loud, but also very simple to use and fun to play with. When DAC is not in use, it goes into shutdown mode, making sure no hissing will keep you up at night. It powers from a standard USB-C power source, like a phone charger, etc.
+The **Loud-ESP32** uses a dual MAX98357 HiFi DAC with a built-in highly efficient D-class amp to deliver 3 to 5W of music power directly to your speakers. It is not too loud, but also very simple to use and fun to play with. When DAC is not in use, it goes into shutdown mode, making sure no hissing will keep you up at night. It powers from a standard USB-C power source, like a phone charger, etc.
 
 ![DSC_0002](https://github.com/user-attachments/assets/7d351d02-7e7f-4974-9a12-ee353c239654) 
 
 
 ## Louder-ESP32
 
-The Louder-ESP32 is a top-of-the-range model that uses a modern, highly capable TAS5805M DAC and is aimed to be paired with medium-to-large speaker systems. With 25W per channel stereo output, it packs a punch and can easily enliven living quarters or dorm rooms. It is highly efficient, but much more demanding for power when cranked; therefore, it also uses an external power adapter using a standard  jack. This DAC has a built-in DSP, so you can have a lot of fun with complex EQ, soft-clipping, DRC compression, and AGL tools, among other things.
+The **Louder-ESP32** is a top-of-the-range model that uses a modern, highly capable TAS5805M DAC and is aimed to be paired with medium-to-large speaker systems. With 25W per channel stereo output, it packs a punch and can easily enliven living quarters or dorm rooms. It is highly efficient, but much more demanding for power when cranked; therefore, it also uses an external power adapter using a standard  jack. This DAC has a built-in DSP, so you can have a lot of fun with complex EQ, soft-clipping, DRC compression, and AGL tools, among other things.
 
 <img width="2801" height="2105" alt="image" src="https://github.com/user-attachments/assets/4cfc5cd6-07bc-472d-95d2-36777389efe5" />
+
+## Louder-ESP32 Plus
+
+The **Louder-ESP32-Plus** upgrades DAc to TAS5825M model, which is more efficient (and therefore more powerful), and more capable. It introduces advanced DSP features that are not available on the base model, as it has much more powerful DSP processor.
+
+- TAS5825M DAC with integrated DSP
+- Digital volume control (avoids loss of resolution compared to software volume)
+- Gain digital control
+- Parametric EQ (15xBQ), 128-tap FIR, 3-band DRC, AGL
+- Advanced DSP: Smart Excursion, Smart Thermal, Smart Bass, SmartEQ
+
+<img width="1860" height="1191" alt="image" src="https://github.com/user-attachments/assets/e2ce7558-e090-4ede-96b5-b187af0bfad4" />
 
 ## Amped-ESP32
 
@@ -160,7 +172,7 @@ Benefits that the new TPA3128 amp brings:
 
 ## Amped-ESP32-Plus
 
-Building upon the success of the Amped-ESP32, the Amped-ESP32 Plus combines the powerful PCM5122 DAC with the efficient TPA3128 amplifier. This board offers the same DSP capabilities as the HiFi-ESP32-Plus while providing built-in amplification for direct speaker connection. The PCM5122's DSP features will enable advanced audio processing, including speaker correction, room EQ, and the possibility of creating 2.1 systems
+Building upon the success of the Amped-ESP32, the **Amped-ESP32 Plus** combines the powerful PCM5122 DAC with the efficient TPA3128 amplifier. This board offers the same DSP capabilities as the HiFi-ESP32-Plus while providing built-in amplification for direct speaker connection. The PCM5122's DSP features will enable advanced audio processing, including speaker correction, room EQ, and the possibility of creating 2.1 systems
 
 <img width="1686" height="1133" alt="image" src="https://github.com/user-attachments/assets/5d8d0b55-e65c-4329-b8ea-e371ff88d784" />
 
