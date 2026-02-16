@@ -159,16 +159,15 @@ Benefits that the new TPA3128 amp brings:
 - It can be powered from a 5V source, so if you're not looking for maximum power, you can use a USB-C power alone
 - Being a newer design, it has better audio quality. I can't hear it, but people say it sounds much better
 
-## Amped-ESP32 Plus (Work in progress)
+## Amped-ESP32-Plus
 
-Building upon the success of the Amped-ESP32, the upcoming Amped-ESP32 Plus will combine the powerful PCM5122 DAC with the efficient TPA3128 amplifier. This board will offer the same DSP capabilities as the HiFi-ESP32-Plus while providing built-in amplification for direct speaker connection. The PCM5122's DSP features will enable advanced audio processing, including speaker correction, room EQ, and the possibility of creating 2.1 systems
+Building upon the success of the Amped-ESP32, the Amped-ESP32 Plus combines the powerful PCM5122 DAC with the efficient TPA3128 amplifier. This board offers the same DSP capabilities as the HiFi-ESP32-Plus while providing built-in amplification for direct speaker connection. The PCM5122's DSP features will enable advanced audio processing, including speaker correction, room EQ, and the possibility of creating 2.1 systems
 
-_Image Coming Soon_
+<img width="1686" height="1133" alt="image" src="https://github.com/user-attachments/assets/5d8d0b55-e65c-4329-b8ea-e371ff88d784" />
 
-**Planned Features:**
+**Features:**
 
 - [PCM5122](https://www.ti.com/lit/ds/symlink/pcm5122.pdf) DAC with integrated DSP + TPA3128 D-class amplifier
-- Advanced crossover capabilities for bi-amp configurations
 - Digital EQ and dynamic range processing
 - Same power output as Amped-ESP32 with enhanced audio quality
 
@@ -195,10 +194,10 @@ _Image Coming Soon_
 
 |  | HiFi-ESP32 | HiFi-ESP32 Plus | Loud-ESP32 | Louder-ESP32 | Amped-ESP32 | Amped-ESP32 Plus |
 |---|---|---|---|---|---|---|
-| Image (ESP32) | <img width="1271" height="854" alt="image" src="https://github.com/user-attachments/assets/fa57efc4-1d78-4dc3-b021-2f66f417f138" /> | <img width="3003" height="2144" alt="image" src="https://github.com/user-attachments/assets/cc046fcf-fbb1-49d1-90b3-b66f86775c52" /> | ![DSC_0002](https://github.com/user-attachments/assets/7d351d02-7e7f-4974-9a12-ee353c239654) | <img width="1712" height="1278" alt="image" src="https://github.com/user-attachments/assets/1bca97a9-0cc7-4658-8ecc-b73894c7579e" /> | ![DSC_0003](https://github.com/user-attachments/assets/447a628c-9225-4beb-b8cc-054cc1d1a20d) | _Coming soon_ |
-| MCU | ESP32-WROVER-N8R8 onboard | ESP32-WROVER-N8R8 onboard | ESP32-WROVER-N8R8 onboard | ESP32-WROVER-N8R8 onboard |  | ESP32-WROVER-N8R8 onboard |
-| Image (ESP32-S3) | <img width="1162" height="852" alt="image" src="https://github.com/user-attachments/assets/d8c9cdaa-5c0d-4332-a307-e107e4a424d3" /> | <img width="1673" height="1058" alt="image" src="https://github.com/user-attachments/assets/207c30e0-2939-432d-a8f9-7d008f5f428a" /> | ![DSC_0009](https://github.com/user-attachments/assets/e732f7a9-77e5-4182-b808-bf12ff35a8b7) | <img width="1739" height="1275" alt="image" src="https://github.com/user-attachments/assets/0b143999-959b-4a2a-af37-deddfa07670d" /> | <img width="3415" height="2500" alt="image" src="https://github.com/user-attachments/assets/72a99b07-283e-4d83-9f4a-e61bcd9a1a28" />  | _Coming Soon_ |
-| MCU (S3) | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard | ESP32-S3-WROOM-N8R8 onboard |
+| Image (ESP32) | <img width="1271" height="854" alt="image" src="https://github.com/user-attachments/assets/fa57efc4-1d78-4dc3-b021-2f66f417f138" /> | <img width="3003" height="2144" alt="image" src="https://github.com/user-attachments/assets/cc046fcf-fbb1-49d1-90b3-b66f86775c52" /> | ![DSC_0002](https://github.com/user-attachments/assets/7d351d02-7e7f-4974-9a12-ee353c239654) | <img width="1712" height="1278" alt="image" src="https://github.com/user-attachments/assets/1bca97a9-0cc7-4658-8ecc-b73894c7579e" /> | ![DSC_0003](https://github.com/user-attachments/assets/447a628c-9225-4beb-b8cc-054cc1d1a20d) | <img width="1686" height="1133" alt="image" src="https://github.com/user-attachments/assets/bacc94bb-4809-4061-ab37-fd54b3b0bcc2" /> |
+| MCU | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 |
+| Image (ESP32-S3) | <img width="1162" height="852" alt="image" src="https://github.com/user-attachments/assets/d8c9cdaa-5c0d-4332-a307-e107e4a424d3" /> | <img width="1673" height="1058" alt="image" src="https://github.com/user-attachments/assets/207c30e0-2939-432d-a8f9-7d008f5f428a" /> | ![DSC_0009](https://github.com/user-attachments/assets/e732f7a9-77e5-4182-b808-bf12ff35a8b7) | <img width="1739" height="1275" alt="image" src="https://github.com/user-attachments/assets/0b143999-959b-4a2a-af37-deddfa07670d" /> | <img width="3415" height="2500" alt="image" src="https://github.com/user-attachments/assets/72a99b07-283e-4d83-9f4a-e61bcd9a1a28" />  | <img width="1686" height="1133" alt="image" src="https://github.com/user-attachments/assets/7d5691e6-dfee-45a0-b282-39dca36276b8" /> |
+| MCU (S3) | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 |
 | DAC | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC (-100 dB typical noise level) | [PCM5122](https://www.ti.com/product/PCM5122) 32bit Stereo DAC with integrated DSP (-112 dB typical noise level) | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with built in D-Class amplifier and powerful DSP | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC working with <br> [TPA3110D2](https://www.ti.com/product/TPA3110D2) D-Class amp <br> [TPA3128D2](https://www.ti.com/product/TPA3128D2) amp starting from Rev H | [PCM5122](https://www.ti.com/product/PCM5122) 32bit Stereo DAC with DSP + [TPA3128D2](https://www.ti.com/product/TPA3128D2) amp |
 | Output (4Ω) | Non-amplified stereo output, 2.1V RMS | Non-amplified stereo output, 2.1V RMS | 2x 5W | Line-level putput, 2.1V RMS, and<br>(TPA3110)<br>2x 22W (4Ω, 1% THD+N) at 16V <br> 2x 32W (4Ω, 1% THD+N) at 20V <br> 1x 40W (4Ω, 1% THD+N) at 20V (bridged)<br>(TPA3128)<br>2x 22W (8Ω, 1% THD+N) at 20V<br> 2x 40W (4Ω, 1% THD+N) at 20V <br> 1x 60W (3Ω, 1% THD+N) at 20V (bridged) | Line-level putput, 2.1V RMS, and<br><br>(TPA3128)<br>2x 22W (8Ω, 1% THD+N) at 20V<br> 2x 40W (4Ω, 1% THD+N) at 20V <br> 1x 60W (3Ω, 1% THD+N) at 20V (bridged) | 2x 22W (4Ω, 1% THD+N) at 16V <br> 2x 32W (4Ω, 1% THD+N) at 20V <br> 1x 40W (4Ω, 1% THD+N) at 20V (bridged) |
 | Output (8Ω) | Non-amplified stereo output | Non-amplified stereo output | 2x 3W | 2x 25W (8Ω, 1% THD+N) at 22V | 2x 25W (8Ω, 1% THD+N) at 22V | 2x 25W (8Ω, 1% THD+N) at 22V |
@@ -732,9 +731,9 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 
 ### Amped-ESP32
 
-| ESP32  | ESP32-S3
-|---|---|
-| ![image](https://github.com/user-attachments/assets/6fd602a7-909f-4b33-8be1-623d2fec443b) | coming soon
+| ESP32  |
+|---|
+| ![image](https://github.com/user-attachments/assets/6fd602a7-909f-4b33-8be1-623d2fec443b) |
 
 ### Amped-ESP32 with TPA3128 amp
 
@@ -755,29 +754,17 @@ Help came with a newer TPA3128 amp with revision H of the Amped-ESP32
 |---|---|
 | ![DSC_0013_small JPG-mh](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/c4947d1b-76f1-468b-81d9-68b46ef42851) | ![DSC_0012_small JPG-mh](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/6716a624-e44d-4f83-a8ee-91ab67b8411a)
 
-### HiFi-ESP32 Plus
-
-| ESP32  | ESP32-S3
-|---|---|
-| TBU | TBU |
-
-The HiFi-ESP32 Plus features the PCM5122 DAC with advanced DSP capabilities, maintaining the same high-quality analog output while adding digital signal processing features for enhanced audio control and customization.
-
-### Amped-ESP32 Plus (Coming Soon)
-
-| ESP32  | ESP32-S3
-|---|---|
-| TBU | TBU |
-
-The upcoming Amped-ESP32 Plus will combine the PCM5122 DAC's DSP features with the TPA3128 amplifier, providing both advanced audio processing and built-in amplification in a single board.
-
 ### Optional SPI Ethernet module
 
-Every board has a header that allows for soldering in a W5500 SPI Ethernet module, which is very easy to find. The only downside is that with the module installed board will not fit the case, unless it is cut to accommodate extra height.
+Every board has a header that allows for soldering in a W5500 SPI Ethernet module, which is very easy to find. The only downside is that with the module installed, the board will not fit the case, unless it is cut to accommodate extra height.
 
 | HiFi-ESP32(S3) | Loud-ESP32(S3) | Louder-ESP32(S3) |
 |---|---|---|
-| ![DSC_0015](https://github.com/user-attachments/assets/7c71f12a-744c-4d25-bb3b-492df4cf5c78) | ![DSC_0026](https://github.com/user-attachments/assets/e688d75d-8e5d-4e58-8fec-fd900e44b3d8) | <img width="3540" height="2438" alt="image" src="https://github.com/user-attachments/assets/46dbbbcc-cb32-4a48-a6e1-2984f17b282d" />
+| <img width="1617" height="1179" alt="image" src="https://github.com/user-attachments/assets/b0c6dc85-7414-4244-bbca-1375b61d7a86" /> | <img width="1998" height="1197" alt="image" src="https://github.com/user-attachments/assets/c0b206b9-f23f-4edf-a3bd-efd235f33c19" /> | <img width="3540" height="2438" alt="image" src="https://github.com/user-attachments/assets/46dbbbcc-cb32-4a48-a6e1-2984f17b282d" />
+
+| Louder-ESP32-Plus | Amped-ESP32-Plus
+|---|---|
+| <img width="1705" height="1164" alt="image" src="https://github.com/user-attachments/assets/ba26decd-a051-439a-89be-98a4ac5d5650" /> | <img width="1713" height="1179" alt="image" src="https://github.com/user-attachments/assets/c3046102-3f63-46a8-a94c-2e7d6d739e8e" /> |  
 
 squeezelite-esp32 nvs settings that you need to apply to enable it
 
@@ -812,6 +799,7 @@ In either scenario, you'd need to inform DAC/AMP to change modulation for PBTL m
 | Desc  | Image |
 |---|---|
 | Bridge outputs before the speaker connector either with jumpers or solder bridges, use (either) single wire for each speaker terminal | <img width="501" height="378" alt="image" src="https://github.com/user-attachments/assets/9d54fd37-cc08-4dd4-a765-53ece6b9317d" /> |
+| More recent boards introduce solder bridges instead of jumpers | <img width="517" height="470" alt="image" src="https://github.com/user-attachments/assets/8cc62052-ddee-464c-9f8c-b653194cbdce" /> |
 | Wire both outputs of the speaker terminals together | <img width="501" height="376" alt="image" src="https://github.com/user-attachments/assets/47cceff1-32d0-40cb-96f3-d1cea6bef2ca" /> |
 
 #### Power figures (comparison of BTL and PBTL modes)
@@ -821,6 +809,14 @@ In either scenario, you'd need to inform DAC/AMP to change modulation for PBTL m
 | TAS5805M | <img width="413" height="333" alt="image" src="https://github.com/user-attachments/assets/0d166711-277b-4910-9a25-13e60922804f" /> | <img width="413" height="294" alt="image" src="https://github.com/user-attachments/assets/199e066e-c770-4f3f-8310-723737ad6e0e" /> | <img width="413" height="314" alt="image" src="https://github.com/user-attachments/assets/f38bd0f2-37fb-4810-bd82-68bc66eaf1c9" /> | 
 | TPA3110  | <img width="417" height="329" alt="image" src="https://github.com/user-attachments/assets/7540a54c-de87-4970-b6be-6bf104a5fd19" /> | <img width="416" height="339" alt="image" src="https://github.com/user-attachments/assets/dd599927-7027-4576-8ae7-92e1bf6eadf9" /> | <img width="418" height="327" alt="image" src="https://github.com/user-attachments/assets/bf7d8604-27f3-411a-83a9-4aaf9ff8d739" /> | 
 | TPA3128 | <img width="418" height="288" alt="image" src="https://github.com/user-attachments/assets/94de8cb3-1490-408d-893a-123cd244ace5" /> | <img width="417" height="288" alt="image" src="https://github.com/user-attachments/assets/02ebc1d8-0c1d-4b9c-9b53-e57e81a4a5a3" />| <img width="416" height="302" alt="image" src="https://github.com/user-attachments/assets/cf155c76-13c7-4c4f-afab-0c5f525695bd" /> | 
+
+#### Louder-ESP32 and Louder-ESP32-Plus (recent revisions)
+
+Physical connections that need to be done on the board's back side (using solder bridges - normally open bridges to be closed for PBTL mode).
+
+<img width="1123" height="855" alt="image" src="https://github.com/user-attachments/assets/572aa991-f660-4d96-8da8-e6ca2e8770fc" />
+
+Note that apart from physical bridges, it also needs Bridge mode to be enabled via I2C command (see below)
 
 #### Amped TPA3110 Amp
 
@@ -871,7 +867,8 @@ Physical connections:
 |---|---|
 | Stereo Mode - leave open | <img width="574" height="410" alt="image" src="https://github.com/user-attachments/assets/a4d4d40d-47bb-4364-82d8-b0ebd9a240bc" /> |
 | (Option A) Mono (PBTL) Mode, close horizontally | <img width="590" height="438" alt="image" src="https://github.com/user-attachments/assets/c6490d23-f573-4e78-8ee0-3fdb05a51353" />
-| (Option B) Close at the speaker | <img width="587" height="437" alt="image" src="https://github.com/user-attachments/assets/e7fdc59c-7a21-4f32-949f-3f78653e6935" />
+| (Option B) Mono (PBTL) Mode, close bridges (recent revisions) | <img width="836" height="674" alt="image" src="https://github.com/user-attachments/assets/442394a9-2c0d-4a4d-84f6-a05786822c54" />
+| (Option C) Close at the speaker | <img width="587" height="437" alt="image" src="https://github.com/user-attachments/assets/e7fdc59c-7a21-4f32-949f-3f78653e6935" />
 
 ### TAS5805M DSP capabilities
 
@@ -1024,8 +1021,10 @@ HiFi-ESP32(S3), Loud-ESP32(S3), Amped-ESP32 and Louder-ESP32(S3) are mechanicall
 | Hifi-ESP32 | Loud-ESP32 |
 |---|---|
 | ![DSC_0013](https://github.com/user-attachments/assets/3eb6bb16-e103-40e1-8142-a239dc5271ca) | ![DSC_0019](https://github.com/user-attachments/assets/79b78c61-b6bf-454d-91f6-9eb513bc06d8) | 
-|Amped-ESP32 | Louder-ESP32 |
+| Amped-ESP32 | Louder-ESP32 |
 | ![DSC_0007](https://github.com/user-attachments/assets/afc3c4b4-3f50-4755-b970-ad58130ec94d) | ![DSC_0001](https://github.com/sonocotta/esp32-audio-dock/assets/5459747/68d5c2ab-d5f7-4f66-8ff7-4301ddaab7ed)
+| Amped-ESP32-Plus | Louder-ESP32-Plus |
+| <img width="1659" height="1168" alt="image" src="https://github.com/user-attachments/assets/b3bd1b4c-de88-4931-8385-053f8c57f30c" /> | <img width="1641" height="1141" alt="image" src="https://github.com/user-attachments/assets/a6746d5a-d262-46f7-80f1-ef8902cdfff1" />
 
 Also, community members created a few 3D-printable designs for Louder-ESP32 boards that can be found below 
 
@@ -1034,10 +1033,11 @@ Also, community members created a few 3D-printable designs for Louder-ESP32 boar
 | [#1](https://www.printables.com/model/1469153-improved-parametric-louder-esp32-speaker) | <img width="1039" height="732" alt="image" src="https://github.com/user-attachments/assets/69de75b8-bd5c-46f0-9ffc-cb29446a4a79" />
 | [#2](https://www.printables.com/model/1498180-louder-esp32-speaker-cab) | <img width="637" height="781" alt="image" src="https://github.com/user-attachments/assets/d4edd687-3f66-442e-98e6-5052c3b91d84" />
 | [#3](https://www.printables.com/model/1268717-louder-esp32-enclosure) | ![image](https://github.com/user-attachments/assets/30842324-77e4-40f5-a326-fcf68f8feed2)
-| [#4](https://www.printables.com/model/1058552-louder-esp32-s3-playeramplifier-case/comments) | ![image](https://github.com/user-attachments/assets/ad4a30d6-953b-461e-b108-9c6155ce2477)
-| [#5](https://www.thingiverse.com/thing:7016604) | <img width="639" height="426" alt="image" src="https://github.com/user-attachments/assets/10ba6360-2e99-4690-83a4-fef0e1cad23d" />
-| [#6](https://www.thingiverse.com/thing:6333131) | ![image](https://github.com/user-attachments/assets/6e37b6ce-443e-4067-8a7a-e3b49e5e8ad3)
-| [#7](https://www.thingiverse.com/thing:6326927) | ![image](https://github.com/user-attachments/assets/cf2983fa-0c92-4798-9cb5-5e4e97d70970)
+| [#4](https://www.crealitycloud.com/model-detail/case-for-amped-esp32-esp32-s3) | <img width="2428" height="3226" alt="image" src="https://github.com/user-attachments/assets/9e361faf-d407-4fe4-b03a-158d9f54e8bf" />
+| [#5](https://www.printables.com/model/1058552-louder-esp32-s3-playeramplifier-case/comments) | ![image](https://github.com/user-attachments/assets/ad4a30d6-953b-461e-b108-9c6155ce2477)
+| [#6](https://www.thingiverse.com/thing:7016604) | <img width="639" height="426" alt="image" src="https://github.com/user-attachments/assets/10ba6360-2e99-4690-83a4-fef0e1cad23d" />
+| [#7](https://www.thingiverse.com/thing:6333131) | ![image](https://github.com/user-attachments/assets/6e37b6ce-443e-4067-8a7a-e3b49e5e8ad3)
+| [#8](https://www.thingiverse.com/thing:6326927) | ![image](https://github.com/user-attachments/assets/cf2983fa-0c92-4798-9cb5-5e4e97d70970)
 
 
 ## Where to buy
@@ -1047,11 +1047,10 @@ You may support my work by ordering these products at Tindie and Elecrow
 - HiFi-ESP32-Plus at [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32-plus/) and [Elecrow](https://www.elecrow.com/hifi-esp32-plus.html)
 - Loud-ESP32 at [Tindie](https://www.tindie.com/products/sonocotta/loud-esp32/) and [Elecrow](https://www.elecrow.com/loud-esp32.html)
 - Louder-ESP32 at [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32/) and [Elecrow](https://www.elecrow.com/louder-esp32.html)
+- Louder-ESP32-Plus at [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32-plus/)
 - Amped-ESP32 at [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32/) and [Elecrow](https://www.elecrow.com/amped-esp32.html)
+- Amped-ESP32-Plus at [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32-plus/)
 
 **New Products (Coming Soon):**
 
 - **Loud-ESP32-Plus** - Coming soon with MA12070P DAC (Real power house with up to 80W in mono)
-- **Louder-ESP32-Plus** - Coming soon with TAS5825M DAC with advanced DSP
-- **Amped-ESP32-Plus** - Coming soon with PCM5122 DAC + TPA3128 amplifier combination
-
