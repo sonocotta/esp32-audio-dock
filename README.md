@@ -36,6 +36,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
   - [HiFi-ESP32 Plus](#hifi-esp32-plus)
   - [Loud-ESP32](#loud-esp32)
   - [Louder-ESP32](#louder-esp32)
+  - [Louder-ESP32 Plus](#louder-esp32-plus)
   - [Amped-ESP32](#amped-esp32)
   - [Amped-ESP32-Plus](#amped-esp32-plus)
   - [Which device is right for me](#which-device-is-right-for-me)
