@@ -421,40 +421,40 @@ Disable SlimProto integration in the HA if you want to go the MA way. If you ena
 
 Please find specific ESPHome configs in the [firmware](/firmware/esphome/) folder. It should be noted that generally esp-idf-based configurations are preferred over the Arduino counterparts, since they are lighter, faster, and more stable, which is important for audio streaming. However, many components do not work with esp-idf; thus, Arduino examples are also provided. Due to the complexity of the TAS5805M driver, it only exists in the esp-idf variant.
 
-- [hifi-esp32-arduino](/firmware/esphome/hifi-esp32-arduino.yaml) and [hifi-esp32-idf](/firmware/esphome/hifi-esp32-idf.yaml) for HiFi-ESP32
-- [hifi-esp32-s3-arduino](/firmware/esphome/hifi-esp32-s3-arduino.yaml) and [hifi-esp32-s3-idf](/firmware/esphome/hifi-esp32-s3-idf.yaml) for HiFi-ESP32-S3
-- [hifi-esp32-plus-idf](/firmware/esphome/hifi-esp32-plus-idf.yaml) and [hifi-esp32-s3-plus-idf](/firmware/esphome/hifi-esp32-s3-plus-idf.yaml) for HiFi-ESP32 Plus and HiFi-ESP32S3-Plus (uses [esphome-pcm5122](https://github.com/sonocotta/esphome-pcm5122/) component)
-- [loud-esp32-arduino](/firmware/esphome/loud-esp32-arduino.yaml) and [loud-esp32-idf](/firmware/esphome/loud-esp32-idf.yaml) for Loud-ESP32
-- [amped-esp32-arduino](/firmware/esphome/amped-esp32-arduino.yaml) and [amped-esp32-idf](/firmware/esphome/amped-esp32-idf.yaml) for Amped-ESP32
-- [amped-esp32-s3-arduino](/firmware/esphome/amped-esp32-s3-arduino.yaml) and [amped-esp32-s3-idf](/firmware/esphome/amped-esp32-s3-idf.yaml) for Amped-ESP32-S3
-- [louder-esp32-idf](/firmware/esphome/louder-esp32-idf.yaml) for Louder-ESP32
-- [louder-esp32-s3-idf](/firmware/esphome/louder-esp32-s3-idf.yaml) for Louder-ESP32-S3
+- [hifi-esp32-arduino](/firmware/esphome/1-hifi-esp32/hifi-esp32-arduino.yaml) and [hifi-esp32-idf](/firmware/esphome/1-hifi-esp32/hifi-esp32-idf.yaml) for HiFi-ESP32
+- [hifi-esp32-s3-arduino](/firmware/esphome/1-hifi-esp32/hifi-esp32-s3-arduino.yaml) and [hifi-esp32-s3-idf](/firmware/esphome/1-hifi-esp32/hifi-esp32-s3-idf.yaml) for HiFi-ESP32-S3
+- [hifi-esp32-plus-idf](/firmware/esphome/5-hifi-esp32-plus/hifi-esp32-plus-idf.yaml) and [hifi-esp32-s3-plus-idf](/firmware/esphome/5-hifi-esp32-plus/hifi-esp32-s3-plus-idf.yaml) for HiFi-ESP32 Plus and HiFi-ESP32S3-Plus (uses [esphome-pcm5122](https://github.com/sonocotta/esphome-pcm5122/) component)
+- [loud-esp32-arduino](/firmware/esphome/2-loud-esp32/loud-esp32-arduino.yaml) and [loud-esp32-idf](/firmware/esphome/2-loud-esp32/loud-esp32-idf.yaml) for Loud-ESP32
+- [amped-esp32-arduino](/firmware/esphome/4-amped-esp32/amped-esp32-arduino.yaml) and [amped-esp32-idf](/firmware/esphome/4-amped-esp32/amped-esp32-idf.yaml) for Amped-ESP32
+- [amped-esp32-s3-arduino](/firmware/esphome/4-amped-esp32/amped-esp32-s3-arduino.yaml) and [amped-esp32-s3-idf](/firmware/esphome/4-amped-esp32/amped-esp32-s3-idf.yaml) for Amped-ESP32-S3
+- [louder-esp32-idf](/firmware/esphome/3-louder-esp32/louder-esp32-idf.yaml) for Louder-ESP32
+- [louder-esp32-s3-idf](/firmware/esphome/3-louder-esp32/louder-esp32-s3-idf.yaml) for Louder-ESP32-S3
 
 #### Snapclient multi-room playback (experimental)
 
 Also, experimental snapclient configs
 
-- [hifi-esp32-idf-snapclient](/firmware/esphome/hifi-esp32-idf-snapclient.yaml)
-- [hifi-esp32-s3-idf-snapclient](/firmware/esphome/hifi-esp32-s3-idf-snapclient.yaml)
-- [loud-esp32-idf-snapclient](/firmware/esphome/loud-esp32-idf-snapclient.yaml)
-- [amped-esp32-idf-snapclient](/firmware/esphome/amped-esp32-idf-snapclient.yaml)
-- [amped-esp32-s3-idf-snapclient](/firmware/esphome/amped-esp32-s3-idf-snapclient.yaml)
-- [louder-esp32-idf-snapclient](/firmware/esphome/louder-esp32-idf-snapclient.yaml)
-- [louder-esp32-s3-idf-snapclient](/firmware/esphome/louder-esp32-s3-idf-snapclient.yaml)
+- [hifi-esp32-idf-snapclient](/firmware/esphome/1-hifi-esp32/hifi-esp32-idf-snapclient.yaml)
+- [hifi-esp32-s3-idf-snapclient](/firmware/esphome/1-hifi-esp32/hifi-esp32-s3-idf-snapclient.yaml)
+- [loud-esp32-idf-snapclient](/firmware/esphome/2-loud-esp32/loud-esp32-idf-snapclient.yaml)
+- [amped-esp32-idf-snapclient](/firmware/esphome/4-amped-esp32/amped-esp32-idf-snapclient.yaml)
+- [amped-esp32-s3-idf-snapclient](/firmware/esphome/4-amped-esp32/amped-esp32-s3-idf-snapclient.yaml)
+- [louder-esp32-idf-snapclient](/firmware/esphome/3-louder-esp32/louder-esp32-idf-snapclient.yaml)
+- [louder-esp32-s3-idf-snapclient](/firmware/esphome/3-louder-esp32/louder-esp32-s3-idf-snapclient.yaml)
 
 #### Sendspin multi-room playback (experimental)
 
 Starting December 2025, the new [Sendspin protocol](https://www.music-assistant.io/player-support/sendspin/) become available for multiroom playback. Although it is in the very early stage of development, it promises really good audio sync and a set of really interesting features, like visualisation support and server-controlled DSP. It is not ready for general use, but I'd encourage everyone to try it out and give some feedback to developers to support this great initiative.
 
-- [hifi-esp32-idf-sendspin](/firmware/esphome/hifi-esp32-idf-sendspin.yaml)
-- [hifi-esp32-s3-idf-sendspin](/firmware/esphome/hifi-esp32-s3-idf-sendspin.yaml) 
-- [hifi-esp32-plus-idf-sendspin](/firmware/esphome/hifi-esp32-plus-idf-sendspin.yaml)
-- [hifi-esp32-s3-plus-idf-sendspin](/firmware/esphome/hifi-esp32-s3-plus-idf-sendspin.yaml)
-- [loud-esp32-idf-sendspin](/firmware/esphome/loud-esp32-idf-sendspin.yaml)
-- [amped-esp32-idf-sendspin](/firmware/esphome/amped-esp32-idf-sendspin.yaml)
-- [amped-esp32-s3-idf-sendspin](/firmware/esphome/amped-esp32-s3-idf-sendspin.yaml)
-- [louder-esp32-idf-sendspin](/firmware/esphome/louder-esp32-idf-sendspin.yaml)
-- [louder-esp32-s3-idf-sendspin](/firmware/esphome/louder-esp32-s3-idf-sendspin.yaml)
+- [hifi-esp32-idf-sendspin](/firmware/esphome/1-hifi-esp32/hifi-esp32-idf-sendspin.yaml)
+- [hifi-esp32-s3-idf-sendspin](/firmware/esphome/1-hifi-esp32/hifi-esp32-s3-idf-sendspin.yaml)
+- [hifi-esp32-plus-idf-sendspin](/firmware/esphome/5-hifi-esp32-plus/hifi-esp32-plus-idf-sendspin.yaml)
+- [hifi-esp32-s3-plus-idf-sendspin](/firmware/esphome/5-hifi-esp32-plus/hifi-esp32-s3-plus-idf-sendspin.yaml)
+- [loud-esp32-idf-sendspin](/firmware/esphome/2-loud-esp32/loud-esp32-idf-sendspin.yaml)
+- [amped-esp32-idf-sendspin](/firmware/esphome/4-amped-esp32/amped-esp32-idf-sendspin.yaml)
+- [amped-esp32-s3-idf-sendspin](/firmware/esphome/4-amped-esp32/amped-esp32-s3-idf-sendspin.yaml)
+- [louder-esp32-idf-sendspin](/firmware/esphome/3-louder-esp32/louder-esp32-idf-sendspin.yaml)
+- [louder-esp32-s3-idf-sendspin](/firmware/esphome/3-louder-esp32/louder-esp32-s3-idf-sendspin.yaml)
 - 
 References:
 
