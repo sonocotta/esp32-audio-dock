@@ -19,7 +19,7 @@ cspot_config,data,string,"{""deviceName"":""loud-esp"",""bitrate"":160}"
 dac_config,data,string,"model=I2S,bck=26,ws=25,do=22"
 dac_controlset,data,string,
 dhcp_tmout,data,string,8
-display_config,data,string,
+display_config,data,string,"SPI,width=320,height=240,cs=5,reset=32,driver= ILI9341,back=32"
 enable_airplay,data,string,1
 enable_bt_sink,data,string,1
 enable_cspot,data,string,1
@@ -31,7 +31,7 @@ host_name,data,string,loud-esp
 i2c_config,data,string,
 jack_mutes_amp,data,string,n
 led_brightness,data,string,
-led_vu_config,data,string,
+led_vu_config,data,string,"type=[WS2812],length=1,gpio=33"
 lms_ctrls_raw,data,string,n
 loudness,data,string,0
 metadata_config,data,string,
@@ -43,10 +43,10 @@ pollmx,data,string,600
 rel_api,data,string,https://api.github.com/repos/sle118/squeezelite-esp32/releases
 release_url,data,string,CONFIG_SQUEEZELITE_ESP32_RELEASE_URL
 rotary_config,data,string,
-set_GPIO,data,string,
+set_GPIO,data,string,"0=ir"
 sleep_config,data,string,
 spdif_config,data,string,
-spi_config,data,string,
+spi_config,data,string,"mosi=23,clk=18,host=2,miso=19,dc=21"
 stats,data,string,n
 telnet_block,data,string,500
 telnet_buffer,data,string,40000
