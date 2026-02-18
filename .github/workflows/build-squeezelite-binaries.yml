@@ -50,6 +50,9 @@ jobs:
   build-esp32:
     needs: prepare
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        depth: [16, 32]
     container:
       image: sle118/squeezelite-esp32-idfv435
     permissions:
@@ -71,7 +74,7 @@ jobs:
     - name: Set defaults
       run: |
         echo "TARGET_BUILD_NAME=I2S-4MFlash" >> $GITHUB_ENV
-        echo "DEPTH=16" >> $GITHUB_ENV
+        echo "DEPTH=${{ matrix.depth }}" >> $GITHUB_ENV
         echo "BUILD_NUMBER=500" >> $GITHUB_ENV
 
     - name: Build ESP32
@@ -90,8 +93,8 @@ jobs:
         SDK_BASENAME=$(basename "$SDK")
         SHORT_COMMIT="${SUBMODULE_COMMIT:-unknown}"
         
-        # Compute tag using the submodule commit id
-        tag="${TARGET_BUILD_NAME}.${SDK_BASENAME}.latest.${SHORT_COMMIT}"
+        # Compute tag using the submodule commit id and depth
+        tag="${TARGET_BUILD_NAME}.${SDK_BASENAME}.${DEPTH}bit.latest.${SHORT_COMMIT}"
         echo "tag=$tag" >> $GITHUB_ENV
         
         cd firmware/squeezelite-esp32
@@ -116,8 +119,8 @@ jobs:
         
         idf.py build -DDEPTH=${DEPTH} -DBUILD_NUMBER=${BUILD_NUMBER}-${DEPTH}
 
-        # Collect produced binaries with SHORT_COMMIT suffix
-        OUT_DIR="../../docs/artifacts/binaries/${TARGET_BUILD_NAME}-${SDK_BASENAME}"
+        # Collect produced binaries with SHORT_COMMIT and DEPTH suffix
+        OUT_DIR="../../docs/artifacts/binaries/${TARGET_BUILD_NAME}-${SDK_BASENAME}-${DEPTH}bit"
         mkdir -p "$OUT_DIR"
         
         cp build/squeezelite.bin "$OUT_DIR/squeezelite-${SHORT_COMMIT}.bin"
@@ -135,12 +138,15 @@ jobs:
     - name: Upload ESP32 artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: esp32-binaries
+        name: esp32-binaries-${{ matrix.depth }}bit
         path: docs/artifacts/binaries/
 
   build-esp32s3:
     needs: prepare
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        depth: [16, 32]
     container:
       image: espressif/idf:v4.4.7
     permissions:
@@ -163,7 +169,7 @@ jobs:
     - name: Set defaults
       run: |
         echo "TARGET_BUILD_NAME=I2S-4MFlash" >> $GITHUB_ENV
-        echo "DEPTH=16" >> $GITHUB_ENV
+        echo "DEPTH=${{ matrix.depth }}" >> $GITHUB_ENV
         echo "BUILD_NUMBER=500" >> $GITHUB_ENV
 
     - name: Build ESP32-S3
@@ -182,8 +188,8 @@ jobs:
         SDK_BASENAME=$(basename "$SDK")
         SHORT_COMMIT="${SUBMODULE_COMMIT:-unknown}"
         
-        # Compute tag using the submodule commit id
-        tag="${TARGET_BUILD_NAME}.${SDK_BASENAME}.latest.${SHORT_COMMIT}"
+        # Compute tag using the submodule commit id and depth
+        tag="${TARGET_BUILD_NAME}.${SDK_BASENAME}.${DEPTH}bit.latest.${SHORT_COMMIT}"
         echo "tag=$tag" >> $GITHUB_ENV
         
         cd firmware/squeezelite-esp32
@@ -208,8 +214,8 @@ jobs:
         
         idf.py build -DDEPTH=${DEPTH} -DBUILD_NUMBER=${BUILD_NUMBER}-${DEPTH}
 
-        # Collect produced binaries with SHORT_COMMIT suffix
-        OUT_DIR="../../docs/artifacts/binaries/${TARGET_BUILD_NAME}-${SDK_BASENAME}"
+        # Collect produced binaries with SHORT_COMMIT and DEPTH suffix
+        OUT_DIR="../../docs/artifacts/binaries/${TARGET_BUILD_NAME}-${SDK_BASENAME}-${DEPTH}bit"
         mkdir -p "$OUT_DIR"
         
         cp build/squeezelite.bin "$OUT_DIR/squeezelite-${SHORT_COMMIT}.bin"
@@ -227,7 +233,7 @@ jobs:
     - name: Upload ESP32-S3 artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: esp32s3-binaries
+        name: esp32s3-binaries-${{ matrix.depth }}bit
         path: docs/artifacts/binaries/
 
   finalize:
@@ -242,16 +248,28 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Download all artifacts
+    - name: Download ESP32 16-bit artifacts
       uses: actions/download-artifact@v4
       with:
-        name: esp32-binaries
+        name: esp32-binaries-16bit
+        path: docs/artifacts/binaries/
+    
+    - name: Download ESP32 32-bit artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: esp32-binaries-32bit
         path: docs/artifacts/binaries/
         
-    - name: Download ESP32-S3 artifacts
+    - name: Download ESP32-S3 16-bit artifacts
       uses: actions/download-artifact@v4
       with:
-        name: esp32s3-binaries
+        name: esp32s3-binaries-16bit
+        path: docs/artifacts/binaries/
+    
+    - name: Download ESP32-S3 32-bit artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: esp32s3-binaries-32bit
         path: docs/artifacts/binaries/
 
     - name: Generate latests templates
