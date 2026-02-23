@@ -1,0 +1,82 @@
+# ============================================================
+# Media Player - Speaker Platform with Announcement Ducking
+# ============================================================
+# Configures media player with announcement ducking logic
+# Requires substitutions:
+#   - friendly_name
+#   - task_stack_in_psram
+# Dependencies: audio.yaml (speaker stack)
+# ============================================================
+
+globals:
+  - id: current_volume
+    type: float
+    initial_value: '0.2'
+  - id: announcement_triggered
+    type: bool
+    initial_value: 'false'
+
+number:
+  - platform: template
+    name: ${friendly_name} Announce Volume
+    id: announce_volume
+    icon: mdi:volume-source
+    unit_of_measurement: "%"
+    min_value: 0
+    max_value: 100
+    step: 1
+    restore_value: true
+    initial_value: 50
+    optimistic: true
+
+media_player:
+  - platform: speaker
+    name: ${friendly_name} Mediaplayer
+    id: external_media_player
+    task_stack_in_psram: ${task_stack_in_psram}
+    volume_increment: 5%
+    volume_initial: 45%
+    media_pipeline:
+      speaker: media_spk_resampling_input
+      num_channels: 2
+    announcement_pipeline:
+      speaker: announcement_spk_resampling_input
+      num_channels: 1
+
+    on_announcement:
+      - if:
+          condition:
+            - lambda: return (!id(announcement_triggered));
+          then:
+            - lambda: |-
+                id(announcement_triggered) = true;
+                id(current_volume) = id(external_media_player).volume;
+            - light.turn_on:
+                id: rgb_front_led
+                blue: 100%
+                red: 0%
+                green: 100%
+                brightness: 50%
+            - mixer_speaker.apply_ducking:
+                  id: media_spk_mixer_input
+                  decibel_reduction: 40
+                  duration: 0.0s
+            - wait_until:
+                media_player.is_announcing: external_media_player
+            - delay: 0.75s
+            - media_player.volume_set:
+                id: external_media_player
+                volume: !lambda "return id(announce_volume).state / 100.0;"
+            - wait_until:
+                - not:
+                    media_player.is_announcing: external_media_player
+            - mixer_speaker.apply_ducking:
+                      id: media_spk_mixer_input
+                      decibel_reduction: 0
+                      duration: 1.0s
+            - media_player.volume_set:
+                id: external_media_player
+                volume: !lambda "return id(current_volume);"
+            - light.turn_off:
+                id: rgb_front_led
+            - lambda: id(announcement_triggered) = false;

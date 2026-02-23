@@ -1,0 +1,15 @@
+# ============================================================
+# IR Receiver - Infrared Remote Control Configuration
+# ============================================================
+# Configures IR receiver for remote control
+# Requires substitutions:
+#   - ir_rx_pin
+# ============================================================
+
+remote_receiver:
+  pin: 
+    number: ${ir_rx_pin}
+    inverted: true
+    mode:
+      input: true
+  dump: all

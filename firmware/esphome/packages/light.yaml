@@ -1,0 +1,18 @@
+# ============================================================
+# Light - RGB LED Configuration
+# ============================================================
+# Configures WS2812 RGB LED strip via RMT
+# Requires substitutions:
+#   - friendly_name
+#   - rgb_led_pin
+# ============================================================
+
+light:
+  - platform: esp32_rmt_led_strip
+    id: rgb_front_led
+    name: "${friendly_name} LED"
+    rgb_order: GRB
+    pin: ${rgb_led_pin}
+    num_leds: 1
+    chipset: ws2812
+    default_transition_length: 0s

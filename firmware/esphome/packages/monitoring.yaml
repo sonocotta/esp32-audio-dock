@@ -1,0 +1,60 @@
+# ============================================================
+# Monitoring - System Metrics and Diagnostics
+# ============================================================
+# Monitors WiFi signal, uptime, temperature, and memory usage
+# Requires substitutions:
+#   - friendly_name
+# ============================================================
+
+debug:
+  update_interval: 10s
+
+sensor:
+  - platform: wifi_signal
+    name: "${friendly_name} WiFi Signal"
+    update_interval: 60s
+    
+  - platform: uptime
+    name: "${friendly_name} Uptime"
+    update_interval: 60s
+    
+  - platform: internal_temperature
+    name: "${friendly_name} CPU Temperature"
+    update_interval: 60s
+    
+  - platform: debug
+    # free:
+    #   name: "Heap Free"
+    # block:
+    #   name: "Heap Max Block"
+    # min_free:
+    #   name: "Heap Min Free"
+    # fragmentation:
+    #   name: "Heap Fragmentation"
+    loop_time:
+      name: "Loop Time"
+    psram:
+      name: "Free PSRAM"
+    cpu_frequency:
+      name: "CPU Frequency"
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: "${friendly_name} IP"
+    mac_address:
+      name: "${friendly_name} MAC"
+  - platform: debug
+    # device:
+    #   name: "Device Info"
+    reset_reason:
+      name: "Reset Reason"
+
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+
+button:
+  - platform: restart
+    id: restart_btn
+    name: "${friendly_name} REBOOT"

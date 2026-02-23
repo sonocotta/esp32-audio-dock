@@ -3,3 +3,4 @@
 
 secrets.yaml
 .esphome-cache/**
+.esphome/**

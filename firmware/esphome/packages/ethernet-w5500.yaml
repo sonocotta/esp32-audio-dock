@@ -1,0 +1,22 @@
+# ============================================================
+# Ethernet - W5500 Configuration (Optional)
+# ============================================================
+# Requires substitutions:
+#   - eth_clk_pin
+#   - eth_mosi_pin
+#   - eth_miso_pin
+#   - eth_cs_pin
+#   - eth_interrupt_pin
+#   - eth_reset_pin
+# ============================================================
+
+ethernet:
+  type: W5500
+  clk_pin: ${eth_clk_pin}
+  mosi_pin: ${eth_mosi_pin}
+  miso_pin: ${eth_miso_pin}
+  cs_pin: ${eth_cs_pin}
+  interrupt_pin: ${eth_interrupt_pin}
+  reset_pin: ${eth_reset_pin}
+
+# wifi: !remove

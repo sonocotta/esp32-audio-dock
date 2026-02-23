@@ -1,0 +1,485 @@
+# ============================================================
+# Snapclient - Snapcast Audio Client
+# ============================================================
+# Configures snapclient component for synchronized audio playback
+# Alternative fork with software DSP support:
+# Frequencies: 40, 50, 60, 70, 80, 90, 100, 110, 120, 130,
+#              140, 200, 315, 500, 800, 1250, 2000, 5000 Hz
+# Range: -15dB to +15dB per band
+# Requires substitutions:
+#   - friendly_name
+#   - i2s_dout_pin
+#   - snapcast_server_ip (or hostname)
+#   - snapcast_server_port (default: 1704)
+# ============================================================
+
+external_components:
+  - source: github://farmed-switch/c-MM-esphome-snapclient@main
+    components: [ snapclient ]
+    refresh: 24h
+
+i2s_audio:
+  i2s_lrclk_pin: ${i2s_lrclk_pin}
+  i2s_bclk_pin: ${i2s_bclk_pin}
+
+### Snapclient component is a work in progress, not yet ready for production use
+# More details:
+# https://github.com/c-MM/esphome-snapclient/
+# https://github.com/esphome/esphome/pull/8350
+snapclient:
+  hostname: ${snapcast_server_ip}   # at this time auto-discovery does not work, so you need to specify the server IP address
+  port: ${snapcast_server_port}     # default port, no need to change unless you have changed it on the server side
+  name: ${friendly_name}            # this is the name that will appear in the snapcast clients list
+  i2s_dout_pin: ${i2s_dout_pin}
+
+# ==================== GRAPHIC EQUALIZER ====================
+# 18-band parametric EQ using ESP-DSP biquad filters
+# Frequencies: 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 200, 315, 500, 800, 1250, 2000, 5000 Hz
+# Range: -15dB to +15dB, Q=1.0 (moderate bandwidth)
+# Default: Flat (0dB) on all bands
+
+number:
+  - platform: template
+    name: "${friendly_name} EQ 0040Hz"
+    id: eq_40hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(0, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0050Hz"
+    id: eq_50hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(1, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0060Hz"
+    id: eq_60hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(2, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0070Hz"
+    id: eq_70hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(3, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0080Hz"
+    id: eq_80hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(4, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0090Hz"
+    id: eq_90hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(5, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0100Hz"
+    id: eq_100hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(6, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0110Hz"
+    id: eq_110hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(7, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0120Hz"
+    id: eq_120hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(8, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0130Hz"
+    id: eq_130hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(9, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0140Hz"
+    id: eq_140hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(10, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0200Hz"
+    id: eq_200hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(11, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0315Hz"
+    id: eq_315hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(12, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0500Hz"
+    id: eq_500hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(13, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 0800Hz"
+    id: eq_800hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(14, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 1250Hz"
+    id: eq_1250hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(15, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 2000Hz"
+    id: eq_2000hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(16, x);
+  
+  - platform: template
+    name: "${friendly_name} EQ 5000Hz"
+    id: eq_5000hz
+    icon: mdi:equalizer
+    optimistic: true
+    min_value: -15
+    max_value: 15
+    step: 1
+    initial_value: 0
+    unit_of_measurement: "dB"
+    mode: slider
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void set_eq_band(int band, float gain_db);
+          set_eq_band(17, x);
+
+select:
+  - platform: template
+    name: "${friendly_name} EQ Preset"
+    id: eq_preset
+    icon: mdi:tune-vertical
+    optimistic: true
+    options:
+      - "Flat (Bypass)"
+      - "Flat (Full Range)"
+      - "Subwoofer"
+      - "Bookshelf"
+      - "Floor Standing"
+      - "Near Field"
+      - "Small/Portable"
+      - "Custom"
+    initial_option: "Flat (Full Range)"
+    restore_value: true
+    on_value:
+      - lambda: |-
+          extern void apply_eq_preset(const char* preset);
+          apply_eq_preset(x.c_str());
+          
+          // Update UI to reflect preset values
+          if (strcmp(x.c_str(), "Flat (Bypass)") == 0 || strcmp(x.c_str(), "Flat (Full Range)") == 0) {
+            id(eq_40hz).publish_state(0);
+            id(eq_50hz).publish_state(0);
+            id(eq_60hz).publish_state(0);
+            id(eq_70hz).publish_state(0);
+            id(eq_80hz).publish_state(0);
+            id(eq_90hz).publish_state(0);
+            id(eq_100hz).publish_state(0);
+            id(eq_110hz).publish_state(0);
+            id(eq_120hz).publish_state(0);
+            id(eq_130hz).publish_state(0);
+            id(eq_140hz).publish_state(0);
+            id(eq_200hz).publish_state(0);
+            id(eq_315hz).publish_state(0);
+            id(eq_500hz).publish_state(0);
+            id(eq_800hz).publish_state(0);
+            id(eq_1250hz).publish_state(0);
+            id(eq_2000hz).publish_state(0);
+            id(eq_5000hz).publish_state(0);
+          } else if (strcmp(x.c_str(), "Subwoofer") == 0) {
+            id(eq_40hz).publish_state(8);
+            id(eq_50hz).publish_state(7);
+            id(eq_60hz).publish_state(6);
+            id(eq_70hz).publish_state(5);
+            id(eq_80hz).publish_state(4);
+            id(eq_90hz).publish_state(3);
+            id(eq_100hz).publish_state(2);
+            id(eq_110hz).publish_state(1);
+            id(eq_120hz).publish_state(0);
+            id(eq_130hz).publish_state(-10);
+            id(eq_140hz).publish_state(-12);
+            id(eq_200hz).publish_state(-13);
+            id(eq_315hz).publish_state(-14);
+            id(eq_500hz).publish_state(-15);
+            id(eq_800hz).publish_state(-15);
+            id(eq_1250hz).publish_state(-15);
+            id(eq_2000hz).publish_state(-15);
+            id(eq_5000hz).publish_state(-15);
+          } else if (strcmp(x.c_str(), "Bookshelf") == 0) {
+            id(eq_40hz).publish_state(4);
+            id(eq_50hz).publish_state(4);
+            id(eq_60hz).publish_state(3);
+            id(eq_70hz).publish_state(3);
+            id(eq_80hz).publish_state(2);
+            id(eq_90hz).publish_state(2);
+            id(eq_100hz).publish_state(1);
+            id(eq_110hz).publish_state(1);
+            id(eq_120hz).publish_state(0);
+            id(eq_130hz).publish_state(0);
+            id(eq_140hz).publish_state(0);
+            id(eq_200hz).publish_state(0);
+            id(eq_315hz).publish_state(-1);
+            id(eq_500hz).publish_state(0);
+            id(eq_800hz).publish_state(1);
+            id(eq_1250hz).publish_state(2);
+            id(eq_2000hz).publish_state(2);
+            id(eq_5000hz).publish_state(3);
+          } else if (strcmp(x.c_str(), "Floor Standing") == 0) {
+            id(eq_40hz).publish_state(3);
+            id(eq_50hz).publish_state(2);
+            id(eq_60hz).publish_state(2);
+            id(eq_70hz).publish_state(1);
+            id(eq_80hz).publish_state(1);
+            id(eq_90hz).publish_state(1);
+            id(eq_100hz).publish_state(0);
+            id(eq_110hz).publish_state(0);
+            id(eq_120hz).publish_state(0);
+            id(eq_130hz).publish_state(0);
+            id(eq_140hz).publish_state(-1);
+            id(eq_200hz).publish_state(-1);
+            id(eq_315hz).publish_state(-1);
+            id(eq_500hz).publish_state(0);
+            id(eq_800hz).publish_state(0);
+            id(eq_1250hz).publish_state(1);
+            id(eq_2000hz).publish_state(1);
+            id(eq_5000hz).publish_state(2);
+          } else if (strcmp(x.c_str(), "Near Field") == 0) {
+            id(eq_40hz).publish_state(-1);
+            id(eq_50hz).publish_state(-1);
+            id(eq_60hz).publish_state(0);
+            id(eq_70hz).publish_state(0);
+            id(eq_80hz).publish_state(0);
+            id(eq_90hz).publish_state(0);
+            id(eq_100hz).publish_state(0);
+            id(eq_110hz).publish_state(0);
+            id(eq_120hz).publish_state(0);
+            id(eq_130hz).publish_state(0);
+            id(eq_140hz).publish_state(0);
+            id(eq_200hz).publish_state(0);
+            id(eq_315hz).publish_state(0);
+            id(eq_500hz).publish_state(0);
+            id(eq_800hz).publish_state(0);
+            id(eq_1250hz).publish_state(1);
+            id(eq_2000hz).publish_state(1);
+            id(eq_5000hz).publish_state(0);
+          } else if (strcmp(x.c_str(), "Small/Portable") == 0) {
+            id(eq_40hz).publish_state(-8);
+            id(eq_50hz).publish_state(-6);
+            id(eq_60hz).publish_state(-5);
+            id(eq_70hz).publish_state(-4);
+            id(eq_80hz).publish_state(-3);
+            id(eq_90hz).publish_state(-2);
+            id(eq_100hz).publish_state(-1);
+            id(eq_110hz).publish_state(0);
+            id(eq_120hz).publish_state(0);
+            id(eq_130hz).publish_state(1);
+            id(eq_140hz).publish_state(1);
+            id(eq_200hz).publish_state(2);
+            id(eq_315hz).publish_state(2);
+            id(eq_500hz).publish_state(2);
+            id(eq_800hz).publish_state(3);
+            id(eq_1250hz).publish_state(4);
+            id(eq_2000hz).publish_state(4);
+            id(eq_5000hz).publish_state(5);
+          }
