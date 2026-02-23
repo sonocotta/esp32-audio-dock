@@ -13,7 +13,6 @@ substitutions:
   friendly_name: HiFi-ESP32-S3
   task_stack_in_psram: "true"
 
-
   # ===== Board-Specific Pinouts =====
   # I2S audio pins
   i2s_lrclk_pin: GPIO15
@@ -23,13 +22,13 @@ substitutions:
   # RGB LED
   rgb_led_pin: GPIO09
 
+  # IR Receiver
+  ir_rx_pin: GPIO07
+
   # SPI pins (for display)
   spi_clk_pin: GPIO12
   spi_mosi_pin: GPIO11
   spi_miso_pin: GPIO13
-
-  # IR Receiver
-  ir_rx_pin: GPIO07
 
   # Display control pins
   display_cs_pin: GPIO39

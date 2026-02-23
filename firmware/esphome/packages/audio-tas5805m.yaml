@@ -1,0 +1,45 @@
+# ============================================================
+# Audio - I2S Audio Setup with TAS5805M DAC
+# ============================================================
+# Configures I2S, speaker stack, mixer, and resamplers.
+# Requires substitutions:
+#   - i2s_lrclk_pin
+#   - i2s_bclk_pin
+#   - i2s_dout_pin
+#   - task_stack_in_psram
+# Depends on: tas5805m-dac.yaml (audio_dac id: tas5805m_dac)
+# ============================================================
+
+i2s_audio:
+  i2s_lrclk_pin: ${i2s_lrclk_pin}
+  i2s_bclk_pin: ${i2s_bclk_pin}
+
+speaker:
+  - platform: i2s_audio
+    id: speaker_id
+    dac_type: external
+    i2s_dout_pin: ${i2s_dout_pin}
+    audio_dac: tas5805m_dac
+    channel: stereo
+    sample_rate: 48000
+    timeout: never
+
+  - platform: mixer
+    id: mixer_speaker_id
+    task_stack_in_psram: ${task_stack_in_psram}
+    output_speaker: speaker_id
+    source_speakers:
+      - id: announcement_spk_mixer_input
+        timeout: never
+      - id: media_spk_mixer_input
+        timeout: never
+
+  - platform: resampler
+    id: media_spk_resampling_input
+    task_stack_in_psram: ${task_stack_in_psram}
+    output_speaker: media_spk_mixer_input
+
+  - platform: resampler
+    id: announcement_spk_resampling_input
+    task_stack_in_psram: ${task_stack_in_psram}
+    output_speaker: announcement_spk_mixer_input

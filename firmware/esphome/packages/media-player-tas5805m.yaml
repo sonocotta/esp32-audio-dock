@@ -1,0 +1,123 @@
+# ============================================================
+# Media Player - Speaker Platform with Announcement Ducking
+# ============================================================
+# Configures media player with announcement ducking logic
+# Uses TAS5805M DAC and I2S audio setup from audio-tas5805m.yaml
+# Requires substitutions:
+#   - friendly_name
+#   - task_stack_in_psram
+# Dependencies: audio-tas5805m.yaml (speaker stack)
+# ============================================================
+
+globals:
+  - id: current_volume
+    type: float
+    initial_value: '0.2'
+  - id: announcement_triggered
+    type: bool
+    initial_value: 'false'
+
+number:
+  - platform: template
+    name: ${friendly_name} Announce Volume
+    id: announce_volume
+    icon: mdi:volume-source
+    unit_of_measurement: "%"
+    min_value: 0
+    max_value: 100
+    step: 1
+    restore_value: true
+    initial_value: 50
+    optimistic: true
+
+media_player:
+  - platform: speaker
+    name: ${friendly_name} Mediaplayer
+    id: external_media_player
+    task_stack_in_psram: ${task_stack_in_psram}
+    volume_increment: 5%
+    volume_initial: 45%
+    media_pipeline:
+      speaker: media_spk_resampling_input
+      num_channels: 2
+    announcement_pipeline:
+      speaker: announcement_spk_resampling_input
+      num_channels: 1
+
+    files:
+      id: startup_sync_sound
+      file: https://github.com/mrtoy-me/esphome-tas5805m/raw/main/components/tas5805m/tas5805m_boot_louder.flac
+
+    on_play:
+      - if:
+          condition:
+            switch.is_off: enable_dac
+          then:
+            switch.turn_on: enable_dac
+
+    on_announcement:
+      - if:
+          condition:
+            switch.is_off: enable_dac
+          then:
+            switch.turn_on: enable_dac
+            
+      - if:
+          condition:
+            - lambda: return (!id(announcement_triggered));
+          then:
+            - lambda: |-
+                id(announcement_triggered) = true;
+                id(current_volume) = id(tas5805m_dac).volume();
+            - light.turn_on:
+                id: rgb_front_led
+                blue: 100%
+                red: 0%
+                green: 100%
+                brightness: 50%
+            - mixer_speaker.apply_ducking:
+                  id: media_spk_mixer_input
+                  decibel_reduction: 40
+                  duration: 0.0s
+            - wait_until:
+                media_player.is_announcing: external_media_player
+            - delay: 0.75s
+            - lambda: id(tas5805m_dac).set_volume(id(announce_volume).state / 100);
+            - wait_until:
+                - not:
+                    media_player.is_announcing: external_media_player
+            - mixer_speaker.apply_ducking:
+                      id: media_spk_mixer_input
+                      decibel_reduction: 0
+                      duration: 1.0s
+            - lambda: id(tas5805m_dac).set_volume(id(current_volume));
+            - light.turn_off:
+                id: rgb_front_led
+            - lambda: id(announcement_triggered) = false;
+
+### Send DAC to shutdown mode after 2 minutes of inactivity
+# This is to save power, since DAC will draw under 100mA in idle state
+interval:
+  - interval: 30s
+    then:
+      - if:
+          condition:
+            - switch.is_on: enable_dac
+            - for:
+                time: 120s
+                condition:
+                  or:
+                    - media_player.is_idle: external_media_player
+                    - media_player.is_paused: external_media_player
+          then:
+            - switch.turn_off: enable_dac
+  # Optional: when DAC reports overheating warning, reduce volume to prevent shutdown
+  - interval: 1s
+    then:
+      - if:
+          condition:
+            - binary_sensor.is_on: over_temperature_warning
+            - lambda: 'return (id(external_media_player).volume != 0.0f);'
+            - lambda: 'return !(id(external_media_player).is_muted());'
+          then:
+            - media_player.volume_down

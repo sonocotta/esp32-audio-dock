@@ -1,0 +1,113 @@
+# ============================================================
+# TAS5805M DAC - I2C Control, EQ, and Fault Monitoring
+# ============================================================
+# Requires substitutions:
+#   - tas5805m_enable_pin
+#   - i2c_sda_pin
+#   - i2c_scl_pin
+# ============================================================
+
+external_components:
+  - source: github://mrtoy-me/esphome-tas5805m@main
+    components: [ tas5805m ]
+    refresh: 60s
+
+i2c:
+  sda: ${i2c_sda_pin}
+  scl: ${i2c_scl_pin}
+  frequency: 400kHz
+  scan: true
+
+### TAS5805M DAC configuration
+audio_dac:
+  - platform: tas5805m
+    id: tas5805m_dac
+    enable_pin: ${tas5805m_enable_pin}  # Physical pin to enable the DAC (active HIGH)
+    dac_mode: BTL                       # 'BTL' / Bridge Tied Load - 2Ch Stereo, or 'PBTL' / Parallel Bridge Tied Load - 1Ch Mono (double power)
+    mixer_mode: STEREO                  # STEREO, STEREO_INVERSE, MONO, LEFT, RIGHT
+    analog_gain: 0db                    # Startup Gain or Output voltage swing - pick based on the power supply voltage: https://github.com/sonocotta/esp32-tas5805m-dac?tab=readme-ov-file#digital-volume-and-analog-gain
+    volume_max:  0dB                    # Max HA volume mapping to Digital Volume control, goes as high as +24dB, but not recommend going much above 0 dB, risking to cause clipping on high volume
+    volume_min: -60db                   # Min HA volume mapping to Digital Volume control, goes as low as -103dB, but prefer to set higher to have a reasonable volume range
+    update_interval: 5s                 # How often fault registers are read and cleared
+
+switch:
+  - platform: tas5805m
+    # Will be operated automatically. When disabled DAC draws dramatically less power
+    enable_dac:
+      name: Enable Louder
+      id: enable_dac
+      restore_mode: ALWAYS_ON
+    # Will be operated automatically. If you use EQ it is required to set it ON
+    enable_eq:
+      name: Enable EQ Control
+      restore_mode: RESTORE_DEFAULT_ON
+
+number:
+  # 15-band EQ. Frequency and bandwidth are fixed by the DAC.
+  - platform: tas5805m
+    eq_gain_band20Hz:
+      name: Gain ---20Hz
+    eq_gain_band31.5Hz:
+      name: Gain ---31.5Hz
+    eq_gain_band50Hz:
+      name: Gain ---50Hz
+    eq_gain_band80Hz:
+      name: Gain ---80Hz
+    eq_gain_band125Hz:
+      name: Gain --125Hz
+    eq_gain_band200Hz:
+      name: Gain --200Hz
+    eq_gain_band315Hz:
+      name: Gain --315Hz
+    eq_gain_band500Hz:
+      name: Gain --500Hz
+    eq_gain_band800Hz:
+      name: Gain --800Hz
+    eq_gain_band1250Hz:
+      name: Gain -1250Hz
+    eq_gain_band2000Hz:
+      name: Gain -2000Hz
+    eq_gain_band3150Hz:
+      name: Gain -3150Hz
+    eq_gain_band5000Hz:
+      name: Gain -5000Hz
+    eq_gain_band8000Hz:
+      name: Gain -8000Hz
+    eq_gain_band16000Hz:
+      name: Gain 16000Hz
+
+### Faults clear registers read from TAS5805M
+sensor:
+  - platform: tas5805m
+    faults_cleared:
+      name: "Times Faults Cleared"
+    update_interval: 60s
+
+### Faults registers read directly from TAS5805M
+binary_sensor:
+  - platform: tas5805m
+    have_fault:
+      name: Any Faults
+    left_channel_dc_fault:
+      name: Left Channel DC Fault
+    right_channel_dc_fault:
+      name: Right Channel DC Fault
+    left_channel_over_current:
+      name: Left Channel Over Current
+    right_channel_over_current:
+      name: Right Channel Over Current
+    otp_crc_check:
+      name: CRC Check Fault
+    bq_write_failed:
+      name: BQ Write Failure
+    clock fault:
+      name: I2S Clock Fault
+    pcdd_over_voltage:
+      name: PCDD Over Voltage
+    pcdd_under_voltage:
+      name: PCDD Under Voltage
+    over_temp_shutdown:
+      name: Over Temperature Shutdown Fault
+    over_temp_warning:
+      name: Over Temperature Warning
+      id: over_temperature_warning

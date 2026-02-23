@@ -1,0 +1,181 @@
+# ============================================================
+# Sendspin - Synchronized Multi-Room Audio
+# ============================================================
+# Configures sendspin component for synchronized multi-room audio playback
+# Requires substitutions:
+#   - task_stack_in_psram
+#   - friendly_name
+# Requires i2s_audio to be configured in main config
+# ============================================================
+
+external_components:
+  - source: github://pr#12253
+    components: [ mixer ]
+    refresh: 24h
+
+  - source: github://pr#12254
+    components: [ resampler ]
+    refresh: 24h
+
+  - source: github://pr#12256
+    components: [ audio ]
+    refresh: 24h
+
+  - source: github://pr#12258
+    components: [ media_player ]
+    refresh: 24h
+    
+  - source: github://pr#12284
+    components: [ mdns, sendspin ]
+    refresh: 24h
+
+  - source: github://pr#12429
+    components: [ file, http_request, media_source, speaker_source ]
+    refresh: 24h
+  
+globals:
+  - id: current_volume
+    type: float
+    initial_value: '0.2'
+  - id: announcement_triggered
+    type: bool
+    initial_value: 'false'
+
+http_request:
+
+text_sensor:
+  - platform: sendspin
+    type: title
+    name: Track Title
+
+  - platform: sendspin
+    type: artist
+    name: Artist
+
+  - platform: sendspin
+    type: album
+    name: Album
+
+sendspin:
+  id: sendspin_hub
+  task_stack_in_psram: ${task_stack_in_psram}
+  kalman_process_error: 0.01
+
+media_source:
+  - platform: sendspin
+    id: sendspin_source
+  - platform: http_request
+    id: http_source
+    buffer_size: 200000
+  - platform: file
+    id: file_source
+    files:
+      id: startup_sync_sound
+      file: https://github.com/mrtoy-me/esphome-tas5805m/raw/main/components/tas5805m/tas5805m_boot_louder.flac
+
+media_player:
+  - platform: sendspin
+    id: sendspin_group_media_player
+
+  - platform: speaker_source
+    id: external_media_player
+    name: "${friendly_name} Player"
+    announcement_speaker: announcement_resampling_speaker
+    media_speaker: media_resampling_speaker
+    announcement_pipeline:
+      format: FLAC
+      num_channels: 1
+      sample_rate: 48000
+    media_pipeline:
+      format: FLAC
+      num_channels: 2
+      sample_rate: 48000
+    volume_increment: 0.05
+    sources:
+      - http_source
+      - sendspin_source
+      - file_source
+    on_announcement:
+      - if:
+          condition:
+            - lambda: return (!id(announcement_triggered));
+          then:
+            - lambda: |-
+                id(announcement_triggered) = true;
+                id(current_volume) = id(external_media_player).volume;
+            - light.turn_on:
+                id: rgb_front_led
+                blue: 100%
+                red: 0%
+                green: 100%
+                brightness: 50%
+            - mixer_speaker.apply_ducking:
+                  id: media_mixer_input
+                  decibel_reduction: 40
+                  duration: 0.0s
+            - wait_until:
+                media_player.is_announcing: external_media_player
+            - delay: 0.75s
+            - media_player.volume_set:
+                id: external_media_player
+                volume: !lambda "return id(announce_volume).state / 100.0;"
+            - wait_until:
+                - not:
+                    media_player.is_announcing: external_media_player
+            - mixer_speaker.apply_ducking:
+                      id: media_mixer_input
+                      decibel_reduction: 0
+                      duration: 1.0s
+            - media_player.volume_set:
+                id: external_media_player
+                volume: !lambda "return id(current_volume);"
+            - light.turn_off:
+                id: rgb_front_led
+            - lambda: id(announcement_triggered) = false;
+
+    on_state:
+      if:
+        condition:
+          and:
+            - lambda: return (!id(announcement_triggered));
+            - not:
+                media_player.is_announcing: external_media_player
+        then:
+          - mixer_speaker.apply_ducking:
+              id: media_mixer_input
+              decibel_reduction: 0
+              duration: 1.0s
+
+    on_play:
+      - display.page.show: page_play
+      - component.update: spi_display
+      - switch.template.publish:
+          id: switch_screen
+          state: ON
+      - if:
+          condition:
+            switch.is_off: enable_dac
+          then:
+            switch.turn_on: enable_dac
+
+    on_idle:
+      - display.page.show: page_clock
+      - component.update: spi_display
+      - if:
+          condition:
+            switch.is_on: enable_dac
+          then:
+            switch.turn_off: enable_dac
+
+number:
+  - platform: template
+    name: ${friendly_name} Announce Volume
+    id: announce_volume
+    icon: mdi:volume-source
+    unit_of_measurement: "%"
+    min_value: 0
+    max_value: 100
+    step: 1
+    restore_value: true
+    initial_value: 50
+    optimistic: true
