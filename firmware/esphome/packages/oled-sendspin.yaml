@@ -1,0 +1,214 @@
+# ============================================================
+# OLED display - Shows simple clock using the SH1106 128x64 OLED connected via SPI
+# ============================================================
+# Requires substitutions:
+#   - spi_clk_pin
+#   - spi_mosi_pin
+#   - spi_miso_pin
+#   - display_cs_pin
+#   - display_dc_pin
+#   - display_reset_pin
+# ============================================================
+
+api:
+  on_client_connected: 
+    then:
+      - display.page.show: page_clock
+      - component.update: spi_display
+
+text_sensor:
+  # These don't have names, they don't need sharing back to HA (MA knows)
+  - platform: sendspin
+    type: title
+    id: ss_title
+
+  - platform: sendspin
+    type: artist
+    id: ss_artist
+
+  - platform: sendspin
+    type: album
+    id: ss_album
+
+switch:
+  - platform: template
+    name: "Screen"
+    id: switch_screen
+    optimistic: true
+    restore_mode: ALWAYS_ON
+    turn_on_action:
+      - if:
+          condition:
+            api.connected:
+          then:
+            - if:
+                condition:
+                  media_player.is_idle: external_media_player
+                then:
+                  - display.page.show: page_clock
+                else:
+                  - display.page.show: page_play
+            - component.update: spi_display
+    turn_off_action:
+      - display.page.show: page_off
+      - component.update: spi_display
+
+time:
+  - platform: homeassistant
+    id: sntp_time
+
+font:
+  - file: 'gfonts://Material+Symbols+Outlined'
+    id: icons_small
+    size: 14
+    glyphs:
+      - "\ue019" # album
+      - "\ue01a" # artist
+      - "\U000fffd8" # music notes
+  - file:
+      type: gfonts
+      family: Ubuntu # TODO try 'Jersey 10 Charted'
+      weight: regular
+    id: text_small
+    size: 14
+    glyphsets: 
+      - GF_Latin_Core # European alphabets too
+  # For the clock page
+  - file:
+      type: gfonts
+      family: Roboto
+      weight: regular
+    id: text_big
+    size: 40
+    glyphs: [' ', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+spi:
+  clk_pin: ${spi_clk_pin}
+  mosi_pin: ${spi_mosi_pin}
+  miso_pin: ${spi_miso_pin}
+  id: spi_bus_display
+
+### Example display configuration, showing the current playback state
+# Kinly developed by @TinheadNed (https://github.com/widget/esphome-esparagus-sendspin)
+display:
+  - platform: ssd1306_spi
+    model: SH1106 128x64
+    id: spi_display
+    spi_id: spi_bus_display
+    cs_pin: ${display_cs_pin}
+    dc_pin: ${display_dc_pin}
+    reset_pin: ${display_reset_pin}
+    update_interval: 200ms
+    data_rate: 20MHz
+    pages:
+      - id: page_startup
+        lambda: |-
+          it.printf(it.get_width() / 2, 20, 
+                    id(text_small), TextAlign::CENTER, "${friendly_name}");
+          it.printf(it.get_width() / 2, 40, 
+                    id(text_small), TextAlign::CENTER, "connecting...");
+
+      # Selected by api.on_connection
+      - id: page_clock
+        lambda: |-
+          // display clock
+          auto hours = id(sntp_time).now().hour;
+          auto minutes = id(sntp_time).now().minute;
+          auto seconds = id(sntp_time).now().second;
+          auto dot = seconds % 2 == 0 ? " " : ":";
+
+          it.printf(it.get_width() / 2, 
+                    it.get_height() / 2, 
+                    id(text_big), 
+                    TextAlign::CENTER, 
+                    "%d%s%02d", hours, dot, minutes);
+          
+      - id: page_off
+        lambda: return;
+
+      # Selected by the speaker on_play
+      - id: page_play
+        lambda: |-
+          const int PADDING_LEFT = 18, PADDING_RIGHT = 28;
+          const int LINE_HEIGHTS[] = {10, 32, 54};
+          int x1, y1, new_h, new_w, 
+              title_width_offset = PADDING_LEFT, 
+              artist_width_offset = PADDING_LEFT,
+              album_width_offset = PADDING_LEFT;
+          bool increment = false;
+          static int iteration = 0;
+
+          // Draw some icons
+          it.print(0, LINE_HEIGHTS[0], 
+                    id(icons_small), 
+                    TextAlign::CENTER_LEFT, 
+                    "\U000fffd8"); // music icon
+          it.print(0, LINE_HEIGHTS[1], 
+                  id(icons_small), 
+                  TextAlign::CENTER_LEFT, 
+                  "\ue01a"); // artist icon
+          it.print(0, LINE_HEIGHTS[2], 
+                  id(icons_small), 
+                  TextAlign::CENTER_LEFT, 
+                  "\ue019"); // album icon
+
+          // Don't scroll over the icons
+          it.start_clipping( Rect(PADDING_LEFT, 
+                                  0, 
+                                  it.get_width(), 
+                                  it.get_height()));
+
+          it.get_text_bounds(0, 0, 
+                            id(ss_title).state.c_str(), 
+                            id(text_small), 
+                            TextAlign::TOP_LEFT, 
+                            &x1, &y1, &new_w, &new_h);
+          if (new_w + PADDING_LEFT >= it.get_width()) {
+            auto missing_artist_text = new_w - it.get_width();
+            increment = true;
+            title_width_offset = PADDING_LEFT - (iteration % (missing_artist_text + PADDING_RIGHT));
+          }
+          it.print(title_width_offset, LINE_HEIGHTS[0], 
+                    id(text_small), 
+                    TextAlign::CENTER_LEFT, 
+                    id(ss_title).state.c_str());
+
+          // Do this again for the artist
+          it.get_text_bounds(0, 0, 
+                            id(ss_artist).state.c_str(), 
+                            id(text_small), 
+                            TextAlign::TOP_LEFT, 
+                            &x1, &y1, &new_w, &new_h);
+
+          if (new_w + PADDING_LEFT >= it.get_width()) {
+            auto missing_title_text = new_w - it.get_width();
+            increment = true;
+            artist_width_offset = PADDING_LEFT - (iteration % (missing_title_text + PADDING_RIGHT));
+          }
+          it.print(artist_width_offset, LINE_HEIGHTS[1], 
+                  id(text_small), 
+                  TextAlign::CENTER_LEFT, 
+                  id(ss_artist).state.c_str());
+
+          // And the album
+          it.get_text_bounds(0, 0, 
+                            id(ss_album).state.c_str(), 
+                            id(text_small), 
+                            TextAlign::TOP_LEFT, 
+                            &x1, &y1, &new_w, &new_h);
+
+          if (new_w + PADDING_LEFT >= it.get_width()) {
+            auto missing_album_text = new_w - it.get_width();
+            increment = true;
+            album_width_offset = PADDING_LEFT - (iteration % (missing_album_text + PADDING_RIGHT));
+          }
+          it.print(album_width_offset, LINE_HEIGHTS[2], 
+                  id(text_small), 
+                  TextAlign::CENTER_LEFT, 
+                  id(ss_album).state.c_str());
+
+          it.end_clipping();
+
+          if (increment) {
+            iteration++;
+          }
