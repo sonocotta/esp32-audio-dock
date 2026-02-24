@@ -121,7 +121,7 @@ packages:
   #     # Option C: TAS58xx configured with bi-amp mode, with filters applied to both channels (HF or LF)
   #     # - firmware/esphome/packages/dac-tas58xx-presets.yaml
 
-  #     - firmware/esphome/packages/audio-tas58xx.yaml
+  #     - firmware/esphome/packages/audio-external-dac.yaml
   #     - firmware/esphome/packages/media-player-tas58xx.yaml
   #     - firmware/esphome/packages/light.yaml
   #     - firmware/esphome/packages/monitoring.yaml
@@ -133,7 +133,7 @@ packages:
   external_dac: !include packages/dac-tas58xx.yaml
   # external_dac: !include packages/dac-tas58xx-biamp.yaml
   # external_dac: !include packages/dac-tas58xx-presets.yaml
-  audio: !include packages/audio-tas58xx.yaml
+  audio: !include packages/audio-external-dac.yaml
   media_player: !include packages/media-player-tas58xx.yaml
   light: !include packages/light.yaml
   monitoring: !include packages/monitoring.yaml

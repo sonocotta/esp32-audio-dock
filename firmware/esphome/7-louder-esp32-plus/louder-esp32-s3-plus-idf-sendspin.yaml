@@ -125,7 +125,7 @@ packages:
   #     # - firmware/esphome/packages/sendspin-tas58xx-with-oled.yaml
   #     # - firmware/esphome/packages/oled-sendspin.yaml
 
-  #     - firmware/esphome/packages/sendspin-audio-tas58xx.yaml
+  #     - firmware/esphome/packages/sendspin-audio-external-dac.yaml
   #     - firmware/esphome/packages/light.yaml
   #     - firmware/esphome/packages/monitoring.yaml
   #     # Optional ethernet (replace wifi config if you use this)
@@ -135,7 +135,7 @@ packages:
   # external_dac: !include packages/dac-tas58xx.yaml
   # external_dac: !include packages/dac-tas58xx-biamp.yaml
   external_dac: !include packages/dac-tas58xx-presets.yaml
-  audio: !include packages/sendspin-audio-tas58xx.yaml
+  audio: !include packages/sendspin-audio-external-dac.yaml
   # sendspin: !include packages/sendspin-tas58xx.yaml
   sendspin: !include packages/sendspin-tas58xx-with-oled.yaml
   oled: !include packages/oled-sendspin.yaml

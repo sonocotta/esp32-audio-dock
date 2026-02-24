@@ -113,9 +113,9 @@ packages:
   #     # - firmware/esphome/packages/ethernet-w5500.yaml
 
   # Debug/local development fallback:
-  # sendspin: !include packages/sendspin.yaml
-  sendspin: !include packages/sendspin-with-oled.yaml
-  oled: !include packages/oled-sendspin.yaml
+  sendspin: !include packages/sendspin.yaml
+  # sendspin: !include packages/sendspin-with-oled.yaml
+  # oled: !include packages/oled-sendspin.yaml
   audio: !include packages/sendspin-audio.yaml
   light: !include packages/light.yaml
   ir_receiver: !include packages/ir-receiver.yaml
