@@ -1,5 +1,5 @@
 # ============================================================
-# Loud-ESP32 - Media Player Configuration
+# Loud-ESP32-S3 - Media Player Configuration
 # ============================================================
 # ESP32 audio board dual MAX98357A DACs (I2S)
 # Features: Wi-Fi media player with mixer/resampler,
@@ -8,62 +8,60 @@
 # Functional blocks imported from /packages
 # ============================================================
 
-
 substitutions:
-  name: esphome-web-5dba18
-  friendly_name: Loud-ESP32
-  task_stack_in_psram: "false"
+  name: esphome-web-169858
+  friendly_name: Loud-ESP32-S3
+  task_stack_in_psram: "true"
 
   # ===== Board-Specific Pinouts =====
-  # I2S Audio (MAX98357A DACs)
-  i2s_lrclk_pin: GPIO25
-  i2s_bclk_pin: GPIO26
-  i2s_dout_pin: GPIO22
-  
+  # I2S audio pins (dual MAX98357A DACs)
+  i2s_lrclk_pin: GPIO15
+  i2s_bclk_pin: GPIO14
+  i2s_dout_pin: GPIO16
+
   # DAC enable pin (actually amp UNMUTE)
-  dac_enable_pin: GPIO13
+  dac_enable_pin: GPIO17
 
   # RGB LED
-  rgb_led_pin: GPIO12
-  
-  # IR Receiver
-  ir_rx_pin: GPIO39
+  rgb_led_pin: GPIO09
 
-  # Ethernet (W5500)
-  eth_clk_pin: GPIO18
-  eth_mosi_pin: GPIO23
-  eth_miso_pin: GPIO19
-  eth_cs_pin: GPIO05
-  eth_interrupt_pin: GPIO35
-  eth_reset_pin: GPIO14
+  # IR Receiver
+  ir_rx_pin: GPIO07
 
   # SPI pins (for display)
-  spi_clk_pin: GPIO18
-  spi_mosi_pin: GPIO23
-  spi_miso_pin: GPIO19
-  
+  spi_clk_pin: GPIO12
+  spi_mosi_pin: GPIO11
+  spi_miso_pin: GPIO13
+
   # Display control pins
-  display_cs_pin: GPIO15
-  display_dc_pin: GPIO04
-  display_reset_pin: GPIO32
+  display_cs_pin: GPIO39
+  display_dc_pin: GPIO40
+  display_reset_pin: GPIO38
+
+  # Ethernet pins (if using ethernet instead of wifi)
+  eth_cs_pin: GPIO10
+  eth_interrupt_pin: GPIO6
+  eth_reset_pin: GPIO5
 
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
-  min_version: 2025.12.2
+  min_version: 2026.1.4
+  name_add_mac_suffix: false
   platformio_options:
     board_build.flash_mode: dio
 
 esp32:
-  variant: esp32
+  variant: ESP32S3
   flash_size: 8MB
   cpu_frequency: 240MHz
   framework:
     type: esp-idf
     version: recommended
-    advanced:
-      minimum_chip_revision: "3.1" 
     sdkconfig_options:
+      CONFIG_ESP32S3_DATA_CACHE_64KB: "y"
+      CONFIG_ESP32S3_DATA_CACHE_LINE_64B: "y"
+      CONFIG_ESP32S3_INSTRUCTION_CACHE_32KB: "y"
       # Moves instructions and read only data from flash into PSRAM on boot.
       # Both enabled allows instructions to execute while a flash operation is in progress without needing to be placed in IRAM.
       # Considerably speeds up mWW at the cost of using more PSRAM.
@@ -72,7 +70,7 @@ esp32:
       CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: "y"
       CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
       CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
-      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"
+      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y" 
 
 logger:
   level: DEBUG
@@ -88,7 +86,9 @@ wifi:
   password: !secret esphome_wifi_password
 
 psram:
+  mode: octal
   speed: 80MHz
+  ignore_not_found: false
 
 network:
   enable_ipv6: true
