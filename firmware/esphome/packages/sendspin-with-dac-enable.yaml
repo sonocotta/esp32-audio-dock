@@ -78,6 +78,15 @@ external_components:
       url: https://github.com/esphome/esphome
       ref: d2026b4cd74bbeb9b86941bf1887f3d93d639387
     components: [ audio ]
+
+switch:
+  - platform: gpio
+    icon: "mdi:speaker"
+    name: Enable DAC
+    id: enable_dac
+    pin:
+      number: ${dac_enable_pin}
+    restore_mode: ALWAYS_OFF
   
 globals:
   - id: current_volume
@@ -113,11 +122,6 @@ media_source:
   - platform: http_request
     id: http_source
     buffer_size: 200000
-  - platform: file
-    id: file_source
-    files:
-      id: startup_sync_sound
-      file: https://github.com/mrtoy-me/esphome-tas5805m/raw/main/components/tas5805m/tas5805m_boot_louder.flac
 
 media_player:
   - platform: sendspin
@@ -140,7 +144,7 @@ media_player:
     sources:
       - http_source
       - sendspin_source
-      - file_source
+
     on_announcement:
       - if:
           condition:
@@ -193,11 +197,6 @@ media_player:
               duration: 1.0s
 
     on_play:
-      - display.page.show: page_play
-      - component.update: spi_display
-      - switch.template.publish:
-          id: switch_screen
-          state: ON
       - if:
           condition:
             switch.is_off: enable_dac
@@ -205,8 +204,6 @@ media_player:
             switch.turn_on: enable_dac
 
     on_idle:
-      - display.page.show: page_clock
-      - component.update: spi_display
       - if:
           condition:
             switch.is_on: enable_dac
