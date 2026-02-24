@@ -10,7 +10,7 @@
 external_components:
   - source: github://mrtoy-me/esphome-tas5805m@main
     components: [ tas5805m ]
-    refresh: 60s
+    refresh: 24h
 
 i2c:
   sda: ${i2c_sda_pin}
@@ -21,7 +21,7 @@ i2c:
 ### TAS5805M DAC configuration
 audio_dac:
   - platform: tas5805m
-    id: tas5805m_dac
+    id: external_dac
     enable_pin: ${tas5805m_enable_pin}  # Physical pin to enable the DAC (active HIGH)
     dac_mode: BTL                       # 'BTL' / Bridge Tied Load - 2Ch Stereo, or 'PBTL' / Parallel Bridge Tied Load - 1Ch Mono (double power)
     mixer_mode: STEREO                  # STEREO, STEREO_INVERSE, MONO, LEFT, RIGHT

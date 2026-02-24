@@ -109,8 +109,8 @@ packages:
   #   https://github.com/sonocotta/esp32-audio-dock
   #   ref: main
   #   files:
-  #     - firmware/esphome/packages/tas5805m-dac.yaml
-  #     - firmware/esphome/packages/audio-tas5805m.yaml
+  #     - firmware/esphome/packages/dac-tas5805m.yaml
+  #     - firmware/esphome/packages/audio-external-dac.yaml
   #     - firmware/esphome/packages/media-player-tas5805m.yaml
   #     - firmware/esphome/packages/light.yaml
   #     - firmware/esphome/packages/ir-receiver.yaml
@@ -120,8 +120,8 @@ packages:
   #     # - firmware/esphome/packages/ethernet-w5500.yaml
 
   # Debug/local development fallback:
-  tas5805m_dac: !include packages/tas5805m-dac.yaml
-  audio: !include packages/audio-tas5805m.yaml
+  tas5805m_dac: !include packages/dac-tas5805m.yaml
+  audio: !include packages/audio-external-dac.yaml
   media_player: !include packages/media-player-tas5805m.yaml
   light: !include packages/light.yaml
   ir_receiver: !include packages/ir-receiver.yaml

@@ -2,11 +2,11 @@
 # Media Player - Speaker Platform with Announcement Ducking
 # ============================================================
 # Configures media player with announcement ducking logic
-# Uses TAS5805M DAC and I2S audio setup from audio-tas5805m.yaml
+# Uses PCM5122 DAC and I2S audio setup from audio-pcm5122.yaml
 # Requires substitutions:
 #   - friendly_name
 #   - task_stack_in_psram
-# Dependencies: audio-tas5805m.yaml (speaker stack)
+# Dependencies: audio-pcm5122.yaml (speaker stack)
 # ============================================================
 
 globals:
@@ -43,10 +43,6 @@ media_player:
     announcement_pipeline:
       speaker: announcement_spk_resampling_input
       num_channels: 1
-
-    files:
-      id: startup_sync_sound
-      file: https://github.com/mrtoy-me/esphome-tas5805m/raw/main/components/tas5805m/tas5805m_boot_louder.flac
 
     on_play:
       - if:
@@ -96,7 +92,6 @@ media_player:
             - lambda: id(announcement_triggered) = false;
 
 ### Send DAC to shutdown mode after 2 minutes of inactivity
-# This is to save power, since DAC will draw under 100mA in idle state
 interval:
   - interval: 30s
     then:
@@ -111,14 +106,3 @@ interval:
                     - media_player.is_paused: external_media_player
           then:
             - switch.turn_off: enable_dac
-            
-  # Optional: when DAC reports overheating warning, reduce volume to prevent shutdown
-  - interval: 1s
-    then:
-      - if:
-          condition:
-            - binary_sensor.is_on: over_temperature_warning
-            - lambda: 'return (id(external_media_player).volume != 0.0f);'
-            - lambda: 'return !(id(external_media_player).is_muted());'
-          then:
-            - media_player.volume_down
