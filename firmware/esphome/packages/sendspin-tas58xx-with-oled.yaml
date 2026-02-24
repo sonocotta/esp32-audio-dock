@@ -78,7 +78,7 @@ external_components:
       url: https://github.com/esphome/esphome
       ref: d2026b4cd74bbeb9b86941bf1887f3d93d639387
     components: [ audio ]
-
+  
   
 globals:
   - id: current_volume
@@ -114,6 +114,11 @@ media_source:
   - platform: http_request
     id: http_source
     buffer_size: 200000
+  - platform: file
+    id: file_source
+    files:
+      id: startup_sync_sound
+      file: https://github.com/mrtoy-me/esphome-tas58xx/raw/main/components/tas58xx/tas58xx_boot.flac
 
 media_player:
   - platform: sendspin
@@ -136,7 +141,7 @@ media_player:
     sources:
       - http_source
       - sendspin_source
-
+      - file_source
     on_announcement:
       - if:
           condition:
@@ -194,10 +199,20 @@ media_player:
       - switch.template.publish:
           id: switch_screen
           state: ON
+      - if:
+          condition:
+            switch.is_off: enable_dac
+          then:
+            switch.turn_on: enable_dac
 
     on_idle:
       - display.page.show: page_clock
       - component.update: spi_display
+      - if:
+          condition:
+            switch.is_on: enable_dac
+          then:
+            switch.turn_off: enable_dac
 
 number:
   - platform: template

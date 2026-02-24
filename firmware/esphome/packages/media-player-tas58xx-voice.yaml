@@ -1,0 +1,89 @@
+# ============================================================
+# Media Player - Enhanced for Voice Assistant with Timer Support
+# ============================================================
+# Media player with announcement ducking and timer support
+# Uses TAS58xx DAC for announcements
+# Requires substitutions:
+#   - friendly_name
+#   - task_stack_in_psram
+# Dependencies: audio-i2s-output.yaml, dac-tas58xx.yaml
+# ============================================================
+
+globals:
+  - id: current_volume
+    type: float
+    initial_value: '0.2'
+
+media_player:
+  - platform: speaker
+    name: ${friendly_name} Mediaplayer
+    id: external_media_player
+    task_stack_in_psram: ${task_stack_in_psram}
+    buffer_size: 2000000         # INCREASED buffer (2MB vs default 1MB)
+    volume_increment: 2%
+    volume_initial: 45%
+    media_pipeline:
+      speaker: media_spk_resampling_input
+      num_channels: 2
+      sample_rate: 48000
+    announcement_pipeline:
+      speaker: announcement_spk_resampling_input
+      num_channels: 1
+      sample_rate: 48000
+
+    on_state:
+      if:
+        condition:
+          and:
+            - switch.is_off: timer_ringing
+            - not:
+                voice_assistant.is_running:
+            - not:
+                media_player.is_announcing:
+        then:
+          - mixer_speaker.apply_ducking:
+              id: media_spk_mixer_input
+              decibel_reduction: 0
+              duration: 1.0s
+
+    files:
+    - id: timer_finished_sound
+      file: https://github.com/esphome/home-assistant-voice-pe/raw/dev/sounds/timer_finished.flac
+    - id: wake_word_triggered_sound
+      file: https://github.com/esphome/home-assistant-voice-pe/raw/dev/sounds/wake_word_triggered.flac
+    - id: startup_sync_sound
+      file: https://github.com/mrtoy-me/esphome-tas5805m/raw/main/components/tas5805m/tas5805m_boot_louder.flac
+
+    on_play:
+      - if:
+          condition:
+            switch.is_off: enable_dac
+          then:
+            switch.turn_on: enable_dac
+
+    on_announcement:
+      - if:
+          condition:
+            switch.is_off: enable_dac
+          then:
+            switch.turn_on: enable_dac
+          
+      - lambda: id(current_volume) = id(external_dac).volume();
+
+      - mixer_speaker.apply_ducking:
+            id: media_spk_mixer_input
+            decibel_reduction: 40
+            duration: 0.0s
+      - wait_until:
+            media_player.is_announcing:
+      - delay: 0.75s
+      - lambda: id(external_dac).set_volume(id(announce_volume).state / 100);
+
+      - wait_until:
+          not:
+            media_player.is_announcing:
+      - mixer_speaker.apply_ducking:
+            id: media_spk_mixer_input
+            decibel_reduction: 0
+            duration: 1.0s
+      - lambda: id(external_dac).set_volume(id(current_volume));

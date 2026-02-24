@@ -1,6 +1,12 @@
 name: Build ESPHome Configs
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'firmware/esphome/**'
+      - '.github/workflows/build-esphome.yml'
   pull_request:
     paths:
       - 'firmware/esphome/**'

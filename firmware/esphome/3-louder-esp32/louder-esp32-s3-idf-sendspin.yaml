@@ -123,7 +123,7 @@ packages:
   #     # - firmware/esphome/packages/ethernet-w5500.yaml
 
   # Debug/local development fallback:
-  tas5805m_dac: !include packages/dac-tas5805m.yaml
+  external_dac: !include packages/dac-tas5805m.yaml
   audio: !include packages/sendspin-audio-external-dac.yaml
   # sendspin: !include packages/sendspin-tas5805m.yaml
   sendspin: !include packages/sendspin-tas5805m-with-oled.yaml

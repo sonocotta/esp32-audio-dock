@@ -1,0 +1,259 @@
+# ============================================================
+# Voice Assistant - Wake Word & Voice Processing
+# ============================================================
+# Configures voice assistant with micro wake word detection
+# Requires substitutions:
+#   - wake_word (e.g., okay_nabu)
+#   - speaker_volume (e.g., 30%)
+#   - voice_assist_idle_phase_id
+#   - voice_assist_listening_phase_id
+#   - voice_assist_thinking_phase_id
+#   - voice_assist_replying_phase_id
+#   - voice_assist_not_ready_phase_id
+#   - voice_assist_error_phase_id
+#   - voice_assist_muted_phase_id
+# Dependencies: microphone-i2s.yaml, media-player-tas58xx.yaml
+# ============================================================
+
+globals:
+  - id: init_in_progress
+    type: bool
+    restore_value: no
+    initial_value: 'true'
+  - id: voice_assistant_phase
+    type: int
+    restore_value: no
+    initial_value: ${voice_assist_not_ready_phase_id}
+
+micro_wake_word:
+  id: mww
+  models:
+    - model: ${wake_word}
+  microphone: voice_assistant_mic
+  on_wake_word_detected:
+    - if:
+        condition:
+          switch.is_on: use_wake_word
+        then:
+          - if:
+              condition:
+                switch.is_on: timer_ringing
+              then:
+                - switch.turn_off: timer_ringing
+                - micro_wake_word.start:
+              else:
+                - if:
+                    condition:
+                      switch.is_off: ducking_switch
+                    then:
+                      media_player.stop:
+                - if:
+                    condition:
+                      voice_assistant.is_running:
+                    then:
+                      voice_assistant.stop:
+                    else:
+                      - if:
+                          condition:
+                            media_player.is_announcing:
+                          then:
+                            - media_player.stop:
+                                announcement: true
+                          else:
+                            - if:
+                                condition:
+                                  switch.is_on: wake_sound
+                                then:
+                                  - script.execute:
+                                      id: play_sound
+                                      priority: true
+                                      sound_file: !lambda return id(wake_word_triggered_sound);
+                                  - delay: 300ms
+                            - voice_assistant.start:
+
+voice_assistant:
+  id: va
+  microphone: voice_assistant_mic
+  media_player: external_media_player
+  use_wake_word: false
+  # Modern audio tuning
+  noise_suppression_level: 2        # 0–4
+  auto_gain: 21dBFS                # limit dynamic gain adjust, otherwise wake word not functional
+  volume_multiplier: 1.7           # constantly increase mic-volume
+  on_client_connected:
+    - lambda: id(init_in_progress) = false;
+    - if:
+        condition:
+          switch.is_on: use_wake_word
+        then:
+          - micro_wake_word.start:
+          - lambda: id(voice_assistant_phase) = ${voice_assist_idle_phase_id};
+        else:
+          - lambda: id(voice_assistant_phase) = ${voice_assist_muted_phase_id};
+  on_client_disconnected:
+    - lambda: id(voice_assistant_phase) = ${voice_assist_not_ready_phase_id};
+    - voice_assistant.stop
+    - micro_wake_word.stop
+  on_start:
+    - mixer_speaker.apply_ducking:
+        id: media_spk_mixer_input
+        decibel_reduction: 40
+        duration: 0.0s
+  on_end:
+      then:
+        - wait_until:
+            not:
+              voice_assistant.is_running:
+        - mixer_speaker.apply_ducking:
+            id: media_spk_mixer_input
+            decibel_reduction: 0
+            duration: 1.0s
+        - voice_assistant.stop
+        - if:
+            condition:
+              switch.is_on: use_wake_word
+            then:
+              - micro_wake_word.start:
+  on_error:
+    - delay: 1s
+    - lambda: |-
+        if (code == "wake-provider-missing" || code == "wake-engine-missing") {
+          id(use_wake_word).turn_off();
+        }
+    - if:
+        condition:
+          switch.is_on: use_wake_word
+        then:
+          - micro_wake_word.start:
+  on_timer_finished:
+    - switch.turn_on: timer_ringing
+
+number:
+  - platform: template
+    name: Announce Volume
+    id: announce_volume
+    icon: mdi:volume-source
+    unit_of_measurement: "%"
+    min_value: 0
+    max_value: 100
+    step: 1
+    restore_value: true
+    initial_value: 50
+    optimistic: true
+
+switch:
+  - platform: template
+    name: "${friendly_name} Enable Voice Assistant"
+    id: use_wake_word
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
+    icon: mdi:assistant
+    on_turn_on:
+      - logger.log: "switch on"
+      - if:
+          condition:
+            lambda: return !id(init_in_progress);
+          then:
+            - logger.log: "condition 1"
+            - lambda: id(voice_assistant_phase) = ${voice_assist_idle_phase_id};
+            - voice_assistant.stop
+            - delay: 1s
+            - if:
+                condition:
+                  not:
+                    - voice_assistant.is_running
+                then:
+                  - logger.log: "Starting micro wake word"
+                  - micro_wake_word.start:
+    on_turn_off:
+      - if:
+          condition:
+            lambda: return !id(init_in_progress);
+          then:
+            - voice_assistant.stop
+            - micro_wake_word.stop
+            - lambda: id(voice_assistant_phase) = ${voice_assist_muted_phase_id};
+
+  - platform: template
+    name: "${friendly_name} Enable Ducking"
+    id: ducking_switch
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
+    icon: mdi:volume-high
+
+  - platform: template
+    id: timer_ringing
+    optimistic: true
+    internal: true
+    restore_mode: ALWAYS_OFF
+    on_turn_on:
+      - mixer_speaker.apply_ducking:
+          id: media_spk_mixer_input
+          decibel_reduction: 40
+          duration: 0.0s
+      - script.execute: ring_timer
+      - delay: 15min
+      - switch.turn_off: timer_ringing
+    on_turn_off:
+      - script.execute: disable_repeat
+      - if:
+          condition:
+            media_player.is_announcing:
+          then:
+            media_player.stop:
+              announcement: true
+      - mixer_speaker.apply_ducking:
+          id: media_spk_mixer_input
+          decibel_reduction: 0
+          duration: 1.0s
+          
+  - platform: template
+    id: wake_sound
+    name: "${friendly_name} Wake Sound"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
+    icon: "mdi:bullhorn"
+
+script:
+  - id: play_sound
+    parameters:
+      priority: bool
+      sound_file: "audio::AudioFile*"
+    then:
+      - lambda: |-
+          if (priority) {
+            id(external_media_player)
+              ->make_call()
+              .set_command(media_player::MediaPlayerCommand::MEDIA_PLAYER_COMMAND_STOP)
+              .set_announcement(true)
+              .perform();
+          }
+          if ( (id(external_media_player).state != media_player::MediaPlayerState::MEDIA_PLAYER_STATE_ANNOUNCING ) || priority) {
+            id(external_media_player)
+              ->play_file(sound_file, true, false);
+          }
+  - id: enable_repeat_one
+    then:
+      - lambda: |-
+            id(external_media_player)
+              ->make_call()
+              .set_command(media_player::MediaPlayerCommand::MEDIA_PLAYER_COMMAND_REPEAT_ONE)
+              .set_announcement(true)
+              .perform();
+            id(external_media_player)->set_playlist_delay_ms(speaker::AudioPipelineType::ANNOUNCEMENT, 500);
+  - id: ring_timer
+    then:
+      - script.execute: enable_repeat_one
+      - script.execute:
+          id: play_sound
+          priority: true
+          sound_file: !lambda return id(timer_finished_sound);
+  - id: disable_repeat
+    then:
+      - lambda: |-
+            id(external_media_player)
+              ->make_call()
+              .set_command(media_player::MediaPlayerCommand::MEDIA_PLAYER_COMMAND_REPEAT_OFF)
+              .set_announcement(true)
+              .perform();
+            id(external_media_player)->set_playlist_delay_ms(speaker::AudioPipelineType::ANNOUNCEMENT, 0);
