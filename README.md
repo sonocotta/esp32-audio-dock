@@ -62,8 +62,6 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
       - [Native HA integration](#native-ha-integration)
       - [Integrate into Music Assistant directly](#integrate-into-music-assistant-directly)
     - [Home Assistant: ESPHome way](#home-assistant-esphome-way)
-      - [Snapclient multi-room playback (experimental)](#snapclient-multi-room-playback-experimental)
-      - [Sendspin multi-room playback (experimental)](#sendspin-multi-room-playback-experimental)
       - [Install steps](#install-steps)
     - [PCM5122 DSP capabilities (HiFi-ESP32 Plus \& Amped-ESP32 Plus)](#pcm5122-dsp-capabilities-hifi-esp32-plus--amped-esp32-plus)
     - [Home Assistant: Snapcast](#home-assistant-snapcast)
@@ -419,44 +417,20 @@ Disable SlimProto integration in the HA if you want to go the MA way. If you ena
 
 [Louder-ESP32 running ESPHome](https://www.espthings.io/index.php/2024/04/07/louder-esp32-a-hi-fi-class-d-audio-amplifier-running-esphome/)
 
-Please find specific ESPHome configs in the [firmware](/firmware/esphome/) folder. It should be noted that generally esp-idf-based configurations are preferred over the Arduino counterparts, since they are lighter, faster, and more stable, which is important for audio streaming. However, many components do not work with esp-idf; thus, Arduino examples are also provided. Due to the complexity of the TAS5805M driver, it only exists in the esp-idf variant.
+All ESPHome configurations are in the [firmware/esphome/](firmware/esphome/) folder. See the **[ESPHome README](firmware/esphome/README.md)** for full details on supported hardware variants, configuration options, the package system, and build instructions.
 
-- [hifi-esp32-arduino](/firmware/esphome/1-hifi-esp32/hifi-esp32-arduino.yaml) and [hifi-esp32-idf](/firmware/esphome/1-hifi-esp32/hifi-esp32-idf.yaml) for HiFi-ESP32
-- [hifi-esp32-s3-arduino](/firmware/esphome/1-hifi-esp32/hifi-esp32-s3-arduino.yaml) and [hifi-esp32-s3-idf](/firmware/esphome/1-hifi-esp32/hifi-esp32-s3-idf.yaml) for HiFi-ESP32-S3
-- [hifi-esp32-plus-idf](/firmware/esphome/5-hifi-esp32-plus/hifi-esp32-plus-idf.yaml) and [hifi-esp32-s3-plus-idf](/firmware/esphome/5-hifi-esp32-plus/hifi-esp32-s3-plus-idf.yaml) for HiFi-ESP32 Plus and HiFi-ESP32S3-Plus (uses [esphome-pcm5122](https://github.com/sonocotta/esphome-pcm5122/) component)
-- [loud-esp32-arduino](/firmware/esphome/2-loud-esp32/loud-esp32-arduino.yaml) and [loud-esp32-idf](/firmware/esphome/2-loud-esp32/loud-esp32-idf.yaml) for Loud-ESP32
-- [amped-esp32-arduino](/firmware/esphome/4-amped-esp32/amped-esp32-arduino.yaml) and [amped-esp32-idf](/firmware/esphome/4-amped-esp32/amped-esp32-idf.yaml) for Amped-ESP32
-- [amped-esp32-s3-arduino](/firmware/esphome/4-amped-esp32/amped-esp32-s3-arduino.yaml) and [amped-esp32-s3-idf](/firmware/esphome/4-amped-esp32/amped-esp32-s3-idf.yaml) for Amped-ESP32-S3
-- [louder-esp32-idf](/firmware/esphome/3-louder-esp32/louder-esp32-idf.yaml) for Louder-ESP32
-- [louder-esp32-s3-idf](/firmware/esphome/3-louder-esp32/louder-esp32-s3-idf.yaml) for Louder-ESP32-S3
+All configs use the ESP-IDF framework (preferred for audio — lighter, faster, and more stable than Arduino). Each board directory contains up to four firmware variants:
 
-#### Snapclient multi-room playback (experimental)
+| Variant | Files | Description |
+|---|---|---|
+| Standard media player | `*-idf.yaml` | Native HA media player with mixer, resampler, TTS and announcement ducking |
+| Snapclient | `*-snapclient.yaml` | Snapcast multi-room client with 18-band software EQ (experimental) |
+| Sendspin | `*-sendspin.yaml` | ESPHome-native multi-room playback via [Sendspin protocol](https://www.music-assistant.io/player-support/sendspin/) (experimental, 2026.2.0+) |
+| Voice Assistant | `*-voice-assist.yaml` | Wake-word voice assistant with HA Voice integration (Plus boards only) |
 
-Also, experimental snapclient configs
+Both ESP32 and ESP32-S3 variants are covered for each board. S3 variants carry `-s3-` in the filename.
 
-- [hifi-esp32-idf-snapclient](/firmware/esphome/1-hifi-esp32/hifi-esp32-idf-snapclient.yaml)
-- [hifi-esp32-s3-idf-snapclient](/firmware/esphome/1-hifi-esp32/hifi-esp32-s3-idf-snapclient.yaml)
-- [loud-esp32-idf-snapclient](/firmware/esphome/2-loud-esp32/loud-esp32-idf-snapclient.yaml)
-- [amped-esp32-idf-snapclient](/firmware/esphome/4-amped-esp32/amped-esp32-idf-snapclient.yaml)
-- [amped-esp32-s3-idf-snapclient](/firmware/esphome/4-amped-esp32/amped-esp32-s3-idf-snapclient.yaml)
-- [louder-esp32-idf-snapclient](/firmware/esphome/3-louder-esp32/louder-esp32-idf-snapclient.yaml)
-- [louder-esp32-s3-idf-snapclient](/firmware/esphome/3-louder-esp32/louder-esp32-s3-idf-snapclient.yaml)
-
-#### Sendspin multi-room playback (experimental)
-
-Starting December 2025, the new [Sendspin protocol](https://www.music-assistant.io/player-support/sendspin/) become available for multiroom playback. Although it is in the very early stage of development, it promises really good audio sync and a set of really interesting features, like visualisation support and server-controlled DSP. It is not ready for general use, but I'd encourage everyone to try it out and give some feedback to developers to support this great initiative.
-
-- [hifi-esp32-idf-sendspin](/firmware/esphome/1-hifi-esp32/hifi-esp32-idf-sendspin.yaml)
-- [hifi-esp32-s3-idf-sendspin](/firmware/esphome/1-hifi-esp32/hifi-esp32-s3-idf-sendspin.yaml)
-- [hifi-esp32-plus-idf-sendspin](/firmware/esphome/5-hifi-esp32-plus/hifi-esp32-plus-idf-sendspin.yaml)
-- [hifi-esp32-s3-plus-idf-sendspin](/firmware/esphome/5-hifi-esp32-plus/hifi-esp32-s3-plus-idf-sendspin.yaml)
-- [loud-esp32-idf-sendspin](/firmware/esphome/2-loud-esp32/loud-esp32-idf-sendspin.yaml)
-- [amped-esp32-idf-sendspin](/firmware/esphome/4-amped-esp32/amped-esp32-idf-sendspin.yaml)
-- [amped-esp32-s3-idf-sendspin](/firmware/esphome/4-amped-esp32/amped-esp32-s3-idf-sendspin.yaml)
-- [louder-esp32-idf-sendspin](/firmware/esphome/3-louder-esp32/louder-esp32-idf-sendspin.yaml)
-- [louder-esp32-s3-idf-sendspin](/firmware/esphome/3-louder-esp32/louder-esp32-s3-idf-sendspin.yaml)
-- 
-References:
+Sendspin references:
 
 - [Music assistant discussion](https://github.com/orgs/music-assistant/discussions/4200#discussioncomment-15345580)
 - [XDA Developers post](https://www.xda-developers.com/sendspin-esphome-multi-room-audio/)
