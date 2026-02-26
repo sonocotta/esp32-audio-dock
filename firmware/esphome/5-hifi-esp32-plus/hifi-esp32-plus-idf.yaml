@@ -97,29 +97,30 @@ network:
 
 # ===== Packages =====
 packages:
-  # esparagus_remote:
-  #   https://github.com/sonocotta/esp32-audio-dock
-  #   ref: main
-  #   files:
-  #     - firmware/esphome/packages/dac-pcm5122.yaml
-  #     - firmware/esphome/packages/audio.yaml
-  #     - firmware/esphome/packages/audio-addon-external-dac.yaml
-  #     - firmware/esphome/packages/media-player-pcm5122.yaml
-  #     - firmware/esphome/packages/light.yaml
-  #     - firmware/esphome/packages/ir-receiver.yaml
-  #     - firmware/esphome/packages/monitoring.yaml
-  #     - firmware/esphome/packages/oled.yaml
-  #     # Optional ethernet (replace wifi config if you use this)
-  #     # - firmware/esphome/packages/ethernet-w5500.yaml
+  esparagus_remote:
+    https://github.com/sonocotta/esp32-audio-dock
+    ref: main
+    files:
+      - firmware/esphome/packages/dac-pcm5122.yaml
+      - firmware/esphome/packages/audio.yaml
+      - firmware/esphome/packages/audio-addon-external-dac.yaml
+      - firmware/esphome/packages/media-player.yaml
+      - firmware/esphome/packages/media-player-addon-dac-enable.yaml
+      - firmware/esphome/packages/light.yaml
+      - firmware/esphome/packages/ir-receiver.yaml
+      - firmware/esphome/packages/monitoring.yaml
+      - firmware/esphome/packages/oled.yaml
+      # Optional ethernet (replace wifi config if you use this)
+      # - firmware/esphome/packages/ethernet-w5500.yaml
 
-  # Debug/local development fallback:
-  pcm5122_dac: !include packages/dac-pcm5122.yaml
-  audio: !include packages/audio.yaml
-  audio_external_dac: !include packages/audio-addon-external-dac.yaml
-  media_player: !include packages/media-player.yaml
-  media_player_dac_enable: !include packages/media-player-addon-dac-enable.yaml
-  light: !include packages/light.yaml
-  ir_receiver: !include packages/ir-receiver.yaml
-  monitoring: !include packages/monitoring.yaml
-  oled: !include packages/oled.yaml
-  # ethernet: !include packages/ethernet-w5500.yaml
+  # # Debug/local development fallback:
+  # pcm5122_dac: !include packages/dac-pcm5122.yaml
+  # audio: !include packages/audio.yaml
+  # audio_external_dac: !include packages/audio-addon-external-dac.yaml
+  # media_player: !include packages/media-player.yaml
+  # media_player_dac_enable: !include packages/media-player-addon-dac-enable.yaml
+  # light: !include packages/light.yaml
+  # ir_receiver: !include packages/ir-receiver.yaml
+  # monitoring: !include packages/monitoring.yaml
+  # oled: !include packages/oled.yaml
+  # # ethernet: !include packages/ethernet-w5500.yaml
