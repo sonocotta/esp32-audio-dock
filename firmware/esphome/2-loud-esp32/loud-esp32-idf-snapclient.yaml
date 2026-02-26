@@ -14,7 +14,7 @@
 # ============================================================
 
 substitutions:
-  name: esphome-web-5dba18
+  name: esphome-web-77c4e8
   friendly_name: Loud-ESP32
   task_stack_in_psram: "false"
 

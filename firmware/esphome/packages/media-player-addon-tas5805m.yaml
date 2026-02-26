@@ -1,67 +1,31 @@
 # ============================================================
-# Media Player - Speaker Platform with Announcement Ducking
+# Media Player - TAS5805M addon
 # ============================================================
-# Configures media player with announcement ducking logic
-# Uses TAS58xx DAC, so depends on audio-tas58xx.yaml for speaker stack
-# Requires substitutions:
-#   - friendly_name
-#   - task_stack_in_psram
-# Dependencies: audio-tas58xx.yaml (speaker stack)
+# Extends media-player.yaml with TAS5805M-specific behavior:
+# - startup sync sound registration
+# - DAC enable on playback/announcement
+# - announcement volume via external_dac API
+# - DAC idle shutdown and overtemp volume throttling
+# Dependencies: media-player.yaml, dac-tas5805m.yaml,
+#               media-player-addon-dac-enable.yaml
 # ============================================================
 
-globals:
-  - id: current_volume
-    type: float
-    initial_value: '0.2'
-  - id: announcement_triggered
-    type: bool
-    initial_value: 'false'
-
-number:
-  - platform: template
-    name: ${friendly_name} Announce Volume
-    id: announce_volume
-    icon: mdi:volume-source
-    unit_of_measurement: "%"
-    min_value: 0
-    max_value: 100
-    step: 1
-    restore_value: true
-    initial_value: 50
-    optimistic: true
+# Important! Play sound on boot required for DAC to capture clock signal and enable DSP configuration
+# If any of the DSP configs are sent before clock signal, they are simply ignored. This applies to EQ and Mixer controls
+esphome:
+  on_boot:
+    priority: 220.0
+    then:
+      media_player.speaker.play_on_device_media_file: startup_sync_sound
 
 media_player:
-  - platform: speaker
-    name: ${friendly_name} Mediaplayer
-    id: external_media_player
-    task_stack_in_psram: ${task_stack_in_psram}
-    volume_increment: 5%
-    volume_initial: 45%
-    media_pipeline:
-      speaker: media_spk_resampling_input
-      num_channels: 2
-    announcement_pipeline:
-      speaker: announcement_spk_resampling_input
-      num_channels: 1
+  - id: !extend external_media_player
 
     files:
       id: startup_sync_sound
-      file: https://github.com/mrtoy-me/esphome-tas58xx/raw/main/components/tas58xx/tas58xx_boot.flac
-
-    on_play:
-      - if:
-          condition:
-            switch.is_off: enable_dac
-          then:
-            switch.turn_on: enable_dac
+      file: https://github.com/mrtoy-me/esphome-tas5805m/raw/main/components/tas5805m/tas5805m_boot_louder.flac
 
     on_announcement:
-      - if:
-          condition:
-            switch.is_off: enable_dac
-          then:
-            switch.turn_on: enable_dac
-            
       - if:
           condition:
             - lambda: return (!id(announcement_triggered));

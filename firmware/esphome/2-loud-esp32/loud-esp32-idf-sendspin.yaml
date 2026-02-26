@@ -9,7 +9,7 @@
 # ============================================================
 
 substitutions:
-  name: esphome-web-5dba18
+  name: esphome-web-77c4e8
   friendly_name: Loud-ESP32
   task_stack_in_psram: "false"
 
@@ -19,8 +19,9 @@ substitutions:
   i2s_bclk_pin: GPIO26
   i2s_dout_pin: GPIO22
 
-  # DAC enable pin (actually amp UNMUTE)
+  # DAC enable pin
   dac_enable_pin: GPIO13
+  dac_enable_restore_mode: ALWAYS_OFF
 
   # RGB LED
   rgb_led_pin: GPIO12
@@ -102,11 +103,11 @@ packages:
   #   url: https://github.com/sonocotta/esp32-audio-dock
   #   ref: main
   #   files:
-  #     # Option A: no OLED connected
   #     - firmware/esphome/packages/sendspin.yaml
-  #     # Option B: OLED displays clock when idling, and track/artist info when playing
-  #     # - firmware/esphome/packages/sendspin-with-oled.yaml
-  #     # - firmware/esphome/packages/oled-sendspin.yaml
+  #     - firmware/esphome/packages/dac-switch.yaml
+  #     - firmware/esphome/packages/media-player-addon-dac-enable.yaml  
+  #     # Optional : OLED displays clock when idling, and track/artist info when playing
+  #     # - firmware/esphome/packages/sendspin-addon-oled.yaml
 
   #     - firmware/esphome/packages/sendspin-audio.yaml
   #     - firmware/esphome/packages/light.yaml
@@ -116,9 +117,10 @@ packages:
   #     # - firmware/esphome/packages/ethernet-w5500.yaml
 
   # Debug/local development fallback:
-  # sendspin: !include packages/sendspin-with-dac-enable.yaml
-  sendspin: !include packages/sendspin-with-dac-enable-and-oled.yaml
-  oled: !include packages/oled-sendspin.yaml
+  sendspin: !include packages/sendspin.yaml
+  dac_switch: !include packages/dac-switch.yaml
+  dac_enable: !include packages/media-player-addon-dac-enable.yaml
+  oled: !include packages/sendspin-addon-oled.yaml
   audio: !include packages/sendspin-audio.yaml
   light: !include packages/light.yaml
   ir_receiver: !include packages/ir-receiver.yaml

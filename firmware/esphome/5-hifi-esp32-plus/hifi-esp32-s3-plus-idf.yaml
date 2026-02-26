@@ -20,9 +20,9 @@ substitutions:
   i2s_dout_pin: GPIO16
 
   # I2C pins for DAC control
-  i2c_sda_pin: GPIO42
-  i2c_scl_pin: GPIO41
-  pcm5122_i2c_address: 0x4D         # I2C address of the DAC, it is 0x4C n the HiFi-ESP32 Rev H, and 0x4D on the rev H1+
+  i2c_sda_pin: GPIO42               # I2C pins are swapped on the rev H  
+  i2c_scl_pin: GPIO41               # These are correct for Rev H1 and later
+  pcm5122_i2c_address: 0x4D         # I2C address of the DAC, it is 0x4C n the HiFi-ESP32 Rev H, and 0x4D on the rev H1+ and later
   pcm5122_enable_pin: GPIO4         # optional, to enable/disable the DAC (XSMT physical pin)
 
   # RGB LED
@@ -103,7 +103,8 @@ packages:
   #   ref: main
   #   files:
   #     - firmware/esphome/packages/dac-pcm5122.yaml
-  #     - firmware/esphome/packages/audio-external-dac.yaml
+  #     - firmware/esphome/packages/audio.yaml
+  #     - firmware/esphome/packages/audio-addon-external-dac.yaml
   #     - firmware/esphome/packages/media-player-pcm5122.yaml
   #     - firmware/esphome/packages/light.yaml
   #     - firmware/esphome/packages/ir-receiver.yaml
@@ -114,8 +115,10 @@ packages:
 
   # Debug/local development fallback:
   pcm5122_dac: !include packages/dac-pcm5122.yaml
-  audio: !include packages/audio-external-dac.yaml
-  media_player: !include packages/media-player-pcm5122.yaml
+  audio: !include packages/audio.yaml
+  audio_external_dac: !include packages/audio-addon-external-dac.yaml
+  media_player: !include packages/media-player.yaml
+  media_player_dac_enable: !include packages/media-player-addon-dac-enable.yaml
   light: !include packages/light.yaml
   ir_receiver: !include packages/ir-receiver.yaml
   monitoring: !include packages/monitoring.yaml

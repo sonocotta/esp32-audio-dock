@@ -10,6 +10,20 @@
 #   - display_reset_pin
 # ============================================================
 
+media_player:
+  - id: !extend sendspin_group_media_player
+
+    on_play:
+      - display.page.show: page_play
+      - component.update: spi_display
+      - switch.template.publish:
+          id: switch_screen
+          state: ON
+
+    on_idle:
+      - display.page.show: page_clock
+      - component.update: spi_display
+
 api:
   on_client_connected: 
     then:

@@ -1,0 +1,25 @@
+# ============================================================
+# Sendspin - DAC enable addon
+# ============================================================
+# Configures sendspin component to switch on and off DAC on playback events
+# Requires substitutions:
+#   - task_stack_in_psram
+#   - dac_enable_pin
+# ============================================================
+
+media_player:
+  - id: !extend external_media_player
+
+    on_play:
+      - if:
+          condition:
+            switch.is_off: enable_dac
+          then:
+            switch.turn_on: enable_dac
+
+    on_idle:
+      - if:
+          condition:
+            switch.is_on: enable_dac
+          then:
+            switch.turn_off: enable_dac

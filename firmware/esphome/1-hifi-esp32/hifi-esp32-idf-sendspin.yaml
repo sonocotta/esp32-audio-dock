@@ -99,11 +99,9 @@ packages:
   #   url: https://github.com/sonocotta/esp32-audio-dock
   #   ref: main
   #   files:
-  #     # Option A: no OLED connected
   #     - firmware/esphome/packages/sendspin.yaml
-  #     # Option B: OLED displays clock when idling, and track/artist info when playing
-  #     # - firmware/esphome/packages/sendspin-with-oled.yaml
-  #     # - firmware/esphome/packages/oled-sendspin.yaml
+  #     # Optional: OLED displays clock when idling, and track/artist info when playing
+  #     # - firmware/esphome/packages/sendspin-addon-oled.yaml
 
   #     - firmware/esphome/packages/sendspin-audio.yaml
   #     - firmware/esphome/packages/light.yaml
@@ -114,8 +112,7 @@ packages:
 
   # Debug/local development fallback:
   sendspin: !include packages/sendspin.yaml
-  # sendspin: !include packages/sendspin-with-oled.yaml
-  # oled: !include packages/oled-sendspin.yaml
+  oled: !include packages/sendspin-addon-oled.yaml
   audio: !include packages/sendspin-audio.yaml
   light: !include packages/light.yaml
   ir_receiver: !include packages/ir-receiver.yaml
