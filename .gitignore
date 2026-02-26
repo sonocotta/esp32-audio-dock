@@ -3,3 +3,5 @@
 
 secrets.yaml
 .esphome-cache/**
+**/.esphome/**
+firmware/esphome/9-packages

@@ -1,0 +1,30 @@
+# ============================================================
+# Snapclient - Snapcast Audio Client
+# ============================================================
+# Configures snapclient component for synchronized audio playback
+# Requires substitutions:
+#   - friendly_name
+#   - i2s_dout_pin
+#   - snapcast_server_ip (or hostname)
+#   - snapcast_server_port (default: 1704)
+# ============================================================
+
+external_components:
+  - source: github://c-MM/esphome-snapclient
+    components: [ snapclient ]
+    refresh: 24h
+
+i2s_audio:
+  i2s_lrclk_pin: ${i2s_lrclk_pin}
+  i2s_bclk_pin: ${i2s_bclk_pin}
+
+### Snapclient component is a work in progress, not yet ready for production use
+# More details:
+# https://github.com/c-MM/esphome-snapclient/
+# https://github.com/esphome/esphome/pull/8350
+snapclient:
+  hostname: ${snapcast_server_ip}
+  port: ${snapcast_server_port}
+  name: ${friendly_name}
+  i2s_dout_pin: ${i2s_dout_pin}
+  webserver_port: 8080

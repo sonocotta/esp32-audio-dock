@@ -1,53 +1,99 @@
+# ============================================================
+# Amped-ESP32-S3 - Snapclient Configuration
+# ============================================================
+# ESP32 audio board with PCM5100 DAC (I2S) and TPA3110/TPA3128 AMP
+# Configured as a Snapcast client for synchronized audio
+# There are two implementations available:
+# 1) Basic snapclient without DSP controls (c-MM original port)
+# 2) snapclient with added DSP controls (farmed-switch fork of c-MM port)
+#     Frequencies: 40, 50, 60, 70, 80, 90, 100, 110, 120, 130,
+#                 140, 200, 315, 500, 800, 1250, 2000, 5000 Hz
+#     Range: -15dB to +15dB per band
+# Board-specific pinouts defined in substitutions
+# Functional blocks imported from /packages
+# ============================================================
+
 substitutions:
-  name: esphome-web-04dfa8
+  name: esphome-web-2ba5fc
   friendly_name: Amped-ESP32-S3
-  task_stack_in_psram: "true" # important to disable this for non-S3 model
+  task_stack_in_psram: "true"
+
+  # ===== Board-Specific Pinouts =====
+  # I2S audio pins
+  i2s_lrclk_pin: GPIO15
+  i2s_bclk_pin: GPIO14
+  i2s_dout_pin: GPIO16
+
+  # Amp UNMUTE pin
+  amp_enable_pin: GPIO17
+  amp_enable_restore_mode: ALWAYS_ON
+  
+  # RGB LED
+  rgb_led_pin: GPIO09
+
+  # SPI pins (for display)
+  spi_clk_pin: GPIO12
+  spi_mosi_pin: GPIO11
+  spi_miso_pin: GPIO13
+
+  # IR Receiver
+  ir_rx_pin: GPIO07
+
+  # Display control pins
+  display_cs_pin: GPIO47
+  display_dc_pin: GPIO38
+  display_reset_pin: GPIO48
+
+  # Ethernet pins (if using ethernet instead of wifi)
+  eth_cs_pin: GPIO10
+  eth_interrupt_pin: GPIO6
+  eth_reset_pin: GPIO5
+
+  # ===== Snapcast Server Configuration =====
+  snapcast_server_ip: "192.168.1.49"
+  snapcast_server_port: "1704"
 
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
-  min_version: 2025.7.0
+  min_version: 2026.1.4
   name_add_mac_suffix: false
   platformio_options:
     board_build.flash_mode: dio
-  on_boot: 
-    then:
-      - switch.turn_on: enable_dac
-      
+
 esp32:
-  board: esp32-s3-devkitc-1
   variant: ESP32S3
   flash_size: 8MB
+  cpu_frequency: 240MHz
   framework:
     type: esp-idf
     version: recommended
     sdkconfig_options:
+      CONFIG_ESP32S3_DATA_CACHE_64KB: "y"
+      CONFIG_ESP32S3_DATA_CACHE_LINE_64B: "y"
+      CONFIG_ESP32S3_INSTRUCTION_CACHE_32KB: "y"
+      # Moves instructions and read only data from flash into PSRAM on boot.
+      # Both enabled allows instructions to execute while a flash operation is in progress without needing to be placed in IRAM.
+      # Considerably speeds up mWW at the cost of using more PSRAM.
+      CONFIG_SPIRAM_RODATA: "y"
+      CONFIG_SPIRAM_FETCH_INSTRUCTIONS: "y"
       CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: "y"
       CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
-
       CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
-      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"  # TLS1.3 support isn't enabled by default in IDF 5.1.5
+      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y" 
 
-# Enable logging
 logger:
   level: DEBUG
-  
-wifi:
-  ssid: !secret esphome_wifi_ssid
-  password: !secret esphome_wifi_password
-  ap:
-    ssid: "$name Hotspot"
-    password: !secret esphome_ap_password
 
-captive_portal:
+api:
 
-# Allow Over-The-Air updates
 ota:
   platform: esphome
   password: !secret esphome_ota_password
 
-# Enable Home Assistant API
-api:
+wifi:
+  ssid: !secret esphome_wifi_ssid
+  password: !secret esphome_wifi_password
 
 psram:
   mode: octal
@@ -57,56 +103,34 @@ psram:
 network:
   enable_ipv6: true
 
-external_components:
-  - source: github://c-MM/esphome-snapclient
-    components: [ snapclient ]
-    refresh: 24h
+# ===== Packages =====
+packages:
+#   esparagus_remote:
+#     url: https://github.com/sonocotta/esp32-audio-dock
+#     ref: main
+#     files:
+#       - firmware/esphome/packages/light.yaml
+#       - firmware/esphome/packages/ir-receiver.yaml
+#       - firmware/esphome/packages/monitoring.yaml
+#       - firmware/esphome/packages/dac-switch.yaml
+#       - firmware/esphome/packages/oled.yaml
+#       # Option A: @c-MM original port of esp32-snapclient client
+#       # Basic implementation without DSP controls
+#       # - firmware/esphome/packages/snapclient.yaml
+#       # Option B: @farmed-switch fork of the c-MM snapclient with added DSP controls
+#       # Implements software BQ-filters for basic DACs and controls hardware DSP for DSP-enabled DACs like TAS5805M
+#       - firmware/esphome/packages/snapclient-with-dsp.yaml
+  #     # Optional ethernet (replace wifi config if you use this)
+  #     # - firmware/esphome/packages/ethernet-w5500.yaml
 
-i2s_audio:
-  i2s_lrclk_pin: GPIO15
-  i2s_bclk_pin: GPIO14
-
-### Snapclient component is a work in progress, not yet ready for production use
-# More details:
-# https://github.com/c-MM/esphome-snapclient/
-# https://github.com/esphome/esphome/pull/8350
-snapclient:
-  hostname: 192.168.1.49   # at this time auto-discovery does not work, so you need to specify the server IP address
-  port: 1704               # default port, no need to change unless you have changed it on the server side
-  name: ${friendly_name}     # this is the name that will appear in the snapcast clients list
-  i2s_dout_pin: GPIO16     # I2S data out pin
-  webserver_port: 8080     # start webserver for snapclient controls
-
-switch:
-  - platform: gpio
-    icon: "mdi:speaker"
-    name: Enable DAC
-    id: enable_dac
-    pin:
-      number: GPIO17
-    restore_mode: ALWAYS_OFF
-
-### RGB light config (if installed)
-light:
-  - platform: esp32_rmt_led_strip
-    id: rgb_front_led
-    name: "${friendly_name} LED"
-    rgb_order: GRB
-    pin: GPIO9
-    num_leds: 1
-    chipset: ws2812
-    default_transition_length: 0s
-
-### IR reader config (if installed). Add your own IR codes as needed
-remote_receiver:
-  pin: 
-    number: GPIO07
-    inverted: true
-    mode:
-      input: true
-  dump: all
-
-button:
-  - platform: restart
-    id: restart_btn
-    name: "${friendly_name} REBOOT"
+  # Debug/local development fallback:
+  light: !include packages/light.yaml
+  ir_receiver: !include packages/ir-receiver.yaml
+  monitoring: !include packages/monitoring.yaml
+  amp_unmute: !include packages/amp-unmute.yaml
+  # snapclient: !include packages/snapclient.yaml
+  snapclient_with_dsp: !include packages/snapclient-with-dsp.yaml
+  
+  oled: !include packages/oled.yaml
+  # Optional ethernet (replace wifi config if you use this)
+  # ethernet_w5500: !include packages/ethernet-w5500.yaml

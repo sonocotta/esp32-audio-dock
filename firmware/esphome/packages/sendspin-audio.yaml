@@ -1,0 +1,48 @@
+# ============================================================
+# Audio - I2S Audio Setup and Speaker Configuration
+# ============================================================
+# Configures I2S DAC, mixer, and resampler for multi-source audio
+# Requires substitutions:
+#   - i2s_lrclk_pin
+#   - i2s_bclk_pin
+#   - i2s_dout_pin
+#   - task_stack_in_psram
+# ============================================================
+
+i2s_audio:
+  i2s_lrclk_pin: ${i2s_lrclk_pin}
+  i2s_bclk_pin: ${i2s_bclk_pin}
+  
+speaker:
+  - platform: i2s_audio
+    id: i2s_speaker_id
+    sample_rate: 48000
+    i2s_dout_pin: ${i2s_dout_pin}
+    bits_per_sample: 16bit
+    dac_type: external
+    channel: stereo
+    timeout: never
+    buffer_duration: 100ms
+
+  - platform: mixer
+    id: mixer_speaker_id
+    output_speaker: i2s_speaker_id
+    num_channels: 2
+    task_stack_in_psram: ${task_stack_in_psram}
+    source_speakers:
+      - id: announcement_mixer_input
+        timeout: never
+      - id: media_mixer_input
+        timeout: never
+
+  - platform: resampler
+    id: media_resampling_speaker
+    output_speaker: media_mixer_input
+    sample_rate: 48000
+    bits_per_sample: 16
+
+  - platform: resampler
+    id: announcement_resampling_speaker
+    output_speaker: announcement_mixer_input
+    sample_rate: 48000
+    bits_per_sample: 16

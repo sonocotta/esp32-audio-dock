@@ -1,0 +1,14 @@
+# AMP unmute pin
+# This package provides a switch to enable/disable the Amp and optionally restore its state on boot.
+# Requires substitutions:
+#   - amp_enable_pin
+#   - amp_enable_restore_mode (e.g., ALWAYS_ON, ALWAYS_OFF, RESTORE_DEFAULT_ON, RESTORE_DEFAULT_OFF)
+
+switch:
+  - platform: gpio
+    icon: "mdi:speaker"
+    name: Enable AMP
+    id: enable_amp
+    pin:
+      number: ${amp_enable_pin}
+    restore_mode: ${amp_enable_restore_mode}

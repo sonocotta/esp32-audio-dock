@@ -1,0 +1,34 @@
+# ============================================================
+# Media Player - Amp enable addon
+# ============================================================
+# Configures media player with AMP enable control
+# Requires substitutions:
+#   - friendly_name
+#   - amp_enable_pin
+# Dependencies: media-player.yaml (speaker stack)
+# amp-switch.yaml (AMP enable switch)
+# ============================================================
+
+media_player:
+  - id: !extend external_media_player
+
+    on_play:
+      - if:
+          condition:
+            switch.is_off: enable_amp
+          then:
+            switch.turn_on: enable_amp
+
+    on_idle:
+      - if:
+          condition:
+            switch.is_on: enable_amp
+          then:
+            switch.turn_off: enable_amp
+
+    on_announcement:
+      - if:
+          condition:
+            switch.is_off: enable_amp
+          then:
+            switch.turn_on: enable_amp

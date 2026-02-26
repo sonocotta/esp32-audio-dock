@@ -1,0 +1,98 @@
+# ============================================================
+# TAS5805M/TAS5825M DAC - I2C Control, EQ, and Fault Monitoring
+# ============================================================
+# Requires substitutions:
+#   - tas58xx_enable_pin
+#   - i2c_sda_pin
+#   - i2c_scl_pin
+#
+# ============================================================
+
+external_components:
+  - source: github://mrtoy-me/esphome-tas58xx@dev
+    components: [tas58xx]
+    refresh: 48h
+
+i2c:
+  sda: ${i2c_sda_pin}
+  scl: ${i2c_scl_pin}
+  frequency: 400kHz
+  scan: true
+
+### TAS5805M/TAS5825M DAC configuration
+audio_dac:
+  - platform: tas58xx
+    id: external_dac
+    tas58xx_dac: ${tas58xx_variant}     # 'TAS5805M' or 'TAS5825M'
+    enable_pin: ${tas58xx_enable_pin}   # Physical pin connected to PWDN pin
+    dac_mode: BTL                       # 'BTL' / Bridge Tied Load - 2Ch Stereo, or 'PBTL' / Parallel Bridge Tied Load - 1Ch Mono (double power)
+    mixer_mode: STEREO                  # STEREO, STEREO_INVERSE, MONO, LEFT, RIGHT
+    analog_gain: 0db                    # Startup Gain or Output voltage swing - pick based on the power supply voltage: https://github.com/sonocotta/esp32-tas5805m-dac?tab=readme-ov-file#digital-volume-and-analog-gain
+    volume_max: 0dB                     # Max HA volume mapping to Digital Volume control, goes as high as +24dB, but not recommend going much above 0 dB, risking to cause clipping on high volume
+    volume_min: -60db                   # Min HA volume mapping to Digital Volume control, goes as low as -103dB, but prefer to set higher to have a reasonable volume range
+    update_interval: 5s                 # How often fault registers are read and cleared
+
+switch:
+  - platform: tas58xx
+    enable_dac:
+      name: Enable DAC
+      id: enable_dac
+      restore_mode: ALWAYS_ON 
+
+select:
+  - platform: tas58xx
+    mixer_mode:
+      name: _Mixer Mode
+    # eq_mode required if Number left_eq_gains/Right_eq_gains or eq_preset_left_channel/eq_preset_right_channel are configured
+    eq_mode:
+      name: EQ Mode
+    # new eq presets - both must be defined and cannot be used with left_eq_gains and right_eq_gains
+    eq_preset_left_channel:
+      name: EQ Preset Cutoff Left Channel
+    eq_preset_right_channel:
+      name: EQ Preset Cutoff Right Channel
+      
+number:
+  - platform: tas58xx
+    channel_volume_left:
+      name: _Volume Left
+    channel_volume_right:
+      name: _Volume Right
+
+### Faults clear registers read from TAS58XX
+sensor:
+  - platform: tas58xx
+    faults_cleared:
+      name: "Times Faults Cleared"
+
+### Faults registers read directly from TAS58XX
+binary_sensor:
+  - platform: tas58xx
+    have_fault:
+      name: Any Faults
+      exclude: CLOCK_FAULT
+    left_channel_dc_fault:
+      name: Left Channel DC Fault
+    right_channel_dc_fault:
+      name: Right Channel DC Fault
+    left_channel_over_current:
+      name: Left Channel Over Current
+    right_channel_over_current:
+      name: Right Channel Over Current
+    otp_crc_check:
+      name: CRC Check Fault
+    bq_write_failed:
+      name: BQ Write Failure
+    # I2S clock fault binary sensor is not really useful with speaker media player
+    # since it generates clock faults when it manipulates I2S.
+    # clock fault:
+    #   name: I2S Clock Fault
+    pcdd_over_voltage:
+      name: PCDD Over Voltage
+    pcdd_under_voltage:
+      name: PCDD Under Voltage
+    over_temp_shutdown:
+      name: Over Temperature Shutdown Fault
+    over_temp_warning:
+      name: Over Temperature Warning
+      id: over_temperature_warning

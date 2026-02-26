@@ -1,0 +1,11 @@
+# ============================================================
+# Sendspin Audio - External DAC addon
+# ============================================================
+# Extends sendspin-audio.yaml to attach an external DAC component
+# to the existing I2S speaker.
+# Dependencies: sendspin-audio.yaml, dac-*.yaml (id: external_dac)
+# ============================================================
+
+speaker:
+  - id: !extend i2s_speaker_id
+    audio_dac: external_dac

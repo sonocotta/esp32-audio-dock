@@ -1,0 +1,14 @@
+# DAC enable switch
+# This package provides a switch to enable/disable the DAC and optionally restore its state on boot.
+# Requires substitutions:
+#   - dac_enable_pin
+#   - dac_enable_restore_mode (e.g., ALWAYS_ON, ALWAYS_OFF, RESTORE_DEFAULT_ON, RESTORE_DEFAULT_OFF)
+
+switch:
+  - platform: gpio
+    icon: "mdi:speaker"
+    name: Enable DAC
+    id: enable_dac
+    pin:
+      number: ${dac_enable_pin}
+    restore_mode: ${dac_enable_restore_mode}
