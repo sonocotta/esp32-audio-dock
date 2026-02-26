@@ -104,31 +104,31 @@ network:
 
 # ===== Packages =====
 packages:
-  # esparagus_remote:
-  #   url: https://github.com/sonocotta/esp32-audio-dock
-  #   ref: main
-  #   files:
-  #     - firmware/esphome/packages/light.yaml
-  #     - firmware/esphome/packages/dac-tas5805m.yaml
-  #     - firmware/esphome/packages/ir-receiver.yaml
-  #     - firmware/esphome/packages/monitoring.yaml
-  #     - firmware/esphome/packages/oled.yaml
-  #     # Option A: @c-MM original port of esp32-snapclient client
-  #     # Basic implementation without DSP controls
-  #     - firmware/esphome/packages/snapclient.yaml
-  #     # Option B: @farmed-switch fork of the c-MM snapclient with added DSP controls
-  #     # Implements software BQ-filters, but makes less sense for DSP-enabled DACs like TAS58XX
-  #     # - firmware/esphome/packages/snapclient-with-dsp.yaml
+  esparagus_remote:
+    url: https://github.com/sonocotta/esp32-audio-dock
+    ref: main
+    files:
+      - firmware/esphome/packages/light.yaml
+      - firmware/esphome/packages/dac-tas5805m.yaml
+      - firmware/esphome/packages/ir-receiver.yaml
+      - firmware/esphome/packages/monitoring.yaml
+      - firmware/esphome/packages/oled.yaml
+      # Option A: @c-MM original port of esp32-snapclient client
+      # Basic implementation without DSP controls
+      - firmware/esphome/packages/snapclient.yaml
+      # Option B: @farmed-switch fork of the c-MM snapclient with added DSP controls
+      # Implements software BQ-filters, but makes less sense for DSP-enabled DACs like TAS58XX
+      # - firmware/esphome/packages/snapclient-with-dsp.yaml
       
-  #     # Optional ethernet (replace wifi config if you use this)
-  #     # - firmware/esphome/packages/ethernet-w5500.yaml
+      # Optional ethernet (replace wifi config if you use this)
+      # - firmware/esphome/packages/ethernet-w5500.yaml
 
-  # Debug/local development fallback:
-  external_dac: !include packages/dac-tas5805m.yaml
-  snapclient: !include packages/snapclient.yaml
-  # snapclient_with_dsp: !include packages/snapclient-with-dsp.yaml
-  ir_receiver: !include packages/ir-receiver.yaml
-  light: !include packages/light.yaml
-  oled: !include packages/oled.yaml
-  monitoring: !include packages/monitoring.yaml
-  # ethernet: !include packages/ethernet-w5500.yaml
+  # # Debug/local development fallback:
+  # external_dac: !include packages/dac-tas5805m.yaml
+  # snapclient: !include packages/snapclient.yaml
+  # # snapclient_with_dsp: !include packages/snapclient-with-dsp.yaml
+  # ir_receiver: !include packages/ir-receiver.yaml
+  # light: !include packages/light.yaml
+  # oled: !include packages/oled.yaml
+  # monitoring: !include packages/monitoring.yaml
+  # # ethernet: !include packages/ethernet-w5500.yaml

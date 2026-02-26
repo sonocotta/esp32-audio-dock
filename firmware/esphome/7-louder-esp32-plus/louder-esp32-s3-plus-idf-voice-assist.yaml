@@ -648,7 +648,21 @@ display:
         
 # ===== Packages =====
 packages:
-  # Debug/local development fallback:
-  external_dac: !include packages/dac-tas58xx.yaml
-  # external_dac: !include packages/dac-tas58xx-biamp.yaml
-  # external_dac: !include packages/dac-tas58xx-presets.yaml        
+  esparagus_remote:
+    url: https://github.com/sonocotta/esp32-audio-dock
+    ref: main
+    files:
+      # Option A: TAS58xx configured with ganged 15-band EQ
+      - firmware/esphome/packages/dac-tas58xx.yaml
+      # Option B: TAS58xx configured with individual 15-band EQ per channel
+      # - firmware/esphome/packages/dac-tas58xx-biamp.yaml
+      # Option C: TAS58xx configured with bi-amp mode, with filters applied to both channels (HF or LF)
+      # - firmware/esphome/packages/dac-tas58xx-presets.yaml
+      # Optional ethernet (replace wifi config if you use this)
+      # - firmware/esphome/packages/ethernet-w5500.yaml
+      
+  # # Debug/local development fallback:
+  # external_dac: !include packages/dac-tas58xx.yaml
+  # # external_dac: !include packages/dac-tas58xx-biamp.yaml
+  # # external_dac: !include packages/dac-tas58xx-presets.yaml
+  # # ethernet: !include packages/ethernet-w5500.yaml    
