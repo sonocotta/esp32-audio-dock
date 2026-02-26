@@ -134,6 +134,10 @@ globals:
     initial_value: 'false'
 
 external_components:
+  - source: github://sonocotta/esphome-pcm5122
+    components: [ pcm5122 ]
+    refresh: 24h
+
   ## Latest refs are not building at the moment
   ## so pinning to specific commits that are known to work
   # - source: github://pr#12253

@@ -115,12 +115,11 @@ packages:
   #     # - firmware/esphome/packages/ethernet-w5500.yaml
 
   # Debug/local development fallback:
-  external_dac: !include packages/dac-tas5805m.yaml
+  pcm5122_dac: !include packages/dac-pcm5122.yaml
   sendspin: !include packages/sendspin.yaml
   sendspin_enable_dac: !include packages/sendspin-addon-dac-enable.yaml
-  sendspin_audio: !include packages/sendspin-audio.yaml
-  sendspin_external_dac: !include packages/sendspin-audio-addon-external-dac.yaml
-  sendspin_tas5805m: !include packages/sendspin-addon-tas5805m.yaml
+  audio: !include packages/sendspin-audio.yaml
+  audio_external_dac: !include packages/sendspin-audio-addon-external-dac.yaml
   oled: !include packages/sendspin-addon-oled.yaml
   light: !include packages/light.yaml
   ir_receiver: !include packages/ir-receiver.yaml
