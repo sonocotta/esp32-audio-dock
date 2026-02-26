@@ -98,7 +98,7 @@ network:
 # ===== Packages =====
 packages:
   esparagus_remote:
-    https://github.com/sonocotta/esp32-audio-dock
+    url: https://github.com/sonocotta/esp32-audio-dock
     ref: main
     files:
       - firmware/esphome/packages/dac-pcm5122.yaml
