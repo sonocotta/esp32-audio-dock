@@ -115,6 +115,7 @@ packages:
       - firmware/esphome/packages/dac-pcm5122.yaml
       - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
+      - firmware/esphome/packages/monitoring-wifi.yaml
       - firmware/esphome/packages/oled.yaml
       # Option A: @c-MM original port of esp32-snapclient client
       # Basic implementation without DSP controls
@@ -131,6 +132,7 @@ packages:
   # pcm5122_dac: !include packages/dac-pcm5122.yaml
   # ir_receiver: !include packages/ir-receiver.yaml
   # monitoring: !include packages/monitoring.yaml
+  # monitoring_wifi: !include packages/monitoring-wifi.yaml
   # oled: !include packages/oled.yaml
   # # snapclient: !include packages/snapclient.yaml
   # snapclient_with_dsp: !include packages/snapclient-with-dsp.yaml
