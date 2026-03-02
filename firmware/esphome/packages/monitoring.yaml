@@ -1,7 +1,9 @@
 # ============================================================
 # Monitoring - System Metrics and Diagnostics
 # ============================================================
-# Monitors WiFi signal, uptime, temperature, and memory usage
+# Monitors uptime, temperature, and memory usage
+# WiFi-specific sensors (wifi_signal, wifi_info) are in
+# monitoring-wifi.yaml — include that package when using WiFi.
 # Requires substitutions:
 #   - friendly_name
 # ============================================================
@@ -10,10 +12,6 @@ debug:
   update_interval: 10s
 
 sensor:
-  - platform: wifi_signal
-    name: "${friendly_name} WiFi Signal"
-    update_interval: 60s
-    
   - platform: uptime
     name: "${friendly_name} Uptime"
     update_interval: 60s
@@ -39,11 +37,6 @@ sensor:
       name: "CPU Frequency"
 
 text_sensor:
-  - platform: wifi_info
-    ip_address:
-      name: "${friendly_name} IP"
-    mac_address:
-      name: "${friendly_name} MAC"
   - platform: debug
     # device:
     #   name: "Device Info"

@@ -1,0 +1,21 @@
+# ============================================================
+# Monitoring - WiFi Metrics (Optional)
+# ============================================================
+# WiFi-specific sensors split from monitoring.yaml so they can
+# be conditionally included. Omit this package when using
+# Ethernet (e.g. W5500) instead of WiFi.
+# Requires substitutions:
+#   - friendly_name
+# ============================================================
+
+sensor:
+  - platform: wifi_signal
+    name: "${friendly_name} WiFi Signal"
+    update_interval: 60s
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: "${friendly_name} IP"
+    mac_address:
+      name: "${friendly_name} MAC"
