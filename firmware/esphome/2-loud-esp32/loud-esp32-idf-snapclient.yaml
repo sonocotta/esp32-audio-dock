@@ -35,14 +35,11 @@ substitutions:
   ir_rx_pin: GPIO39
 
   # Ethernet (W5500)
-  eth_clk_pin: GPIO18
-  eth_mosi_pin: GPIO23
-  eth_miso_pin: GPIO19
   eth_cs_pin: GPIO05
   eth_interrupt_pin: GPIO35
   eth_reset_pin: GPIO14
 
-  # SPI pins (for display)
+  # SPI pins
   spi_clk_pin: GPIO18
   spi_mosi_pin: GPIO23
   spi_miso_pin: GPIO19
