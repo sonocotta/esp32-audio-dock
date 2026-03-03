@@ -658,7 +658,7 @@ packages:
       # - firmware/esphome/packages/dac-tas58xx-biamp.yaml
       # Option C: TAS58xx configured with bi-amp mode, with filters applied to both channels (HF or LF)
       # - firmware/esphome/packages/dac-tas58xx-presets.yaml
-      # Optional ethernet (replace wifi config if you use this)
+      # Optional ethernet (replace wifi config if you use this, you need to exclude OLED package if you do this to free up SPI bus)
       # - firmware/esphome/packages/ethernet-w5500.yaml
       
   # # Debug/local development fallback:
