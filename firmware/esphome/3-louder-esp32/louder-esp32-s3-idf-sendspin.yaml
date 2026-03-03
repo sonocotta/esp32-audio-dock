@@ -82,9 +82,9 @@ ota:
   platform: esphome
   password: !secret esphome_ota_password
 
-# wifi:
-#   ssid: !secret esphome_wifi_ssid
-#   password: !secret esphome_wifi_password
+wifi:
+  ssid: !secret esphome_wifi_ssid
+  password: !secret esphome_wifi_password
 
 psram:
   mode: octal
