@@ -111,7 +111,7 @@ packages:
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
       - firmware/esphome/packages/oled.yaml
-      # Optional ethernet (replace wifi config if you use this)
+      # Optional ethernet (replace wifi config if you use this, you need to exclude OLED package if you do this to free up SPI bus)
       # - firmware/esphome/packages/ethernet-w5500.yaml
 
   # # Debug/local development fallback:

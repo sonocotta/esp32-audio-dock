@@ -121,7 +121,7 @@ packages:
       # Implements software BQ-filters, but makes less sense for DSP-enabled DACs like TAS58XX
       # - firmware/esphome/packages/snapclient-with-dsp.yaml
       
-      # Optional ethernet (replace wifi config if you use this)
+      # Optional ethernet (replace wifi config if you use this, you need to exclude OLED package if you do this to free up SPI bus)
       # - firmware/esphome/packages/ethernet-w5500.yaml
 
   # # Debug/local development fallback:
