@@ -100,8 +100,10 @@ binary_sensor:
       name: CRC Check Fault
     bq_write_failed:
       name: BQ Write Failure
-    clock fault:
-      name: I2S Clock Fault
+    # I2S clock fault binary sensor is not really useful with speaker media player and sendspin
+    # since it generates clock faults when it manipulates I2S.
+    # clock fault:
+    #   name: I2S Clock Fault
     pcdd_over_voltage:
       name: PCDD Over Voltage
     pcdd_under_voltage:
