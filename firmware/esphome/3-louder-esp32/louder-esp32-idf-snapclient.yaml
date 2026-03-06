@@ -26,7 +26,8 @@ substitutions:
   i2s_dout_pin: GPIO22
   
   # TAS5805M
-  tas5805m_enable_pin: GPIO33
+  tas58xx_variant: TAS5805M
+  tas58xx_enable_pin: GPIO33
   i2c_sda_pin: GPIO21
   i2c_scl_pin: GPIO27
 
@@ -108,8 +109,14 @@ packages:
     url: https://github.com/sonocotta/esp32-audio-dock
     ref: main
     files:
+      # Option A: TAS58xx configured with ganged 15-band EQ
+      - firmware/esphome/packages/dac-tas58xx.yaml
+      # Option B: TAS58xx configured with individual 15-band EQ per channel
+      # - firmware/esphome/packages/dac-tas58xx-biamp.yaml
+      # Option C: TAS58xx configured with bi-amp mode, with filters applied to both channels (HF or LF)
+      # - firmware/esphome/packages/dac-tas58xx-presets.yaml
+
       - firmware/esphome/packages/light.yaml
-      - firmware/esphome/packages/dac-tas5805m.yaml
       - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
@@ -125,8 +132,9 @@ packages:
       # - firmware/esphome/packages/ethernet-w5500.yaml
 
   # # Debug/local development fallback:
-  # external_dac: !include packages/dac-tas5805m.yaml
-  # snapclient: !include packages/snapclient.yaml
+  # external_dac: !include packages/dac-tas58xx.yaml
+  # external_dac: !include packages/dac-tas58xx-biamp.yaml
+  # external_dac: !include packages/dac-tas58xx-presets.yaml  # snapclient: !include packages/snapclient.yaml
   # # snapclient_with_dsp: !include packages/snapclient-with-dsp.yaml
   # ir_receiver: !include packages/ir-receiver.yaml
   # light: !include packages/light.yaml
