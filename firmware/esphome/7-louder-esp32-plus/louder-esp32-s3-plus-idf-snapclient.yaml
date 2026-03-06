@@ -11,7 +11,7 @@
 substitutions:
   name: esphome-web-b4e96c
   friendly_name: Louder-ESP32-S3-Plus
-  task_stack_in_psram: "true" # important to disable this for non-S3 model
+  task_stack_in_psram: "true" 
 
   # Board-specific pinout configuration
   # I2S audio pins
@@ -53,9 +53,6 @@ esphome:
   name_add_mac_suffix: false
   platformio_options:
     board_build.flash_mode: dio
-  # Important! Play sound on boot required for DAC to capture clock signal and enable DSP configuration
-  # If any of the DSP configs are sent before clock signal, they are simply ignored. This applies to EQ and Mixer controls
-  # Not sure how to implement it at the moment
 
 esp32:
   variant: ESP32S3
@@ -82,72 +79,26 @@ esp32:
       CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
       CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"  # TLS1.3 support isn't enabled by default in IDF 5.1.5
 
-# Enable logging
 logger:
   level: DEBUG
 
-debug:
-  update_interval: 5s
-  
-wifi:
-  ssid: !secret esphome_wifi_ssid
-  password: !secret esphome_wifi_password
-  ap:
-    ssid: "$name Hotspot"
-    password: !secret esphome_ap_password
+api:
 
-captive_portal:
-
-# Allow Over-The-Air updates
 ota:
   platform: esphome
   password: !secret esphome_ota_password
 
-### Optional if you want ethernet (then remove above wifi config)
-# ethernet:
-#   type: W5500
-#   clk_pin: ${spi_clk_pin}
-#   mosi_pin: ${spi_mosi_pin}
-#   miso_pin: ${spi_miso_pin}
-#   cs_pin: ${eth_cs_pin}
-#   interrupt_pin: ${eth_interrupt_pin}
-#   reset_pin: ${eth_reset_pin}
-
-# Enable Home Assistant API
-api:
-
-network:
-  enable_ipv6: true
-
-globals:
-  - id: current_volume
-    type: float
-    initial_value: '0.2'
+wifi:
+  ssid: !secret esphome_wifi_ssid
+  password: !secret esphome_wifi_password
 
 psram:
   mode: octal
   speed: 80MHz
   ignore_not_found: false
 
-external_components:
-  - source: github://c-MM/esphome-snapclient
-    components: [ snapclient ]
-    refresh: 24h
-
-i2s_audio:
-  i2s_lrclk_pin: ${i2s_lrclk_pin}
-  i2s_bclk_pin: ${i2s_bclk_pin}
-
-### Snapclient component is a work in progress, not yet ready for production use
-# More details:
-# https://github.com/c-MM/esphome-snapclient/
-# https://github.com/esphome/esphome/pull/8350
-snapclient:
-  hostname: 192.168.1.49   # at this time auto-discovery does not work, so you need to specify the server IP address
-  port: 1704               # default port, no need to change unless you have changed it on the server side
-  name: ${friendly_name}     # this is the name that will appear in the snapcast clients list
-  i2s_dout_pin: ${i2s_dout_pin}
-  webserver_port: 8080     # start webserver for snapclient controls
+network:
+  enable_ipv6: true
 
 # ===== Packages =====
 packages:
@@ -161,21 +112,34 @@ packages:
       # - firmware/esphome/packages/dac-tas58xx-biamp.yaml
       # Option C: TAS58xx configured with bi-amp mode, with filters applied to both channels (HF or LF)
       # - firmware/esphome/packages/dac-tas58xx-presets.yaml
+
       - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
       - firmware/esphome/packages/oled.yaml
+      
+      # Option A: @c-MM original port of esp32-snapclient client
+      # Basic implementation without DSP controls
+      - firmware/esphome/packages/snapclient.yaml
+      # Option B: @farmed-switch fork of the c-MM snapclient with added DSP controls
+      # Implements software BQ-filters, but makes less sense for DSP-enabled DACs like TAS58XX
+      # - firmware/esphome/packages/snapclient-with-dsp.yaml
+      
       # Optional ethernet (replace wifi config if you use this, you need to exclude OLED package if you do this to free up SPI bus)
       # - firmware/esphome/packages/ethernet-w5500.yaml
 
   # # Debug/local development fallback:
   # external_dac: !include packages/dac-tas58xx.yaml
   # # external_dac: !include packages/dac-tas58xx-biamp.yaml
-  # # external_dac: !include packages/dac-tas58xx-presets.yaml
-  # light: !include packages/light.yaml
+  # # external_dac: !include packages/dac-tas58xx-presets.yaml  
+
+  # snapclient: !include packages/snapclient.yaml
+  # # snapclient_with_dsp: !include packages/snapclient-with-dsp.yaml
+  
   # ir_receiver: !include packages/ir-receiver.yaml
+  # light: !include packages/light.yaml
+  # oled: !include packages/oled.yaml
   # monitoring: !include packages/monitoring.yaml
   # monitoring_wifi: !include packages/monitoring-wifi.yaml
-  # oled: !include packages/oled.yaml
-  # # # ethernet: !include packages/ethernet-w5500.yaml
+  # # ethernet: !include packages/ethernet-w5500.yaml

@@ -1,0 +1,34 @@
+# ============================================================
+# Sendspin - TAS58XX addon
+# ============================================================
+# Extends sendspin.yaml with TAS58XX-specific behavior:
+# - startup sync file source
+# - boot-time startup sync playback
+# - DAC enable/disable hooks for playback events
+# Dependencies: sendspin.yaml, sendspin-audio-addon-external-dac.yaml,
+#               sendspin-addon-dac-enable.yaml
+# ============================================================
+
+# Important! Play sound on boot required for DAC to capture clock signal and enable DSP configuration
+# If any of the DSP configs are sent before clock signal, they are simply ignored. This applies to EQ and Mixer controls
+esphome:
+  on_boot:
+    priority: 220.0
+    then:
+      media_player.play_media:
+        id: external_media_player
+        media_url: file://startup_sync_sound
+
+media_source:
+  - platform: file
+    id: file_source
+    files:
+      id: startup_sync_sound
+      file: https://github.com/mrtoy-me/esphome-tas58xx/raw/main/components/tas58xx/tas58xx_boot.flac
+
+media_player:
+  - id: !extend external_media_player
+    sources:
+      - http_source
+      - sendspin_source
+      - file_source

@@ -7,11 +7,12 @@ on:
     paths:
       - 'firmware/esphome/**'
       - '.github/workflows/build-esphome.yml'
+      - '!firmware/esphome/packages-archive/**'
   pull_request:
     paths:
       - 'firmware/esphome/**'
       - '.github/workflows/build-esphome.yml'
-
+      - '!firmware/esphome/packages-archive/**'
 jobs:
   prepare:
     name: Prepare Build Matrix
@@ -26,6 +27,7 @@ jobs:
         run: |
           configs=$(find firmware/esphome -maxdepth 2 -name "*.yaml" -type f \
             | grep -v "/packages/" \
+            | grep -v "/packages-archive/" \
             | grep -v "/secrets/" \
             | grep -v "secrets.yaml" \
             | jq -R -s -c 'split("\n")[:-1]')
