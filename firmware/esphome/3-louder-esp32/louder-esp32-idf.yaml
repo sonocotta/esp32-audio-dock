@@ -113,6 +113,7 @@ packages:
       - firmware/esphome/packages/media-player.yaml
       - firmware/esphome/packages/media-player-addon-dac-enable.yaml
       - firmware/esphome/packages/media-player-addon-tas58xx.yaml
+
       - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
@@ -124,11 +125,14 @@ packages:
   # # Debug/local development fallback:
   # external_dac: !include packages/dac-tas58xx.yaml
   # external_dac: !include packages/dac-tas58xx-biamp.yaml
-  # external_dac: !include packages/dac-tas58xx-presets.yaml  # audio: !include packages/audio.yaml
+  # external_dac: !include packages/dac-tas58xx-presets.yaml  
+
+  # audio: !include packages/audio.yaml
   # audio_external_dac: !include packages/audio-addon-external-dac.yaml
   # media_player: !include packages/media-player.yaml
   # media_player_dac_enable: !include packages/media-player-addon-dac-enable.yaml
   # media_player_tas58xx: !include packages/media-player-addon-tas58xx.yaml
+  
   # light: !include packages/light.yaml
   # ir_receiver: !include packages/ir-receiver.yaml
   # monitoring: !include packages/monitoring.yaml
