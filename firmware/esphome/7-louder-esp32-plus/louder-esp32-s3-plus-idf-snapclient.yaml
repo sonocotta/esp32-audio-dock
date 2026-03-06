@@ -46,6 +46,10 @@ substitutions:
   eth_interrupt_pin: GPIO6
   eth_reset_pin: GPIO5
 
+  # ===== Snapcast Server Configuration =====
+  snapcast_server_ip: "192.168.1.49"
+  snapcast_server_port: "1704"
+  
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
@@ -118,7 +122,7 @@ packages:
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
       - firmware/esphome/packages/oled.yaml
-      
+
       # Option A: @c-MM original port of esp32-snapclient client
       # Basic implementation without DSP controls
       - firmware/esphome/packages/snapclient.yaml
