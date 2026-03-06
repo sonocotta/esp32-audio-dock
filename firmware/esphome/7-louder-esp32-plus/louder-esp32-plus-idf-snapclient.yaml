@@ -1,83 +1,88 @@
 # ============================================================
-# Louder-ESP32-S3-Plus - Sendspin Media Player Configuration
+# Louder-ESP32-Plus - Snapclient Configuration
 # ============================================================
-# Media player using Sendspin protocol with OLED display
-# Features: TAS5825M DAC, I2S output, SSD1306 display with
-#           scrolling text, RGB LED, IR receiver
-# Requires: Sendspin server/sender on network
-# Board-specific pinouts are defined in substitutions section
+# ESP32 audio board with TAS5825M DAC (I2C+I2S) with built-in DSP
+# Configured as a Snapcast client for synchronized audio
+# There are two implementations available:
+# 1) Basic snapclient without DSP controls (c-MM original port)
+# 2) snapclient with added DSP controls (farmed-switch fork of c-MM port)
+#     Frequencies: 40, 50, 60, 70, 80, 90, 100, 110, 120, 130,
+#                 140, 200, 315, 500, 800, 1250, 2000, 5000 Hz
+#     Range: -15dB to +15dB per band
+# Board-specific pinouts defined in substitutions
+# Functional blocks imported from /packages
 # ============================================================
 
 substitutions:
-  name: esphome-web-b4e96c
-  friendly_name: Louder-ESP32-S3-Plus
-  task_stack_in_psram: "true" 
+  name: esphome-web-8a2d98
+  friendly_name: Louder-ESP32-Plus
+  task_stack_in_psram: "false" 
 
-  # Board-specific pinout configuration
-  # I2S audio pins
-  i2s_lrclk_pin: GPIO15
-  i2s_bclk_pin: GPIO14
-  i2s_dout_pin: GPIO16
+
+  # ===== Board-Specific Pinouts =====
+  # I2S Audio
+  i2s_lrclk_pin: GPIO25
+  i2s_bclk_pin: GPIO26
+  i2s_dout_pin: GPIO22
   
   # TAS5825M
   tas58xx_variant: TAS5825M
-  tas58xx_enable_pin: GPIO17
-  i2c_sda_pin: GPIO8
-  i2c_scl_pin: GPIO9
-  
+  tas58xx_enable_pin: GPIO33
+  i2c_sda_pin: GPIO21
+  i2c_scl_pin: GPIO27
+
   # RGB LED
-  rgb_led_pin: GPIO21
+  rgb_led_pin: GPIO12
   
-  # IR receiver
-  ir_rx_pin: GPIO07
+  # IR Receiver
+  ir_rx_pin: GPIO39
 
   # SPI pins (for display)
-  spi_clk_pin: GPIO12
-  spi_mosi_pin: GPIO11
-  spi_miso_pin: GPIO13
+  spi_clk_pin: GPIO18
+  spi_mosi_pin: GPIO23
+  spi_miso_pin: GPIO19
+
+  # Ethernet (W5500)
+  eth_cs_pin: GPIO15
+  eth_interrupt_pin: GPIO35
+  eth_reset_pin: GPIO14
   
   # Display control pins
-  display_cs_pin: GPIO47
-  display_dc_pin: GPIO38
-  display_reset_pin: GPIO48
+  display_cs_pin: GPIO05
+  display_dc_pin: GPIO04
+  display_reset_pin: GPIO32
 
-  # Ethernet pins (if using ethernet instead of wifi)
-  eth_cs_pin: GPIO10
-  eth_interrupt_pin: GPIO6
-  eth_reset_pin: GPIO5
+  # ===== Snapcast Server Configuration =====
+  snapcast_server_ip: "192.168.1.49"
+  snapcast_server_port: "1704"
 
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
-  min_version: 2026.1.4
+  min_version: 2025.12.2
   name_add_mac_suffix: false
   platformio_options:
     board_build.flash_mode: dio
 
 esp32:
-  variant: ESP32S3
-  flash_size: 8MB
+  variant: esp32
+  flash_size: 16MB
   cpu_frequency: 240MHz
   framework:
     type: esp-idf
     version: recommended
+    advanced:
+      minimum_chip_revision: "3.1" 
     sdkconfig_options:
-      CONFIG_ESP32S3_DATA_CACHE_64KB: "y"
-      CONFIG_ESP32S3_DATA_CACHE_LINE_64B: "y"
-      CONFIG_ESP32S3_INSTRUCTION_CACHE_32KB: "y"
-
-      # Optional for ESP32-Louder used by Voice-PE
       # Moves instructions and read only data from flash into PSRAM on boot.
       # Both enabled allows instructions to execute while a flash operation is in progress without needing to be placed in IRAM.
       # Considerably speeds up mWW at the cost of using more PSRAM.
       CONFIG_SPIRAM_RODATA: "y"
       CONFIG_SPIRAM_FETCH_INSTRUCTIONS: "y"
-
       CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: "y"
       CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
-
       CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
-      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"  # TLS1.3 support isn't enabled by default in IDF 5.1.5
+      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"
 
 logger:
   level: DEBUG
@@ -93,9 +98,7 @@ wifi:
   password: !secret esphome_wifi_password
 
 psram:
-  mode: octal
   speed: 80MHz
-  ignore_not_found: false
 
 network:
   enable_ipv6: true
@@ -113,17 +116,19 @@ packages:
       # Option C: TAS58xx configured with bi-amp mode, with filters applied to both channels (HF or LF)
       # - firmware/esphome/packages/dac-tas58xx-presets.yaml
 
-      - firmware/esphome/packages/audio.yaml
-      - firmware/esphome/packages/audio-addon-external-dac.yaml
-      - firmware/esphome/packages/media-player.yaml
-      - firmware/esphome/packages/media-player-addon-dac-enable.yaml
-      - firmware/esphome/packages/media-player-addon-tas58xx.yaml
-      
       - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
       - firmware/esphome/packages/oled.yaml
+      
+      # Option A: @c-MM original port of esp32-snapclient client
+      # Basic implementation without DSP controls
+      - firmware/esphome/packages/snapclient.yaml
+      # Option B: @farmed-switch fork of the c-MM snapclient with added DSP controls
+      # Implements software BQ-filters, but makes less sense for DSP-enabled DACs like TAS58XX
+      # - firmware/esphome/packages/snapclient-with-dsp.yaml
+      
       # Optional ethernet (replace wifi config if you use this, you need to exclude OLED package if you do this to free up SPI bus)
       # - firmware/esphome/packages/ethernet-w5500.yaml
 
@@ -131,16 +136,12 @@ packages:
   # external_dac: !include packages/dac-tas58xx.yaml
   # # external_dac: !include packages/dac-tas58xx-biamp.yaml
   # # external_dac: !include packages/dac-tas58xx-presets.yaml  
+  # snapclient: !include packages/snapclient.yaml
+  # # snapclient_with_dsp: !include packages/snapclient-with-dsp.yaml
   
-  # audio: !include packages/audio.yaml
-  # audio_external_dac: !include packages/audio-addon-external-dac.yaml
-  # media_player: !include packages/media-player.yaml
-  # media_player_dac_enable: !include packages/media-player-addon-dac-enable.yaml
-  # media_player_tas58xx: !include packages/media-player-addon-tas58xx.yaml
-  
-  # light: !include packages/light.yaml
   # ir_receiver: !include packages/ir-receiver.yaml
+  # light: !include packages/light.yaml
+  # oled: !include packages/oled.yaml
   # monitoring: !include packages/monitoring.yaml
   # monitoring_wifi: !include packages/monitoring-wifi.yaml
-  # oled: !include packages/oled.yaml
   # # ethernet: !include packages/ethernet-w5500.yaml

@@ -11,7 +11,7 @@
 substitutions:
   name: esphome-web-b4e96c
   friendly_name: Louder-ESP32-S3-Plus
-  task_stack_in_psram: "true" # important to disable this for non-S3 model
+  task_stack_in_psram: "true"
 
   # Board-specific pinout configuration
   # I2S audio pins
@@ -53,14 +53,6 @@ esphome:
   name_add_mac_suffix: false
   platformio_options:
     board_build.flash_mode: dio
-  # Important! Play sound on boot required for DAC to capture clock signal and enable DSP configuration
-  # If any of the DSP configs are sent before clock signal, they are simply ignored. This applies to EQ and Mixer controls
-  on_boot:
-    priority: 220.0
-    then:
-      media_player.play_media:
-        id: external_media_player
-        media_url: file://startup_sync_sound
 
 esp32:
   variant: ESP32S3
@@ -87,287 +79,26 @@ esp32:
       CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
       CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"  # TLS1.3 support isn't enabled by default in IDF 5.1.5
 
-# Enable logging
 logger:
   level: DEBUG
 
-debug:
-  update_interval: 5s
-  
-wifi:
-  ssid: !secret esphome_wifi_ssid
-  password: !secret esphome_wifi_password
-  ap:
-    ssid: "$name Hotspot"
-    password: !secret esphome_ap_password
+api:
 
-captive_portal:
-
-# Allow Over-The-Air updates
 ota:
   platform: esphome
   password: !secret esphome_ota_password
 
-### Optional if you want ethernet (then remove above wifi config)
-# ethernet:
-#   type: W5500
-#   clk_pin: ${spi_clk_pin}
-#   mosi_pin: ${spi_mosi_pin}
-#   miso_pin: ${spi_miso_pin}
-#   cs_pin: ${eth_cs_pin}
-#   interrupt_pin: ${eth_interrupt_pin}
-#   reset_pin: ${eth_reset_pin}
-
-# Enable Home Assistant API
-api:
-  on_client_connected: 
-    then:
-      - display.page.show: page_clock
-      - component.update: spi_display
-
-network:
-  enable_ipv6: true
-
-http_request:
-
-globals:
-  - id: current_volume
-    type: float
-    initial_value: '0.2'
-  - id: announcement_triggered
-    type: bool
-    initial_value: 'false'
+wifi:
+  ssid: !secret esphome_wifi_ssid
+  password: !secret esphome_wifi_password
 
 psram:
   mode: octal
   speed: 80MHz
   ignore_not_found: false
 
-external_components:
-  ## Latest refs are not building at the moment
-  ## so pinning to specific commits that are known to work
-  # - source: github://pr#12253
-  #   components: [ mixer ]
-  #   refresh: 24h
-
-  # - source: github://pr#12254
-  #   components: [ resampler ]
-  #   refresh: 24h
-
-  # - source: github://pr#12256
-  #   components: [ audio ]
-  #   refresh: 24h
-
-  # - source: github://pr#12258
-  #   components: [ media_player ]
-  #   refresh: 24h
-    
-  # - source: github://pr#12284
-  #   components: [ mdns, sendspin ]
-  #   refresh: 24h
-
-  # - source: github://pr#12429
-  #   components: [ file, http_request, media_source, speaker_source ]
-  #   refresh: 24h
-  
-  ## Speciifc commits that are known to produce a working build
-  ## https://github.com/esphome/esphome/pull/12284#issuecomment-3929269125
-  - source:
-      # https://github.com/esphome/esphome/pull/12429
-      type: git
-      url: https://github.com/esphome/esphome
-      ref: a6c403deb7603d316dce2820897902e01c3695cc
-    refresh: 0s
-    components: [ file, http_request, media_source, speaker_source ]
-  - source:
-      # https://github.com/esphome/esphome/pull/12284
-      type: git
-      url: https://github.com/esphome/esphome
-      ref: 119a5c25a483c58b3d58a35c8cec95495c6491c2
-    components: [ sendspin ]
-
-  # The following sources are merged into the dev branch of ESPHome, but not yet in a release.
-  # We've pinned them to their specific squash merge commit id for reproducable builds.
-  # These should be available in ESPHome 2026.3.0
-  - source:
-      # Dev commit hash for squash merge from PR#10212
-      type: git
-      url: https://github.com/esphome/esphome
-      ref: 903971de12c1b291ca8cd367ce5cdf9af8b304ae
-    components: [ runtime_image ]
-  - source:
-      # Dev commit hash for squash merge from PR#12258
-      type: git
-      url: https://github.com/esphome/esphome
-      ref: 264c8faedd0ab956b0437ec2ecc0bacae1708923
-    components: [ media_player ]
-  - source:
-      # Dev commit hash for squash merge from PR#14013
-      type: git
-      url: https://github.com/esphome/esphome
-      ref: ba7134ee3f870ce00d2990d84b142b734028330f
-    components: [ mdns ]
-  - source:
-      # Dev commit hash for squash merge from PR#14108
-      type: git
-      url: https://github.com/esphome/esphome
-      ref: d2026b4cd74bbeb9b86941bf1887f3d93d639387
-    components: [ audio ]
-
-i2s_audio:
-  i2s_lrclk_pin: ${i2s_lrclk_pin}
-  i2s_bclk_pin: ${i2s_bclk_pin}
-
-speaker:
-  - platform: i2s_audio
-    id: i2s_speaker_id
-    sample_rate: 48000
-    i2s_dout_pin: ${i2s_dout_pin}
-    bits_per_sample: 16bit
-    dac_type: external
-    channel: stereo
-    timeout: never
-    buffer_duration: 100ms
-    audio_dac: external_dac
-
-  - platform: mixer
-    id: mixer_speaker_id
-    output_speaker: i2s_speaker_id
-    num_channels: 2
-    task_stack_in_psram: ${task_stack_in_psram}
-    source_speakers:
-      - id: announcement_mixer_input
-        timeout: never
-      - id: media_mixer_input
-        timeout: never
-
-  - platform: resampler
-    id: media_resampling_speaker
-    output_speaker: media_mixer_input
-    sample_rate: 48000
-    bits_per_sample: 16
-
-  - platform: resampler
-    id: announcement_resampling_speaker
-    output_speaker: announcement_mixer_input
-    sample_rate: 48000
-    bits_per_sample: 16
-
-sendspin:
-  id: sendspin_hub
-  task_stack_in_psram: ${task_stack_in_psram}
-  kalman_process_error: 0.01
-
-media_source:
-  - platform: sendspin
-    id: sendspin_source
-  - platform: http_request
-    id: http_source
-    buffer_size: 200000
-  - platform: file
-    id: file_source
-    files:
-      id: startup_sync_sound
-      file: https://github.com/mrtoy-me/esphome-tas58xx/raw/main/components/tas58xx/tas58xx_boot.flac
-
-media_player:
-  - platform: sendspin
-    id: sendspin_group_media_player
-
-  - platform: speaker_source
-    id: external_media_player
-    name: Media Player
-    announcement_speaker: announcement_resampling_speaker
-    media_speaker: media_resampling_speaker
-    announcement_pipeline:
-      format: FLAC     # FLAC is the least processor intensive codec
-      num_channels: 1  # Stereo audio is unnecessary for announcements
-      sample_rate: 48000
-    media_pipeline:
-      format: FLAC     # FLAC is the least processor intensive codec
-      num_channels: 2
-      sample_rate: 48000
-    volume_increment: 0.05
-    sources:
-      - file_source
-      - http_source
-      - sendspin_source
-    on_announcement:
-      - if:
-          condition:
-            - lambda: return (!id(announcement_triggered));
-          then:
-            - lambda: |-
-                id(announcement_triggered) = true;
-                id(current_volume) = id(external_media_player).volume;
-            - mixer_speaker.apply_ducking:
-                  id: media_mixer_input
-                  decibel_reduction: 40
-                  duration: 0.0s
-            - wait_until:
-                media_player.is_announcing: external_media_player
-            - delay: 0.75s
-            - media_player.volume_set:
-                id: external_media_player
-                volume: !lambda "return id(announce_volume).state / 100.0;"
-            - wait_until:
-                - not:
-                    media_player.is_announcing: external_media_player
-            - mixer_speaker.apply_ducking:
-                      id: media_mixer_input
-                      decibel_reduction: 0
-                      duration: 1.0s
-            - media_player.volume_set:
-                id: external_media_player
-                volume: !lambda "return id(current_volume);"
-            - lambda: id(announcement_triggered) = false;
-
-    on_state:
-      if:
-        condition:
-          and:
-            - lambda: return (!id(announcement_triggered));
-            - not:
-                media_player.is_announcing: external_media_player
-        then:
-          - mixer_speaker.apply_ducking:
-              id: media_mixer_input
-              decibel_reduction: 0
-              duration: 1.0s
-    
-    on_play:
-      - display.page.show: page_play
-      - component.update: spi_display
-      - switch.template.publish:
-          id: switch_screen
-          state: ON
-      - if:
-          condition:
-            switch.is_off: enable_dac
-          then:
-            switch.turn_on: enable_dac
-
-    on_idle:
-      - display.page.show: page_clock
-      - component.update: spi_display
-      - if:
-          condition:
-            switch.is_on: enable_dac
-          then:
-            switch.turn_off: enable_dac
-
-number:
-  - platform: template
-    name: Announce Volume
-    id: announce_volume
-    icon: mdi:volume-source
-    unit_of_measurement: "%"
-    min_value: 0
-    max_value: 100
-    step: 1
-    restore_value: true
-    initial_value: 50
-    optimistic: true
+network:
+  enable_ipv6: true
 
 # ===== Packages =====
 packages:
@@ -381,7 +112,15 @@ packages:
       # - firmware/esphome/packages/dac-tas58xx-biamp.yaml
       # Option C: TAS58xx configured with bi-amp mode, with filters applied to both channels (HF or LF)
       # - firmware/esphome/packages/dac-tas58xx-presets.yaml
-      - firmware/esphome/packages/sendspin-addon-oled.yaml
+
+      - firmware/esphome/packages/sendspin.yaml
+      # Optional: OLED displays clock when idling, and track/artist info when playing
+      # - firmware/esphome/packages/sendspin-addon-oled.yaml
+      - firmware/esphome/packages/sendspin-audio.yaml
+      - firmware/esphome/packages/sendspin-audio-addon-external-dac.yaml
+      - firmware/esphome/packages/sendspin-addon-dac-enable.yaml
+      - firmware/esphome/packages/sendspin-addon-tas58xx.yaml
+      
       - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
@@ -392,10 +131,17 @@ packages:
   # # Debug/local development fallback:
   # external_dac: !include packages/dac-tas58xx.yaml
   # # external_dac: !include packages/dac-tas58xx-biamp.yaml
-  # # external_dac: !include packages/dac-tas58xx-presets.yaml
+  # # external_dac: !include packages/dac-tas58xx-presets.yaml  
+
+  # sendspin_audio: !include packages/sendspin-audio.yaml
+  # sendspin_external_dac: !include packages/sendspin-audio-addon-external-dac.yaml
+  # sendspin: !include packages/sendspin.yaml
+  # sendspin_enable_dac: !include packages/sendspin-addon-dac-enable.yaml
+  # sendspin_tas58xx: !include packages/sendspin-addon-tas58xx.yaml
+  # oled: !include packages/sendspin-addon-oled.yaml
+
   # light: !include packages/light.yaml
   # ir_receiver: !include packages/ir-receiver.yaml
   # monitoring: !include packages/monitoring.yaml
   # monitoring_wifi: !include packages/monitoring-wifi.yaml
-  # oled-sendspin: !include packages/sendspin-addon-oled.yaml
   # # ethernet: !include packages/ethernet-w5500.yaml
