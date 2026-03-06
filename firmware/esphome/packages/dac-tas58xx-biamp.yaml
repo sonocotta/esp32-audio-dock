@@ -9,7 +9,7 @@
 # ============================================================
 
 external_components:
-  - source: github://mrtoy-me/esphome-tas58xx@dev
+  - source: github://mrtoy-me/esphome-tas58xx@main
     components: [tas58xx]
     refresh: 48h
 
@@ -25,6 +25,7 @@ audio_dac:
     id: external_dac
     tas58xx_dac: ${tas58xx_variant}     # 'TAS5805M' or 'TAS5825M'
     enable_pin: ${tas58xx_enable_pin}   # Physical pin connected to PWDN pin
+    modulation: BD_MODE                 # 'BD_MODE' default and for VCC 12V or less, or '1SPW_MODE' consider more power efficiency for VCC >12V 
     dac_mode: BTL                       # 'BTL' / Bridge Tied Load - 2Ch Stereo, or 'PBTL' / Parallel Bridge Tied Load - 1Ch Mono (double power)
     mixer_mode: STEREO                  # STEREO, STEREO_INVERSE, MONO, LEFT, RIGHT
     analog_gain: 0db                    # Startup Gain or Output voltage swing - pick based on the power supply voltage: https://github.com/sonocotta/esp32-tas5805m-dac?tab=readme-ov-file#digital-volume-and-analog-gain
