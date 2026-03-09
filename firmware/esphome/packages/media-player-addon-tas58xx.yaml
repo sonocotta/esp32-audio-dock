@@ -23,7 +23,7 @@ media_player:
 
     files:
       id: startup_sync_sound
-      file: https://github.com/mrtoy-me/esphome-tas58xx/raw/beta/components/tas58x/silent_boot.flac
+      file: https://github.com/mrtoy-me/esphome-tas58xx/raw/main/components/tas58x/silent_boot.flac
       # For debuging purposes, you can use a sound with audible content
       # file: https://github.com/mrtoy-me/esphome-tas58xx/raw/main/components/tas58xx/tas58xx_boot.flac
 
