@@ -6,8 +6,22 @@
 #   - i2c_sda_pin
 #   - i2c_scl_pin
 #
+# Optional substitutions (override in main config to change defaults):
+#   - tas58xx_dac_mode:    BTL (default) or PBTL
+#   - tas58xx_modulation:  BD_MODE (default) or 1SPW_MODE
+#   - tas58xx_mixer_mode:  STEREO (default), STEREO_INVERSE, MONO, LEFT, RIGHT
+#   - tas58xx_analog_gain: 0db (default)
+#   - tas58xx_volume_max:  0dB (default)
+#   - tas58xx_volume_min:  -60dB (default)
 # ============================================================
 
+substitutions:
+  tas58xx_dac_mode: BTL        # 'BTL' / Bridge Tied Load - 2Ch Stereo, or 'PBTL' / Parallel Bridge Tied Load - 1Ch Mono (double power)
+  tas58xx_modulation: BD_MODE  # 'BD_MODE' default and for VCC 12V or less, or '1SPW_MODE' consider more power efficiency for VCC >12V
+  tas58xx_mixer_mode: STEREO   # STEREO, STEREO_INVERSE, MONO, LEFT, RIGHT
+  tas58xx_analog_gain: 0db     # Startup Gain or Output voltage swing
+  tas58xx_volume_max: 0dB      # Max HA volume mapping to Digital Volume control
+  tas58xx_volume_min: -60dB    # Min HA volume mapping to Digital Volume control
 external_components:
   - source: github://mrtoy-me/esphome-tas58xx@main
     components: [tas58xx]
@@ -25,12 +39,12 @@ audio_dac:
     id: external_dac
     tas58xx_dac: ${tas58xx_variant}     # 'TAS5805M' or 'TAS5825M'
     enable_pin: ${tas58xx_enable_pin}   # Physical pin connected to PWDN pin
-    modulation: BD_MODE                 # 'BD_MODE' default and for VCC 12V or less, or '1SPW_MODE' consider more power efficiency for VCC >12V 
-    dac_mode: BTL                       # 'BTL' / Bridge Tied Load - 2Ch Stereo, or 'PBTL' / Parallel Bridge Tied Load - 1Ch Mono (double power)
-    mixer_mode: STEREO                  # STEREO, STEREO_INVERSE, MONO, LEFT, RIGHT
-    analog_gain: 0db                    # Startup Gain or Output voltage swing - pick based on the power supply voltage: https://github.com/sonocotta/esp32-tas5805m-dac?tab=readme-ov-file#digital-volume-and-analog-gain
-    volume_max: 0dB                     # Max HA volume mapping to Digital Volume control, goes as high as +24dB, but not recommend going much above 0 dB, risking to cause clipping on high volume
-    volume_min: -60db                   # Min HA volume mapping to Digital Volume control, goes as low as -103dB, but prefer to set higher to have a reasonable volume range
+    modulation: ${tas58xx_modulation}   # 'BD_MODE' default and for VCC 12V or less, or '1SPW_MODE' consider more power efficiency for VCC >12V
+    dac_mode: ${tas58xx_dac_mode}       # 'BTL' / Bridge Tied Load - 2Ch Stereo, or 'PBTL' / Parallel Bridge Tied Load - 1Ch Mono (double power)
+    mixer_mode: ${tas58xx_mixer_mode}   # STEREO, STEREO_INVERSE, MONO, LEFT, RIGHT
+    analog_gain: ${tas58xx_analog_gain} # Startup Gain or Output voltage swing - pick based on the power supply voltage: https://github.com/sonocotta/esp32-tas5805m-dac?tab=readme-ov-file#digital-volume-and-analog-gain
+    volume_max: ${tas58xx_volume_max}   # Max HA volume mapping to Digital Volume control, goes as high as +24dB, but not recommend going much above 0 dB, risking to cause clipping on high volume
+    volume_min: ${tas58xx_volume_min}   # Min HA volume mapping to Digital Volume control, goes as low as -103dB, but prefer to set higher to have a reasonable volume range
     update_interval: 5s                 # How often fault registers are read and cleared
 
 switch:
