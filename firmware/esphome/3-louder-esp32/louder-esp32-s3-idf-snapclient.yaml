@@ -30,6 +30,13 @@ substitutions:
   i2c_sda_pin: GPIO8
   i2c_scl_pin: GPIO9
 
+  # ===== DAC Overrides (optional) =====
+  # tas58xx_dac_mode: PBTL 
+  # tas58xx_mixer_mode: MONO
+  # tas58xx_analog_gain: 0db
+  # tas58xx_volume_max: 0dB
+  # tas58xx_volume_min: -60dB
+  
   # RGB LED
   rgb_led_pin: GPIO21
 
