@@ -19,10 +19,10 @@ substitutions:
   task_stack_in_psram: "true" 
   
   # Board-specific pinout configuration
-  # I2C pins for DAC control
-  i2c_sda_pin: GPIO42               # I2C pins are swapped on the rev H  
-  i2c_scl_pin: GPIO41               # These are correct for Rev H1 and later
-  pcm5122_i2c_address: 0x4D         # I2C address of the DAC, it is 0x4C n the HiFi-ESP32 Rev H, and 0x4D on the rev H1+ and later
+  # I2C pins
+  i2c_sda_pin: GPIO18
+  i2c_scl_pin: GPIO8
+  pcm5122_i2c_address: 0x4D
   pcm5122_enable_pin: GPIO4         # optional, to enable/disable the DAC (XSMT physical pin)
   
   # I2S audio pins
