@@ -97,6 +97,31 @@
 			"isBackground": false
 		},
 		{
+			"label": "ESP-IDF: Generate Settings Binaries",
+			"type": "shell",
+			"command": "docker",
+			"args": [
+				"run",
+				"--rm",
+				"-v",
+				"${workspaceFolder}:/work",
+				"-w",
+				"/work",
+				"espressif/idf:v4.4.7",
+				"bash",
+				"-lc",
+				"set -euo pipefail; mkdir -p docs/artifacts/binaries/nvs-settings; NVS_GEN=\"$IDF_PATH/components/nvs_flash/nvs_partition_generator/nvs_partition_gen.py\"; for file in flash-tools/settings/*.csv; do [ -f \"$file\" ] || continue; base=$(basename \"$file\" .csv); out=\"docs/artifacts/binaries/nvs-settings/${base}.bin\"; echo \"Generating $file -> $out\"; \"$NVS_GEN\" generate \"$file\" \"$out\" 65536; done"
+			],
+			"problemMatcher": [],
+			"group": "build",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "dedicated"
+			}
+		},
+		{
 			"label": "Serve Web Installer",
 			"type": "shell",
 			"command": "python3 -m http.server 8008 -d docs",
