@@ -16,7 +16,7 @@ bt_sink_pin,data,string,1234
 bt_sink_volume,data,string,127
 bypass_wm,data,string,0
 cspot_config,data,string,"{""deviceName"":""hifi-esp32s3-plus"",""bitrate"":160}"
-dac_config,data,string,"model=I2S,bck=14,ws=15,do=16,sda=8,scl=9,i2c=77"
+dac_config,data,string,"model=I2S,bck=14,ws=15,do=16,sda=42,scl=41,i2c=77"
 dac_controlset,data,string,"{""init"":[{""reg"":0,""val"":0},{""reg"":3,""val"":0},{""reg"":42,""val"":17},{""reg"":2,""val"":0},{""reg"":13,""val"":16},{""reg"":37,""val"":8},{""reg"":61,""val"":48},{""reg"":62,""val"":48}],""poweron"":[{""reg"":3,""val"":0}],""poweroff"":[{""reg"":3,""val"":1}]}"
 dhcp_tmout,data,string,8
 display_config,data,string,
@@ -28,7 +28,7 @@ eth_config,data,string,
 ethtmout,data,string,8
 gpio_exp_config,data,string,
 host_name,data,string,hifi-esp32s3-plus
-i2c_config,data,string,"scl=9,sda=8,speed=400000,port=1"
+i2c_config,data,string,"scl=41,sda=42,speed=400000,port=1"
 jack_mutes_amp,data,string,n
 led_brightness,data,string,
 led_vu_config,data,string,
