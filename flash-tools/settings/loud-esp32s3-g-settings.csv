@@ -2,22 +2,22 @@ key,type,encoding,value
 config,namespace,,
 a2dp_ctmt,data,string,1000
 a2dp_ctrld,data,string,500
-a2dp_dev_name,data,string,louder-esp32-plus
+a2dp_dev_name,data,string,loud-esp32s3
 a2dp_sink_name,data,string,SMSL BT4.2
 actrls_config,data,string,
-airplay_name,data,string,louder-esp32-plus
+airplay_name,data,string,loud-esp32s3
 airplay_port,data,string,5000
-ap_ssid,data,string,louder-esp32-plus
+ap_ssid,data,string,loud-esp32s3
 autoexec,data,string,1
-autoexec1,data,string,squeezelite -o I2S -b 500:2000 -d all=info -C 30 -W -n louder-esp32-plus
+autoexec1,data,string,squeezelite -o I2S -b 500:2000 -d all=info -C 30 -W -n loud-esp32s3
 bat_config,data,string,
-bt_name,data,string,louder-esp32-plus
+bt_name,data,string,loud-esp32s3
 bt_sink_pin,data,string,1234
 bt_sink_volume,data,string,127
 bypass_wm,data,string,0
-cspot_config,data,string,"{""deviceName"":""louder-esp32-plus"",""bitrate"":160}"
-dac_config,data,string,"model=I2S,bck=26,ws=25,do=22,sda=21,scl=27,i2c=76"
-dac_controlset,data,string,"{""init"":[{""reg"":3,""val"":2},{""reg"":3,""val"":3}],""poweron"":[{""reg"":3,""val"":3}],""poweroff"":[{""reg"":3,""val"":0}]}"
+cspot_config,data,string,"{""deviceName"":""loud-esp32s3"",""bitrate"":160}"
+dac_config,data,string,"model=I2S,bck=14,ws=15,do=16"
+dac_controlset,data,string,
 dhcp_tmout,data,string,8
 display_config,data,string,
 enable_airplay,data,string,1
@@ -27,8 +27,8 @@ equalizer,data,string,
 eth_config,data,string,
 ethtmout,data,string,8
 gpio_exp_config,data,string,
-host_name,data,string,louder-esp32-plus
-i2c_config,data,string,"scl=27,sda=21,speed=400000,port=1"
+host_name,data,string,loud-esp32s3
+i2c_config,data,string,
 jack_mutes_amp,data,string,n
 led_brightness,data,string,
 led_vu_config,data,string,
@@ -43,7 +43,7 @@ pollmx,data,string,600
 rel_api,data,string,https://api.github.com/repos/sle118/squeezelite-esp32/releases
 release_url,data,string,CONFIG_SQUEEZELITE_ESP32_RELEASE_URL
 rotary_config,data,string,
-set_GPIO,data,string,"33=vcc,39=ir"
+set_GPIO,data,string,"17=amp,7=ir"
 sleep_config,data,string,
 spdif_config,data,string,
 spi_config,data,string,

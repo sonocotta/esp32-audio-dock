@@ -25,7 +25,7 @@ substitutions:
   i2s_dout_pin: GPIO16
 
   # DAC enable pin (actually amp UNMUTE)
-  dac_enable_pin: GPIO17
+  dac_enable_pin: GPIO17              # It is 17 on rev G an later. rev F uses GPIO08
   dac_enable_restore_mode: ALWAYS_ON
   
   # RGB LED
