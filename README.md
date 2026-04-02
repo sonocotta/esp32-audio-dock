@@ -103,6 +103,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
       - [OLED models](#oled-models)
       - [Software side](#software-side)
     - [Case](#case)
+  - [Comunity projects](#comunity-projects)
   - [Where to buy](#where-to-buy)
 
 ## Motivation
@@ -1025,6 +1026,14 @@ Also, community members created a few 3D-printable designs for Louder-ESP32 boar
 | [#7](https://www.thingiverse.com/thing:6333131) | ![image](https://github.com/user-attachments/assets/6e37b6ce-443e-4067-8a7a-e3b49e5e8ad3)
 | [#8](https://www.thingiverse.com/thing:6326927) | ![image](https://github.com/user-attachments/assets/cf2983fa-0c92-4798-9cb5-5e4e97d70970)
 
+## Comunity projects
+
+If you don't mind to show off your projects, please send me a note, or create a PR directly
+
+| #  | Image |
+|----|----|
+| [Inexpensive DIY Wi-Fi & BT speaker for Home Assistant audio](https://github.com/undotcom/home-assistant-audio-speaker-v2/) | image
+| [DIY WiFi & BT audio speaker for Home Assistant, modify prebuilt 3D printed speaker](https://www.reddit.com/r/homeassistant/comments/1qw1gg6/diy_wifi_bt_audio_speaker_for_home_assistant/) | image
 
 ## Where to buy
 
