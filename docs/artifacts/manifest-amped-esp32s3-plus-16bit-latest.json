@@ -1,5 +1,5 @@
 {
-  "name": "hifi-esp32s3-plus-16bit",
+  "name": "amped-esp32s3-plus-16bit",
   "version": "a71aff68",
   "home_assistant_domain": "slim_player",
   "funding_url": "https://esphome.io/guides/supporters.html",

@@ -1,5 +1,5 @@
 {
-  "name": "amped-esp32s3-plus-32bit",
+  "name": "loud-esp32s3-g-16bit",
   "version": "a71aff68",
   "home_assistant_domain": "slim_player",
   "funding_url": "https://esphome.io/guides/supporters.html",
@@ -10,11 +10,11 @@
       "chipFamily": "ESP32-S3",
       "parts": [
         {
-          "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3-32bit/bootloader-a71aff68.bin",
+          "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3-16bit/bootloader-a71aff68.bin",
           "offset": "0x0"
         },
         {
-          "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3-32bit/partition-table-a71aff68.bin",
+          "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3-16bit/partition-table-a71aff68.bin",
           "offset": "0x8000"
         },
         {
@@ -22,23 +22,23 @@
           "offset": "0x9000"
         },
         {
-          "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3-32bit/ota_data_initial-a71aff68.bin",
+          "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3-16bit/ota_data_initial-a71aff68.bin",
           "offset": "0xd000"
         },
         {
-          "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3-32bit/recovery-a71aff68.bin",
+          "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3-16bit/recovery-a71aff68.bin",
           "offset": "0x10000"
         },
         {
-          "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3-32bit/squeezelite-a71aff68.bin",
+          "path": "binaries/I2S-4MFlash-sdkconfig.esp32s3-16bit/squeezelite-a71aff68.bin",
           "offset": "0x150000"
         },
         {
-          "path": "binaries/nvs-settings/amped-esp32s3-plus-settings.bin",
+          "path": "binaries/nvs-settings/loud-esp32s3-g-settings.bin",
           "offset": "0x3f0000"
         }
       ]
     }
   ],
-  "manifest_name": "manifest-amped-esp32s3-plus-32bit-latest.json"
+  "manifest_name": "manifest-loud-esp32s3-g-16bit-latest.json"
 }

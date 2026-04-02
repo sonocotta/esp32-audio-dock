@@ -1,5 +1,5 @@
 {
-  "name": "amped-esp32s3-plus-32bit",
+  "name": "loud-esp32s3-g-32bit",
   "version": "a71aff68",
   "home_assistant_domain": "slim_player",
   "funding_url": "https://esphome.io/guides/supporters.html",
@@ -34,11 +34,11 @@
           "offset": "0x150000"
         },
         {
-          "path": "binaries/nvs-settings/amped-esp32s3-plus-settings.bin",
+          "path": "binaries/nvs-settings/loud-esp32s3-g-settings.bin",
           "offset": "0x3f0000"
         }
       ]
     }
   ],
-  "manifest_name": "manifest-amped-esp32s3-plus-32bit-latest.json"
+  "manifest_name": "manifest-loud-esp32s3-g-32bit-latest.json"
 }
