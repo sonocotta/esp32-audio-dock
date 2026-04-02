@@ -1,5 +1,5 @@
 {
-    "name": "hifi-esp32-plus-16bit",
+    "name": "amped-esp32-plus-16bit",
     "version": "$commitid",
     "home_assistant_domain": "slim_player",
     "funding_url": "https://esphome.io/guides/supporters.html",
