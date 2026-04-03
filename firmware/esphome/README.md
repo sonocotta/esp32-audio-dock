@@ -119,7 +119,7 @@ Each hardware variant has 3-4 firmware options depending on your use case.
 - `louder-esp32-idf-snapclient.yaml` / `louder-esp32-s3-idf-snapclient.yaml` - Snapcast client with DSP controls, software DSP makes less sense since hardware DSP is much more efficient here
 - `louder-esp32-idf-sendspin.yaml` / `louder-esp32-s3-idf-sendspin.yaml` - Sendspin synchronized playback, very much experimental but working quite impressively well, especially in combination with built-in DSP
 
-**Packages used**: `dac-tas5805m.yaml`, `audio.yaml`, `audio-addon-external-dac.yaml`, `media-player.yaml`, `media-player-addon-dac-enable.yaml`, `media-player-addon-tas5805m.yaml`, `light.yaml`, `ir-receiver.yaml`, `monitoring.yaml`, `oled.yaml`  
+**Packages used**: `dac-tas58xx.yaml`, `audio.yaml`, `audio-addon-external-dac.yaml`, `media-player.yaml`, `media-player-addon-dac-enable.yaml`, `media-player-addon-tas58xx.yaml`, `light.yaml`, `ir-receiver.yaml`, `monitoring.yaml`, `oled.yaml`  
 **Optional**: `ethernet-w5500.yaml`
 
 <img width="923" height="1224" alt="image" src="https://github.com/user-attachments/assets/36084c57-3cf2-4ce3-bc2d-26e8d5b52b04" />
@@ -169,17 +169,17 @@ Each hardware variant has 3-4 firmware options depending on your use case.
 ### 7. Louder-ESP32-Plus
 
 **DAC**: TAS5825M (I2C + I2S) with built-in DSP  
-**MCU**: ESP32-S3  
+**MCU**: ESP32 / ESP32-S3  
 **Target**: High-power output with advanced audio processing and voice assistant support  
 **Features**: RGB LED, IR receiver, OLED display, optional Ethernet (W5500), microphone (voice assistant)
 
 **Directory**: `7-louder-esp32-plus/`
 
 **Configurations:**
-- `louder-esp32-s3-plus-idf.yaml` - Standard media player with TAS5825M DSP
-- `louder-esp32-s3-plus-idf-snapclient.yaml` - Snapcast client
-- `louder-esp32-s3-plus-idf-sendspin.yaml` - Sendspin synchronized playback with OLED display
-- `louder-esp32-s3-plus-idf-voice-assist.yaml` - Voice assistant with wake word detection
+- `louder-esp32-plus-idf.yaml` / `louder-esp32-s3-plus-idf.yaml` - Standard media player with TAS5825M DSP
+- `louder-esp32-plus-idf-snapclient.yaml` / `louder-esp32-s3-plus-idf-snapclient.yaml` - Snapcast client
+- `louder-esp32-plus-idf-sendspin.yaml` / `louder-esp32-s3-plus-idf-sendspin.yaml` - Sendspin synchronized playback with OLED display
+- `louder-esp32-s3-plus-idf-voice-assist.yaml` - Voice assistant with wake word detection (S3 only)
 
 The TAS5825M DSP allows 3 distinct EQ modes:
 
@@ -204,18 +204,17 @@ The DSP also allows adjusting the gain per channel, which is essentially a balan
 ### 8. Amped-ESP32-Plus
 
 **DAC**: PCM5122 (I2C + I2S) with entry-level DSP + amplifier  
-**MCU**: ESP32-S3  
+**MCU**: ESP32 / ESP32-S3  
 **Target**: High-quality DSP-controlled audio with built-in amplification and voice assistant support  
 **Features**: RGB LED, IR receiver, optional OLED display, optional Ethernet (W5500), microphone (voice assistant)
 
 **Directory**: `8-amped-esp32-plus/`
 
 **Configurations:**
-- `amped-esp32-s3-plus-idf.yaml` - Standard media player
-- `amped-esp32-s3-plus-idf-snapclient.yaml` - Snapcast client
-- `amped-esp32-s3-plus-idf-snapclient-with-dsp.yaml` - Snapcast client with software DSP equalizer controls
-- `amped-esp32-s3-plus-idf-sendspin.yaml` - Sendspin synchronized playback
-- `amped-esp32-s3-plus-idf-voice-assist.yaml` - Voice assistant with wake word detection
+- `amped-esp32-plus-idf.yaml` / `amped-esp32-s3-plus-idf.yaml` - Standard media player
+- `amped-esp32-plus-idf-snapclient.yaml` / `amped-esp32-s3-plus-idf-snapclient.yaml` - Snapcast client
+- `amped-esp32-plus-idf-sendspin.yaml` / `amped-esp32-s3-plus-idf-sendspin.yaml` - Sendspin synchronized playback
+- `amped-esp32-s3-plus-idf-voice-assist.yaml` - Voice assistant with wake word detection (S3 only)
 
 ---
 
@@ -314,8 +313,8 @@ Full-featured voice assistant with wake word detection:
    - `3-louder-esp32/` - TAS5805M high-power with DSP
    - `4-amped-esp32/` - PCM5100 + TPA3110 amp
    - `5-hifi-esp32-plus/` - PCM5122 with DSP
-   - `7-louder-esp32-plus/` - TAS5825M high-power with DSP (S3 only)
-   - `8-amped-esp32-plus/` - PCM5122 + amp + voice assist (S3 only)
+   - `7-louder-esp32-plus/` - TAS5825M high-power with DSP (ESP32 / ESP32-S3)
+   - `8-amped-esp32-plus/` - PCM5122 + amp + voice assist (ESP32 / ESP32-S3)
 
 2. **Choose your MCU variant** (where applicable):
    - `*-esp32-*` - ESP32 variant
@@ -468,8 +467,7 @@ The package system promotes code reusability across different hardware variants.
 
 - **`dac-switch.yaml`**: Simple GPIO enable/disable switch for MAX98357A (Loud-ESP32)
 - **`dac-pcm5122.yaml`**: PCM5122 DAC via I2C with volume, EQ and DSP controls (HiFi-ESP32-Plus, Amped-ESP32-Plus)
-- **`dac-tas5805m.yaml`**: TAS5805M DAC via I2C with enable pin and fault monitoring (Louder-ESP32)
-- **`dac-tas58xx.yaml`**: TAS5805M/TAS5825M DAC using the unified `tas58xx` driver — 15-band EQ, mixer, gain control (Louder-ESP32-Plus)
+- **`dac-tas58xx.yaml`**: TAS5805M/TAS5825M DAC using the unified `tas58xx` driver — 15-band EQ, mixer, gain control (Louder-ESP32, Louder-ESP32-Plus)
 - **`dac-tas58xx-biamp.yaml`**: TAS58xx in bi-amp mode with per-channel EQ
 - **`dac-tas58xx-presets.yaml`**: TAS58xx with high/low frequency filter presets for subwoofer/satellite setups
 
@@ -486,7 +484,7 @@ These addon packages extend `external_media_player` with board-specific behavior
 
 - **`media-player-addon-dac-enable.yaml`**: Turns DAC GPIO on when playback starts, off when idle — used on Loud-ESP32, HiFi-ESP32-Plus
 - **`media-player-addon-amp-unmute.yaml`**: Unmutes the TPA3110/TPA3128 amplifier on playback — used on Amped-ESP32
-- **`media-player-addon-tas5805m.yaml`**: TAS5805M-specific playback hooks — plays startup sync sound on boot, enables DAC on play, overtemp monitoring
+- **`media-player-addon-tas58xx.yaml`**: TAS58xx-specific playback hooks — plays startup sync sound on boot, enables DAC on play, overtemp monitoring
 
 ### Sendspin Addon Packages
 
@@ -494,13 +492,14 @@ These addon packages extend Sendspin player components with board-specific behav
 
 - **`sendspin-addon-dac-enable.yaml`**: Turns DAC GPIO on/off with Sendspin playback state
 - **`sendspin-addon-amp-unmute.yaml`**: Unmutes amplifier with Sendspin playback
-- **`sendspin-addon-tas5805m.yaml`**: TAS5805M hooks for Sendspin — startup sync sound on boot, DAC enable on play
+- **`sendspin-addon-tas58xx.yaml`**: TAS58xx hooks for Sendspin — startup sync sound on boot, DAC enable on play
 - **`sendspin-addon-oled.yaml`**: Scrolling track info on OLED display during Sendspin playback
 
 ### Feature Packages
 
 - **`ethernet-w5500.yaml`**: W5500 SPI Ethernet module (replaces Wi-Fi config when used)
 - **`amp-unmute.yaml`**: GPIO switch definition for TPA3110/TPA3128 amplifier mute control
+- **`monitoring-wifi.yaml`**: Extended Wi-Fi diagnostics — signal strength, IP address, and connection state sensors
 
 ### Using Packages
 
