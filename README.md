@@ -138,6 +138,12 @@ The **Loud-ESP32** uses a dual MAX98357 HiFi DAC with a built-in highly efficien
 
 <img width="1443" height="1010" alt="image" src="https://github.com/user-attachments/assets/b6f2c2b7-c261-475a-8f22-c3fec4cec834" />
 
+## Loud-ESP32-Plus
+
+The Loud-ESP32-Plus model hires much more powerful [Infineon MA12070P](https://www.infineon.com/part/MA12070P) DAC with up to 60W per channel. Due to the D-class amp, they are highly efficient yet high-quality audio streamers. It lacks DSP features, but has most raw horsepower across the line. It is a work in rpogress, and it will become available as soon as I figure out the driver code.
+
+<img width="1558" height="1154" alt="image" src="https://github.com/user-attachments/assets/4db9c620-bad8-4b72-b07a-69f18b183cc1" />
+
 
 ## Louder-ESP32
 
@@ -172,13 +178,13 @@ Benefits that the new TPA3128 amp brings:
 
 ## Amped-ESP32-Plus
 
-Building upon the success of the Amped-ESP32, the **Amped-ESP32 Plus** combines the powerful PCM5122 DAC with the efficient TPA3128 amplifier. This board offers the same DSP capabilities as the HiFi-ESP32-Plus while providing built-in amplification for direct speaker connection. The PCM5122's DSP features will enable advanced audio processing, including speaker correction, room EQ, and the possibility of creating 2.1 systems
+Building upon the success of the Amped-ESP32, the **Amped-ESP32 Plus** combines the powerful PCM5122 DAC with the efficient TPA3110 or TPA3118 amplifier (depending on revision). This board offers the same DSP capabilities as the HiFi-ESP32-Plus while providing built-in amplification for direct speaker connection. The PCM5122's DSP features will enable advanced audio processing, including speaker correction, room EQ, and the possibility of creating 2.1 systems
 
 <img width="1686" height="1133" alt="image" src="https://github.com/user-attachments/assets/5d8d0b55-e65c-4329-b8ea-e371ff88d784" />
 
 **Features:**
 
-- [PCM5122](https://www.ti.com/lit/ds/symlink/pcm5122.pdf) DAC with integrated DSP + TPA3128 D-class amplifier
+- [PCM5122](https://www.ti.com/lit/ds/symlink/pcm5122.pdf) DAC with integrated DSP + TPA3110/TPA3118 D-class amplifier
 - Digital EQ and dynamic range processing
 - Same power output as Amped-ESP32 with enhanced audio quality
 
@@ -203,23 +209,29 @@ Building upon the success of the Amped-ESP32, the **Amped-ESP32 Plus** combines 
 
 </details>
 
-|  | HiFi-ESP32 | HiFi-ESP32 Plus | Loud-ESP32 | Louder-ESP32 | Amped-ESP32 | Amped-ESP32 Plus |
-|---|---|---|---|---|---|---|
-| Image (ESP32) | <img width="1271" height="854" alt="image" src="https://github.com/user-attachments/assets/fa57efc4-1d78-4dc3-b021-2f66f417f138" /> | <img width="3003" height="2144" alt="image" src="https://github.com/user-attachments/assets/cc046fcf-fbb1-49d1-90b3-b66f86775c52" /> | <img width="1226" height="866" alt="image" src="https://github.com/user-attachments/assets/c778a9f8-0bf0-46a7-b0a1-5f5581574f59" /> | <img width="1712" height="1278" alt="image" src="https://github.com/user-attachments/assets/1bca97a9-0cc7-4658-8ecc-b73894c7579e" /> | ![DSC_0003](https://github.com/user-attachments/assets/447a628c-9225-4beb-b8cc-054cc1d1a20d) | <img width="1686" height="1133" alt="image" src="https://github.com/user-attachments/assets/bacc94bb-4809-4061-ab37-fd54b3b0bcc2" /> |
-| MCU | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 |
-| Image (ESP32-S3) | <img width="1162" height="852" alt="image" src="https://github.com/user-attachments/assets/d8c9cdaa-5c0d-4332-a307-e107e4a424d3" /> | <img width="1673" height="1058" alt="image" src="https://github.com/user-attachments/assets/207c30e0-2939-432d-a8f9-7d008f5f428a" /> | <img width="1151" height="812" alt="image" src="https://github.com/user-attachments/assets/a25fb486-a561-4c0a-833e-e8f722f76c41" /> | <img width="1739" height="1275" alt="image" src="https://github.com/user-attachments/assets/0b143999-959b-4a2a-af37-deddfa07670d" /> | <img width="3415" height="2500" alt="image" src="https://github.com/user-attachments/assets/72a99b07-283e-4d83-9f4a-e61bcd9a1a28" />  | <img width="1686" height="1133" alt="image" src="https://github.com/user-attachments/assets/7d5691e6-dfee-45a0-b282-39dca36276b8" /> |
-| MCU (S3) | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 |
-| DAC | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC (-100 dB typical noise level) | [PCM5122](https://www.ti.com/product/PCM5122) 32bit Stereo DAC with integrated DSP (-112 dB typical noise level) | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with built in D-Class amplifier and powerful DSP | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC working with <br> [TPA3110D2](https://www.ti.com/product/TPA3110D2) D-Class amp <br> [TPA3128D2](https://www.ti.com/product/TPA3128D2) amp starting from Rev H | [PCM5122](https://www.ti.com/product/PCM5122) 32bit Stereo DAC with DSP + [TPA3128D2](https://www.ti.com/product/TPA3128D2) amp |
-| Output (4Ω) | Non-amplified stereo output, 2.1V RMS | Non-amplified stereo output, 2.1V RMS | 2x 5W | Line-level putput, 2.1V RMS, and<br>(TPA3110)<br>2x 22W (4Ω, 1% THD+N) at 16V <br> 2x 32W (4Ω, 1% THD+N) at 20V <br> 1x 40W (4Ω, 1% THD+N) at 20V (bridged)<br>(TPA3128)<br>2x 22W (8Ω, 1% THD+N) at 20V<br> 2x 40W (4Ω, 1% THD+N) at 20V <br> 1x 60W (3Ω, 1% THD+N) at 20V (bridged) | Line-level putput, 2.1V RMS, and<br><br>(TPA3128)<br>2x 22W (8Ω, 1% THD+N) at 20V<br> 2x 40W (4Ω, 1% THD+N) at 20V <br> 1x 60W (3Ω, 1% THD+N) at 20V (bridged) | 2x 22W (4Ω, 1% THD+N) at 16V <br> 2x 32W (4Ω, 1% THD+N) at 20V <br> 1x 40W (4Ω, 1% THD+N) at 20V (bridged) |
-| Output (8Ω) | Non-amplified stereo output | Non-amplified stereo output | 2x 3W | 2x 25W (8Ω, 1% THD+N) at 22V | 2x 25W (8Ω, 1% THD+N) at 22V | 2x 25W (8Ω, 1% THD+N) at 22V |
-| PSRAM | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br>ESP32S3: 8MB PSRAM over 80MHz QSPI | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br>ESP32S3: 8MB PSRAM over 80MHz QSPI | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br>ESP32S3: 8MB PSRAM over 80MHz QSPI | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br>ESP32S3: 8MB PSRAM over 80MHz QSPI | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br>ESP32S3: 8MB PSRAM over 80MHz QSPI | ESP32: 8MB PSRAM (4MB usable) over 40MHz SPI<br>ESP32S3: 8MB PSRAM over 80MHz QSPI |
-| Power | 5V over USB-C, 2x [LP5907](https://www.ti.com/lit/ds/symlink/lp5907.pdf) 3.3 V Ultra-Low-Noise LDO for analog section | 5V over USB-C, 2x [LP5907](https://www.ti.com/lit/ds/symlink/lp5907.pdf) 3.3 V Ultra-Low-Noise LDO for analog section | 5V (up to 2.5A) from USB-C | Up to 26V from external PSU | Up to 26V from external PSU | Up to 26V from external PSU |
-| Connectivity | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) |
-| DSP Features | None | Parametric EQ, crossover, DRC | None | Advanced (EQ, DRC, AGL, etc.) | None | Parametric EQ, crossover, DRC |
-| **Software support** |  |  |  |  |  |  |
-| Squeezelite-ESP32 | Yes (S3 support is unofficial) | Yes (S3 support is unofficial) | Yes (S3 support is unofficial) | Yes (S3 support is unofficial) | Yes (S3 support is unofficial) | Work in progress |
-| Snapclient | Yes | Yes | Yes | Yes | Yes | Work in progress |
-| ESPHome (HA) | Yes | Yes | Yes | Yes | Yes | No (Work in Progress) |
+|  | HiFi-ESP32 | HiFi-ESP32 Plus | Loud-ESP32 | Loud-ESP32-Plus | Louder-ESP32 | Louder-ESP32-Plus | Amped-ESP32 | Amped-ESP32 Plus |
+|---|---|---|---|---|---|---|---|---|
+| Image (ESP32) | <img width="1271" height="854" alt="image" src="https://github.com/user-attachments/assets/fa57efc4-1d78-4dc3-b021-2f66f417f138" /> | <img width="3003" height="2144" alt="image" src="https://github.com/user-attachments/assets/cc046fcf-fbb1-49d1-90b3-b66f86775c52" /> | <img width="1226" height="866" alt="image" src="https://github.com/user-attachments/assets/c778a9f8-0bf0-46a7-b0a1-5f5581574f59" /> | <img width="1558" height="1154" alt="image" src="https://github.com/user-attachments/assets/b1525874-319c-41d9-a354-8419b3df76ec" /> | <img width="1560" height="1093" alt="image" src="https://github.com/user-attachments/assets/44809566-6eaf-4567-ae04-70904f7ea173" /> | <img width="1555" height="1045" alt="image" src="https://github.com/user-attachments/assets/ee5ed334-b355-4fd9-ad94-a2edeaef927a" /> | ![DSC_0003](https://github.com/user-attachments/assets/447a628c-9225-4beb-b8cc-054cc1d1a20d) | <img width="1580" height="1141" alt="image" src="https://github.com/user-attachments/assets/7335b7cb-ccfe-45f8-bd14-0b8db077ff10" /> |
+| MCU | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 |
+| Image (ESP32-S3) | <img width="1162" height="852" alt="image" src="https://github.com/user-attachments/assets/d8c9cdaa-5c0d-4332-a307-e107e4a424d3" /> | <img width="1673" height="1058" alt="image" src="https://github.com/user-attachments/assets/207c30e0-2939-432d-a8f9-7d008f5f428a" /> | <img width="1151" height="812" alt="image" src="https://github.com/user-attachments/assets/a25fb486-a561-4c0a-833e-e8f722f76c41" /> | <img width="1558" height="1154" alt="image" src="https://github.com/user-attachments/assets/e3c2ce90-012e-4d28-aa31-56833b886665" /> | <img width="1739" height="1275" alt="image" src="https://github.com/user-attachments/assets/0b143999-959b-4a2a-af37-deddfa07670d" /> | <img width="1703" height="1096" alt="image" src="https://github.com/user-attachments/assets/44d83f5a-3dd6-4cf4-bb3f-6a065066ba3d" /> | <img width="3415" height="2500" alt="image" src="https://github.com/user-attachments/assets/72a99b07-283e-4d83-9f4a-e61bcd9a1a28" />  | <img width="1686" height="1133" alt="image" src="https://github.com/user-attachments/assets/7d5691e6-dfee-45a0-b282-39dca36276b8" /> |
+| MCU (S3) | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 |
+| DAC | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC (-100 dB typical noise level) | [PCM5122](https://www.ti.com/product/PCM5122) 32bit Stereo DAC with integrated DSP (-112 dB typical noise level) | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | [Infineon MA12070P](https://www.infineon.com/part/MA12070P)<br> with built-in D-Class amp | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with built in D-Class amplifier and powerful DSP | Stereo I2S DAC (<br>[TAS5825M](https://www.ti.com/product/TAS5825M)<br>) with built in D-Class amplifier and powerful DSP | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC working with <br> [TPA3110D2](https://www.ti.com/product/TPA3110D2) D-Class amp <br> [TPA3128D2](https://www.ti.com/product/TPA3128D2) amp starting from Rev H | [PCM5122](https://www.ti.com/product/PCM5122) 32bit Stereo DAC with DSP + [TPA3110D2](https://www.ti.com/product/TPA3110D2) or [TPA3118D2](https://www.ti.com/product/TPA3118D2) amp |
+| Line-out (possibility to connect external amplifier) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
+| Output (4Ω, 1% THD) | ❌ | ❌ | 2x 5W | 2x 60W | 2x 32W,<br>1x 45W (bridged) | 2x 45W,<br>1x 60W (bridged) | (TPA3110)<br>2x 25W<br>1x 40W (bridged)<br>(TPA3128)<br>2x 25W<br>1x 60W (bridged) | (TPA3110)<br>2x 25W<br>1x 40W (bridged)<br>(TPA3118)<br>2x 25W<br>1x 60W (bridged) |
+| Output (8Ω, 1% THD) | ❌ | ❌ | 2x 3W | 2x 35W | 2x 22W | 2x 30W | 2x 25W | 2x 25W |
+| Flash | 8MB | 8MB | 8MB | 8MB | 8MB | 8MB | 8MB | 8MB |
+| PSRAM | 8MB | 8MB | 8MB | 8MB | 8MB | 8MB | 8MB | 8MB |
+| Power | 5V over USB-C | 5V over USB-C | 5V (up to 2.5A) from USB-C | 5..26V from external PSU | 5..26V from external PSU | 5..26V from external PSU | (TPA3110) 9..26V <br>(TPA3128) 5..26V<br>from external PSU | (TPA3110) 9..26V <br>(TPA3118) 5..26V<br>from external PSU |
+| Connectivity | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) |
+| Built-in DSP (Digital Signal Processor) | ❌ | Basic (6-band EQ, DRC) | ❌ | ❌ | Advanced (15-band EQ, DRC, AGL, FIR, etc.) | Advanced+ (15-band EQ, DRC, AGL, FIR, Smart features.) | ❌ | Basic (6-band EQ, DRC) |
+| Built-in mic (voice assist) | optional | optional | optional | optional | optional | optional | optional | optional |
+| Built-in IR reader | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Software support** |  |  |  |  |  |  |  |  |
+| Squeezelite-ESP32 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Snapclient | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| ESPHome (Media player) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| ESPHome (Sendspin player) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| ESPHome (Snapclient player) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 ### Onboard PSRAM
 
@@ -272,6 +284,7 @@ Audio streaming requires proper buffering to work; even with the ESP32's 500K of
 
 |          | I2C CLK | I2C DATA | PSRAM RESERVED | AMP EN      | 
 |----------|---------|----------|----------------|-------------|
+| ESP32    | 27      | 21       | 16, 17         | 13          | 
 | ESP32-S3 | 08      | 18       | 35, 36, 37     | 17          |   
 
 ### HiFi-ESP32 Plus and Amped-ESP32 Plus
