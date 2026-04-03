@@ -1042,7 +1042,7 @@ If you don't mind to show off your projects, please send me a note, or create a 
 |----|----|
 | [Inexpensive DIY Wi-Fi & BT speaker for Home Assistant audio](https://github.com/undotcom/home-assistant-audio-speaker-v2/) | ![image](https://github.com/undotcom/home-assistant-audio-speaker-v2/raw/main/images/low_cost_home_assistant_speaker_audio_tts_notifications.jpg)
 | [DIY WiFi & BT audio speaker for Home Assistant, modify prebuilt 3D printed speaker](https://www.reddit.com/r/homeassistant/comments/1qw1gg6/diy_wifi_bt_audio_speaker_for_home_assistant/) | <img width="1080" height="810" alt="image" src="https://github.com/user-attachments/assets/5fddea3c-2f5b-402f-8db7-8e7bb75767db" />
-| [3D Printed Case for HiFi ESP32 Plus](https://makerworld.com/en/models/2611823-hifi-esp32-plus-case#profileId-2882358) | <img width="1080" height="810" alt="image" src="https://github.com/user-attachments/assets/acbfb5f1-65a4-441d-9538-c2c454ac4dff" />
+| [3D Printed Case for HiFi ESP32 Plus](https://makerworld.com/en/models/2611823-hifi-esp32-plus-case#profileId-2882358) | <img width="1080" height="810" alt="image" src="https://github.com/user-attachments/assets/f3f9aa86-7ad1-4ccf-8d29-35b591596efc" />
 
 
 ## Where to buy
