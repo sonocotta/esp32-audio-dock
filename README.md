@@ -40,7 +40,6 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
   - [Louder-ESP32 Plus](#louder-esp32-plus)
   - [Amped-ESP32](#amped-esp32)
   - [Amped-ESP32-Plus](#amped-esp32-plus)
-  - [Which device is right for me](#which-device-is-right-for-me)
   - [Features](#features)
     - [Onboard PSRAM](#onboard-psram)
   - [Boards Pinout](#boards-pinout)
@@ -123,8 +122,6 @@ The **HiFi-ESP32** is a first-in-line product that uses the legendary PCM5100 se
 
 The **HiFi-ESP32 Plus** represents the next evolution of HiFi-ESP32 boards, featuring the advanced PCM5122 DAC with built-in DSP capabilities. This board maintains the same audio quality as the original HiFi-ESP32 while adding powerful digital signal processing features, including parametric EQ (6 BQs per channel), DRC, and crossover functionality (with output to downstream DAC). The PCM5122's flexible DSP engine can be configured for various audio enhancement scenarios, making it ideal for projects requiring sound tuning (why would you not), and opening the path to create 2.1 systems with PCM5122+PCM5102 master-slave config.
 
-<img width="3003" height="2144" alt="image" src="https://github.com/user-attachments/assets/64a7b96f-d0c1-4572-9fd7-8407753628cf" />
-
 **Key Features:**
 
 - [PCM5122](https://www.ti.com/lit/ds/symlink/pcm5122.pdf) DAC with integrated DSP
@@ -132,6 +129,8 @@ The **HiFi-ESP32 Plus** represents the next evolution of HiFi-ESP32 boards, feat
 - Digital volume control (avoids loss of resolution compared to software volume)
 - Advanced audio processing features (DRC)
 - Same form factor and connectivity as HiFi-ESP32
+
+<img width="3003" height="2144" alt="image" src="https://github.com/user-attachments/assets/64a7b96f-d0c1-4572-9fd7-8407753628cf" />
 
 ## Loud-ESP32
 
@@ -144,7 +143,6 @@ The **Loud-ESP32** uses a dual MAX98357 HiFi DAC with a built-in highly efficien
 The Loud-ESP32-Plus model hires much more powerful [Infineon MA12070P](https://www.infineon.com/part/MA12070P) DAC with up to 60W per channel. Due to the D-class amp, they are highly efficient yet high-quality audio streamers. It lacks DSP features, but has most raw horsepower across the line. It is a work in rpogress, and it will become available as soon as I figure out the driver code.
 
 <img width="1558" height="1154" alt="image" src="https://github.com/user-attachments/assets/4db9c620-bad8-4b72-b07a-69f18b183cc1" />
-
 
 ## Louder-ESP32
 
@@ -168,8 +166,6 @@ The **Louder-ESP32-Plus** upgrades DAc to TAS5825M model, which is more efficien
 
 The PCM5100 HiFi DAC is combined with a highly efficient TPA3110D2 D-class amplifier (recently replaced by [TPA3128](https://www.ti.com/product/TPA3138D2), Rev H+). It brings all the best from the HiFi model and adds an onboard amp to form a complete solution that can be paired with speakers. It uses an external power source to feed hungry amps and the host MCU using an onboard drop-down converter. It has similar power capabilities to the Louder model, but it is much simpler to use since it only needs a valid I2S signal to operate, so a simple book example code will do it.
 
-<img width="1983" height="1286" alt="image" src="https://github.com/user-attachments/assets/c041834a-6996-4180-b355-14eb599ecf69" />
-
 Benefits that the new TPA3128 amp brings:
 
 - It is much more efficient (about half the heat with the same output power, compared to TPA3110), so the board can sustain higher power for longer
@@ -177,11 +173,11 @@ Benefits that the new TPA3128 amp brings:
 - It can be powered from a 5V source, so if you're not looking for maximum power, you can use a USB-C power alone
 - Being a newer design, it has better audio quality. I can't hear it, but people say it sounds much better
 
+<img width="1983" height="1286" alt="image" src="https://github.com/user-attachments/assets/c041834a-6996-4180-b355-14eb599ecf69" />
+
 ## Amped-ESP32-Plus
 
 Building upon the success of the Amped-ESP32, the **Amped-ESP32 Plus** combines the powerful PCM5122 DAC with the efficient TPA3110 or TPA3118 amplifier (depending on revision). This board offers the same DSP capabilities as the HiFi-ESP32-Plus while providing built-in amplification for direct speaker connection. The PCM5122's DSP features will enable advanced audio processing, including speaker correction, room EQ, and the possibility of creating 2.1 systems
-
-<img width="1686" height="1133" alt="image" src="https://github.com/user-attachments/assets/5d8d0b55-e65c-4329-b8ea-e371ff88d784" />
 
 **Features:**
 
@@ -189,9 +185,7 @@ Building upon the success of the Amped-ESP32, the **Amped-ESP32 Plus** combines 
 - Digital EQ and dynamic range processing
 - Same power output as Amped-ESP32 with enhanced audio quality
 
-## Which device is right for me
-
-<img width="1047" height="1112" alt="Esparagus Lineup-Device Select Map (ESP32) drawio (1)" src="https://github.com/user-attachments/assets/79e9bcd5-f621-416e-8a61-c49d2770f2e1" />
+<img width="1686" height="1133" alt="image" src="https://github.com/user-attachments/assets/5d8d0b55-e65c-4329-b8ea-e371ff88d784" />
 
 ## Features
 
