@@ -16,6 +16,10 @@ media_player:
     i2s_dout_pin: ${i2s_dout_pin}
     on_play:
       - logger.log: "Playback started!"
+      - delay: 1000ms
+      - select.set:
+          id: tas58xx_eq_mode_select
+          option: "EQ 15 Band"
     on_pause:
       - logger.log: "Playback paused!"
     on_idle:
