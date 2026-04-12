@@ -669,7 +669,7 @@ The [web-installer](https://sonocotta.github.io/esparagus-snapclient/) allows yo
 ESP32-S3 boards have two ways of firmware update: (1) similarly to classic ESP32, they can be flashed over built-in UART, or (2) uniquely for S3, over built-in USB host controller. Since it is firmware-controlled, it may be disabled if not used (or, more commonly, not available with factory default empty firmware). When an unflashed ESP32-S3 device comes into a boot loop, with a USB-CDC device appearing and disappearing every second, and **requires a special flashing initialisation sequence to get flashed**:
 
 - Press the IO0 (FLASH) button and keep it pressed
-- Press the RESET button and release the FLASH button after
+- Press and release the RESET button, then release the FLASH button last
 - ESP32-S3 will enter download mode, and the USB-CDC device will appear and stay available
 - Run flashing routine as usual, either through web-serial or `esp_tool`
 - This time, it is not possible to reboot the device over USB, so press RESET once more
