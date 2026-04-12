@@ -130,7 +130,7 @@ packages:
       - firmware/esphome/packages/oled.yaml
       # Option A: @c-MM original port of esp32-snapclient client
       # Basic implementation without DSP controls
-      - firmware/esphome/packages/snapclient.yaml
+      # - firmware/esphome/packages/snapclient.yaml
       # Option B: @farmed-switch fork of the c-MM snapclient with added DSP controls
       # Implements software BQ-filters, but makes less sense for DSP-enabled DACs like TAS58XX
       # - firmware/esphome/packages/snapclient-with-dsp.yaml
@@ -149,3 +149,4 @@ packages:
   # monitoring: !include packages/monitoring.yaml
   # monitoring_wifi: !include packages/monitoring-wifi.yaml
   # # ethernet: !include packages/ethernet-w5500.yaml
+  snapclient: !include packages/snapclient-new.yaml
