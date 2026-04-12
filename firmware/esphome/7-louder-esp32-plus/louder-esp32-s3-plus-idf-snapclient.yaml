@@ -31,6 +31,7 @@ substitutions:
   # tas58xx_analog_gain: 0db
   # tas58xx_volume_max: 0dB
   # tas58xx_volume_min: -60dB
+  tas58xx_refresh_eq: MANUAL
   
   # RGB LED
   rgb_led_pin: GPIO21
