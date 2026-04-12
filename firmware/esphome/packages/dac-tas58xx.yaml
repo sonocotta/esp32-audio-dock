@@ -63,7 +63,7 @@ select:
       name: _Mixer Mode
     eq_mode:
       name: EQ Mode
-      id: tas58xx_eq_mode
+      id: tas58xx_eq_mode_select
 
 number:
   - platform: tas58xx
