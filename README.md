@@ -943,7 +943,7 @@ It is not recommended to go *far beyond* the voltage your speakers can handle; o
 
 The screw terminal is connected in parallel to the barrel jack; you can use either interchangeably.
 
-On the latest boards (starting from Amped-ESP32), I switched to [barrel jack with thick middle pin](https://atta.szlcsc.com/upload/public/pdf/source/20200812/C720576_7B83670454B7C7E493B4E29DD30CFE1F.pdf) with a **2.5mm pin**, it’s a bit unusual but still common enough in the laptop world. It is far more comfortable in handling high currents, and importantly, much more sturdy and resistant to desoldering. 
+On the latest boards (starting from Amped-ESP32), I switched to [barrel jack with thick middle pin](https://jlcpcb.com/partdetail/XUNPU-DC_044AA250/C720576) with a **2.5mm pin**, it’s a bit unusual but still common enough in the laptop world. It is far more comfortable in handling high currents, and importantly, much more sturdy and resistant to desoldering. 
 
 ![image](https://github.com/user-attachments/assets/59acba9e-b447-4724-a6a1-bf777f053787)
 
