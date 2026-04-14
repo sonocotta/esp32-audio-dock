@@ -137,7 +137,7 @@ packages:
   # pcm5122_dac: !include packages/dac-pcm5122.yaml
   # amp_unmute: !include packages/amp-unmute.yaml
   snapclient: !include packages/snapclient-new.yaml
-  extenal_dac: !include packages/snapclient-addon-external-dac.yaml
+  external_dac_addon: !include packages/snapclient-addon-external-dac.yaml
   dac_enable: !include packages/snapclient-addon-dac-enable.yaml
   amp_enable: !include packages/snapclient-addon-amp-enable.yaml
   # # snapclient_with_dsp: !include packages/snapclient-with-dsp.yaml
