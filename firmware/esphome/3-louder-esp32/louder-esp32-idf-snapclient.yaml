@@ -37,6 +37,7 @@ substitutions:
   # tas58xx_volume_max: 0dB
   # tas58xx_volume_min: -60dB
   tas58xx_refresh_eq: MANUAL
+  tas58xx_dac_restore_mode: ALWAYS_OFF
   
   # RGB LED
   rgb_led_pin: GPIO12
@@ -117,7 +118,7 @@ packages:
     ref: main
     files:
       # Option A: TAS58xx configured with ganged 15-band EQ
-      - firmware/esphome/packages/dac-tas58xx.yaml
+      # - firmware/esphome/packages/dac-tas58xx.yaml
       # Option B: TAS58xx configured with individual 15-band EQ per channel
       # - firmware/esphome/packages/dac-tas58xx-biamp.yaml
       # Option C: TAS58xx configured with bi-amp mode, with filters applied to both channels (HF or LF)
@@ -139,7 +140,7 @@ packages:
       # - firmware/esphome/packages/ethernet-w5500.yaml
 
   # # Debug/local development fallback:
-  # external_dac: !include packages/dac-tas58xx.yaml
+  external_dac: !include packages/dac-tas58xx.yaml
   # external_dac: !include packages/dac-tas58xx-biamp.yaml
   # external_dac: !include packages/dac-tas58xx-presets.yaml  # snapclient: !include packages/snapclient.yaml
   # # snapclient_with_dsp: !include packages/snapclient-with-dsp.yaml
@@ -150,3 +151,4 @@ packages:
   # monitoring_wifi: !include packages/monitoring-wifi.yaml
   # # ethernet: !include packages/ethernet-w5500.yaml
   snapclient: !include packages/snapclient-new.yaml
+  dac_enable: !include packages/snapclient-addon-dac-enable.yaml

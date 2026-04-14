@@ -23,7 +23,9 @@ substitutions:
   tas58xx_analog_gain: 0db     # Startup Gain or Output voltage swing
   tas58xx_volume_max: 0dB      # Max HA volume mapping to Digital Volume control
   tas58xx_volume_min: -60dB    # Min HA volume mapping to Digital Volume control
-  tas58xx_refresh_eq: AUTO
+  tas58xx_refresh_eq: AUTO     # AUTO applicable when audio playback triggered at boot, MANUAL requires to trigger EQ refresh with automation
+  tas58xx_dac_restore_mode: ALWAYS_ON  
+
 external_components:
   - source: github://mrtoy-me/esphome-tas58xx@main
     components: [tas58xx]
@@ -55,7 +57,7 @@ switch:
     enable_dac:
       name: Enable DAC
       id: enable_dac
-      restore_mode: ALWAYS_ON 
+      restore_mode: ${tas58xx_dac_restore_mode} 
 
 
 select:
@@ -64,6 +66,7 @@ select:
       name: _Mixer Mode
     eq_mode:
       name: EQ Mode
+      id: tas58xx_eq_mode_select
       
 number:
   - platform: tas58xx

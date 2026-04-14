@@ -7,20 +7,36 @@ i2s_audio:
   i2s_lrclk_pin: ${i2s_lrclk_pin}
   i2s_bclk_pin: ${i2s_bclk_pin}
 
+globals:
+  - id: eq_applied
+    type: bool
+    initial_value: 'false'
+
 media_player:
   - platform: snapclient
     hostname: ${snapcast_server_ip}
     port: ${snapcast_server_port}
     name: ${friendly_name}
+    id: snapclient_media_player
     audio_dac: external_dac
     i2s_dout_pin: ${i2s_dout_pin}
+
     on_play:
-      - logger.log: "Playback started!"
-      #- delay: 1000ms
-      - select.set:
-          id: tas58xx_eq_mode_select
-          option: "EQ 15 Band"
+    - if:
+          condition:
+            - lambda: return (!id(eq_applied));
+          then:
+            - logger.log: "Playback started!"
+            #- delay: 1000ms
+            - select.set_index:
+                id: tas58xx_eq_mode_select
+                index: 1 # Enabled
+            - globals.set:
+                id: eq_applied
+                value: 'true' 
+    
     on_pause:
       - logger.log: "Playback paused!"
+    
     on_idle:
       - logger.log: "Playback finished!"
