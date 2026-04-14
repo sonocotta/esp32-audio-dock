@@ -26,7 +26,7 @@ substitutions:
 
   # DAC enable pin (actually amp UNMUTE)
   dac_enable_pin: GPIO13
-  dac_enable_restore_mode: ALWAYS_ON
+  dac_enable_restore_mode: ALWAYS_OFF
   
   # RGB LED
   rgb_led_pin: GPIO12

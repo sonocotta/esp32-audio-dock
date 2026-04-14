@@ -1,0 +1,24 @@
+# ============================================================
+# Media Player - Amp enable addon
+# ============================================================
+# Extends snapclient media player with Amp enable control
+# Dependencies: snapclient-new.yaml (speaker stack)
+# amp-unmute.yaml (Amp enable switch)
+# ============================================================
+
+media_player:
+  - id: !extend snapclient_media_player
+
+    on_play:
+      - if:
+          condition:
+            switch.is_off: enable_amp
+          then:
+            switch.turn_on: enable_amp
+
+    on_idle:
+      - if:
+          condition:
+            switch.is_on: enable_amp
+          then:
+            switch.turn_off: enable_amp

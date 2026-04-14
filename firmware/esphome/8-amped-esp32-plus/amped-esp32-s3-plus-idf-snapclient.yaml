@@ -32,7 +32,7 @@ substitutions:
   
   # Amp UNMUTE pin
   amp_enable_pin: GPIO17
-  amp_enable_restore_mode: ALWAYS_ON
+  amp_enable_restore_mode: ALWAYS_OFF
   
   # RGB LED
   rgb_led_pin: GPIO21
@@ -122,7 +122,7 @@ packages:
       # - firmware/esphome/packages/snapclient.yaml
       # Option B: @farmed-switch fork of the c-MM snapclient with added DSP controls
       # Implements software BQ-filters, but makes less sense for DSP-enabled DACs
-      - firmware/esphome/packages/snapclient-with-dsp.yaml
+      # - firmware/esphome/packages/snapclient-with-dsp.yaml
 
       - firmware/esphome/packages/amp-unmute.yaml
       - firmware/esphome/packages/light.yaml
@@ -136,7 +136,10 @@ packages:
   # # Debug/local development fallback:    
   # pcm5122_dac: !include packages/dac-pcm5122.yaml
   # amp_unmute: !include packages/amp-unmute.yaml
-  # snapclient: !include packages/snapclient.yaml
+  snapclient: !include packages/snapclient-new.yaml
+  extenal_dac: !include packages/snapclient-addon-external-dac.yaml
+  dac_enable: !include packages/snapclient-addon-dac-enable.yaml
+  amp_enable: !include packages/snapclient-addon-amp-enable.yaml
   # # snapclient_with_dsp: !include packages/snapclient-with-dsp.yaml
 
   # light: !include packages/light.yaml
