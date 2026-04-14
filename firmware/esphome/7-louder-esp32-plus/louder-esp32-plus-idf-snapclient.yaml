@@ -119,7 +119,7 @@ packages:
     ref: main
     files:
       # Option A: TAS58xx configured with ganged 15-band EQ
-      - firmware/esphome/packages/dac-tas58xx.yaml
+      # - firmware/esphome/packages/dac-tas58xx.yaml
       # Option B: TAS58xx configured with individual 15-band EQ per channel
       # - firmware/esphome/packages/dac-tas58xx-biamp.yaml
       # Option C: TAS58xx configured with bi-amp mode, with filters applied to both channels (HF or LF)
