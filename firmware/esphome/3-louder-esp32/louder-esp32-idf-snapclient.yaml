@@ -151,5 +151,6 @@ packages:
   # monitoring_wifi: !include packages/monitoring-wifi.yaml
   # # ethernet: !include packages/ethernet-w5500.yaml
   snapclient: !include packages/snapclient-new.yaml
+  extenal_dac: !include packages/snapclient-addon-external-dac.yaml
   dac_enable: !include packages/snapclient-addon-dac-enable.yaml
   eq_enable: !include packages/snapclient-addon-tas58xx.yaml

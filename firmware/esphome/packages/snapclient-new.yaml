@@ -13,7 +13,6 @@ media_player:
     port: ${snapcast_server_port}
     name: ${friendly_name}
     id: snapclient_media_player
-    audio_dac: external_dac
     i2s_dout_pin: ${i2s_dout_pin}
 
     on_play:
