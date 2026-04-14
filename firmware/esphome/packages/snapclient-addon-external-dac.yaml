@@ -5,6 +5,6 @@
 # by attaching a configured external DAC component.
 # ============================================================
 
-speaker:
+media_player:
   - id: !extend snapclient_media_player
     audio_dac: external_dac
