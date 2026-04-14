@@ -156,3 +156,4 @@ packages:
   # # ethernet: !include packages/ethernet-w5500.yaml
   snapclient: !include packages/snapclient-new.yaml
   dac_enable: !include packages/snapclient-addon-dac-enable.yaml
+  eq_enable: !include packages/snapclient-addon-tas58xx.yaml

@@ -38,7 +38,7 @@ substitutions:
   # tas58xx_volume_min: -60dB
   tas58xx_refresh_eq: MANUAL
   tas58xx_dac_restore_mode: ALWAYS_OFF
-  
+
   # RGB LED
   rgb_led_pin: GPIO12
   
@@ -152,3 +152,4 @@ packages:
   # # ethernet: !include packages/ethernet-w5500.yaml
   snapclient: !include packages/snapclient-new.yaml
   dac_enable: !include packages/snapclient-addon-dac-enable.yaml
+  eq_enable: !include packages/snapclient-addon-tas58xx.yaml

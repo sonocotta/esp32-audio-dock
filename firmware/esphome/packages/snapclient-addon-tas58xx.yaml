@@ -1,0 +1,29 @@
+# ============================================================
+# Media Player - TAS58XX EQ enable addon
+# ============================================================
+# Extends snapclient media player with TAS58XX EQ enable control
+# Dependencies: snapclient-new.yaml (speaker stack)
+# tas58xx-dac.yaml (EQ enable switch included in DAC component)
+# ============================================================
+
+globals:
+  - id: eq_applied
+    type: bool
+    initial_value: 'false'
+
+media_player:
+  - id: !extend snapclient_media_player
+
+    on_play:
+      - if:
+          condition:
+            - lambda: return (!id(eq_applied));
+          then:
+            - logger.log: "Playback started!"
+            #- delay: 1000ms
+            - select.set_index:
+                id: tas58xx_eq_mode_select
+                index: 1 # Enabled
+            - globals.set:
+                id: eq_applied
+                value: 'true' 

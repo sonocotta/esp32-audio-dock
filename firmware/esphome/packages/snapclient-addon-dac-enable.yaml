@@ -1,12 +1,10 @@
 # ============================================================
-# Media Player - AC enable addon
+# Media Player - DAC enable addon
 # ============================================================
-# Configures media player with DAC enable control
-# Requires substitutions:
-#   - friendly_name
-#   - dac_enable_pin
-# Dependencies: media-player.yaml (speaker stack)
+# Extends snapclient media player with DAC enable control
+# Dependencies: snapclient-new.yaml (speaker stack)
 # dac-switch.yaml (DAC enable switch)
+# or tas58xx-dac.yaml (DAC enable switch included in DAC component)
 # ============================================================
 
 media_player:

@@ -7,11 +7,6 @@ i2s_audio:
   i2s_lrclk_pin: ${i2s_lrclk_pin}
   i2s_bclk_pin: ${i2s_bclk_pin}
 
-globals:
-  - id: eq_applied
-    type: bool
-    initial_value: 'false'
-
 media_player:
   - platform: snapclient
     hostname: ${snapcast_server_ip}
@@ -22,18 +17,7 @@ media_player:
     i2s_dout_pin: ${i2s_dout_pin}
 
     on_play:
-    - if:
-          condition:
-            - lambda: return (!id(eq_applied));
-          then:
-            - logger.log: "Playback started!"
-            #- delay: 1000ms
-            - select.set_index:
-                id: tas58xx_eq_mode_select
-                index: 1 # Enabled
-            - globals.set:
-                id: eq_applied
-                value: 'true' 
+      - logger.log: "Playback started!"
     
     on_pause:
       - logger.log: "Playback paused!"
