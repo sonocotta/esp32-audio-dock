@@ -13,17 +13,16 @@ globals:
 
 media_player:
   - id: !extend snapclient_media_player
-
     on_play:
-      - wait_until:
-          condition:
-            switch.is_on: enable_dac
-      - delay: 1000ms
       - if:
           condition:
             - lambda: return (!id(eq_applied));
           then:
             - logger.log: "Playback started!"
+            - wait_until:
+                condition:
+                  switch.is_on: enable_dac
+            - delay: 1000ms
             - select.set_index:
                 id: tas58xx_eq_mode_select
                 index: 1 # Enabled
