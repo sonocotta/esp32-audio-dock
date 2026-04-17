@@ -51,7 +51,7 @@ substitutions:
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
-  min_version: 2025.12.2
+  min_version: 2026.3.0
   platformio_options:
     board_build.flash_mode: dio
 

@@ -8,7 +8,7 @@
 # ============================================================
 
 substitutions:
-  name: esphome-web-eb21c4
+  name: esphome-web-e0de84
   friendly_name: Louder-ESP32
   task_stack_in_psram: "false" 
 
@@ -58,7 +58,7 @@ substitutions:
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
-  min_version: 2025.12.2
+  min_version: 2026.3.0
   name_add_mac_suffix: false
   platformio_options:
     board_build.flash_mode: dio
@@ -135,6 +135,7 @@ packages:
   # external_dac: !include packages/dac-tas58xx-biamp.yaml
   # external_dac: !include packages/dac-tas58xx-presets.yaml  
 
+  # sendspin: !include packages/sendspin.yaml
   # sendspin_audio: !include packages/sendspin-audio.yaml
   # sendspin_external_dac: !include packages/sendspin-audio-addon-external-dac.yaml
   # sendspin: !include packages/sendspin.yaml

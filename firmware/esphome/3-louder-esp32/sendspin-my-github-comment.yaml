@@ -1,0 +1,141 @@
+external_components:
+  - source:
+      # https://github.com/esphome/esphome/pull/14933
+      type: git
+      url: https://github.com/kahrendt/esphome
+      ref: 7a6cf5c8472b7e2fa18ee0fc314f66a80d249e32
+    components: [const, media_source, sendspin]
+  - source:
+      # https://github.com/esphome/esphome/pull/14933
+      type: git
+      url: https://github.com/kahrendt/esphome
+      ref: ff8ce89556748509d7ee8724e12d9d43d3c8c1e8
+    components: [http_request]
+
+globals:
+  - id: current_volume
+    type: float
+    initial_value: '0.2'
+  - id: announcement_triggered
+    type: bool
+    initial_value: 'false'
+
+http_request:
+
+text_sensor:
+  - platform: sendspin
+    type: title
+    name: Track Title
+
+  - platform: sendspin
+    type: artist
+    name: Artist
+
+  - platform: sendspin
+    type: album
+    name: Album
+
+sendspin:
+  id: sendspin_hub
+  task_stack_in_psram: ${task_stack_in_psram}
+
+media_source:
+  - platform: sendspin
+    id: sendspin_media_source
+  # - platform: audio_file
+  #  id: audio_file_announcement_source
+  - platform: http_request
+    id: http_announcement_source
+    buffer_size: 250000
+  - platform: http_request
+    id: http_media_source
+    buffer_size: 100000 #200000
+
+media_player:
+  - platform: sendspin
+    id: sendspin_group_media_player
+
+  - platform: speaker_source
+    id: external_media_player
+    name: "${friendly_name} Player"
+    announcement_pipeline:
+      format: FLAC
+      num_channels: 1
+      sample_rate: 48000
+      speaker: announcement_resampling_speaker
+      sources:
+        # - audio_file_announcement_source
+        - http_announcement_source
+    media_pipeline:
+      format: FLAC
+      num_channels: 2
+      sample_rate: 48000
+      speaker: media_resampling_speaker
+      sources:
+        - http_media_source
+        - sendspin_media_source
+    volume_increment: 0.05
+
+    on_announcement:
+      - if:
+          condition:
+            - lambda: return (!id(announcement_triggered));
+          then:
+            - lambda: |-
+                id(announcement_triggered) = true;
+                id(current_volume) = id(external_media_player).volume;
+            - light.turn_on:
+                id: rgb_front_led
+                blue: 100%
+                red: 0%
+                green: 100%
+                brightness: 50%
+            - mixer_speaker.apply_ducking:
+                  id: media_mixer_input
+                  decibel_reduction: 40
+                  duration: 0.0s
+            - wait_until:
+                media_player.is_announcing: external_media_player
+            - delay: 0.75s
+            - media_player.volume_set:
+                id: external_media_player
+                volume: !lambda "return id(announce_volume).state / 100.0;"
+            - wait_until:
+                - not:
+                    media_player.is_announcing: external_media_player
+            - mixer_speaker.apply_ducking:
+                      id: media_mixer_input
+                      decibel_reduction: 0
+                      duration: 1.0s
+            - media_player.volume_set:
+                id: external_media_player
+                volume: !lambda "return id(current_volume);"
+            - light.turn_off:
+                id: rgb_front_led
+            - lambda: id(announcement_triggered) = false;
+
+    on_state:
+      if:
+        condition:
+          and:
+            - lambda: return (!id(announcement_triggered));
+            - not:
+                media_player.is_announcing: external_media_player
+        then:
+          - mixer_speaker.apply_ducking:
+              id: media_mixer_input
+              decibel_reduction: 0
+              duration: 1.0s
+
+number:
+  - platform: template
+    name: ${friendly_name} Announce Volume
+    id: announce_volume
+    icon: mdi:volume-source
+    unit_of_measurement: "%"
+    min_value: 0
+    max_value: 100
+    step: 1
+    restore_value: true
+    initial_value: 50
+    optimistic: true

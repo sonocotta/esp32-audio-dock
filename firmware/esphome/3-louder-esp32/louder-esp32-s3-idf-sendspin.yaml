@@ -8,7 +8,7 @@
 # ============================================================
 
 substitutions:
-  name: esphome-web-896908
+  name: esphome-web-f63c10
   friendly_name: Louder-ESP32-S3
   task_stack_in_psram: "true" 
 
@@ -56,7 +56,7 @@ substitutions:
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
-  min_version: 2026.1.4
+  min_version: 2026.3.0
   name_add_mac_suffix: false
   platformio_options:
     board_build.flash_mode: dio
@@ -118,7 +118,7 @@ packages:
 
       - firmware/esphome/packages/sendspin.yaml
       # Optional: OLED displays clock when idling, and track/artist info when playing
-      - firmware/esphome/packages/sendspin-addon-oled.yaml
+      # - firmware/esphome/packages/sendspin-addon-oled.yaml
       - firmware/esphome/packages/sendspin-audio.yaml
       - firmware/esphome/packages/sendspin-audio-addon-external-dac.yaml
       - firmware/esphome/packages/sendspin-addon-dac-enable.yaml
@@ -136,6 +136,7 @@ packages:
   # # external_dac: !include packages/dac-tas58xx-biamp.yaml
   # # external_dac: !include packages/dac-tas58xx-presets.yaml
   
+  # sendspin: !include packages/sendspin.yaml
   # sendspin_audio: !include packages/sendspin-audio.yaml
   # sendspin_external_dac: !include packages/sendspin-audio-addon-external-dac.yaml
   # sendspin: !include packages/sendspin.yaml
