@@ -1,0 +1,10 @@
+# ============================================================
+# Snapclient media player - External DAC addon
+# ============================================================
+# Extends Snapclient media player configuration from snapclient-new.yaml
+# by attaching a configured external DAC component.
+# ============================================================
+
+media_player:
+  - id: !extend snapclient_media_player
+    audio_dac: external_dac

@@ -28,6 +28,7 @@ jobs:
           configs=$(find firmware/esphome -maxdepth 2 -name "*.yaml" -type f \
             | grep -v "/packages/" \
             | grep -v "/packages-archive/" \
+            | grep -v "/0-legacy-boards/" \
             | grep -v "/secrets/" \
             | grep -v "secrets.yaml" \
             | jq -R -s -c 'split("\n")[:-1]')

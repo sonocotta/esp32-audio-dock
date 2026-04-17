@@ -14,7 +14,7 @@
 # ============================================================
 
 substitutions:
-  name: esphome-web-896908
+  name: esphome-web-f63c10
   friendly_name: Louder-ESP32-S3
   task_stack_in_psram: "true" 
 
@@ -36,7 +36,9 @@ substitutions:
   # tas58xx_analog_gain: 0db
   # tas58xx_volume_max: 0dB
   # tas58xx_volume_min: -60dB
-  
+  tas58xx_refresh_eq: MANUAL  
+  tas58xx_dac_restore_mode: ALWAYS_OFF
+
   # RGB LED
   rgb_led_pin: GPIO21
 
@@ -119,7 +121,7 @@ packages:
     ref: main
     files:
       # Option A: TAS58xx configured with ganged 15-band EQ
-      - firmware/esphome/packages/dac-tas58xx.yaml
+      # - firmware/esphome/packages/dac-tas58xx.yaml
       # Option B: TAS58xx configured with individual 15-band EQ per channel
       # - firmware/esphome/packages/dac-tas58xx-biamp.yaml
       # Option C: TAS58xx configured with bi-amp mode, with filters applied to both channels (HF or LF)
@@ -132,7 +134,7 @@ packages:
       - firmware/esphome/packages/oled.yaml
       # Option A: @c-MM original port of esp32-snapclient client
       # Basic implementation without DSP controls
-      - firmware/esphome/packages/snapclient.yaml
+      # - firmware/esphome/packages/snapclient.yaml
       # Option B: @farmed-switch fork of the c-MM snapclient with added DSP controls
       # Implements software BQ-filters, but makes less sense for DSP-enabled DACs like TAS58XX
       # - firmware/esphome/packages/snapclient-with-dsp.yaml
@@ -141,7 +143,7 @@ packages:
       # - firmware/esphome/packages/ethernet-w5500.yaml
 
   # # Debug/local development fallback:
-  # external_dac: !include packages/dac-tas58xx.yaml
+  external_dac: !include packages/dac-tas58xx.yaml
   # external_dac: !include packages/dac-tas58xx-biamp.yaml
   # external_dac: !include packages/dac-tas58xx-presets.yaml  
   # snapclient: !include packages/snapclient.yaml
@@ -152,3 +154,7 @@ packages:
   # monitoring: !include packages/monitoring.yaml
   # monitoring_wifi: !include packages/monitoring-wifi.yaml
   # # ethernet: !include packages/ethernet-w5500.yaml
+  snapclient: !include packages/snapclient-new.yaml
+  external_dac_addon: !include packages/snapclient-addon-external-dac.yaml
+  dac_enable: !include packages/snapclient-addon-dac-enable.yaml
+  eq_enable: !include packages/snapclient-addon-tas58xx.yaml

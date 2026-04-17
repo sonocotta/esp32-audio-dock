@@ -13,6 +13,7 @@
 #   - tas58xx_analog_gain: 0db (default)
 #   - tas58xx_volume_max:  0dB (default)
 #   - tas58xx_volume_min:  -60dB (default)
+#   - tas58xx_refresh_eq:  AUTO (default)
 # ============================================================
 
 substitutions:
@@ -22,8 +23,12 @@ substitutions:
   tas58xx_analog_gain: 0db     # Startup Gain or Output voltage swing
   tas58xx_volume_max: 0dB      # Max HA volume mapping to Digital Volume control
   tas58xx_volume_min: -60dB    # Min HA volume mapping to Digital Volume control
+  tas58xx_refresh_eq: AUTO     # AUTO applicable when audio playback triggered at boot, MANUAL requires to trigger EQ refresh with automation
+  tas58xx_branch: main         # Branch of the esphome-tas58xx component to use, default to 'main' for stable code
+  tas58xx_dac_restore_mode: ALWAYS_ON  
+
 external_components:
-  - source: github://mrtoy-me/esphome-tas58xx@main
+  - source: github://mrtoy-me/esphome-tas58xx@${tas58xx_branch}
     components: [tas58xx]
     refresh: 48h
 
@@ -45,6 +50,7 @@ audio_dac:
     analog_gain: ${tas58xx_analog_gain} # Startup Gain or Output voltage swing - pick based on the power supply voltage: https://github.com/sonocotta/esp32-tas5805m-dac?tab=readme-ov-file#digital-volume-and-analog-gain
     volume_max: ${tas58xx_volume_max}   # Max HA volume mapping to Digital Volume control, goes as high as +24dB, but not recommend going much above 0 dB, risking to cause clipping on high volume
     volume_min: ${tas58xx_volume_min}   # Min HA volume mapping to Digital Volume control, goes as low as -103dB, but prefer to set higher to have a reasonable volume range
+    refresh_eq: ${tas58xx_refresh_eq}
     update_interval: 5s                 # How often fault registers are read and cleared
 
 switch:
@@ -52,7 +58,7 @@ switch:
     enable_dac:
       name: Enable DAC
       id: enable_dac
-      restore_mode: ALWAYS_ON 
+      restore_mode: ${tas58xx_dac_restore_mode}
 
 select:
   - platform: tas58xx
@@ -60,6 +66,7 @@ select:
       name: _Mixer Mode
     eq_mode:
       name: EQ Mode
+      id: tas58xx_eq_mode_select
 
 number:
   - platform: tas58xx

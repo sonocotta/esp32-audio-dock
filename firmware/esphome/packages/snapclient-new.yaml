@@ -1,0 +1,25 @@
+external_components:
+  - source: github://pr#14389
+    components: [ snapclient ]
+    refresh: 24h
+
+i2s_audio:
+  i2s_lrclk_pin: ${i2s_lrclk_pin}
+  i2s_bclk_pin: ${i2s_bclk_pin}
+
+media_player:
+  - platform: snapclient
+    hostname: ${snapcast_server_ip}
+    port: ${snapcast_server_port}
+    name: ${friendly_name}
+    id: snapclient_media_player
+    i2s_dout_pin: ${i2s_dout_pin}
+
+    on_play:
+      - logger.log: "Playback started!"
+    
+    on_pause:
+      - logger.log: "Playback paused!"
+    
+    on_idle:
+      - logger.log: "Playback finished!"
