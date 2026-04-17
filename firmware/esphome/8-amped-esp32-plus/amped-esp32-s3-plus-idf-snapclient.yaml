@@ -119,7 +119,10 @@ packages:
       - firmware/esphome/packages/dac-pcm5122.yaml
       # Option A: @c-MM original port of esp32-snapclient client
       # Basic implementation without DSP controls
-      # - firmware/esphome/packages/snapclient.yaml
+      - firmware/esphome/packages/snapclient-new.yaml
+      - firmware/esphome/packages/snapclient-addon-external-dac.yaml
+      - firmware/esphome/packages/snapclient-addon-dac-enable.yaml
+      - firmware/esphome/packages/snapclient-addon-amp-enable.yaml
       # Option B: @farmed-switch fork of the c-MM snapclient with added DSP controls
       # Implements software BQ-filters, but makes less sense for DSP-enabled DACs
       # - firmware/esphome/packages/snapclient-with-dsp.yaml
@@ -136,10 +139,10 @@ packages:
   # # Debug/local development fallback:    
   # pcm5122_dac: !include packages/dac-pcm5122.yaml
   # amp_unmute: !include packages/amp-unmute.yaml
-  snapclient: !include packages/snapclient-new.yaml
-  external_dac_addon: !include packages/snapclient-addon-external-dac.yaml
-  dac_enable: !include packages/snapclient-addon-dac-enable.yaml
-  amp_enable: !include packages/snapclient-addon-amp-enable.yaml
+  # snapclient: !include packages/snapclient-new.yaml
+  # external_dac_addon: !include packages/snapclient-addon-external-dac.yaml
+  # dac_enable: !include packages/snapclient-addon-dac-enable.yaml
+  # amp_enable: !include packages/snapclient-addon-amp-enable.yaml
   # # snapclient_with_dsp: !include packages/snapclient-with-dsp.yaml
 
   # light: !include packages/light.yaml
