@@ -28,3 +28,9 @@ audio_file:
     file: https://github.com/mrtoy-me/esphome-tas58xx/raw/main/components/tas58xx/silent_boot.flac
     # For debugпing purposes, you can use a sound with audible content
     # file: https://github.com/mrtoy-me/esphome-tas58xx/raw/main/components/tas58xx/tas58xx_boot.flac
+
+media_player:
+  - id: !extend external_media_player
+    announcement_pipeline:
+      sources:
+      - file_source

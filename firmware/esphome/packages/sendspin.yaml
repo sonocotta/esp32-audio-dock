@@ -57,6 +57,9 @@ media_source:
   - platform: http_request
     id: http_source
     buffer_size: 200000
+  - platform: http_request
+    id: http_announcement_source
+    buffer_size: 250000
 
 media_player:
   - platform: sendspin
@@ -73,7 +76,8 @@ media_player:
       num_channels: 1  # Stereo audio is unnecessary for announcements
       sample_rate: 48000
       sources:
-      - file_source
+      # - file_source
+      - http_announcement_source
 
     media_pipeline:
       speaker: media_resampling_speaker
