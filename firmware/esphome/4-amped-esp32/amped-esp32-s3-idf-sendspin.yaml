@@ -47,7 +47,7 @@ substitutions:
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
-  min_version: 2026.1.4
+  min_version: 2026.3.0
   name_add_mac_suffix: false
   platformio_options:
     board_build.flash_mode: dio
