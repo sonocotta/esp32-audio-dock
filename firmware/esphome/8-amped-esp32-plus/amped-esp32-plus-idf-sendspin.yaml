@@ -49,6 +49,9 @@ substitutions:
   display_dc_pin: GPIO04
   display_reset_pin: GPIO32
 
+  # ESP32 optimal settings for Sendspin
+  media_source_buffer_size: 100000
+  
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}

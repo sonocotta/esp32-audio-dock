@@ -8,6 +8,9 @@
 # Requires i2s_audio to be configured in main config
 # ============================================================
 
+substitutions:
+  media_source_buffer_size: 200000
+
 external_components:
   ## Specific commits that are known to produce a working build
   # https://github.com/esphome/esphome/pull/14933#issuecomment-4239312101
@@ -56,10 +59,10 @@ media_source:
     id: sendspin_source
   - platform: http_request
     id: http_source
-    buffer_size: 200000
+    buffer_size: ${media_source_buffer_size}
   - platform: http_request
     id: http_announcement_source
-    buffer_size: 250000
+    buffer_size: ${media_source_buffer_size}
 
 media_player:
   - platform: sendspin

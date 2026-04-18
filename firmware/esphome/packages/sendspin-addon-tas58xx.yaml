@@ -17,11 +17,11 @@ esphome:
     then:
       media_player.play_media:
         id: external_media_player
-        media_url: file://startup_sync_sound
+        media_url: audio-file://startup_sync_sound
 
 media_source:
   - platform: audio_file
-    id: file_source
+    id: audio_file_source
 
 audio_file:
   - id: startup_sync_sound
@@ -31,6 +31,6 @@ audio_file:
 
 media_player:
   - id: !extend external_media_player
-    announcement_pipeline:
+    media_pipeline:
       sources:
-      - file_source
+      - audio_file_source

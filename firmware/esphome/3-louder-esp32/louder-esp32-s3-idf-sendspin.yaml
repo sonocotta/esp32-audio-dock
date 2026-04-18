@@ -116,13 +116,13 @@ packages:
       # Option C: TAS58xx configured with bi-amp mode, with filters applied to both channels (HF or LF)
       # - firmware/esphome/packages/dac-tas58xx-presets.yaml
 
-      - firmware/esphome/packages/sendspin.yaml
+      # - firmware/esphome/packages/sendspin.yaml
       # Optional: OLED displays clock when idling, and track/artist info when playing
       # - firmware/esphome/packages/sendspin-addon-oled.yaml
       - firmware/esphome/packages/sendspin-audio.yaml
       - firmware/esphome/packages/sendspin-audio-addon-external-dac.yaml
       - firmware/esphome/packages/sendspin-addon-dac-enable.yaml
-      - firmware/esphome/packages/sendspin-addon-tas58xx.yaml
+      # - firmware/esphome/packages/sendspin-addon-tas58xx.yaml
 
       - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/ir-receiver.yaml
@@ -136,12 +136,12 @@ packages:
   # # external_dac: !include packages/dac-tas58xx-biamp.yaml
   # # external_dac: !include packages/dac-tas58xx-presets.yaml
   
-  # sendspin: !include packages/sendspin.yaml
+  sendspin: !include packages/sendspin.yaml
   # sendspin_audio: !include packages/sendspin-audio.yaml
   # sendspin_external_dac: !include packages/sendspin-audio-addon-external-dac.yaml
   # sendspin: !include packages/sendspin.yaml
   # sendspin_enable_dac: !include packages/sendspin-addon-dac-enable.yaml
-  # sendspin_tas58xx: !include packages/sendspin-addon-tas58xx.yaml
+  sendspin_tas58xx: !include packages/sendspin-addon-tas58xx.yaml
   # oled: !include packages/sendspin-addon-oled.yaml
 
   # light: !include packages/light.yaml
