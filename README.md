@@ -1,9 +1,7 @@
 # ESP32 Audio Docks and Louder ESP
 
-![Open Source Hardware](/images/open-source-hardware-logo.png)
-![Open Source Software](/images/open-source-software-logo.png)
-<a href="https://www.tindie.com/stores/sonocotta/?ref=offsite_badges&utm_source=sellers_andrey-malyshenko&utm_medium=badges&utm_campaign=badge_medium"><img src="https://d2ss6ovg47m0r5.cloudfront.net/badges/tindie-mediums.png" alt="I sell on Tindie" width="150" height="78"></a>
-<br />
+<a href="https://lectronz.com/stores/sonocotta" alt="I sell on Lectronz"><img src="https://lectronz-images.b-cdn.net/static/badges/i-sell-on-lectronz-medium.png" /></a><a href="https://www.tindie.com/stores/sonocotta/?ref=offsite_badges&utm_source=sellers_andrey-malyshenko&utm_medium=badges&utm_campaign=badge_medium"><img src="https://d2ss6ovg47m0r5.cloudfront.net/badges/tindie-mediums.png" alt="I sell on Tindie" width="150" height="78"></a>
+
 [![Dev Chat](https://img.shields.io/discord/1233306441469657140?logo=discord&label=discord&style=flat-square)](https://discord.gg/PtnaAaQMpS)
 
 ESP32 Audio Docks is a range of development boards (earlier docks) that allow you to develop Audio solutions based on ESP32 chips. These were created to make Audio development entry as easy and inexpensive as possible. 
@@ -1069,14 +1067,15 @@ If you don't mind to show off your projects, please send me a note, or create a 
 
 ## Where to buy
 
-You may support my work by ordering these products at Tindie and Elecrow
-- HiFi-ESP32 at [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32/) and [Elecrow](https://www.elecrow.com/hifi-esp32.html)
-- HiFi-ESP32-Plus at [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32-plus/) and [Elecrow](https://www.elecrow.com/hifi-esp32-plus.html)
-- Loud-ESP32 at [Tindie](https://www.tindie.com/products/sonocotta/loud-esp32/) and [Elecrow](https://www.elecrow.com/loud-esp32.html)
-- Louder-ESP32 at [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32/) and [Elecrow](https://www.elecrow.com/louder-esp32.html)
-- Louder-ESP32-Plus at [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32-plus/)
-- Amped-ESP32 at [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32/) and [Elecrow](https://www.elecrow.com/amped-esp32.html)
-- Amped-ESP32-Plus at [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32-plus/)
+You may support my work by ordering these products at Lectronz, Elecrow, and Tindie
+- HiFi-ESP32 at [Lectronz](https://lectronz.com/products/hifi-esp32), [Elecrow](https://www.elecrow.com/hifi-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32/)
+- HiFi-ESP32-Plus at [Lectronz](https://lectronz.com/products/hifi-esp32-plus), [Elecrow](https://www.elecrow.com/hifi-esp32-plus.html), and [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32-plus/)
+- Loud-ESP32 at [Lectronz](https://lectronz.com/products/loud-esp32), [Elecrow](https://www.elecrow.com/loud-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/loud-esp32/)
+- Loud-ESP32-Plus _coming soon_
+- Louder-ESP32 at [Lectronz](https://lectronz.com/products/louder-esp32), [Elecrow](https://www.elecrow.com/louder-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32/)
+- Louder-ESP32-Plus at [Lectronz](https://lectronz.com/products/louder-esp32-plus), [Elecrow](https://www.elecrow.com/louder-esp32-plus.html), and [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32-plus/)
+- Amped-ESP32 at [Lectronz](https://lectronz.com/products/amped-esp32), [Elecrow](https://www.elecrow.com/amped-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32/)
+- Amped-ESP32-Plus at Lectronz (soon), Elecrow (even sooner), and [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32-plus/)
 
 **New Products (Coming Soon):**
 
