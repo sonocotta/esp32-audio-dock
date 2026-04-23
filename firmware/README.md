@@ -61,66 +61,6 @@ To monitor the serial output, run:
 pio device monitor
 ```
 
-## Building ESPHome on Windows with WSL (Alternative Method)
-
-> Contributed by [@harrison110](https://github.com/harrison110) in [#123](https://github.com/sonocotta/esp32-audio-dock/issues/123#issuecomment-4255961275)
-
-Building via Docker on Windows without a properly configured WSL can result in **very** long build times (7000+ seconds). Using WSL 2 brings this down to ~3 minutes.
-
-### Step 1 — Install and Configure WSL 2
-
-1. Install WSL with Ubuntu (or your preferred distro) from **PowerShell**:
-   ```powershell
-   wsl --install -d Ubuntu
-   ```
-   Make sure you have at least the minimum recommended version — Docker currently recommends **WSL 2.1.5** or newer. Older versions will cause issues with the build.
-
-2. Create the WSL config file to set resource limits. Without this, WSL may not have enough resources, which will drastically increase build times.
-
-   Create the file `C:\Users\YOUR_USER_NAME\.wslconfig` with the following contents (adjust values to your system):
-   ```ini
-   [wsl2]
-   memory=8GB
-   processors=6
-   swap=4GB
-   localhostForwarding=true
-   ```
-
-### Step 2 — Install Dependencies
-
-Inside WSL, install Python and any other required dependencies. Also install **Docker Desktop** on Windows (it integrates with WSL 2 automatically).
-
-### Step 3 — Build
-
-Clone the repository inside WSL and follow the standard build instructions. Running the Docker build from within WSL keeps all files on the Linux filesystem, which is the key to fast build times.
-
-### Step 4 — Flash the Firmware from Windows
-
-Flashing is easier to do from Windows rather than from WSL to avoid USB/hardware access issues.
-
-1. Install `esptool` on Windows:
-   ```powershell
-   pip install esptool
-   ```
-
-2. Flash using the following command (adjust `--chip`, `--port`, and the path to your binary as needed):
-   ```powershell
-   python -m esptool --chip esp32s3 --port COM7 --baud 460800 write-flash 0x0 "FIRMWARE.FACTORY.BIN_LOCATION"
-   ```
-
-3. If the compiled `.bin` file is still on the WSL filesystem, get its Windows path with:
-   ```bash
-   wslpath -w "$(find ./3-louder-esp32 -name firmware.factory.bin | head -n 1)"
-   ```
-   Change the folder name to match your target device.
-
-4. To find the correct COM port in PowerShell:
-   ```powershell
-   Get-CimInstance Win32_SerialPort | Select-Object DeviceID,Name,Description
-   ```
-
----
-
 ## Usage
 
 ### Command Line Interface (CLI)
