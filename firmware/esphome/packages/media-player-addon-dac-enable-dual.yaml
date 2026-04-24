@@ -1,0 +1,52 @@
+# ============================================================
+# Media Player - AC enable addon
+# ============================================================
+# Configures media player with DAC enable control
+# Requires substitutions:
+#   - friendly_name
+#   - dac_enable_pin
+# Dependencies: media-player.yaml (speaker stack)
+# dac-switch.yaml (DAC enable switch)
+# ============================================================
+
+media_player:
+  - id: !extend external_media_player
+
+    on_play:
+      - if:
+          condition:
+            switch.is_off: sw_external_dac_main
+          then:
+            switch.turn_on: sw_external_dac_main
+
+      - if:
+          condition:
+            switch.is_off: sw_external_dac_secondary
+          then:
+            switch.turn_on: sw_external_dac_secondary
+
+    on_idle:
+      - if:
+          condition:
+            switch.is_on: sw_external_dac_main
+          then:
+            switch.turn_off: sw_external_dac_main
+
+      - if:
+          condition:
+            switch.is_on: sw_external_dac_secondary
+          then:
+            switch.turn_off: sw_external_dac_secondary
+
+    on_announcement:
+      - if:
+          condition:
+            switch.is_off: sw_external_dac_main
+          then:
+            switch.turn_on: sw_external_dac_main
+
+      - if:
+          condition:
+            switch.is_off: sw_external_dac_secondary
+          then:
+            switch.turn_on: sw_external_dac_secondary

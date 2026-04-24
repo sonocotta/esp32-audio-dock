@@ -1,0 +1,68 @@
+# ============================================================
+# Media Player - TAS58XX addon
+# ============================================================
+# Extends media-player.yaml with TAS58XX-specific behavior:
+# - startup sync sound registration
+# - DAC enable on playback/announcement
+# - announcement volume via external_dac API
+# - DAC idle shutdown and overtemp volume throttling
+# Dependencies: media-player.yaml, dac-tas58xx.yaml,
+#               media-player-addon-dac-enable.yaml
+# ============================================================
+
+# Important! Play sound on boot required for DAC to capture clock signal and enable DSP configuration
+# If any of the DSP configs are sent before clock signal, they are simply ignored. This applies to EQ and Mixer controls
+esphome:
+  on_boot:
+    priority: 220.0
+    then:
+      media_player.speaker.play_on_device_media_file: startup_sync_sound
+
+media_player:
+  - id: !extend external_media_player
+
+    files:
+      - id: startup_sync_sound
+        # file: https://github.com/mrtoy-me/esphome-tas58xx/raw/main/components/tas58xx/silent_boot.flac
+        # For debuging purposes, you can use a sound with audible content
+        file: https://github.com/mrtoy-me/esphome-tas58xx/raw/main/components/tas58xx/tas58xx_boot.flac
+
+### Send DAC to shutdown mode after 2 minutes of inactivity
+# This is to save power, since DAC will draw under 100mA in idle state
+interval:
+  - interval: 30s
+    then:
+      - if:
+          condition:
+            - switch.is_on: sw_external_dac_main
+            - for:
+                time: 120s
+                condition:
+                  or:
+                    - media_player.is_idle: external_media_player
+                    - media_player.is_paused: external_media_player
+          then:
+            - switch.turn_off: sw_external_dac_main
+
+      - if:
+          condition:
+            - switch.is_on: sw_external_dac_secondary
+            - for:
+                time: 120s
+                condition:
+                  or:
+                    - media_player.is_idle: external_media_player
+                    - media_player.is_paused: external_media_player
+          then:
+            - switch.turn_off: sw_external_dac_secondary
+            
+  # Optional: when DAC reports overheating warning, reduce volume to prevent shutdown
+  - interval: 1s
+    then:
+      - if:
+          condition:
+            - binary_sensor.is_on: over_temperature_warning
+            - lambda: 'return (id(external_media_player).volume != 0.0f);'
+            - lambda: 'return !(id(external_media_player).is_muted());'
+          then:
+            - media_player.volume_down
