@@ -1,0 +1,45 @@
+# ============================================================
+# MA12070P DAC - I2C Control, Digital volume, and Mute
+# ============================================================
+# Requires substitutions:
+#   - i2c_sda_pin
+#   - i2c_scl_pin
+# ============================================================
+
+substitutions:
+  ma12070p_enable_pin: GPIO17
+  ma12070p_mute_pin: GPIO18
+  ma12070p_volume_max: 0dB
+  ma12070p_volume_min: -80dB
+
+external_components:
+  - source: github://sonocotta/esphome-ma12070p
+    components: [ ma12070p ]
+    refresh: 24h
+
+i2c:
+  sda: ${i2c_sda_pin}
+  scl: ${i2c_scl_pin}
+  frequency: 400kHz
+  scan: true
+
+audio_dac:
+  - platform: ma12070p
+    id: external_dac
+    enable_pin: ${ma12070p_enable_pin}    # ENABLE, When pulled high, the device is reset and kept in an inactive state with minimum power consumption.
+    mute_pin: ${ma12070p_mute_pin}        # MUTE, Mute audio output when pulled low
+    volume_max: ${ma12070p_volume_max}    # maximum volume range 0dB, can go up to +24dB
+    volume_min: ${ma12070p_volume_min}    # minimum volume range -60dB, can go down to -144dB
+    # debug: true                         # Dumps all I2C communication to the log, useful for debugging and reverse engineering, but can cause performance issues and log flooding, so use with caution. --- IGNORE ---
+
+switch:
+  - platform: ma12070p
+    enable_dac:
+      name: DAC Enable
+      id: enable_dac
+      restore_mode: ALWAYS_ON
+
+    mute:
+      name: DAC Mute
+      id: mute_dac
+      restore_mode: ALWAYS_ON

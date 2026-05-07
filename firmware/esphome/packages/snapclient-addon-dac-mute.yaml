@@ -1,0 +1,25 @@
+# ============================================================
+# Media Player - DAC mute addon
+# ============================================================
+# Extends snapclient media player with DAC mute control
+# Dependencies: snapclient-new.yaml (speaker stack)
+# dac-mute-switch.yaml (DAC mute switch)
+# or ma12070p-dac.yaml (DAC mute switch included in DAC component)
+# ============================================================
+
+media_player:
+  - id: !extend snapclient_media_player
+
+    on_play:
+      - if:
+          condition:
+            switch.is_on: mute_dac
+          then:
+            switch.turn_off: mute_dac
+
+    on_idle:
+      - if:
+          condition:
+            switch.is_off: mute_dac
+          then:
+            switch.turn_on: mute_dac

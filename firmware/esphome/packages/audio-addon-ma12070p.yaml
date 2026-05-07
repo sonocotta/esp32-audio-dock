@@ -1,0 +1,12 @@
+# ============================================================
+# Audio - External DAC addon
+# ============================================================
+# Extends base audio speaker configuration from audio.yaml
+# by attaching a configured external DAC component.
+# Dependencies: audio.yaml, dac-*.yaml that defines id: external_dac
+# ============================================================
+
+speaker:
+  - id: !extend speaker_id
+    audio_dac: external_dac
+    bits_per_sample: 32bit    # MA12070P requires 32-bit I2S slot width (64 BCLK/frame)
