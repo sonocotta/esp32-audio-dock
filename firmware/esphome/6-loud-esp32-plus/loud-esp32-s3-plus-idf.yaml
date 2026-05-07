@@ -106,11 +106,11 @@ packages:
     url: https://github.com/sonocotta/esp32-audio-dock
     ref: main
     files:
-      # - firmware/esphome/packages/dac-ma12070p.yaml
+      - firmware/esphome/packages/dac-ma12070p.yaml
       - firmware/esphome/packages/audio.yaml
-      # - firmware/esphome/packages/audio-addon-external-dac.yaml
+      - firmware/esphome/packages/audio-addon-ma12070p.yaml
       - firmware/esphome/packages/media-player.yaml
-      # - firmware/esphome/packages/media-player-addon-dac-mute.yaml
+      - firmware/esphome/packages/media-player-addon-dac-mute.yaml
       - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
@@ -120,11 +120,11 @@ packages:
       # - firmware/esphome/packages/ethernet-w5500.yaml
 
   # # Debug/local development fallback:
-  ma12070p_dac: !include packages/dac-ma12070p.yaml
+  # ma12070p_dac: !include packages/dac-ma12070p.yaml
   # audio: !include packages/audio.yaml
-  audio_external_dac: !include packages/audio-addon-ma12070p.yaml
+  # audio_ma12070p: !include packages/audio-addon-ma12070p.yaml
   # media_player: !include packages/media-player.yaml
-  media_player_dac_mute: !include packages/media-player-addon-dac-mute.yaml
+  # media_player_dac_mute: !include packages/media-player-addon-dac-mute.yaml
   # light: !include packages/light.yaml
   # ir_receiver: !include packages/ir-receiver.yaml
   # monitoring: !include packages/monitoring.yaml

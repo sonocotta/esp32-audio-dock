@@ -105,14 +105,14 @@ packages:
     url: https://github.com/sonocotta/esp32-audio-dock
     ref: main
     files:
-      # - firmware/esphome/packages/dac-ma12070p.yaml
+      - firmware/esphome/packages/dac-ma12070p.yaml
       - firmware/esphome/packages/sendspin.yaml
       # Optional: OLED displays clock when idling, and track/artist info when playing
       # - firmware/esphome/packages/sendspin-addon-oled.yaml
 
       - firmware/esphome/packages/sendspin-audio.yaml
-      # - firmware/esphome/packages/sendspin-audio-addon-ma12070p.yaml
-      # - firmware/esphome/packages/sendspin-addon-dac-mute.yaml
+      - firmware/esphome/packages/sendspin-audio-addon-ma12070p.yaml
+      - firmware/esphome/packages/sendspin-addon-dac-mute.yaml
       - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
@@ -121,11 +121,11 @@ packages:
       # - firmware/esphome/packages/ethernet-w5500.yaml
 
   # # Debug/local development fallback:
-  ma12070p_dac: !include packages/dac-ma12070p.yaml
+  # ma12070p_dac: !include packages/dac-ma12070p.yaml
   # sendspin: !include packages/sendspin.yaml
-  sendspin_dac_mute: !include packages/sendspin-addon-dac-mute.yaml
+  # sendspin_dac_mute: !include packages/sendspin-addon-dac-mute.yaml
   # audio: !include packages/sendspin-audio.yaml
-  audio_external_dac: !include packages/sendspin-audio-addon-ma12070p.yaml
+  # audio_ma12070p: !include packages/sendspin-audio-addon-ma12070p.yaml
   # oled: !include packages/sendspin-addon-oled.yaml
   # light: !include packages/light.yaml
   # ir_receiver: !include packages/ir-receiver.yaml
