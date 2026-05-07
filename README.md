@@ -1071,12 +1071,8 @@ You may support my work by ordering these products at Lectronz, Elecrow, and Tin
 - HiFi-ESP32 at [Lectronz](https://lectronz.com/products/hifi-esp32), [Elecrow](https://www.elecrow.com/hifi-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32/)
 - HiFi-ESP32-Plus at [Lectronz](https://lectronz.com/products/hifi-esp32-plus), [Elecrow](https://www.elecrow.com/hifi-esp32-plus.html), and [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32-plus/)
 - Loud-ESP32 at [Lectronz](https://lectronz.com/products/loud-esp32), [Elecrow](https://www.elecrow.com/loud-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/loud-esp32/)
-- Loud-ESP32-Plus _coming soon_
+- Loud-ESP32-Plus - Coming soon with MA12070P DAC (Real power house with up to 80W in mono)
 - Louder-ESP32 at [Lectronz](https://lectronz.com/products/louder-esp32), [Elecrow](https://www.elecrow.com/louder-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32/)
 - Louder-ESP32-Plus at [Lectronz](https://lectronz.com/products/louder-esp32-plus), [Elecrow](https://www.elecrow.com/louder-esp32-plus.html), and [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32-plus/)
 - Amped-ESP32 at [Lectronz](https://lectronz.com/products/amped-esp32), [Elecrow](https://www.elecrow.com/amped-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32/)
-- Amped-ESP32-Plus at Lectronz (soon), Elecrow (even sooner), and [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32-plus/)
-
-**New Products (Coming Soon):**
-
-- **Loud-ESP32-Plus** - Coming soon with MA12070P DAC (Real power house with up to 80W in mono)
+- Amped-ESP32-Plus at [Lectronz](https://lectronz.com/products/amped-esp32-plus), [Elecrow](https://www.elecrow.com/amped-esp32-plus.html), and [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32-plus/)
