@@ -46,6 +46,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [Amped-ESP32-Plus](#amped-esp32-plus-1)
     - [HiFi-ESP32 Plus and Amped-ESP32 Plus](#hifi-esp32-plus-and-amped-esp32-plus)
     - [Loud-ESP32](#loud-esp32-1)
+    - [Loud-ESP32-Plus](#loud-esp32-plus-1)
     - [Louder-ESP32 and Louder-ESP32-Plus](#louder-esp32-and-louder-esp32-plus)
     - [Ethernet (all boards)](#ethernet-all-boards)
     - [Optional peripheral (all boards)](#optional-peripheral-all-boards)
@@ -298,6 +299,13 @@ Audio streaming requires proper buffering to work; even with the ESP32's 500K of
 | ESP32    | 26      | 22       | 25     |    13    |   16, 17     |
 | ESP32-S3 | 14      | 16       | 15     |     8    |   35, 36, 37 | 
 
+
+### Loud-ESP32-Plus
+
+|          | I2S CLK | I2S DATA | I2S WS | DAC ENABLE| DAC MUTE    | SDA  |  SCL | PSRAM RESERVED | 
+|----------|---------|----------|--------|----------|--------------|------|------|----------------|
+| ESP32    | 26      | 22       | 25     |    13    |   33         | 21   | 27   | 16, 17         |
+| ESP32-S3 | 14      | 16       | 15     |    17    |   18         | 9    | 8    |     35, 36, 37 | 
 
 ### Louder-ESP32 and Louder-ESP32-Plus
 
