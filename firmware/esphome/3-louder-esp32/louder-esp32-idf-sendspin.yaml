@@ -60,12 +60,13 @@ substitutions:
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
-  min_version: 2026.3.0
+  min_version: 2026.5.0
   name_add_mac_suffix: false
   platformio_options:
     board_build.flash_mode: dio
 
 esp32:
+  id: esp32_id
   variant: esp32
   flash_size: 8MB
   cpu_frequency: 240MHz
@@ -124,6 +125,7 @@ packages:
       - firmware/esphome/packages/sendspin-audio-addon-external-dac.yaml
       - firmware/esphome/packages/sendspin-addon-dac-enable.yaml
       - firmware/esphome/packages/sendspin-addon-tas58xx.yaml
+      - firmware/esphome/packages/sendspin-addon-esp32.yaml
 
       - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/ir-receiver.yaml

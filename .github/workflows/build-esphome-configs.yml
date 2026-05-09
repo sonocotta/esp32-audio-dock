@@ -77,5 +77,5 @@ jobs:
             -v "${{ github.workspace }}/firmware/esphome/packages:/config/packages" \
             -v "${{ github.workspace }}/.esphome-cache:/cache" \
             -e PLATFORMIO_BUILD_CACHE_DIR=/cache/.pio-cache \
-            esphome/esphome:latest \
+            esphome/esphome:dev \
             compile "/config/${{ steps.config-info.outputs.config_file }}"
