@@ -1,0 +1,25 @@
+# ============================================================
+# Sendspin Player - ESP32 specific optimizations
+# ============================================================
+# Extends sendspin media player with ESP32 (non-S3 models) specific optimizations
+# ============================================================
+
+esp32:
+  - id: !extend esp32_id
+    sdkconfig_options:
+        # Sendspin dev recommends
+        CONFIG_ESP_WIFI_RX_IRAM_OPT: "y" # Unnecessary on an ESP32-S3; uses more internal memory
+        CONFIG_ESP_WIFI_IRAM_OPT: "y"  # Unnecessary on an ESP32-S3; uses more internal memory
+        CONFIG_ESP_WIFI_EXTRA_IRAM_OPT: "y"  # Unnecessary on an ESP32-S3; uses more internal memory
+        CONFIG_LWIP_IRAM_OPTIMIZATION: "y"  # Unnecessary on an ESP32-S3; uses more internal memory
+
+
+audio:
+  codecs:
+    flac:
+      buffer_memory: internal  # Unnecessary on an ESP32-S3; uses more internal memory
+    opus:
+      state_memory: internal  # Unnecessary on an ESP32-S3; uses more internal memory
+      pseudostack:
+        threadsafe: false  # Unnecessary on an ESP32-S3; prevents decoding two Opus streams simultaneously
+
