@@ -14,21 +14,22 @@ substitutions:
   friendly_name: Amped-ESP32-S3-Plus-VA
   task_stack_in_psram: "true"
 
-  
   # Board-specific pinout configuration
   # I2C pins
   i2c_sda_pin: GPIO18
   i2c_scl_pin: GPIO8
-  
+  pcm5122_i2c_address: 0x4D
+  pcm5122_enable_pin: GPIO4         # optional, to enable/disable the DAC (XSMT physical pin)
+
   # I2S audio output pins
-  i2s_out_lrclk_pin: GPIO15
-  i2s_out_bclk_pin: GPIO14
+  i2s_lrclk_pin: GPIO15
+  i2s_bclk_pin: GPIO14
   i2s_dout_pin: GPIO16
   
   # I2S audio input pins (microphone)
-  i2s_in_lrclk_pin: GPIO40
-  i2s_in_bclk_pin: GPIO41
-  i2s_din_pin: GPIO39
+  i2s_mic_lrclk_pin: GPIO40
+  i2s_mic_bclk_pin: GPIO41
+  i2s_mic_din_pin: GPIO39
   i2s_mic_channel: left # or right?
 
   # Amplifier control
