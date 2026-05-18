@@ -135,7 +135,7 @@ packages:
       - firmware/esphome/packages/media-player.yaml
       # - firmware/esphome/packages/media-player-addon-dac-enable.yaml
 
-      - firmware/esphome/packages/light-x.yaml
+      - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
       # Optional ethernet (replace wifi config if you use this, you need to exclude OLED package if you do this to free up SPI bus)
