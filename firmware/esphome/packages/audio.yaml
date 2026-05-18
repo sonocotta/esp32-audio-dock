@@ -9,20 +9,25 @@
 #   - task_stack_in_psram
 # ============================================================
 
+substitutions:
+  audio_buffer_duration: 100ms
+
 i2s_audio:
+- id: i2s_out
   i2s_lrclk_pin: ${i2s_lrclk_pin}
   i2s_bclk_pin: ${i2s_bclk_pin}
   
 speaker:
   - platform: i2s_audio
     id: i2s_speaker_id
+    i2s_audio_id: i2s_out
     sample_rate: 48000
     i2s_dout_pin: ${i2s_dout_pin}
     bits_per_sample: 16bit
     dac_type: external
     channel: stereo
     timeout: never
-    buffer_duration: 100ms
+    buffer_duration: ${audio_buffer_duration}
 
   - platform: mixer
     id: mixer_speaker_id
@@ -38,11 +43,13 @@ speaker:
   - platform: resampler
     id: media_resampling_speaker
     output_speaker: media_mixer_input
+    task_stack_in_psram: ${task_stack_in_psram}
     sample_rate: 48000
     bits_per_sample: 16
 
   - platform: resampler
     id: announcement_resampling_speaker
     output_speaker: announcement_mixer_input
+    task_stack_in_psram: ${task_stack_in_psram}
     sample_rate: 48000
     bits_per_sample: 16
