@@ -96,7 +96,7 @@ network:
 packages:
   esparagus_remote:
     url: https://github.com/sonocotta/esp32-audio-dock
-    features/sendspin-config-refactoring
+    ref: features/sendspin-config-refactoring
     files:
       - firmware/esphome/packages/dac-pcm5122.yaml
       - firmware/esphome/packages/audio.yaml

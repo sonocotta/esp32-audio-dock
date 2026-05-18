@@ -103,7 +103,7 @@ network:
 packages:
   esparagus_remote:
     url: https://github.com/sonocotta/esp32-audio-dock
-    features/sendspin-config-refactoring
+    ref: features/sendspin-config-refactoring
     files:
       - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/ir-receiver.yaml
