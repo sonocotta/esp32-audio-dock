@@ -5,12 +5,17 @@
 # Requires substitutions:
 #   - task_stack_in_psram
 #   - friendly_name
+# Optional substitutions:
+#   - media_player_led_control: "true" (default) — set to "false"
+#     when voice-assist.yaml is also included, to avoid conflicts
+#     with voice-assist LED state management.
 # Requires i2s_audio to be configured in main config
 # !! Requires ESPHome 2026.5.0 or later for latest sendspin features and optimizations !!
 # !! at the moment this would only build with ESPHome (Dev) but should be available in ESPHome (main) by the mid-May !!
 # ============================================================
 
 substitutions:
+  media_player_led_control: "true"
   media_source_buffer_size: 200000
 
 globals:
@@ -86,12 +91,16 @@ media_player:
             - lambda: |-
                 id(announcement_triggered) = true;
                 id(current_volume) = id(external_media_player).volume;
-            - light.turn_on:
-                id: rgb_front_led
-                blue: 100%
-                red: 0%
-                green: 100%
-                brightness: 50%
+            - if:
+                condition:
+                  lambda: return ${media_player_led_control};
+                then:
+                  - light.turn_on:
+                      id: rgb_front_led
+                      blue: 100%
+                      red: 0%
+                      green: 100%
+                      brightness: 50%
             - mixer_speaker.apply_ducking:
                   id: media_mixer_input
                   decibel_reduction: 40
@@ -112,8 +121,12 @@ media_player:
             - media_player.volume_set:
                 id: external_media_player
                 volume: !lambda "return id(current_volume);"
-            - light.turn_off:
-                id: rgb_front_led
+            - if:
+                condition:
+                  lambda: return ${media_player_led_control};
+                then:
+                  - light.turn_off:
+                      id: rgb_front_led
             - lambda: id(announcement_triggered) = false;
 
     on_state:
