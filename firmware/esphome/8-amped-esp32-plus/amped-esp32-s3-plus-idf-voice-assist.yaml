@@ -108,7 +108,7 @@ esp32:
 
 # Enable logging
 logger:
-  level: DEBUG
+  level: INFO
 
 debug:
   update_interval: 5s
@@ -204,7 +204,7 @@ microphone:
 
 speaker:
   - platform: i2s_audio
-    id: speaker_id
+    id: i2s_speaker_id
     i2s_audio_id: i2s_out
     dac_type: external
     i2s_dout_pin: ${i2s_dout_pin}
@@ -216,7 +216,7 @@ speaker:
   - platform: mixer
     id: mixer_speaker_id
     task_stack_in_psram: ${task_stack_in_psram}
-    output_speaker: speaker_id
+    output_speaker: i2s_speaker_id
     source_speakers:
       - id: announcement_spk_mixer_input
         timeout: never

@@ -74,7 +74,7 @@ esp32:
       CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y" 
 
 logger:
-  level: DEBUG
+  level: INFO
 
 api:
 
@@ -98,12 +98,13 @@ network:
 packages:
   esparagus_remote:
     url: https://github.com/sonocotta/esp32-audio-dock
-    ref: main
+    features/sendspin-config-refactoring
     files:
+      - firmware/esphome/packages/dac-switch.yaml
       - firmware/esphome/packages/audio.yaml
       - firmware/esphome/packages/media-player.yaml
-      - firmware/esphome/packages/dac-switch.yaml
       - firmware/esphome/packages/media-player-addon-dac-enable.yaml
+      
       - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
