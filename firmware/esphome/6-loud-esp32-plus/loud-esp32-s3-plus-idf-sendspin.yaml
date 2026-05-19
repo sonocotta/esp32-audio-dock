@@ -79,7 +79,7 @@ esp32:
       CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y" 
 
 logger:
-  level: DEBUG
+  level: INFO
 
 api:
 
@@ -103,16 +103,17 @@ network:
 packages:
   esparagus_remote:
     url: https://github.com/sonocotta/esp32-audio-dock
-    ref: main
+    ref: features/sendspin-config-refactoring
     files:
       - firmware/esphome/packages/dac-ma12070p.yaml
+      - firmware/esphome/packages/audio.yaml
       - firmware/esphome/packages/sendspin.yaml
       # Optional: OLED displays clock when idling, and track/artist info when playing
       # - firmware/esphome/packages/sendspin-addon-oled.yaml
 
-      - firmware/esphome/packages/sendspin-audio.yaml
       - firmware/esphome/packages/sendspin-audio-addon-ma12070p.yaml
       - firmware/esphome/packages/sendspin-addon-dac-mute.yaml
+      
       - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
@@ -124,7 +125,7 @@ packages:
   # ma12070p_dac: !include packages/dac-ma12070p.yaml
   # sendspin: !include packages/sendspin.yaml
   # sendspin_dac_mute: !include packages/sendspin-addon-dac-mute.yaml
-  # audio: !include packages/sendspin-audio.yaml
+  # audio: !include packages/audio.yaml
   # audio_ma12070p: !include packages/sendspin-audio-addon-ma12070p.yaml
   # oled: !include packages/sendspin-addon-oled.yaml
   # light: !include packages/light.yaml

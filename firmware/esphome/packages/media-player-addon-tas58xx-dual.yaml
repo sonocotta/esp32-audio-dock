@@ -23,9 +23,9 @@ media_player:
 
     files:
       - id: startup_sync_sound
-        # file: https://github.com/mrtoy-me/esphome-tas58xx/raw/main/components/tas58xx/silent_boot.flac
-        # For debuging purposes, you can use a sound with audible content
-        file: https://github.com/mrtoy-me/esphome-tas58xx/raw/main/components/tas58xx/tas58xx_boot.flac
+        file: https://github.com/mrtoy-me/esphome-tas58xx/raw/main/components/tas58xx/silent_boot.flac
+        # For debugging purposes, you can use a sound with audible content
+        # file: https://github.com/mrtoy-me/esphome-tas58xx/raw/main/components/tas58xx/tas58xx_boot.flac
 
 ### Send DAC to shutdown mode after 2 minutes of inactivity
 # This is to save power, since DAC will draw under 100mA in idle state

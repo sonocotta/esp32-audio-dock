@@ -7,6 +7,6 @@
 # ============================================================
 
 speaker:
-  - id: !extend speaker_id
+  - id: !extend i2s_speaker_id
     audio_dac: external_dac
     bits_per_sample: 32bit    # MA12070P requires 32-bit I2S slot width (64 BCLK/frame)

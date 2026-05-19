@@ -81,7 +81,7 @@ esp32:
       CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"
 
 logger:
-  level: DEBUG
+  level: INFO
 
 api:
 
@@ -103,18 +103,19 @@ network:
 packages:
   esparagus_remote:
     url: https://github.com/sonocotta/esp32-audio-dock
-    ref: main
+    ref: features/sendspin-config-refactoring
     files:
       - firmware/esphome/packages/dac-pcm5122.yaml
+      - firmware/esphome/packages/amp-unmute.yaml
+      - firmware/esphome/packages/audio.yaml
       - firmware/esphome/packages/sendspin.yaml
       # Optional: OLED displays clock when idling, and track/artist info when playing
       # - firmware/esphome/packages/sendspin-addon-oled.yaml
 
-      - firmware/esphome/packages/sendspin-audio.yaml
       - firmware/esphome/packages/sendspin-audio-addon-external-dac.yaml
-      - firmware/esphome/packages/amp-unmute.yaml
       - firmware/esphome/packages/sendspin-addon-amp-unmute.yaml
       - firmware/esphome/packages/sendspin-addon-esp32.yaml
+      
       - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
@@ -126,7 +127,7 @@ packages:
   # pcm5122_dac: !include packages/dac-pcm5122.yaml
   # sendspin: !include packages/sendspin.yaml
   # sendspin_enable_dac: !include packages/sendspin-addon-dac-enable.yaml
-  # audio: !include packages/sendspin-audio.yaml
+  # audio: !include packages/audio.yaml
   # audio_external_dac: !include packages/sendspin-audio-addon-external-dac.yaml
   # oled: !include packages/sendspin-addon-oled.yaml
   # light: !include packages/light.yaml

@@ -10,39 +10,88 @@
 #   - display_reset_pin
 # ============================================================
 
+defaults:
+  font_small: 14
+  display_model: SH1106 128x64
+
 media_player:
   - id: !extend sendspin_group_media_player
 
     on_play:
       - display.page.show: page_play
-      - component.update: spi_display
       - switch.template.publish:
           id: switch_screen
           state: ON
 
     on_idle:
       - display.page.show: page_clock
-      - component.update: spi_display
 
 api:
   on_client_connected: 
     then:
       - display.page.show: page_clock
-      - component.update: spi_display
+
+logger:
+  logs:
+    # don't log missing glyph errors
+    font: ERROR
 
 text_sensor:
   # These don't have names, they don't need sharing back to HA (MA knows)
   - platform: sendspin
     type: title
     id: ss_title
+    on_value:
+      - globals.set:
+          id: title_length
+          value: '0'
+      # reset the progress length or duration here if required?
 
   - platform: sendspin
     type: artist
     id: ss_artist
+    on_value:
+      - globals.set:
+          id: artist_length
+          value: '0'
 
   - platform: sendspin
     type: album
     id: ss_album
+    on_value:
+      - globals.set:
+          id: album_length
+          value: '0'
+
+sensor:
+  - platform: sendspin
+    type: track_duration
+    id: ss_track_duration
+    on_value:
+      # If the duration has changed, reset the progress bar length
+      - globals.set: 
+          id: progress_length
+          value: '0'
+
+  - platform: sendspin
+    type: track_progress
+    id: ss_track_progress
+    on_value:
+      # Do the calculation on the pixel size of the progress bar, having
+      # made sure there's a duration to compare against, and it's not too
+      # large.  Can't check it's just the wrong one.
+      - globals.set: 
+          id: progress_length
+          value: !lambda |-
+            if (x > id(ss_track_duration).state) {
+              return 0;
+            } else if (id(ss_track_duration).state > 0.0) {
+              uint32_t tmp = floor(x);
+              tmp *= 128;
+              return int(tmp/id(ss_track_duration).state);
+            } else {
+              return 0;
+            }
 
 switch:
   - platform: template
@@ -74,17 +123,17 @@ time:
 font:
   - file: 'gfonts://Material+Symbols+Outlined'
     id: icons_small
-    size: 14
+    size: ${font_small}
     glyphs:
       - "\ue019" # album
       - "\ue01a" # artist
       - "\U000fffd8" # music notes
   - file:
       type: gfonts
-      family: Ubuntu # TODO try 'Jersey 10 Charted'
+      family: Ubuntu
       weight: regular
     id: text_small
-    size: 14
+    size: ${font_small}
     glyphsets: 
       - GF_Latin_Core # European alphabets too
   # For the clock page
@@ -103,17 +152,20 @@ spi:
   id: spi_bus_display
 
 ### Example display configuration, showing the current playback state
-# Kinly developed by @TinheadNed (https://github.com/widget/esphome-esparagus-sendspin)
+# Kindly developed by @TinheadNed (https://github.com/widget/esphome-esparagus-sendspin)
 display:
   - platform: ssd1306_spi
-    model: SH1106 128x64
+    model: ${display_model}
     id: spi_display
     spi_id: spi_bus_display
     cs_pin: ${display_cs_pin}
     dc_pin: ${display_dc_pin}
     reset_pin: ${display_reset_pin}
-    update_interval: 200ms
-    data_rate: 20MHz
+    # These two set how much time the ESP32 is running the display
+    # which takes time away from playing audio!
+    update_interval: 400ms
+    data_rate: 10MHz # T_cycle min is 100ns
+
     pages:
       - id: page_startup
         lambda: |-
@@ -137,6 +189,7 @@ display:
                     TextAlign::CENTER, 
                     "%d%s%02d", hours, dot, minutes);
           
+      # Blank the display (e.g. before suspending the component)
       - id: page_off
         lambda: return;
 
@@ -144,7 +197,7 @@ display:
       - id: page_play
         lambda: |-
           const int PADDING_LEFT = 18, PADDING_RIGHT = 28;
-          const int LINE_HEIGHTS[] = {10, 32, 54};
+          const int LINE_HEIGHTS[] = {10, 30, 50};
           int x1, y1, new_h, new_w, 
               title_width_offset = PADDING_LEFT, 
               artist_width_offset = PADDING_LEFT,
@@ -172,13 +225,17 @@ display:
                                   it.get_width(), 
                                   it.get_height()));
 
-          it.get_text_bounds(0, 0, 
-                            id(ss_title).state.c_str(), 
-                            id(text_small), 
-                            TextAlign::TOP_LEFT, 
-                            &x1, &y1, &new_w, &new_h);
-          if (new_w + PADDING_LEFT >= it.get_width()) {
-            auto missing_artist_text = new_w - it.get_width();
+          if (id(title_length) == 0) {
+            it.get_text_bounds(0, 0, 
+                              id(ss_title).state.c_str(), 
+                              id(text_small), 
+                              TextAlign::TOP_LEFT, 
+                              &x1, &y1, &new_w, &new_h);
+            id(title_length) = new_w;
+          }
+
+          if (id(title_length) + PADDING_LEFT >= it.get_width()) {
+            auto missing_artist_text = id(title_length) - it.get_width();
             increment = true;
             title_width_offset = PADDING_LEFT - (iteration % (missing_artist_text + PADDING_RIGHT));
           }
@@ -188,14 +245,17 @@ display:
                     id(ss_title).state.c_str());
 
           // Do this again for the artist
-          it.get_text_bounds(0, 0, 
-                            id(ss_artist).state.c_str(), 
-                            id(text_small), 
-                            TextAlign::TOP_LEFT, 
-                            &x1, &y1, &new_w, &new_h);
+          if (id(artist_length) == 0) {
+            it.get_text_bounds(0, 0, 
+                              id(ss_artist).state.c_str(), 
+                              id(text_small), 
+                              TextAlign::TOP_LEFT, 
+                              &x1, &y1, &new_w, &new_h);
+            id(artist_length) = new_w;
+          }
 
-          if (new_w + PADDING_LEFT >= it.get_width()) {
-            auto missing_title_text = new_w - it.get_width();
+          if (id(artist_length) + PADDING_LEFT >= it.get_width()) {
+            auto missing_title_text = id(artist_length) - it.get_width();
             increment = true;
             artist_width_offset = PADDING_LEFT - (iteration % (missing_title_text + PADDING_RIGHT));
           }
@@ -205,14 +265,17 @@ display:
                   id(ss_artist).state.c_str());
 
           // And the album
-          it.get_text_bounds(0, 0, 
-                            id(ss_album).state.c_str(), 
-                            id(text_small), 
-                            TextAlign::TOP_LEFT, 
-                            &x1, &y1, &new_w, &new_h);
+          if (id(album_length) == 0) {
+            it.get_text_bounds(0, 0, 
+                              id(ss_album).state.c_str(), 
+                              id(text_small), 
+                              TextAlign::TOP_LEFT, 
+                              &x1, &y1, &new_w, &new_h);
+            id(album_length) = new_w;
+          }
 
-          if (new_w + PADDING_LEFT >= it.get_width()) {
-            auto missing_album_text = new_w - it.get_width();
+          if (id(album_length) + PADDING_LEFT >= it.get_width()) {
+            auto missing_album_text = id(album_length) - it.get_width();
             increment = true;
             album_width_offset = PADDING_LEFT - (iteration % (missing_album_text + PADDING_RIGHT));
           }
@@ -223,6 +286,31 @@ display:
 
           it.end_clipping();
 
+          if (id(progress_length) > 0) {
+            it.filled_rectangle(0, it.get_height()-2,
+                                id(progress_length), it.get_height());
+          }
+
           if (increment) {
             iteration++;
           }
+
+# We're caching pixel lengths of strings here, as it's unclear
+# how expensive those string calculations are every screen raster
+globals:
+  - id: title_length
+    type: int
+    restore_value: no
+    initial_value: '0'
+  - id: artist_length
+    type: int
+    restore_value: no
+    initial_value: '0'
+  - id: album_length
+    type: int
+    restore_value: no
+    initial_value: '0'
+  - id: progress_length
+    type: int
+    restore_value: no
+    initial_value: '0'

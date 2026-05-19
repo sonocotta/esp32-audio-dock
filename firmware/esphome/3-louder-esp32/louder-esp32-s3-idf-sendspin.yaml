@@ -83,7 +83,7 @@ esp32:
       CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y" 
 
 logger:
-  level: DEBUG
+  level: INFO
 
 api:
 
@@ -107,7 +107,7 @@ network:
 packages:
   esparagus_remote:
     url: https://github.com/sonocotta/esp32-audio-dock
-    ref: main
+    ref: features/sendspin-config-refactoring
     files:
       # Option A: TAS58xx configured with ganged 15-band EQ
       - firmware/esphome/packages/dac-tas58xx.yaml
@@ -116,10 +116,10 @@ packages:
       # Option C: TAS58xx configured with bi-amp mode, with filters applied to both channels (HF or LF)
       # - firmware/esphome/packages/dac-tas58xx-presets.yaml
 
+      - firmware/esphome/packages/audio.yaml
       - firmware/esphome/packages/sendspin.yaml
       # Optional: OLED displays clock when idling, and track/artist info when playing
       # - firmware/esphome/packages/sendspin-addon-oled.yaml
-      - firmware/esphome/packages/sendspin-audio.yaml
       - firmware/esphome/packages/sendspin-audio-addon-external-dac.yaml
       - firmware/esphome/packages/sendspin-addon-dac-enable.yaml
       - firmware/esphome/packages/sendspin-addon-tas58xx.yaml
@@ -137,7 +137,7 @@ packages:
   # # external_dac: !include packages/dac-tas58xx-presets.yaml
   
   # sendspin: !include packages/sendspin.yaml
-  # sendspin_audio: !include packages/sendspin-audio.yaml
+  # sendspin_audio: !include packages/audio.yaml
   # sendspin_external_dac: !include packages/sendspin-audio-addon-external-dac.yaml
   # sendspin: !include packages/sendspin.yaml
   # sendspin_enable_dac: !include packages/sendspin-addon-dac-enable.yaml
