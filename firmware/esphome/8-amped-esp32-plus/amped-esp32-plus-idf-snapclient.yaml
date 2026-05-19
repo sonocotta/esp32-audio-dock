@@ -109,7 +109,7 @@ network:
 packages:
   esparagus_remote:
     url: https://github.com/sonocotta/esp32-audio-dock
-    ref: features/sendspin-config-refactoring
+    ref: main
     files:
       - firmware/esphome/packages/dac-pcm5122.yaml
       # Option A: @c-MM original port of esp32-snapclient client

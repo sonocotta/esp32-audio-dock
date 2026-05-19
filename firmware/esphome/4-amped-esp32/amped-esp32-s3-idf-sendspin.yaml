@@ -98,7 +98,7 @@ network:
 packages:
   esparagus_remote:
     url: https://github.com/sonocotta/esp32-audio-dock
-    ref: features/sendspin-config-refactoring
+    ref: main
     files:
       - firmware/esphome/packages/audio.yaml
       - firmware/esphome/packages/sendspin.yaml
