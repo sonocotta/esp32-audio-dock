@@ -36,12 +36,12 @@ speaker:
 
   # Resampler for media playback
   - platform: resampler
-    id: media_spk_resampling_input
+    id: media_resampling_speaker
     task_stack_in_psram: ${task_stack_in_psram}
     output_speaker: media_spk_mixer_input
 
   # Resampler for announcements
   - platform: resampler
-    id: announcement_spk_resampling_input
+    id: announcement_resampling_speaker
     task_stack_in_psram: ${task_stack_in_psram}
     output_speaker: announcement_spk_mixer_input

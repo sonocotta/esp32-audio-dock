@@ -37,10 +37,10 @@ media_player:
     volume_increment: 5%
     volume_initial: 45%
     media_pipeline:
-      speaker: media_spk_resampling_input
+      speaker: media_resampling_speaker
       num_channels: 2
     announcement_pipeline:
-      speaker: announcement_spk_resampling_input
+      speaker: announcement_resampling_speaker
       num_channels: 1
 
     on_announcement:
