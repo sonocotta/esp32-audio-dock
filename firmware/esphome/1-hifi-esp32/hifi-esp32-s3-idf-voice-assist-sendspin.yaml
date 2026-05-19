@@ -128,5 +128,4 @@ packages:
       - firmware/esphome/packages/audio.yaml
       - firmware/esphome/packages/sendspin.yaml
       - firmware/esphome/packages/sendspin-addon-voice-assist.yaml
-      - firmware/esphome/packages/voice-assist.yaml
       - firmware/esphome/packages/voice-assist-sendspin.yaml
