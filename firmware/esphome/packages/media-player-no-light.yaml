@@ -52,7 +52,7 @@ media_player:
                 id(announcement_triggered) = true;
                 id(current_volume) = id(external_media_player).volume;
             - mixer_speaker.apply_ducking:
-                  id: media_spk_mixer_input
+                  id: media_mixer_input
                   decibel_reduction: 30
                   duration: 0.5s
             - wait_until:
@@ -65,7 +65,7 @@ media_player:
                 - not:
                     media_player.is_announcing: external_media_player
             - mixer_speaker.apply_ducking:
-                      id: media_spk_mixer_input
+                      id: media_mixer_input
                       decibel_reduction: 0
                       duration: 1.0s
             - media_player.volume_set:
