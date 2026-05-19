@@ -93,7 +93,7 @@ esp32:
       CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"  # TLS1.3 support isn't enabled by default in IDF 5.1.5
 
 logger:
-  level: INFO
+  level: DEBUG
 
 api:
 
@@ -117,7 +117,7 @@ network:
 packages:
   esparagus_remote:
     url: https://github.com/sonocotta/esp32-audio-dock
-    ref: features/sendspin-config-refactoring
+    ref: main
     files:
       # Option A: TAS58xx configured with ganged 15-band EQ
       - firmware/esphome/packages/dac-tas58xx.yaml

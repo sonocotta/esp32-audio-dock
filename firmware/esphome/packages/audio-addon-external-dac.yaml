@@ -7,5 +7,5 @@
 # ============================================================
 
 speaker:
-  - id: !extend i2s_speaker_id
+  - id: !extend speaker_id
     audio_dac: external_dac

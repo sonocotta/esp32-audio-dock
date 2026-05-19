@@ -85,7 +85,7 @@ esp32:
       CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"  # TLS1.3 support isn't enabled by default in IDF 5.1.5
 
 logger:
-  level: INFO
+  level: DEBUG
 
 api:
 
@@ -109,16 +109,15 @@ network:
 packages:
   esparagus_remote:
     url: https://github.com/sonocotta/esp32-audio-dock
-    ref: features/sendspin-config-refactoring
+    ref: main
     files:
       - firmware/esphome/packages/dac-pcm5122.yaml
       - firmware/esphome/packages/amp-unmute.yaml
-      - firmware/esphome/packages/audio.yaml
+      - firmware/esphome/packages/sendspin-audio.yaml
+      - firmware/esphome/packages/sendspin-audio-addon-external-dac.yaml
       - firmware/esphome/packages/sendspin.yaml
       # Optional: OLED displays clock when idling, and track/artist info when playing
       # - firmware/esphome/packages/sendspin-addon-oled.yaml
-      
-      - firmware/esphome/packages/sendspin-audio-addon-external-dac.yaml
       - firmware/esphome/packages/sendspin-addon-dac-enable.yaml
       
       - firmware/esphome/packages/light.yaml
@@ -131,7 +130,7 @@ packages:
   # # Debug/local development fallback:
   # pcm5122_dac: !include packages/dac-pcm5122.yaml
   # amp_unmute: !include packages/amp-unmute.yaml
-  # audio: !include packages/audio.yaml
+  # audio: !include packages/sendspin-audio.yaml
   # audio_external_dac: !include packages/sendspin-audio-addon-external-dac.yaml
   # sendspin: !include packages/sendspin.yaml
   # sendspin_enable_dac: !include packages/sendspin-addon-dac-enable.yaml

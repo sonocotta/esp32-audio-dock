@@ -78,7 +78,7 @@ esp32:
       CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"
 
 logger:
-  level: INFO
+  level: DEBUG
 
 api:
 
@@ -100,20 +100,19 @@ network:
 packages:
   esparagus_remote:
     url: https://github.com/sonocotta/esp32-audio-dock
-    ref: features/sendspin-config-refactoring
+    ref: main
     files:
       - firmware/esphome/packages/dac-pcm5122.yaml
-      - firmware/esphome/packages/amp-unmute.yaml
       - firmware/esphome/packages/audio.yaml
+      - firmware/esphome/packages/amp-unmute.yaml
       - firmware/esphome/packages/audio-addon-external-dac.yaml
       - firmware/esphome/packages/media-player.yaml
       - firmware/esphome/packages/media-player-addon-amp-unmute.yaml
-
       - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
-      # - firmware/esphome/packages/oled.yaml
+      - firmware/esphome/packages/oled.yaml
       # Optional ethernet (replace wifi config if you use this, you need to exclude OLED package if you do this to free up SPI bus)
       # - firmware/esphome/packages/ethernet-w5500.yaml
 
