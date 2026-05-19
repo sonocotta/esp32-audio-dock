@@ -84,7 +84,7 @@ esp32:
       CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y" 
 
 logger:
-  level: DEBUG
+  level: INFO
 
 api:
 

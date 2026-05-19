@@ -93,7 +93,7 @@ esp32:
       CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"  # TLS1.3 support isn't enabled by default in IDF 5.1.5
 
 logger:
-  level: DEBUG
+  level: INFO
 
 api:
 

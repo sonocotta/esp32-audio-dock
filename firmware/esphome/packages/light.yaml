@@ -7,12 +7,15 @@
 #   - rgb_led_pin
 # ============================================================
 
+substitutions:
+  num_leds: 1
+
 light:
   - platform: esp32_rmt_led_strip
     id: rgb_front_led
     name: "${friendly_name} LED"
     rgb_order: GRB
     pin: ${rgb_led_pin}
-    num_leds: 1
+    num_leds: ${num_leds}
     chipset: ws2812
     default_transition_length: 0s
