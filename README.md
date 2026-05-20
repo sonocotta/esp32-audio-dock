@@ -779,6 +779,8 @@ Help came with a newer TPA3128 amp with revision H of the Amped-ESP32
 
 ### Optional SPI Ethernet module
 
+<img width="683" height="503" alt="image" src="https://github.com/user-attachments/assets/b516aab9-523e-4f01-b800-3fe5cce835ec" />
+
 Every board has a header that allows for soldering in a W5500 SPI Ethernet module, which is very easy to find. The only downside is that with the module installed, the board will not fit the case, unless it is cut to accommodate extra height.
 
 | HiFi-ESP32(S3) | Loud-ESP32(S3) | Louder-ESP32(S3) |
@@ -975,6 +977,13 @@ On the latest boards (starting from Amped-ESP32), I switched to [barrel jack wit
 
 ![image](https://github.com/user-attachments/assets/59acba9e-b447-4724-a6a1-bf777f053787)
 
+#### Recommended models
+
+|  Model | Image |
+|---|---|
+| [19V 3.42A 65W 5.5X2.5mm AC Laptop Power adapter Charger For ASUS](https://pl.aliexpress.com/item/1005005541362473.html) | <img width="803" height="621" alt="image" src="https://github.com/user-attachments/assets/e1305d1d-d7bf-4c28-8bc0-8a373fd93265" />
+
+
 #### Efficiency
 
 I performed Louder-ESP32 board load tests to analyze the thermal stability of the board under maximum load. These tests output a 100Hz sin-wave with a close to rail-to-rail signal (adjusting volume and gain) into an 8-Ohm load (both BD and 1SPW modulation). I started testing with bare naked DAC. As soon as I reached the point where DAC was entering thermal shutdown, I added a small radiator on top, and once more, a larger radiator on the back side (where the thermal pad is connected to the ground plane)
@@ -1024,7 +1033,7 @@ Most of the 64x128 pixel OLED screen models that are very common among hobbyists
 
 |  Model | Image |
 |---|---|
-| [1.3" OLED Screen 128x64 SH1106 30Pin](https://www.aliexpress.com/item/1005003801387081.html) | ![image](https://github.com/user-attachments/assets/78b44c8d-484a-4c07-9f9f-fb1f86689fac)
+| [1.3" OLED Screen 128x64 SH1106 30Pin](https://www.aliexpress.com/item/1005003801387081.html) | <img width="801" height="600" alt="image" src="https://github.com/user-attachments/assets/e83924ba-64b1-4644-8776-cf031597c6ca" />
 
 #### Software side
 
