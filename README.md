@@ -1,6 +1,6 @@
 # ESP32 Audio Docks and Louder ESP
 
-<a href="https://lectronz.com/stores/sonocotta" alt="I sell on Lectronz"><img src="https://lectronz-images.b-cdn.net/static/badges/i-sell-on-lectronz-medium.png" /></a><a href="https://www.tindie.com/stores/sonocotta/?ref=offsite_badges&utm_source=sellers_andrey-malyshenko&utm_medium=badges&utm_campaign=badge_medium"><img src="https://d2ss6ovg47m0r5.cloudfront.net/badges/tindie-mediums.png" alt="I sell on Tindie" width="150" height="78"></a>
+<a href="https://lectronz.com/stores/sonocotta" alt="I sell on Lectronz"><img src="https://lectronz-images.b-cdn.net/static/badges/i-sell-on-lectronz-medium.png" /></a><a href="https://www.tindie.com/stores/sonocotta/?ref=offsite_badges&utm_source=sellers_andrey-malyshenko&utm_medium=badges&utm_campaign=badge_medium"><img src="https://static.tindie.com/badges/tindie-mediums.png" alt="I sell on Tindie" width="150" height="78"></a><a class="logo" href="https://www.elecrow.com/store/Sonocotta" title="I sell at Elecrow"><img src="https://www.elecrow.com/media/logo/stores/1/ELECROW_LOGO.png" alt="elecrow logo" height="78" style="max-width: none;"></a>
 
 [![Dev Chat](https://img.shields.io/discord/1233306441469657140?logo=discord&label=discord&style=flat-square)](https://discord.gg/PtnaAaQMpS)
 
