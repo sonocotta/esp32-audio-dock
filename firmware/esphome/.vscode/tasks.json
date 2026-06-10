@@ -1,0 +1,41 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "ESPHome: Build Current File",
+			"type": "shell",
+			"command": ".venv/bin/esphome compile ${file}",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "ESPHome: Build and Upload OTA",
+			"type": "shell",
+			"command": ".venv/bin/esphome run ${file} --device OTA",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "ESPHome: Build and Upload over USB",
+			"type": "shell",
+			"command": ".venv/bin/esphome run ${file} --device ${input:usbPort}",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": []
+		}
+	],
+	"inputs": [
+		{
+			"id": "usbPort",
+			"type": "promptString",
+			"description": "USB serial port",
+			"default": "/dev/tty.usbserial-0001"
+		}
+	]
+}

@@ -1,0 +1,135 @@
+# ============================================================
+# Sendspin (without RGB lights) - Synchronized Multi-Room Audio
+# ============================================================
+# Configures sendspin component for synchronized multi-room audio playback
+# Requires substitutions:
+#   - task_stack_in_psram
+#   - friendly_name
+# Requires i2s_audio to be configured in main config
+# !! Requires ESPHome 2026.5.0 or later for latest sendspin features and optimizations !!
+# !! at the moment this would only build with ESPHome (Dev) but should be available in ESPHome (main) by the mid-May !!
+# ============================================================
+
+substitutions:
+  media_source_buffer_size: 200000
+
+globals:
+  - id: current_volume
+    type: float
+    initial_value: '0.2'
+  - id: announcement_triggered
+    type: bool
+    initial_value: 'false'
+
+text_sensor:
+  - platform: sendspin
+    type: title
+    name: Track Title
+
+  - platform: sendspin
+    type: artist
+    name: Artist
+
+  - platform: sendspin
+    type: album
+    name: Album
+
+sendspin:
+  id: sendspin_hub
+  task_stack_in_psram: ${task_stack_in_psram}
+
+media_source:
+  - platform: sendspin
+    id: sendspin_source
+    decode_memory: internal
+
+  - platform: audio_http
+    id: http_media_source
+    buffer_size: ${media_source_buffer_size}
+
+  - platform: audio_http
+    id: http_announcement_source
+    buffer_size: ${media_source_buffer_size}
+
+media_player:
+  - platform: sendspin
+    id: sendspin_group_media_player
+    name: "${friendly_name} Sendspin Player"
+
+  - platform: speaker_source
+    id: external_media_player
+    name: "${friendly_name} Player"
+    volume_increment: 0.05
+
+    announcement_pipeline:
+      format: FLAC     # FLAC is the least processor intensive codec
+      num_channels: 1  # Stereo audio is unnecessary for announcements
+      sample_rate: 48000
+      speaker: announcement_mixer_input
+      sources:
+        - http_announcement_source
+
+    media_pipeline:
+      speaker: media_resampling_speaker
+      format: FLAC     # FLAC is the least processor intensive codec
+      num_channels: 2
+      sample_rate: 48000
+      sources:
+        - sendspin_source
+        - http_media_source
+
+    on_announcement:
+      - if:
+          condition:
+            - lambda: return (!id(announcement_triggered));
+          then:
+            - lambda: |-
+                id(announcement_triggered) = true;
+                id(current_volume) = id(external_media_player).volume;
+            - mixer_speaker.apply_ducking:
+                  id: media_mixer_input
+                  decibel_reduction: 40
+                  duration: 0.0s
+            - wait_until:
+                media_player.is_announcing: external_media_player
+            - delay: 0.75s
+            - media_player.volume_set:
+                id: external_media_player
+                volume: !lambda "return id(announce_volume).state / 100.0;"
+            - wait_until:
+                - not:
+                    media_player.is_announcing: external_media_player
+            - mixer_speaker.apply_ducking:
+                      id: media_mixer_input
+                      decibel_reduction: 0
+                      duration: 1.0s
+            - media_player.volume_set:
+                id: external_media_player
+                volume: !lambda "return id(current_volume);"
+            - lambda: id(announcement_triggered) = false;
+
+    on_state:
+      if:
+        condition:
+          and:
+            - lambda: return (!id(announcement_triggered));
+            - not:
+                media_player.is_announcing: external_media_player
+        then:
+          - mixer_speaker.apply_ducking:
+              id: media_mixer_input
+              decibel_reduction: 0
+              duration: 1.0s
+
+number:
+  - platform: template
+    name: ${friendly_name} Announce Volume
+    id: announce_volume
+    icon: mdi:volume-source
+    unit_of_measurement: "%"
+    min_value: 0
+    max_value: 100
+    step: 1
+    restore_value: true
+    initial_value: 50
+    optimistic: true
