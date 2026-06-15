@@ -11,6 +11,7 @@
 
 substitutions:
   audio_buffer_duration: 100ms
+  bits_per_sample: 16bit
 
 i2s_audio:
 - id: i2s_out
@@ -23,7 +24,7 @@ speaker:
     i2s_audio_id: i2s_out
     sample_rate: 48000
     i2s_dout_pin: ${i2s_dout_pin}
-    bits_per_sample: 16bit
+    bits_per_sample: ${bits_per_sample}
     dac_type: external
     channel: stereo
     timeout: never
