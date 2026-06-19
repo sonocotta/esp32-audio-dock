@@ -1143,7 +1143,7 @@ Since the Louder-ESP32 Mini is designed to fit a standard speaker terminal, a ve
 <img width="710" height="458" alt="image" src="https://github.com/user-attachments/assets/00830aad-fe9e-45ec-b202-29d284efd4d6" />
 
 
-You can pull it from the [folder](/hardware/3d/louder-esp32-mini-enclosure/) or pull directly from the [Tinkercad](https://www.tinkercad.com/things/3qzMPw0aLqx-louder-esp32-mini-shell) and modify if needed. The shell is designed to be printed without support, and it is perfectly okay to print it with PLA plastic or similar material. 
+You can pull it from the [folder](/hardware/9-louder-esp32-mini/3d/) or pull directly from the [Tinkercad](https://www.tinkercad.com/things/3qzMPw0aLqx-louder-esp32-mini-shell) and modify if needed. The shell is designed to be printed without support, and it is perfectly okay to print it with PLA plastic or similar material. 
 
 ## Community projects
 
