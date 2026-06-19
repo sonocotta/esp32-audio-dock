@@ -21,7 +21,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
 | **Louder-ESP32** | **Louder-ESP32-Plus** |
 | <img width="1247" height="886" alt="image" src="https://github.com/user-attachments/assets/95c3c09d-e223-4a48-a39f-49aef12fbac7" /> | <img width="1249" height="842" alt="image" src="https://github.com/user-attachments/assets/06745d0b-ee1d-48fb-9883-347d742ff5f1" />
 | **Louder-ESP32-mini** | **Louder-ESP32-Pro** |
-| image goes here | image goes here |
+| <img width="1422" height="998" alt="image" src="https://github.com/user-attachments/assets/bf0bdc60-7698-44f8-8f30-2a007b1d85d6" /> | <img width="1629" height="1049" alt="image" src="https://github.com/user-attachments/assets/7366dac2-5ac5-4e68-a655-c06f550b26c5" /> |
 | **Amped-ESP32** | **Amped-ESP32-Plus** | 
 | <img width="1300" height="903" alt="image" src="https://github.com/user-attachments/assets/625801a1-a66e-4ef8-ab90-5508d6f662cd" /> | <img width="1097" height="794" alt="image" src="https://github.com/user-attachments/assets/2c334973-66e3-47f7-860d-f835607408c0" />
 
@@ -112,7 +112,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [TFT screen](#tft-screen)
     - [Case](#case)
     - [Louder-ESP32 Pro case](#louder-esp32-pro-case)
-  - [Comunity projects](#comunity-projects)
+  - [Community projects](#community-projects)
   - [Where to buy](#where-to-buy)
 
 ## Motivation
@@ -169,7 +169,9 @@ Louder-ESP32-mini is equipped with a high-quality TAS5805M DAC with powerful DSP
 
 It is designed to be as affordable as it can be, so more speakers can avoid landfills and be an integral part of smart homes instead. It uses minimal (if any) extra peripherals, and it requires no soldering to operate. The part choice was carefully done to make it production-friendly and affordable for everyone
 
-*image goes here*
+| Front | Back |
+|---|---|
+| <img width="1202" height="880" alt="image" src="https://github.com/user-attachments/assets/e8b126eb-b302-4bbc-b08b-134d6727ec22" /> | <img width="1155" height="920" alt="image" src="https://github.com/user-attachments/assets/34120e2b-6f47-4bf4-aa47-cffb0ad6e706" />
 
 ## Louder-ESP32 Plus
 
@@ -193,7 +195,8 @@ Louder-ESP32-Pro is equipped with a high-quality TAS5825M DAC with powerful DSP 
 
 It is designed to be used with USB-PD-enabled power sources, so powering it is as easy as plugging in a standard laptop power charger. For maximum power, a 65W power source is recommended, but it would also happily accept quick-charge phone power adapters, and even standard USB-C power adapters, with limited output power
 
-*image goes here*
+<img width="1316" height="1171" alt="image" src="https://github.com/user-attachments/assets/e610f382-cf8a-4cfd-a7d8-97774dcc7654" />
+
 
 ## Amped-ESP32
 
@@ -237,36 +240,11 @@ Building upon the success of the Amped-ESP32, the **Amped-ESP32 Plus** combines 
 
 </details>
 
-|  | HiFi-ESP32 | HiFi-ESP32 Plus | Loud-ESP32 | Loud-ESP32-Plus | Louder-ESP32 | Louder-ESP32-Plus | Amped-ESP32 | Amped-ESP32 Plus |
-|---|---|---|---|---|---|---|---|---|
-| Image (ESP32) | <img width="1271" height="854" alt="image" src="https://github.com/user-attachments/assets/fa57efc4-1d78-4dc3-b021-2f66f417f138" /> | <img width="3003" height="2144" alt="image" src="https://github.com/user-attachments/assets/cc046fcf-fbb1-49d1-90b3-b66f86775c52" /> | <img width="1226" height="866" alt="image" src="https://github.com/user-attachments/assets/c778a9f8-0bf0-46a7-b0a1-5f5581574f59" /> | <img width="1558" height="1154" alt="image" src="https://github.com/user-attachments/assets/b1525874-319c-41d9-a354-8419b3df76ec" /> | <img width="1560" height="1093" alt="image" src="https://github.com/user-attachments/assets/44809566-6eaf-4567-ae04-70904f7ea173" /> | <img width="1555" height="1045" alt="image" src="https://github.com/user-attachments/assets/ee5ed334-b355-4fd9-ad94-a2edeaef927a" /> | ![DSC_0003](https://github.com/user-attachments/assets/447a628c-9225-4beb-b8cc-054cc1d1a20d) | <img width="1580" height="1141" alt="image" src="https://github.com/user-attachments/assets/7335b7cb-ccfe-45f8-bd14-0b8db077ff10" /> |
-| MCU | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 |
-| Image (ESP32-S3) | <img width="1162" height="852" alt="image" src="https://github.com/user-attachments/assets/d8c9cdaa-5c0d-4332-a307-e107e4a424d3" /> | <img width="1673" height="1058" alt="image" src="https://github.com/user-attachments/assets/207c30e0-2939-432d-a8f9-7d008f5f428a" /> | <img width="1151" height="812" alt="image" src="https://github.com/user-attachments/assets/a25fb486-a561-4c0a-833e-e8f722f76c41" /> | <img width="1558" height="1154" alt="image" src="https://github.com/user-attachments/assets/e3c2ce90-012e-4d28-aa31-56833b886665" /> | <img width="1739" height="1275" alt="image" src="https://github.com/user-attachments/assets/0b143999-959b-4a2a-af37-deddfa07670d" /> | <img width="1703" height="1096" alt="image" src="https://github.com/user-attachments/assets/44d83f5a-3dd6-4cf4-bb3f-6a065066ba3d" /> | <img width="3415" height="2500" alt="image" src="https://github.com/user-attachments/assets/72a99b07-283e-4d83-9f4a-e61bcd9a1a28" />  | <img width="1686" height="1133" alt="image" src="https://github.com/user-attachments/assets/7d5691e6-dfee-45a0-b282-39dca36276b8" /> |
-| MCU (S3) | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 |
-| DAC | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC (-100 dB typical noise level) | [PCM5122](https://www.ti.com/product/PCM5122) 32bit Stereo DAC with integrated DSP (-112 dB typical noise level) | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | [Infineon MA12070P](https://www.infineon.com/part/MA12070P)<br> with built-in D-Class amp | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with built in D-Class amplifier and powerful DSP | Stereo I2S DAC (<br>[TAS5825M](https://www.ti.com/product/TAS5825M)<br>) with built in D-Class amplifier and powerful DSP | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC working with <br> [TPA3110D2](https://www.ti.com/product/TPA3110D2) D-Class amp <br> [TPA3128D2](https://www.ti.com/product/TPA3128D2) amp starting from Rev H | [PCM5122](https://www.ti.com/product/PCM5122) 32bit Stereo DAC with DSP + [TPA3110D2](https://www.ti.com/product/TPA3110D2) or [TPA3118D2](https://www.ti.com/product/TPA3118D2) amp |
-| Line-out (possibility to connect external amplifier) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
-| Output (4Ω, 1% THD) | ❌ | ❌ | 2x 5W | 2x 60W | 2x 32W,<br>1x 45W (bridged) | 2x 45W,<br>1x 60W (bridged) | (TPA3110)<br>2x 25W<br>1x 40W (bridged)<br>(TPA3128)<br>2x 25W<br>1x 60W (bridged) | (TPA3110)<br>2x 25W<br>1x 40W (bridged)<br>(TPA3118)<br>2x 25W<br>1x 60W (bridged) |
-| Output (8Ω, 1% THD) | ❌ | ❌ | 2x 3W | 2x 35W | 2x 22W | 2x 30W | 2x 25W | 2x 25W |
-| Flash | 8MB | 8MB | 8MB | 8MB | 8MB | 8MB | 8MB | 8MB |
-| PSRAM | 8MB | 8MB | 8MB | 8MB | 8MB | 8MB | 8MB | 8MB |
-| Power | 5V over USB-C | 5V over USB-C | 5V (up to 2.5A) from USB-C | 5..26V from external PSU | 5..26V from external PSU | 5..26V from external PSU | (TPA3110) 9..26V <br>(TPA3128) 5..26V<br>from external PSU | (TPA3110) 9..26V <br>(TPA3118) 5..26V<br>from external PSU |
-| Connectivity | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) |
-| Built-in DSP (Digital Signal Processor) | ❌ | Basic (6-band EQ, DRC) | ❌ | ❌ | Advanced (15-band EQ, DRC, AGL, FIR, etc.) | Advanced+ (15-band EQ, DRC, AGL, FIR, Smart features.) | ❌ | Basic (6-band EQ, DRC) |
-| Built-in mic (voice assist) | optional | optional | optional | optional | optional | optional | optional | optional |
-| Built-in IR reader | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Software support** |  |  |  |  |  |  |  |  |
-| Squeezelite-ESP32 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Snapclient | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| ESPHome (Media player) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| ESPHome (Sendspin player) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| ESPHome (Snapclient player) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-
-
 |  | HiFi-ESP32 | HiFi-ESP32 Plus | Loud-ESP32 | Loud-ESP32-Plus | Louder-ESP32 | Louder-ESP32 Mini | Louder-ESP32 Plus | Louder-ESP32 Pro | Amped-ESP32 | Amped-ESP32 Plus |
 |---|---|---|---|---|---|---|---|---|---|---|
 | Image (ESP32) | <img width="1271" height="854" alt="image" src="https://github.com/user-attachments/assets/fa57efc4-1d78-4dc3-b021-2f66f417f138" /> | <img width="3003" height="2144" alt="image" src="https://github.com/user-attachments/assets/cc046fcf-fbb1-49d1-90b3-b66f86775c52" /> | <img width="1226" height="866" alt="image" src="https://github.com/user-attachments/assets/c778a9f8-0bf0-46a7-b0a1-5f5581574f59" /> | <img width="1558" height="1154" alt="image" src="https://github.com/user-attachments/assets/b1525874-319c-41d9-a354-8419b3df76ec" /> | <img width="1560" height="1093" alt="image" src="https://github.com/user-attachments/assets/44809566-6eaf-4567-ae04-70904f7ea173" /> | n/a | <img width="1555" height="1045" alt="image" src="https://github.com/user-attachments/assets/ee5ed334-b355-4fd9-ad94-a2edeaef927a" /> | n/a | ![DSC_0003](https://github.com/user-attachments/assets/447a628c-9225-4beb-b8cc-054cc1d1a20d) | <img width="1580" height="1141" alt="image" src="https://github.com/user-attachments/assets/7335b7cb-ccfe-45f8-bd14-0b8db077ff10" /> |
-| MCU | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | NA | ESP32-WROVER-N8R8 | NA | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 |
-| Image (ESP32-S3) | <img width="1162" height="852" alt="image" src="https://github.com/user-attachments/assets/d8c9cdaa-5c0d-4332-a307-e107e4a424d3" /> | <img width="1673" height="1058" alt="image" src="https://github.com/user-attachments/assets/207c30e0-2939-432d-a8f9-7d008f5f428a" /> | <img width="1151" height="812" alt="image" src="https://github.com/user-attachments/assets/a25fb486-a561-4c0a-833e-e8f722f76c41" /> | <img width="1558" height="1154" alt="image" src="https://github.com/user-attachments/assets/e3c2ce90-012e-4d28-aa31-56833b886665" /> | | <img width="1739" height="1275" alt="image" src="https://github.com/user-attachments/assets/0b143999-959b-4a2a-af37-deddfa07670d" /> | <img width="1703" height="1096" alt="image" src="https://github.com/user-attachments/assets/44d83f5a-3dd6-4cf4-bb3f-6a065066ba3d" /> | | <img width="3415" height="2500" alt="image" src="https://github.com/user-attachments/assets/72a99b07-283e-4d83-9f4a-e61bcd9a1a28" />  | <img width="1686" height="1133" alt="image" src="https://github.com/user-attachments/assets/7d5691e6-dfee-45a0-b282-39dca36276b8" /> |
+| MCU | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | n/a | ESP32-WROVER-N8R8 | n/a | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 |
+| Image (ESP32-S3) | <img width="1162" height="852" alt="image" src="https://github.com/user-attachments/assets/d8c9cdaa-5c0d-4332-a307-e107e4a424d3" /> | <img width="1673" height="1058" alt="image" src="https://github.com/user-attachments/assets/207c30e0-2939-432d-a8f9-7d008f5f428a" /> | <img width="1151" height="812" alt="image" src="https://github.com/user-attachments/assets/a25fb486-a561-4c0a-833e-e8f722f76c41" /> | <img width="1558" height="1154" alt="image" src="https://github.com/user-attachments/assets/e3c2ce90-012e-4d28-aa31-56833b886665" /> | <img width="1739" height="1275" alt="image" src="https://github.com/user-attachments/assets/0b143999-959b-4a2a-af37-deddfa07670d" /> | <img width="1422" height="998" alt="image" src="https://github.com/user-attachments/assets/bf0bdc60-7698-44f8-8f30-2a007b1d85d6" /> | <img width="1703" height="1096" alt="image" src="https://github.com/user-attachments/assets/44d83f5a-3dd6-4cf4-bb3f-6a065066ba3d" /> | <img width="1629" height="1049" alt="image" src="https://github.com/user-attachments/assets/7366dac2-5ac5-4e68-a655-c06f550b26c5" /> | <img width="3415" height="2500" alt="image" src="https://github.com/user-attachments/assets/72a99b07-283e-4d83-9f4a-e61bcd9a1a28" />  | <img width="1686" height="1133" alt="image" src="https://github.com/user-attachments/assets/7d5691e6-dfee-45a0-b282-39dca36276b8" /> |
 | MCU (S3) | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 |
 | DAC | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC (-100 dB typical noise level) | [PCM5122](https://www.ti.com/product/PCM5122) 32bit Stereo DAC with integrated DSP (-112 dB typical noise level) | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | [Infineon MA12070P](https://www.infineon.com/part/MA12070P)<br> with built-in D-Class amp | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with built in D-Class amplifier and powerful DSP | Stereo I2S DAC (<br>[TAS5805M](https://www.ti.com/product/TAS5805M)<br>) with built in D-Class amplifier and powerful DSP | Stereo I2S DAC (<br>[TAS5825M](https://www.ti.com/product/TAS5825M)<br>) with built in D-Class amplifier and powerful DSP | Stereo I2S DAC (<br>[TAS5825M](https://www.ti.com/product/TAS5825M)<br>) with built in D-Class amplifier and powerful DSP | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC working with <br> [TPA3110D2](https://www.ti.com/product/TPA3110D2) D-Class amp <br> [TPA3128D2](https://www.ti.com/product/TPA3128D2) amp starting from Rev H | [PCM5122](https://www.ti.com/product/PCM5122) 32bit Stereo DAC with DSP + [TPA3110D2](https://www.ti.com/product/TPA3110D2) or [TPA3118D2](https://www.ti.com/product/TPA3118D2) amp |
 | Line-out (possibility to connect external amplifier) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
@@ -1090,7 +1068,7 @@ In short, when a speaker claims “100W,” it typically translates to about 10W
 
 ### OLED screen
 
-Starting May 2025, all boards will have an OLED screen solder-less connector. Originally, I added the OLED header on the back side of the PCB that would require careful and skillful soldering (It is quite nice when using squeezelite since you can get quite a lot with existing plugins and settings). Later on, I managed to find the right model of the screen and corresponding connector for a reasonable price, and decided to equip every board with the connector as standard. 
+Starting May 2025, all boards will have an OLED screen with a solder-less connector. Originally, I added the OLED header on the back side of the PCB that would require careful and skillful soldering (It is quite nice when using squeezelite since you can get quite a lot with existing plugins and settings). Later on, I managed to find the right model of the screen and corresponding connector for a reasonable price, and decided to equip every board with the connector as standard. 
 
 At this moment, one can simply throw in a compatible OLED screen and use a small strap of double-sided adhesive to fix it mechanically. The final result is a nice and finished look
 
@@ -1117,12 +1095,12 @@ Although you're free to use it your way, using the pinout above, I'd expect the 
 
 ### TFT screen 
 
-Since the development of the Sendspin protocol wen tinto visualisation area, and latest features allow displaying album art, track status and progress, I'm replacing OLED screeen with larger and colorfun TFT screen. The first board to recieve upgrade is Louder-ESP32 Pro board, introducing 14-pin connector for ST7789-baed 320x240 pixel TFT screen.
+Since the development of the Sendspin protocol went into the visualisation area, and the latest features allow displaying album art, track status, and progress, I'm replacing the OLED screen with a larger and colorful TFT screen. The first board to receive an upgrade is the Louder-ESP32 Pro board, introducing a 14-pin connector for a ST7789-based 320x240 pixel TFT screen.
 
 |  Model | Image |
 |---|---|
-| [2.0" TFT Screen 320x240 ST7789 14Pin](https://pl.aliexpress.com/item/1005008463441614.html) | image placeholder |
-| [2.4" TFT Screen 320x240 ST7789 14Pin](https://pl.aliexpress.com/item/1005008472996411.html) | image placeholder |
+| [2.0" TFT Screen 320x240 ST7789 14Pin](https://pl.aliexpress.com/item/1005008463441614.html) | <img width="429" height="573" alt="image" src="https://github.com/user-attachments/assets/e715c9e0-0c9a-4de0-ae75-466400d38e1b" /> |
+| [2.4" TFT Screen 320x240 ST7789 14Pin](https://pl.aliexpress.com/item/1005008472996411.html) | <img width="450" height="593" alt="image" src="https://github.com/user-attachments/assets/e78397ea-ad13-45af-8f2b-6377f6f6db7f" /> |
 
 
 ### Case
@@ -1154,11 +1132,11 @@ Also, community members created a few 3D-printable designs for Louder-ESP32 boar
 
 Louder-ESP32-Pro boards are mechanically compatible with aluminum cases for Raspberry Pi 5. The most important components that release heat under heavy operation would be covered by the case heat release pads. On top of that, the board allows connecting a 4-pin fan with speed control and RPM readout, so it can be engaged only when needed.
 
-image placeholder
+<img width="1536" height="1078" alt="image" src="https://github.com/user-attachments/assets/4a0fd32e-17af-47b9-80d8-220d21d62b77" />
 
-## Comunity projects
+## Community projects
 
-If you don't mind to show off your projects, please send me a note, or create a PR directly
+If you don't mind showing off your projects, please send me a note or create a PR directly
 
 | #  | Image |
 |----|----|
