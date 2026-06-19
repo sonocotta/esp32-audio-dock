@@ -1138,11 +1138,12 @@ Louder-ESP32-Pro boards are mechanically compatible with aluminum cases for Rasp
 
 ### Louder-ESP32 Mini shell
 
-Since Louder-ESP32 Mini is designed to fit a standard speaker terminal, vertical USB-C port was added instead of more traditional horisontal type. It is highly recommneded to protect it from the sideways force, which would be common when cable is inserted. The simplest solution is to use a 3D-printed shell that will protect the board and the USB-C port from mechanical stress.
+Since the Louder-ESP32 Mini is designed to fit a standard speaker terminal, a vertical USB-C port was added instead of the more traditional horizontal type. It is highly recommended to protect it from the sideways force, which would be common when the cable is inserted. The simplest solution is to use a 3D-printed shell that will protect the board and the USB-C port from mechanical stress.
 
-image placeholder
+<img width="710" height="458" alt="image" src="https://github.com/user-attachments/assets/00830aad-fe9e-45ec-b202-29d284efd4d6" />
 
-You can pull it from the [folder](/hardware/3d/louder-esp32-mini-enclosure/) or pull directly from the [Tinkercad](https://www.tinkercad.com/things/3qzMPw0aLqx-louder-esp32-mini-shell) and modify if needed. The shell is designed to be printed without support, and it is perfectly okay to print in with PLA plastic or similar material. 
+
+You can pull it from the [folder](/hardware/3d/louder-esp32-mini-enclosure/) or pull directly from the [Tinkercad](https://www.tinkercad.com/things/3qzMPw0aLqx-louder-esp32-mini-shell) and modify if needed. The shell is designed to be printed without support, and it is perfectly okay to print it with PLA plastic or similar material. 
 
 ## Community projects
 
