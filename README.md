@@ -112,6 +112,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [TFT screen](#tft-screen)
     - [Case](#case)
     - [Louder-ESP32 Pro case](#louder-esp32-pro-case)
+    - [Louder-ESP32 Mini shell](#louder-esp32-mini-shell)
   - [Community projects](#community-projects)
   - [Where to buy](#where-to-buy)
 
@@ -1134,6 +1135,14 @@ Also, community members created a few 3D-printable designs for Louder-ESP32 boar
 Louder-ESP32-Pro boards are mechanically compatible with aluminum cases for Raspberry Pi 5. The most important components that release heat under heavy operation would be covered by the case heat release pads. On top of that, the board allows connecting a 4-pin fan with speed control and RPM readout, so it can be engaged only when needed.
 
 <img width="1536" height="1078" alt="image" src="https://github.com/user-attachments/assets/4a0fd32e-17af-47b9-80d8-220d21d62b77" />
+
+### Louder-ESP32 Mini shell
+
+Since Louder-ESP32 Mini is designed to fit a standard speaker terminal, vertical USB-C port was added instead of more traditional horisontal type. It is highly recommneded to protect it from the sideways force, which would be common when cable is inserted. The simplest solution is to use a 3D-printed shell that will protect the board and the USB-C port from mechanical stress.
+
+image placeholder
+
+You can pull it from the [folder](/hardware/3d/louder-esp32-mini-enclosure/) or pull directly from the [Tinkercad](https://www.tinkercad.com/things/3qzMPw0aLqx-louder-esp32-mini-shell) and modify if needed. The shell is designed to be printed without support, and it is perfectly okay to print in with PLA plastic or similar material. 
 
 ## Community projects
 
