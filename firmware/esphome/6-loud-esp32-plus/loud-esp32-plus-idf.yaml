@@ -1,41 +1,38 @@
 # ============================================================
-# Louder-ESP32-Plus - Sendspin Configuration
+# Loud-ESP32-Plus - Media Player Configuration
 # ============================================================
-# ESP32 audio board with TAS5825M DAC (I2C+I2S) with built-in DSP
-# Configured with Sendspin for synchronized multi-room audio
+# ESP32 audio board with Infineon MA12070P DAC, I2S output, with entry-level DSP
+# Features: Wi-Fi media player with mixer/resampler,
+#           announcements, RGB LED, IR receiver
 # Board-specific pinouts defined in substitutions
 # Functional blocks imported from /packages
 # ============================================================
 
 substitutions:
-  name: esphome-web-8a2d98
-  friendly_name: Louder-ESP32-Plus
-  task_stack_in_psram: "false" 
-
+  name: esphome-web-2cb4b8
+  friendly_name: Loud-ESP32-Plus
+  task_stack_in_psram: "true"
 
   # ===== Board-Specific Pinouts =====
   # I2S Audio 
   i2s_lrclk_pin: GPIO25
   i2s_bclk_pin: GPIO26
   i2s_dout_pin: GPIO22
-  
-  # TAS5825M
-  tas58xx_variant: TAS5825M
-  tas58xx_enable_pin: GPIO33
+  bits_per_sample: 32bit
+
+  # I2C pins for DAC control
   i2c_sda_pin: GPIO21
   i2c_scl_pin: GPIO27
 
-  # ===== DAC Overrides (optional) =====
-  # tas58xx_dac_mode: PBTL 
-  # tas58xx_mixer_mode: MONO
-  # tas58xx_analog_gain: 0db
-  # tas58xx_volume_max: 0dB
-  # tas58xx_volume_min: -60dB
-  # tas58xx_refresh_eq: AUTO
-  
+  # MA12070P DAC
+  ma12070p_enable_pin: GPIO13
+  ma12070p_mute_pin: GPIO33
+  # ma12070p_volume_max: 0dB
+  # ma12070p_volume_min: -80dB
+
   # RGB LED
   rgb_led_pin: GPIO12
-  
+
   # IR Receiver
   ir_rx_pin: GPIO39
 
@@ -45,18 +42,15 @@ substitutions:
   spi_miso_pin: GPIO19
 
   # Ethernet (W5500)
-  eth_cs_pin: GPIO15
+  eth_cs_pin: GPIO05
   eth_interrupt_pin: GPIO35
   eth_reset_pin: GPIO14
   
   # Display control pins
-  display_cs_pin: GPIO05
+  display_cs_pin: GPIO15
   display_dc_pin: GPIO04
   display_reset_pin: GPIO32
 
-  # ESP32 optimal settings for Sendspin
-  media_source_buffer_size: 100000
-  
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
@@ -87,7 +81,7 @@ esp32:
       CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"
 
 logger:
-  level: INFO
+  level: DEBUG
 
 api:
 
@@ -112,43 +106,28 @@ packages:
     url: https://github.com/sonocotta/esp32-audio-dock
     ref: main
     files:
-      # Option A: TAS58xx configured with ganged 15-band EQ
-      - firmware/esphome/packages/dac-tas58xx.yaml
-      # Option B: TAS58xx configured with individual 15-band EQ per channel
-      # - firmware/esphome/packages/dac-tas58xx-biamp.yaml
-      # Option C: TAS58xx configured with bi-amp mode, with filters applied to both channels (HF or LF)
-      # - firmware/esphome/packages/dac-tas58xx-presets.yaml
-
-      - firmware/esphome/packages/audio.yaml
-      - firmware/esphome/packages/sendspin.yaml
-      # Optional: OLED displays clock when idling, and track/artist info when playing
-      # - firmware/esphome/packages/sendspin-addon-oled.yaml
-      - firmware/esphome/packages/sendspin-audio-addon-external-dac.yaml
-      - firmware/esphome/packages/sendspin-addon-dac-enable.yaml
-      - firmware/esphome/packages/sendspin-addon-tas58xx.yaml
-      - firmware/esphome/packages/sendspin-addon-esp32.yaml
+      - firmware/esphome/packages/dac-ma12070p.yaml
+      # - firmware/esphome/packages/audio.yaml
+      # - firmware/esphome/packages/audio-addon-ma12070p.yaml
+      - firmware/esphome/packages/media-player.yaml
+      - firmware/esphome/packages/media-player-addon-dac-mute.yaml
       
       - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
+      # - firmware/esphome/packages/oled.yaml
       # Optional ethernet (replace wifi config if you use this, you need to exclude OLED package if you do this to free up SPI bus)
       # - firmware/esphome/packages/ethernet-w5500.yaml
 
   # # Debug/local development fallback:
-  # external_dac: !include packages/dac-tas58xx.yaml
-  # # external_dac: !include packages/dac-tas58xx-biamp.yaml
-  # # external_dac: !include packages/dac-tas58xx-presets.yaml  
-
-  # sendspin_audio: !include packages/audio.yaml
-  # sendspin_external_dac: !include packages/sendspin-audio-addon-external-dac.yaml
-  # sendspin: !include packages/sendspin.yaml
-  # sendspin_enable_dac: !include packages/sendspin-addon-dac-enable.yaml
-  # sendspin_tas58xx: !include packages/sendspin-addon-tas58xx.yaml
-  # oled: !include packages/sendspin-addon-oled.yaml
-
+  # ma12070p_dac: !include packages/dac-ma12070p.yaml
+  audio: !include ../packages/audio.yaml
+  # media_player: !include packages/media-player.yaml
+  # media_player_dac_mute: !include packages/media-player-addon-dac-mute.yaml
   # light: !include packages/light.yaml
   # ir_receiver: !include packages/ir-receiver.yaml
   # monitoring: !include packages/monitoring.yaml
   # monitoring_wifi: !include packages/monitoring-wifi.yaml
+  # oled: !include packages/oled.yaml
   # # ethernet: !include packages/ethernet-w5500.yaml

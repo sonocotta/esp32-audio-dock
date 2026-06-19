@@ -1,7 +1,7 @@
 # ============================================================
 # Loud-ESP32-Plus - Media Player Configuration
 # ============================================================
-# ESP32 audio board with PCM5122 DAC, I2S output, with entry-level DSP
+# ESP32 audio board with Infineon MA12070P DAC, I2S output, with entry-level DSP
 # Configured with Sendspin for synchronized multi-room audio
 # Board-specific pinouts defined in substitutions
 # Functional blocks imported from /packages

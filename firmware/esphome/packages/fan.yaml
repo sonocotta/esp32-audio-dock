@@ -1,0 +1,29 @@
+substitutions:
+  fan_input_pin: GPIO7
+  fan_pwn_pin: GPIO4 
+
+
+output:
+  - platform: ledc
+    pin: ${fan_pwn_pin}
+    id: fan_pwm
+    frequency: 25000 Hz
+    inverted: true
+
+fan:
+  - platform: speed
+    output: fan_pwm
+    name: "Cooling Fan"
+
+sensor:
+  - platform: pulse_counter
+    pin:
+      number: ${fan_input_pin}
+      mode:
+        input: true
+        pullup: true
+    name: "Fan RPM"
+    update_interval: 5s
+    unit_of_measurement: "RPM"
+    filters:
+      - multiply: 0.5

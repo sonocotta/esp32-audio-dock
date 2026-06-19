@@ -20,6 +20,8 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
 |  <img width="1144" height="865" alt="image" src="https://github.com/user-attachments/assets/aa1b6f87-355b-4cab-ac37-16149af80012" /> | <img width="1168" height="849" alt="image" src="https://github.com/user-attachments/assets/e3be3e40-4989-4310-842f-8709e21af504" />
 | **Louder-ESP32** | **Louder-ESP32-Plus** |
 | <img width="1247" height="886" alt="image" src="https://github.com/user-attachments/assets/95c3c09d-e223-4a48-a39f-49aef12fbac7" /> | <img width="1249" height="842" alt="image" src="https://github.com/user-attachments/assets/06745d0b-ee1d-48fb-9883-347d742ff5f1" />
+| **Louder-ESP32-mini** | **Louder-ESP32-Pro** |
+| image goes here | image goes here |
 | **Amped-ESP32** | **Amped-ESP32-Plus** | 
 | <img width="1300" height="903" alt="image" src="https://github.com/user-attachments/assets/625801a1-a66e-4ef8-ab90-5508d6f662cd" /> | <img width="1097" height="794" alt="image" src="https://github.com/user-attachments/assets/2c334973-66e3-47f7-860d-f835607408c0" />
 
@@ -35,7 +37,9 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
   - [Loud-ESP32](#loud-esp32)
   - [Loud-ESP32-Plus](#loud-esp32-plus)
   - [Louder-ESP32](#louder-esp32)
+  - [Louder-ESP32 Mini](#louder-esp32-mini)
   - [Louder-ESP32 Plus](#louder-esp32-plus)
+  - [Louder-ESP32 Pro](#louder-esp32-pro)
   - [Amped-ESP32](#amped-esp32)
   - [Amped-ESP32-Plus](#amped-esp32-plus)
   - [Features](#features)
@@ -51,6 +55,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [Ethernet (all boards)](#ethernet-all-boards)
     - [Optional peripheral (all boards)](#optional-peripheral-all-boards)
     - [Mic header](#mic-header)
+    - [TFT and Fan header (Louder-ESP32 Pro boards)](#tft-and-fan-header-louder-esp32-pro-boards)
   - [Which software is right for me](#which-software-is-right-for-me)
   - [Software samples](#software-samples)
     - [Platformio IDE](#platformio-ide)
@@ -86,7 +91,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [HiFi-ESP32](#hifi-esp32-1)
     - [Loud-ESP32](#loud-esp32-2)
     - [Amped-ESP32](#amped-esp32-1)
-    - [Amped-ESP32 with TPA3128 amp](#amped-esp32-with-tpa3128-amp)
+    - [Amped-ESP32 with TPA3118/TPA3128 amp](#amped-esp32-with-tpa3118tpa3128-amp)
     - [Louder-ESP32](#louder-esp32-1)
     - [Optional SPI Ethernet module](#optional-spi-ethernet-module)
     - [BTL and PBTL mode (Louder and Amped boards)](#btl-and-pbtl-mode-louder-and-amped-boards)
@@ -98,12 +103,15 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [TAS5805M DSP capabilities](#tas5805m-dsp-capabilities)
     - [Louder-ESP32 and Amped-ESP32 power considerations](#louder-esp32-and-amped-esp32-power-considerations)
       - [Connector specs](#connector-specs)
+      - [Recommended models](#recommended-models)
       - [Efficiency](#efficiency)
     - [Speakers selection](#speakers-selection)
     - [OLED screen](#oled-screen)
       - [OLED models](#oled-models)
       - [Software side](#software-side)
+    - [TFT screen](#tft-screen)
     - [Case](#case)
+    - [Louder-ESP32 Pro case](#louder-esp32-pro-case)
   - [Comunity projects](#comunity-projects)
   - [Where to buy](#where-to-buy)
 
@@ -151,6 +159,18 @@ The **Louder-ESP32** is a top-of-the-range model that uses a modern, highly capa
 
 <img width="2801" height="2105" alt="image" src="https://github.com/user-attachments/assets/4cfc5cd6-07bc-472d-95d2-36777389efe5" />
 
+## Louder-ESP32 Mini
+
+Louder-ESP32-mini is a compact version of the Louder-ESP32, which would replace the standard speaker terminal on your old speakers, turning them into a hi-fi audio solution for your smart home.
+
+It comes in two sizes that are most common among off-the-shelf speakers: 42x42mm (small speakers typically) and 52x52mm (for larger models).
+
+Louder-ESP32-mini is equipped with a high-quality TAS5805M DAC with powerful DSP features, allowing audio tuning to turn small speakers into high-quality audio streamers. Onboard ESP32-S3 with 8MB PSRAM is there to ensure enough horsepower for solid streaming capabilities.
+
+It is designed to be as affordable as it can be, so more speakers can avoid landfills and be an integral part of smart homes instead. It uses minimal (if any) extra peripherals, and it requires no soldering to operate. The part choice was carefully done to make it production-friendly and affordable for everyone
+
+*image goes here*
+
 ## Louder-ESP32 Plus
 
 The **Louder-ESP32-Plus** upgrades DAc to TAS5825M model, which is more efficient (and therefore more powerful), and more capable. It introduces advanced DSP features that are not available on the base model, as it has much more powerful DSP processor.
@@ -162,6 +182,18 @@ The **Louder-ESP32-Plus** upgrades DAc to TAS5825M model, which is more efficien
 - Advanced DSP: Smart Excursion, Smart Thermal, Smart Bass, SmartEQ
 
 <img width="1860" height="1191" alt="image" src="https://github.com/user-attachments/assets/e2ce7558-e090-4ede-96b5-b187af0bfad4" />
+
+## Louder-ESP32 Pro
+
+On the other side of the scale, Louder-ESP32-Pro is a feature-packed version of the Louder-ESP32-Plus, which hosts most of the optional extras as standard, adds support for color TFT screens, and, perhaps most importantly, adds an industrial-grade heat release solution for reliable heavy-duty operation.
+
+It comes in Raspberry Pi 5 shape with the most important component placed to follow the original heat release pattern. This allows the use of Raspberry Pi aluminum radiators, including those with soft-controlled fan connectors, that can be driven through Louder-ESP32-Pro software when operating in hot conditions.
+
+Louder-ESP32-Pro is equipped with a high-quality TAS5825M DAC with powerful DSP features, allowing audio tuning to turn your speakers into high-quality audio streamers, big or small likewise. Onboard ESP32-S3 with 8MB PSRAM is there to ensure enough horsepower for solid streaming capabilities.
+
+It is designed to be used with USB-PD-enabled power sources, so powering it is as easy as plugging in a standard laptop power charger. For maximum power, a 65W power source is recommended, but it would also happily accept quick-charge phone power adapters, and even standard USB-C power adapters, with limited output power
+
+*image goes here*
 
 ## Amped-ESP32
 
@@ -228,6 +260,31 @@ Building upon the success of the Amped-ESP32, the **Amped-ESP32 Plus** combines 
 | ESPHome (Media player) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | ESPHome (Sendspin player) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | ESPHome (Snapclient player) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+
+|  | HiFi-ESP32 | HiFi-ESP32 Plus | Loud-ESP32 | Loud-ESP32-Plus | Louder-ESP32 | Louder-ESP32 Mini | Louder-ESP32 Plus | Louder-ESP32 Pro | Amped-ESP32 | Amped-ESP32 Plus |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Image (ESP32) | <img width="1271" height="854" alt="image" src="https://github.com/user-attachments/assets/fa57efc4-1d78-4dc3-b021-2f66f417f138" /> | <img width="3003" height="2144" alt="image" src="https://github.com/user-attachments/assets/cc046fcf-fbb1-49d1-90b3-b66f86775c52" /> | <img width="1226" height="866" alt="image" src="https://github.com/user-attachments/assets/c778a9f8-0bf0-46a7-b0a1-5f5581574f59" /> | <img width="1558" height="1154" alt="image" src="https://github.com/user-attachments/assets/b1525874-319c-41d9-a354-8419b3df76ec" /> | <img width="1560" height="1093" alt="image" src="https://github.com/user-attachments/assets/44809566-6eaf-4567-ae04-70904f7ea173" /> | n/a | <img width="1555" height="1045" alt="image" src="https://github.com/user-attachments/assets/ee5ed334-b355-4fd9-ad94-a2edeaef927a" /> | n/a | ![DSC_0003](https://github.com/user-attachments/assets/447a628c-9225-4beb-b8cc-054cc1d1a20d) | <img width="1580" height="1141" alt="image" src="https://github.com/user-attachments/assets/7335b7cb-ccfe-45f8-bd14-0b8db077ff10" /> |
+| MCU | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 | NA | ESP32-WROVER-N8R8 | NA | ESP32-WROVER-N8R8 | ESP32-WROVER-N8R8 |
+| Image (ESP32-S3) | <img width="1162" height="852" alt="image" src="https://github.com/user-attachments/assets/d8c9cdaa-5c0d-4332-a307-e107e4a424d3" /> | <img width="1673" height="1058" alt="image" src="https://github.com/user-attachments/assets/207c30e0-2939-432d-a8f9-7d008f5f428a" /> | <img width="1151" height="812" alt="image" src="https://github.com/user-attachments/assets/a25fb486-a561-4c0a-833e-e8f722f76c41" /> | <img width="1558" height="1154" alt="image" src="https://github.com/user-attachments/assets/e3c2ce90-012e-4d28-aa31-56833b886665" /> | | <img width="1739" height="1275" alt="image" src="https://github.com/user-attachments/assets/0b143999-959b-4a2a-af37-deddfa07670d" /> | <img width="1703" height="1096" alt="image" src="https://github.com/user-attachments/assets/44d83f5a-3dd6-4cf4-bb3f-6a065066ba3d" /> | | <img width="3415" height="2500" alt="image" src="https://github.com/user-attachments/assets/72a99b07-283e-4d83-9f4a-e61bcd9a1a28" />  | <img width="1686" height="1133" alt="image" src="https://github.com/user-attachments/assets/7d5691e6-dfee-45a0-b282-39dca36276b8" /> |
+| MCU (S3) | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 | ESP32-S3-WROOM-N8R8 |
+| DAC | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC (-100 dB typical noise level) | [PCM5122](https://www.ti.com/product/PCM5122) 32bit Stereo DAC with integrated DSP (-112 dB typical noise level) | Dual I2S DAC ([MAX98357](https://www.analog.com/en/products/max98357a.html)) with built in D-Class amp | [Infineon MA12070P](https://www.infineon.com/part/MA12070P)<br> with built-in D-Class amp | Stereo I2S DAC ([TAS5805M](https://www.ti.com/product/TAS5805M)) with built in D-Class amplifier and powerful DSP | Stereo I2S DAC (<br>[TAS5805M](https://www.ti.com/product/TAS5805M)<br>) with built in D-Class amplifier and powerful DSP | Stereo I2S DAC (<br>[TAS5825M](https://www.ti.com/product/TAS5825M)<br>) with built in D-Class amplifier and powerful DSP | Stereo I2S DAC (<br>[TAS5825M](https://www.ti.com/product/TAS5825M)<br>) with built in D-Class amplifier and powerful DSP | [PCM5100A](https://www.ti.com/product/PCM5100A) 32bit Stereo DAC working with <br> [TPA3110D2](https://www.ti.com/product/TPA3110D2) D-Class amp <br> [TPA3128D2](https://www.ti.com/product/TPA3128D2) amp starting from Rev H | [PCM5122](https://www.ti.com/product/PCM5122) 32bit Stereo DAC with DSP + [TPA3110D2](https://www.ti.com/product/TPA3110D2) or [TPA3118D2](https://www.ti.com/product/TPA3118D2) amp |
+| Line-out (possibility to connect external amplifier) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
+| Output (4Ω, 1% THD) | ❌ | ❌ | 2x 5W | 2x 60W | 2x 32W,<br>1x 45W (bridged) | 1x 5W | 2x 45W,<br>1x 53W (bridged) | 2x 45W,<br>1x 53W (bridged) | (TPA3110)<br>2x 25W<br>1x 40W (bridged)<br>(TPA3128)<br>2x 25W<br>1x 60W (bridged) | (TPA3110)<br>2x 25W<br>1x 40W (bridged)<br>(TPA3118)<br>2x 25W<br>1x 60W (bridged) |
+| Output (8Ω, 1% THD) | ❌ | ❌ | 2x 3W | 2x 35W | 2x 22W | 1x 3W | 2x 30W | 2x 30W | 2x 25W | 2x 25W |
+| Flash | 8MB | 8MB | 8MB | 8MB | 8MB | 8MB | 8MB | 8MB | 8MB | 8MB |
+| PSRAM | 8MB | 8MB | 8MB | 8MB | 8MB | 8MB | 8MB | 8MB | 8MB | 8MB |
+| Power | 5V over USB-C | 5V over USB-C | 5V (up to 2.5A) from USB-C | 5..26V from external PSU | 5..26V from external PSU | 5V (up to 2A) from USB-C | 5..26V from external PSU | USB-PD enabled power adapter (up to 65W) | (TPA3110) 9..26V <br>(TPA3128) 5..26V<br>from external PSU | (TPA3110) 9..26V <br>(TPA3118) 5..26V<br>from external PSU |
+| Connectivity | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BLE | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BLE + Ethernet | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) | WiFi + BT4.2 (except S3) + BLE <br> Ethernet (optional module) |
+| Built-in DSP (Digital Signal Processor) | ❌ | Basic (6-band EQ, DRC) | ❌ | ❌ | Advanced (15-band EQ, DRC, AGL, FIR, etc.) | Advanced (15-band EQ, DRC, AGL, FIR, etc.) | Advanced+ (15-band EQ, DRC, AGL, FIR, Smart features.) | Advanced+ (15-band EQ, DRC, AGL, FIR, Smart features.) | ❌ | Basic (6-band EQ, DRC) |
+| Built-in mic (voice assist) | optional | optional | optional | optional | optional | ❌ | optional | ✅ | optional | optional |
+| Built-in IR reader | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ |
+| **Software support** |  |  |  |  |  |  |  |  |  |  |
+| Squeezelite-ESP32 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Snapclient | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| ESPHome (Media player) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| ESPHome (Sendspin player) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| ESPHome (Snapclient player) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 ### Onboard PSRAM
 
@@ -341,8 +398,13 @@ Both versions of the Louder-ESP32 boards (ESP32 Rev. H6+, ESP32-S3 Rev. K0+) and
 | HIFI-ESP32-S3 (Rev G2+) | 17      | 18     | 8        |
 
 The mic model that I used for testing and validation is the INMP441 MEMS microphone; the pinout is created for this model. Other models might be available.
-
 <img width="356" height="301" alt="image" src="https://github.com/user-attachments/assets/d7f3dbff-4d94-45f1-9305-beaac4166c8f" />
+
+### TFT and Fan header (Louder-ESP32 Pro boards)
+
+|                          |  FAN PWM| FAN SPD  | TFT SPI HOST/SPEED | TFT SPI CLK | TFT SPI MOSI | TFT SPI MISO | TFT SPI CS | TFT SPI DC | TFT RST | TFT BACKLIGHT |
+|--------------------------|---------|----------|--------------------|-------------|--------------|--------------|------------|------------|---------|---------------|
+| ESP32-S3                 | 2       | 1        | SPI2/20MHz         | 12          | 11           | 13           | 47         | 38         | 48      |   42          | 
 
 ## Which software is right for me
 
@@ -511,10 +573,10 @@ The PCM5122's DSP features will be gradually unlocked through firmware updates, 
 
 - [X] - Hardware design completed (HiFi-ESP32 Plus)
 - [X] - Basic I2C driver [implementation](https://github.com/tommag/PCM51xx_Arduino)
-- [ ] - ESPHome component development
-- [ ] - Advanced DSP feature implementation
-- [ ] - Hardware design (Amped-ESP32 Plus)
-- [ ] - Web interface for DSP control
+- [X] - ESPHome component development
+- [x] - Advanced DSP feature implementation
+- [X] - Hardware design (Amped-ESP32 Plus)
+- [x] - Web interface for DSP control
 
 ### Home Assistant: Snapcast
 
@@ -758,7 +820,7 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 |---|
 | ![image](https://github.com/user-attachments/assets/6fd602a7-909f-4b33-8be1-623d2fec443b) |
 
-### Amped-ESP32 with TPA3128 amp
+### Amped-ESP32 with TPA3118/TPA3128 amp
 
 Originally, I used the TPA3110 amp with Amped Esparagus and Amped-ESP32 boards for its simplicity and availability. The only issue with TAP3110 is that it lacks the MUTE pin. It does have an STBY pin, but as it turned out, it is not pop-free, meaning each time you switch it on and off, the amp makes a loud pop in the speakers. I tried changing the level slowly, but it didn't help.
 
@@ -770,6 +832,13 @@ Help came with a newer TPA3128 amp with revision H of the Amped-ESP32
 - TPA3128 has a marginally better audio quality, as they say. I cannot hear the difference 😉
 
 <img width="1291" height="864" alt="image" src="https://github.com/user-attachments/assets/448377ee-ece4-443a-9b6c-31874d50568b" />
+
+On the latest revisions I'm switching over to the TPA3118 amp, replacing TPA3128 for a few reasons:
+
+- MUTE schematic is updated to slow down voltage ramping speed on turn on – this helps reduce pop noise to “I can no longer hear it” level
+- Modulation is hardwired to BD (1SPW is more efficient, but caused pops as well)
+- Gain is fixed at a 20dB level – also helps with pops
+- I added a band-pass input filter network to make sure it is noise-free.
 
 ### Louder-ESP32
 
@@ -1046,6 +1115,16 @@ Although you're free to use it your way, using the pinout above, I'd expect the 
 | 2 | In the LMS settings install the `SqueezeESP32` plugin | ![image](https://github.com/user-attachments/assets/5e32f271-cb66-4ea4-8a94-aaf1d0a73c5e)
 | 3 | Update each speaker's settings in the LMS, and navigate to `Display` settings | ![image](https://github.com/user-attachments/assets/ac970067-8b98-4294-af9a-80d0274e0558)
 
+### TFT screen 
+
+Since the development of the Sendspin protocol wen tinto visualisation area, and latest features allow displaying album art, track status and progress, I'm replacing OLED screeen with larger and colorfun TFT screen. The first board to recieve upgrade is Louder-ESP32 Pro board, introducing 14-pin connector for ST7789-baed 320x240 pixel TFT screen.
+
+|  Model | Image |
+|---|---|
+| [2.0" TFT Screen 320x240 ST7789 14Pin](https://pl.aliexpress.com/item/1005008463441614.html) | image placeholder |
+| [2.4" TFT Screen 320x240 ST7789 14Pin](https://pl.aliexpress.com/item/1005008472996411.html) | image placeholder |
+
+
 ### Case
 
 HiFi-ESP32(S3), Loud-ESP32(S3), Amped-ESP32 and Louder-ESP32(S3) are mechanically compatible with Raspberry Pi 3/4 cases, tested with transparent ones. 
@@ -1070,6 +1149,12 @@ Also, community members created a few 3D-printable designs for Louder-ESP32 boar
 | [#6](https://www.thingiverse.com/thing:7016604) | <img width="639" height="426" alt="image" src="https://github.com/user-attachments/assets/10ba6360-2e99-4690-83a4-fef0e1cad23d" />
 | [#7](https://www.thingiverse.com/thing:6333131) | ![image](https://github.com/user-attachments/assets/6e37b6ce-443e-4067-8a7a-e3b49e5e8ad3)
 | [#8](https://www.thingiverse.com/thing:6326927) | ![image](https://github.com/user-attachments/assets/cf2983fa-0c92-4798-9cb5-5e4e97d70970)
+
+### Louder-ESP32 Pro case
+
+Louder-ESP32-Pro boards are mechanically compatible with aluminum cases for Raspberry Pi 5. The most important components that release heat under heavy operation would be covered by the case heat release pads. On top of that, the board allows connecting a 4-pin fan with speed control and RPM readout, so it can be engaged only when needed.
+
+image placeholder
 
 ## Comunity projects
 
