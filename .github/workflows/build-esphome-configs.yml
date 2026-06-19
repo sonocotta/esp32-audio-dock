@@ -67,7 +67,7 @@ jobs:
 
       - name: Copy secrets example file for CI build
         run: |
-          cp firmware/esphome/secrets/secrets.yaml.example \
+          cp firmware/esphome/secrets.yaml.example \
              "${{ steps.config-info.outputs.config_dir }}/secrets.yaml"
 
       - name: Build ESPHome config
