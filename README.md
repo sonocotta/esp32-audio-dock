@@ -1123,6 +1123,7 @@ Also, community members created a few 3D-printable designs for Louder-ESP32 boar
 | [#2](https://www.printables.com/model/1498180-louder-esp32-speaker-cab) | <img width="637" height="781" alt="image" src="https://github.com/user-attachments/assets/d4edd687-3f66-442e-98e6-5052c3b91d84" />
 | [#3](https://www.printables.com/model/1268717-louder-esp32-enclosure) | ![image](https://github.com/user-attachments/assets/30842324-77e4-40f5-a326-fcf68f8feed2)
 | [#4](https://www.crealitycloud.com/model-detail/case-for-amped-esp32-esp32-s3) | <img width="2428" height="3226" alt="image" src="https://github.com/user-attachments/assets/9e361faf-d407-4fe4-b03a-158d9f54e8bf" />
+| [3D Printed Case for HiFi ESP32 Plus](https://makerworld.com/en/models/2611823-hifi-esp32-plus-case#profileId-2882358) | <img width="1080" height="810" alt="image" src="https://github.com/user-attachments/assets/f3f9aa86-7ad1-4ccf-8d29-35b591596efc" />
 | [#5](https://www.printables.com/model/1058552-louder-esp32-s3-playeramplifier-case/comments) | ![image](https://github.com/user-attachments/assets/ad4a30d6-953b-461e-b108-9c6155ce2477)
 | [#6](https://www.thingiverse.com/thing:7016604) | <img width="639" height="426" alt="image" src="https://github.com/user-attachments/assets/10ba6360-2e99-4690-83a4-fef0e1cad23d" />
 | [#7](https://www.thingiverse.com/thing:6333131) | ![image](https://github.com/user-attachments/assets/6e37b6ce-443e-4067-8a7a-e3b49e5e8ad3)
@@ -1140,9 +1141,9 @@ If you don't mind showing off your projects, please send me a note or create a P
 
 | #  | Image |
 |----|----|
+| [V4 - DIY $90 Home Assistant bookshelf speaker for ESPHome & SendSpin or Squeezelite](https://www.reddit.com/r/homeassistant/comments/1u7dtm9/v4_diy_90_home_assistant_bookshelf_speaker_for/) | <img width="1999" height="1794" alt="image" src="https://github.com/user-attachments/assets/c50837c5-185e-4975-9f74-c56d668573f6" />
 | [Inexpensive DIY Wi-Fi & BT speaker for Home Assistant audio](https://github.com/undotcom/home-assistant-audio-speaker-v2/) | ![image](https://github.com/undotcom/home-assistant-audio-speaker-v2/raw/main/images/low_cost_home_assistant_speaker_audio_tts_notifications.jpg)
 | [DIY WiFi & BT audio speaker for Home Assistant, modify prebuilt 3D printed speaker](https://www.reddit.com/r/homeassistant/comments/1qw1gg6/diy_wifi_bt_audio_speaker_for_home_assistant/) | <img width="1080" height="810" alt="image" src="https://github.com/user-attachments/assets/5fddea3c-2f5b-402f-8db7-8e7bb75767db" />
-| [3D Printed Case for HiFi ESP32 Plus](https://makerworld.com/en/models/2611823-hifi-esp32-plus-case#profileId-2882358) | <img width="1080" height="810" alt="image" src="https://github.com/user-attachments/assets/f3f9aa86-7ad1-4ccf-8d29-35b591596efc" />
 
 
 ## Where to buy
