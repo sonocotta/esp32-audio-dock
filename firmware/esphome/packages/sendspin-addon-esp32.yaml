@@ -6,11 +6,6 @@
 
 esp32:
   - id: !extend esp32_id
-    advanced:
-      minimum_chip_revision: "3.1"
-      sram1_as_iram: true   # ADDED - expands IRAM by remapping 32KB of SRAM1
-                            # provides headroom for WiFi IRAM options below
-                            # reduces CPU cycles fetching code from slow PSRAM bus
     sdkconfig_options:
         # Sendspin dev recommends
         CONFIG_ESP_WIFI_RX_IRAM_OPT: "y" # Unnecessary on an ESP32-S3; uses more internal memory
