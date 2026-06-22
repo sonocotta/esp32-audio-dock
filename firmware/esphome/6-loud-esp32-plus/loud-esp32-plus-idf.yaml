@@ -108,8 +108,7 @@ packages:
     ref: main
     files:
       - firmware/esphome/packages/dac-ma12070p.yaml
-      # - firmware/esphome/packages/audio.yaml
-      # - firmware/esphome/packages/audio-addon-ma12070p.yaml
+      - firmware/esphome/packages/audio.yaml
       - firmware/esphome/packages/media-player.yaml
       - firmware/esphome/packages/media-player-addon-dac-mute.yaml
       
@@ -123,7 +122,7 @@ packages:
 
   # # Debug/local development fallback:
   # ma12070p_dac: !include packages/dac-ma12070p.yaml
-  audio: !include ../packages/audio.yaml
+  # audio: !include ../packages/audio.yaml
   # media_player: !include packages/media-player.yaml
   # media_player_dac_mute: !include packages/media-player-addon-dac-mute.yaml
   # light: !include packages/light.yaml

@@ -113,7 +113,6 @@ packages:
       # Optional: OLED displays clock when idling, and track/artist info when playing
       # - firmware/esphome/packages/sendspin-addon-oled.yaml
 
-      - firmware/esphome/packages/sendspin-audio-addon-ma12070p.yaml
       - firmware/esphome/packages/sendspin-addon-dac-mute.yaml
       - firmware/esphome/packages/sendspin-addon-esp32.yaml
       
@@ -129,7 +128,6 @@ packages:
   # sendspin: !include packages/sendspin.yaml
   # sendspin_dac_mute: !include packages/sendspin-addon-dac-mute.yaml
   # audio: !include packages/audio.yaml
-  # audio_ma12070p: !include packages/sendspin-audio-addon-ma12070p.yaml
   # oled: !include packages/sendspin-addon-oled.yaml
   # light: !include packages/light.yaml
   # ir_receiver: !include packages/ir-receiver.yaml
