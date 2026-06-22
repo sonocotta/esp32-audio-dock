@@ -6,6 +6,9 @@
 #   - i2c_scl_pin
 # ============================================================
 
+substitutions:
+  pcm5122_dac_restore_mode: ALWAYS_OFF
+
 external_components:
   - source: github://sonocotta/esphome-pcm5122
     components: [ pcm5122 ]
@@ -32,4 +35,66 @@ switch:
     enable_dac:
       name: Enable DAC
       id: enable_dac
-      restore_mode: ALWAYS_ON
+      restore_mode: ${pcm5122_dac_restore_mode}
+
+select:
+  - platform: pcm5122
+    process_flow:
+      name: PCM5122 Process Flow
+      id: pcm5122_process_flow
+
+number:
+  - platform: pcm5122
+    band_1:
+      filter_type: "Low Shelf"              # Filter type: one of "Low Shelf", "High Shelf", "Equalizer", "Low Pass", "High Pass"
+      frequency: 50                         # Filter center frequency in Hz
+      q_factor: 1.5                         # Q-factor (if applicable to selected filter), 0.1 .. 10.0
+      min_gain: -12dB                       # Minimum slider value, can go down to -24 dB 
+      max_gain: 12dB                        # Maximum slider value, can go up to 24 dB
+      gain:
+        name: "63 Hz"
+
+    band_2:   
+      filter_type: "Equalizer"
+      frequency: 250
+      q_factor: 1.0  
+      min_gain: -12dB
+      max_gain: 12dB
+      gain:
+        name: "250 Hz"
+
+    band_3:   
+      filter_type: "Equalizer"
+      frequency: 1000
+      q_factor: 0.9  
+      min_gain: -12dB
+      max_gain: 12dB
+      gain:
+        name: "1000 Hz"
+
+    band_4:   
+      filter_type: "Equalizer"
+      frequency: 4000
+      q_factor: 0.8  
+      min_gain: -12dB
+      max_gain: 12dB
+      gain:
+        name: "4000 Hz"
+
+    band_5:   
+      filter_type: "Equalizer"
+      frequency: 8000
+      q_factor: 0.7  
+      min_gain: -12dB
+      max_gain: 12dB
+      gain:
+        name: "8000 Hz"
+
+    band_6:   
+      filter_type: "High Shelf"
+      frequency: 16000
+      q_factor: 0.6  
+      min_gain: -12dB
+      max_gain: 12dB
+      gain:
+        name: "16000 Hz"

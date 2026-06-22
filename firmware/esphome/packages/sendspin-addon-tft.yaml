@@ -1,0 +1,800 @@
+# ============================================================
+# OLED display - Shows simple clock using the SH1106 128x64 OLED connected via SPI
+# ============================================================
+# Requires substitutions:
+#   - spi_clk_pin
+#   - spi_mosi_pin
+#   - spi_miso_pin
+#   - display_cs_pin
+#   - display_dc_pin
+#   - display_reset_pin
+# ============================================================
+
+defaults:
+  font_small: 24
+  font_family: Roboto
+  font_glyphsets: "GF_Latin_Core"
+  display_model: ILI9341
+
+substitutions:
+
+  mdi_pause_glyph: \U000F03E4
+  mdi_play_glyph: \U000F040A
+  mdi_skip_previous_glyph: \U000F04AE
+  mdi_skip_next_glyph: \U000F04AD
+
+  # Time to wait before verifying optimistic state changes match actual state
+  optimistic_state_correction_delay: 1000ms
+
+external_components:
+  - source: github://pr#16057
+    components: [ generic_image, sendspin ]
+    refresh: 0s
+
+media_player:
+  - id: !extend sendspin_group_media_player
+
+    on_play:
+      # Update play/pause icon
+      - lambda: lv_label_set_text(id(play_pause_icon), "${mdi_pause_glyph}");
+      - if:
+          condition:
+            lvgl.page.is_showing: idle_page
+          then:
+            - lvgl.page.show: 
+                id: sendspin_page
+                animation: FADE_IN
+                time: 300ms
+    on_pause:
+      # Update play/pause icon
+      - lambda: lv_label_set_text(id(play_pause_icon), "${mdi_play_glyph}");
+    on_idle:
+      # Update play/pause icon
+      - lambda: lv_label_set_text(id(play_pause_icon), "${mdi_play_glyph}");
+      - if:
+          condition:
+            not:
+              lvgl.page.is_showing: idle_page
+          then:
+            - lvgl.page.show: 
+                id: idle_page
+                animation: FADE_OUT
+                time: 300ms
+
+# interval:
+#   - interval: 0.5s
+#     then:
+#       - if:
+#           condition:
+#             - media_player.is_playing: sendspin_group_media_player
+#           then:
+#             - sendspin.get_track_progress:
+#                 then:
+#                   - lambda: |-
+#                       uint32_t seconds = x / 1000;
+#                       uint32_t minutes = seconds / 60;
+#                       seconds %= 60;
+#                       char buf[16];
+#                       snprintf(buf, sizeof(buf), "%d:%02d", minutes, seconds);
+#                       lv_label_set_text(id(track_progress_label), buf);
+
+#     on_play:
+#       - display.page.show: page_play
+#       - switch.template.publish:
+#           id: switch_screen
+#           state: ON
+
+#     on_idle:
+#       - display.page.show: page_clock
+
+# api:
+#   on_client_connected: 
+#     then:
+#       - display.page.show: page_clock
+
+text_sensor:
+  - platform: sendspin
+    id: track_title
+    type: title
+    on_value:
+      - lambda: |-
+          lv_label_set_text(id(track_progress_label), "");
+      - component.update: now_playing_text
+  - platform: sendspin
+    id: album_title
+    type: album
+  - platform: sendspin
+    id: track_artist
+    type: artist
+    on_value:
+      - component.update: now_playing_text
+  # - platform: sendspin
+  #   id: album_year
+  #   type: year
+  # - platform: sendspin
+  #   id: track_number
+  #   type: track
+  - platform: template
+    id: now_playing_text
+    lambda: |-
+      std::string playing_text = id(track_title).get_state();
+      if (!id(track_artist).get_state().empty()) {
+        if (!playing_text.empty()) {
+          playing_text += " - ";
+        }
+        playing_text += id(track_artist).get_state();
+      }
+      return playing_text;
+    on_value:
+      - lvgl.label.update: 
+          id: now_playing_label
+          text: !lambda return x;
+    update_interval: never
+
+sensor:
+  - platform: sendspin
+    type: track_duration
+    id: ss_track_duration
+    on_value:
+      # If the duration has changed, reset the progress bar length
+      - globals.set: 
+          id: progress_length
+          value: '0'
+
+  - platform: sendspin
+    type: track_progress
+    id: ss_track_progress
+    on_value:
+      # Do the calculation on the pixel size of the progress bar, having
+      # made sure there's a duration to compare against, and it's not too
+      # large.  Can't check it's just the wrong one.
+      - globals.set: 
+          id: progress_length
+          value: !lambda |-
+            if (x > id(ss_track_duration).state) {
+              return 0;
+            } else if (id(ss_track_duration).state > 0.0) {
+              uint32_t tmp = floor(x);
+              tmp *= 128;
+              return int(tmp/id(ss_track_duration).state);
+            } else {
+              return 0;
+            }
+
+output:
+  - platform: ledc
+    pin: ${display_backlight_pin}
+    id: backlight_output
+
+light:
+  - platform: monochromatic
+    id: led
+    name: Screen
+    icon: "mdi:television"
+    entity_category: config
+    output: backlight_output
+    restore_mode: RESTORE_DEFAULT_ON
+    default_transition_length: 250ms
+
+  # - platform: template
+  #   name: "Screen"
+  #   id: switch_screen
+  #   optimistic: true
+  #   restore_mode: ALWAYS_ON
+  #   turn_on_action:
+  #     - if:
+  #         condition:
+  #           api.connected:
+  #         then:
+  #           - if:
+  #               condition:
+  #                 media_player.is_idle: sendspin_group_media_player
+  #               then:
+  #                 - display.page.show: page_clock
+  #               else:
+  #                 - display.page.show: page_play
+  #           - component.update: spi_display
+  #   turn_off_action:
+  #     - display.page.show: page_off
+  #     - component.update: spi_display
+
+time:
+  - platform: homeassistant
+    id: sntp_time
+
+font:
+  - file: 'gfonts://Material+Symbols+Outlined'
+    id: icons_small
+    size: ${font_small}
+    glyphs:
+      - "\ue019" # album
+      - "\ue01a" # artist
+      - "\U000fffd8" # music notes
+  - file:
+      type: gfonts
+      family: Ubuntu
+      weight: regular
+    id: text_small
+    size: ${font_small}
+    glyphsets: 
+      - GF_Latin_Core # European alphabets too
+  # For the clock page
+  - file:
+      type: gfonts
+      family: ${font_family}
+      weight: regular
+    id: text_big
+    size: 64
+    glyphs: [' ', ':', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+  # Use a mono font to make track progress colon in the same position as it increments
+  - file:
+      type: gfonts
+      family: Roboto Mono
+      weight: 400
+    id: font_time
+    size: 16
+    glyphsets:
+      - ${font_glyphsets}
+
+  - file:
+      type: gfonts
+      family: ${font_family}
+      weight: 300
+    id: font_display
+    size: 20
+    glyphsets:
+      - ${font_glyphsets}
+
+  # Material Design Icons font for media controls
+  - file: https://github.com/Templarian/MaterialDesign-Webfont/raw/refs/heads/master/fonts/materialdesignicons-webfont.ttf
+    id: font_mdi
+    size: 40
+    glyphs: [
+      "\U000F03E4",  # mdi:pause
+      "\U000F040A",  # mdi:play
+      "\U000F04AD",  # mdi:skip-next
+      "\U000F04AE",  # mdi:skip-previous
+    ]
+
+spi:
+  clk_pin: ${spi_clk_pin}
+  mosi_pin: ${spi_mosi_pin}
+  miso_pin: ${spi_miso_pin}
+  id: spi_bus_display
+
+generic_image:
+  - platform: sendspin
+    id: sendspin_cover_art
+    format: JPEG
+    type: rgb565
+    resize: 200x200
+    source: ALBUM
+    on_image_display:
+      - if:
+          condition:
+            lvgl.page.is_showing: sendspin_page
+          then:
+            # Built-in lvgl.image.update action doesn't support fading
+            # Update image and fade in after decoding
+            - lambda: |-
+                lv_obj_t* img = id(album_art_widget);
+                // Update image source
+                lv_img_set_src(img, id(sendspin_cover_art));
+                lv_img_set_zoom(img, LV_ZOOM_NONE);
+                // Fade in new image
+                static lv_anim_t fade_in;
+                lv_anim_init(&fade_in);
+                lv_anim_set_var(&fade_in, img);
+                lv_anim_set_values(&fade_in, 0, 255);
+                lv_anim_set_time(&fade_in, 300);  // 300ms fade in
+                lv_anim_set_exec_cb(&fade_in, [](void* obj, int32_t v) {
+                    lv_obj_set_style_img_opa((lv_obj_t*)obj, v, 0);
+                });
+                lv_anim_start(&fade_in);
+          else:
+            # Page isn't currently open, don't bother fading
+            - lvgl.image.update: 
+                id: album_art_widget
+                src: sendspin_cover_art
+    on_image_error:
+      - logger.log: "Failed to decode cover art image"
+
+  - platform: sendspin
+    id: sendspin_artist_picture
+    format: JPEG
+    type: rgb565
+    resize: 200x200
+    source: ARTIST
+    on_image_display:
+      - lvgl.image.update: 
+          id: artist_picture_widget
+          src: sendspin_artist_picture
+      - logger.log: "Decoded artist picture"
+    on_image_error:
+      - logger.log: "Failed to decode artist picture"
+
+display:
+  - platform: ili9xxx
+    model: ${display_model}
+    dimensions:
+      width: 320
+      height: 240
+      offset_height: 0
+      offset_width: 0
+    color_order: RGB
+    invert_colors: true
+    # rotation: 90
+    id: s3_box_lcd
+    spi_id: spi_bus_display
+    cs_pin: ${display_cs_pin}
+    dc_pin: ${display_dc_pin}
+    reset_pin: ${display_reset_pin}
+    # These two set how much time the ESP32 is running the display
+    # which takes time away from playing audio!
+    data_rate: 10MHz # T_cycle min is 100ns
+    auto_clear_enabled: false
+    update_interval: never
+
+    # pages:
+    #   - id: page_startup
+    #     lambda: |-
+    #       it.printf(it.get_width() / 2, 20, 
+    #                 id(text_small), TextAlign::CENTER, "${friendly_name}");
+    #       it.printf(it.get_width() / 2, 40, 
+    #                 id(text_small), TextAlign::CENTER, "connecting...");
+
+    #   # Selected by api.on_connection
+    #   - id: page_clock
+    #     lambda: |-
+    #       // display clock
+    #       auto hours = id(sntp_time).now().hour;
+    #       auto minutes = id(sntp_time).now().minute;
+    #       auto seconds = id(sntp_time).now().second;
+    #       auto dot = seconds % 2 == 0 ? " " : ":";
+
+    #       it.printf(it.get_width() / 2, 
+    #                 it.get_height() / 2, 
+    #                 id(text_big), 
+    #                 TextAlign::CENTER, 
+    #                 "%d%s%02d", hours, dot, minutes);
+          
+    #   # Blank the display (e.g. before suspending the component)
+    #   - id: page_off
+    #     lambda: return;
+
+    #   # Selected by the speaker on_play
+    #   - id: page_play
+    #     lambda: |-
+
+
+# // Draw album art at top center of the display
+# {
+#   int art_size = 128;
+#   auto* img = id(sendspin_cover_art);
+#   if (img->get_width() > 0 && img->get_height() > 0) {
+#     int art_x = (it.get_width() - art_size) / 2;
+#     int art_y = 4;
+#     it.image(art_x, art_y, img, art_size, art_size);
+#   }
+# }
+
+# const int PADDING_LEFT = 18, PADDING_RIGHT = 28;
+# const int LINE_HEIGHTS[] = {320 - 32, 320 - 64, 320 - 96};
+# int x1, y1, new_h, new_w, 
+#     title_width_offset = PADDING_LEFT, 
+#     artist_width_offset = PADDING_LEFT,
+#     album_width_offset = PADDING_LEFT;
+# bool increment = false;
+# static int iteration = 0;
+
+# // Draw some icons
+# it.print(0, LINE_HEIGHTS[0], 
+#           id(icons_small), 
+#           TextAlign::CENTER_LEFT, 
+#           "\U000fffd8"); // music icon
+# it.print(0, LINE_HEIGHTS[1], 
+#         id(icons_small), 
+#         TextAlign::CENTER_LEFT, 
+#         "\ue01a"); // artist icon
+# it.print(0, LINE_HEIGHTS[2], 
+#         id(icons_small), 
+#         TextAlign::CENTER_LEFT, 
+#         "\ue019"); // album icon
+
+# // Don't scroll over the icons
+# it.start_clipping( Rect(PADDING_LEFT, 
+#                         0, 
+#                         it.get_width(), 
+#                         it.get_height()));
+
+# if (id(title_length) == 0) {
+#   it.get_text_bounds(0, 0, 
+#                     id(ss_title).state.c_str(), 
+#                     id(text_small), 
+#                     TextAlign::TOP_LEFT, 
+#                     &x1, &y1, &new_w, &new_h);
+#   id(title_length) = new_w;
+# }
+
+# if (id(title_length) + PADDING_LEFT >= it.get_width()) {
+#   auto missing_artist_text = id(title_length) - it.get_width();
+#   increment = true;
+#   title_width_offset = PADDING_LEFT - (iteration % (missing_artist_text + PADDING_RIGHT));
+# }
+# it.print(title_width_offset, LINE_HEIGHTS[0], 
+#           id(text_small), 
+#           TextAlign::CENTER_LEFT, 
+#           id(ss_title).state.c_str());
+
+# // Do this again for the artist
+# if (id(artist_length) == 0) {
+#   it.get_text_bounds(0, 0, 
+#                     id(ss_artist).state.c_str(), 
+#                     id(text_small), 
+#                     TextAlign::TOP_LEFT, 
+#                     &x1, &y1, &new_w, &new_h);
+#   id(artist_length) = new_w;
+# }
+
+# if (id(artist_length) + PADDING_LEFT >= it.get_width()) {
+#   auto missing_title_text = id(artist_length) - it.get_width();
+#   increment = true;
+#   artist_width_offset = PADDING_LEFT - (iteration % (missing_title_text + PADDING_RIGHT));
+# }
+# it.print(artist_width_offset, LINE_HEIGHTS[1], 
+#         id(text_small), 
+#         TextAlign::CENTER_LEFT, 
+#         id(ss_artist).state.c_str());
+
+# // And the album
+# if (id(album_length) == 0) {
+#   it.get_text_bounds(0, 0, 
+#                     id(ss_album).state.c_str(), 
+#                     id(text_small), 
+#                     TextAlign::TOP_LEFT, 
+#                     &x1, &y1, &new_w, &new_h);
+#   id(album_length) = new_w;
+# }
+
+# if (id(album_length) + PADDING_LEFT >= it.get_width()) {
+#   auto missing_album_text = id(album_length) - it.get_width();
+#   increment = true;
+#   album_width_offset = PADDING_LEFT - (iteration % (missing_album_text + PADDING_RIGHT));
+# }
+# it.print(album_width_offset, LINE_HEIGHTS[2], 
+#         id(text_small), 
+#         TextAlign::CENTER_LEFT, 
+#         id(ss_album).state.c_str());
+
+# it.end_clipping();
+
+# if (id(progress_length) > 0) {
+#   it.filled_rectangle(0, it.get_height()-2,
+#                       id(progress_length), it.get_height());
+# }
+
+# if (increment) {
+#   iteration++;
+# }
+
+# We're caching pixel lengths of strings here, as it's unclear
+# how expensive those string calculations are every screen raster
+globals:
+  - id: title_length
+    type: int
+    restore_value: no
+    initial_value: '0'
+  - id: artist_length
+    type: int
+    restore_value: no
+    initial_value: '0'
+  - id: album_length
+    type: int
+    restore_value: no
+    initial_value: '0'
+  - id: progress_length
+    type: int
+    restore_value: no
+    initial_value: '0'
+
+script:
+  - id: hide_media_controls
+    mode: restart  # Restart the timer if called again
+    then:
+      - delay: 5s
+      - lvgl.widget.hide: media_controls_overlay
+      - logger.log: "Hiding media controls"
+
+lvgl:
+  displays:
+    - s3_box_lcd
+  rotation: 180
+  buffer_size: 25%
+  color_depth: 16
+  bg_color: 0x000000
+  default_font: font_display
+  top_layer:
+    widgets:
+      # Media controls overlay (initially hidden) - works on all pages
+      - obj:
+          id: media_controls_overlay
+          align: TOP_MID
+          width: 320
+          height: 80
+          bg_color: 0x000000
+          bg_opa: 60%  # Semi-transparent background
+          border_width: 0
+          radius: 10
+          scrollbar_mode: "OFF"  # Hide scrollbars
+          scrollable: false  # Disable scrolling completely
+          hidden: true  # Initially hidden
+          widgets:
+            # Previous button - doesn't currently work with current media player
+            - button:
+                id: prev_button
+                align: LEFT_MID
+                x: 40
+                width: 70
+                height: 70
+                bg_color: 0x404040
+                bg_opa: 70%
+                radius: 35
+                on_click:
+                  - media_player.previous: sendspin_group_media_player
+                  - logger.log: "Previous button pressed"
+                  - script.stop: hide_media_controls
+                  - script.execute: hide_media_controls
+                widgets:
+                  - label:
+                      align: CENTER
+                      text: "\U000F04AE"  # mdi:skip-previous
+                      text_color: 0xFFFFFF
+                      text_font: font_mdi
+
+            # Play/Pause button
+            - button:
+                id: play_pause_button
+                align: CENTER
+                width: 70
+                height: 70
+                bg_color: 0x404040
+                bg_opa: 70%
+                radius: 35
+                on_click:
+                  - media_player.toggle: sendspin_group_media_player
+                  - logger.log: "Play/Pause button pressed"
+                  - lambda: |-
+                      // Optimistically toggle the icon for immediate feedback
+                      const char* current_text = lv_label_get_text(id(play_pause_icon));
+                      if (strcmp(current_text, "${mdi_pause_glyph}") == 0) {
+                        lv_label_set_text(id(play_pause_icon), "${mdi_play_glyph}");
+                      } else {
+                        lv_label_set_text(id(play_pause_icon), "${mdi_pause_glyph}");
+                      }
+                  - delay: ${optimistic_state_correction_delay}
+                  - lambda: |-
+                      // After delay, ensure icon matches actual state
+                      if (id(sendspin_group_media_player)->state == media_player::MediaPlayerState::MEDIA_PLAYER_STATE_PLAYING) {
+                        lv_label_set_text(id(play_pause_icon), "${mdi_pause_glyph}");
+                      } else {
+                        lv_label_set_text(id(play_pause_icon), "${mdi_play_glyph}");
+                      }
+                  - script.stop: hide_media_controls
+                  - script.execute: hide_media_controls
+                widgets:
+                  - label:
+                      id: play_pause_icon
+                      align: CENTER
+                      text: "\U000F03E4"  # mdi:pause (default)
+                      text_color: 0xFFFFFF
+                      text_font: font_mdi
+
+            # Next button - doesn't currently work with current media player
+            - button:
+                id: next_button
+                align: RIGHT_MID
+                x: -40
+                width: 70
+                height: 70
+                bg_color: 0x404040
+                bg_opa: 70%
+                radius: 35
+                on_click:
+                  - media_player.next: sendspin_group_media_player
+                  - logger.log: "Next button pressed"
+                  - script.stop: hide_media_controls
+                  - script.execute: hide_media_controls
+                widgets:
+                  - label:
+                      align: CENTER
+                      text: "\U000F04AD"  # mdi:skip-next
+                      text_color: 0xFFFFFF
+                      text_font: font_mdi
+
+  pages:
+    - id: idle_page
+      bg_color: 0x000000
+      skip: true
+      on_swipe_right:
+        - lambda: 'lv_indev_wait_release(lv_indev_get_act());'
+        - lvgl.page.next:
+            animation: OUT_RIGHT
+            time: 300ms
+        - logger.log: "Swiped right"
+      on_swipe_left:
+        - lambda: 'lv_indev_wait_release(lv_indev_get_act());'
+        - lvgl.page.previous:
+            animation: OUT_LEFT
+            time: 300ms
+        - logger.log: "Swiped left"
+      widgets:
+        - label:
+            id: idle_label
+            align: CENTER
+            text: "Sendspin Player"
+            text_color: 0xFFFFFF
+            text_font: font_display
+            clickable: true
+            on_click:
+              - lvgl.page.show: sendspin_page
+        - obj:
+            id: touch_capture_idle
+            x: 0
+            y: 0
+            width: 320
+            height: 240
+            bg_opa: TRANSP
+            border_opa: TRANSP
+            clickable: true
+            on_click:
+              - lambda: |-
+                  if (id(sendspin_group_media_player)->state == media_player::MediaPlayerState::MEDIA_PLAYER_STATE_PLAYING) {
+                    lv_label_set_text(id(play_pause_icon), "\U000F03E4");
+                  } else {
+                    lv_label_set_text(id(play_pause_icon), "\U000F040A");
+                  }
+              - lvgl.widget.show: media_controls_overlay
+              - logger.log: "Showing media controls"
+              - script.execute: hide_media_controls
+
+    - id: sendspin_page
+      bg_color: 0x000000
+      scrollbar_mode: "OFF"  # Hide scrollbars on main page
+      on_swipe_right:
+        - lambda: 'lv_indev_wait_release(lv_indev_get_act());'
+        - lvgl.page.next:
+            animation: OUT_RIGHT
+            time: 300ms
+        - logger.log: "Swiped right"
+      on_swipe_left:
+        - lambda: 'lv_indev_wait_release(lv_indev_get_act());'
+        - lvgl.page.previous:
+            animation: OUT_LEFT
+            time: 300ms
+        - logger.log: "Swiped left"
+      widgets:
+        - image:
+            id: album_art_widget
+            align: TOP_MID
+            src: sendspin_cover_art
+            height: 200
+            width: 200
+            antialias: true  # Better quality when scaling
+            clickable: false
+        - obj:
+            id: track_info_container
+            x: 0
+            y: 200
+            width: 320
+            height: 40
+            bg_color: 0x000000
+            border_width: 0
+            pad_all: 0
+            scrollbar_mode: "OFF"  # Hide scrollbars
+            clickable: false
+            widgets:
+              - label:
+                  id: now_playing_label
+                  align: CENTER
+                  text_color: 0xFFFFFF
+                  text_font: font_display
+                  text: ""
+                  width: 300  # Slightly less than container width for padding
+                  long_mode: SCROLL_CIRCULAR  # Continuously scroll text that doesn't fit
+        # Track progress time (left of album art)
+        - label:
+            id: track_progress_label
+            x: 0
+            y: 178
+            width: 60
+            height: 20
+            text_align: CENTER
+            text_color: 0xAAAAAA
+            text_font: font_time
+            text: ""
+        # Track duration time (right of album art)
+        - label:
+            id: track_duration_label
+            x: 260
+            y: 178
+            width: 60
+            height: 20
+            text_align: CENTER
+            text_color: 0xAAAAAA
+            text_font: font_time
+            text: ""
+        - obj:
+            id: touch_capture
+            x: 0
+            y: 0
+            width: 320
+            height: 240
+            bg_opa: TRANSP
+            border_opa: TRANSP
+            clickable: true
+            on_click:
+              - lambda: |-
+                  if (id(sendspin_group_media_player)->state == media_player::MediaPlayerState::MEDIA_PLAYER_STATE_PLAYING) {
+                    lv_label_set_text(id(play_pause_icon), "\U000F03E4");
+                  } else {
+                    lv_label_set_text(id(play_pause_icon), "\U000F040A");
+                  }
+              - lvgl.widget.show: media_controls_overlay
+              - logger.log: "Showing media controls"
+              - script.execute: hide_media_controls
+
+    - id: sendspin_artist_page
+      bg_color: 0x000000
+      scrollbar_mode: "OFF"  # Hide scrollbars on main page
+      on_swipe_right:
+        - lambda: 'lv_indev_wait_release(lv_indev_get_act());'
+        - lvgl.page.next:
+            animation: OUT_RIGHT
+            time: 300ms
+        - logger.log: "Swiped right"
+      on_swipe_left:
+        - lambda: 'lv_indev_wait_release(lv_indev_get_act());'
+        - lvgl.page.previous:
+            animation: OUT_LEFT
+            time: 300ms
+        - logger.log: "Swiped left"
+      widgets:
+        - image:
+            id: artist_picture_widget
+            align: TOP_MID
+            src: sendspin_artist_picture
+            height: 200
+            width: 200
+            antialias: true  # Better quality when scaling
+            clickable: true
+        - obj:
+            id: touch_capture_artist
+            x: 0
+            y: 0
+            width: 320
+            height: 240
+            bg_opa: TRANSP
+            border_opa: TRANSP
+            clickable: true
+            on_click:
+              - lambda: |-
+                  if (id(sendspin_group_media_player)->state == media_player::MediaPlayerState::MEDIA_PLAYER_STATE_PLAYING) {
+                    lv_label_set_text(id(play_pause_icon), "\U000F03E4");
+                  } else {
+                    lv_label_set_text(id(play_pause_icon), "\U000F040A");
+                  }
+              - lvgl.widget.show: media_controls_overlay
+              - logger.log: "Showing media controls"
+              - script.execute: hide_media_controls
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: true
+    id: home_button
+    on_press:
+      - lvgl.page.show: idle_page
+      - logger.log: "Home button pressed"

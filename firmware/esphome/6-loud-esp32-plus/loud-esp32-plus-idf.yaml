@@ -1,5 +1,5 @@
 # ============================================================
-# Loud-ESP32-S3-Plus - Media Player Configuration
+# Loud-ESP32-Plus - Media Player Configuration
 # ============================================================
 # ESP32 audio board with Infineon MA12070P DAC, I2S output, with entry-level DSP
 # Features: Wi-Fi media player with mixer/resampler,
@@ -10,66 +10,67 @@
 
 substitutions:
   name: esphome-web-2cb4b8
-  friendly_name: Loud-ESP32S3-Plus
+  friendly_name: Loud-ESP32-Plus
   task_stack_in_psram: "true"
 
   # ===== Board-Specific Pinouts =====
-  # I2S audio pins
-  i2s_lrclk_pin: GPIO15
-  i2s_bclk_pin: GPIO14
-  i2s_dout_pin: GPIO16
+  # I2S Audio 
+  i2s_lrclk_pin: GPIO25
+  i2s_bclk_pin: GPIO26
+  i2s_dout_pin: GPIO22
   bits_per_sample: 32bit
 
   # I2C pins for DAC control
-  i2c_sda_pin: GPIO08
-  i2c_scl_pin: GPIO09
+  i2c_sda_pin: GPIO21
+  i2c_scl_pin: GPIO27
 
   # MA12070P DAC
-  ma12070p_enable_pin: GPIO17
-  ma12070p_mute_pin: GPIO18
+  ma12070p_enable_pin: GPIO13
+  ma12070p_mute_pin: GPIO33
   # ma12070p_volume_max: 0dB
   # ma12070p_volume_min: -80dB
 
   # RGB LED
-  rgb_led_pin: GPIO21
+  rgb_led_pin: GPIO12
 
   # IR Receiver
-  ir_rx_pin: GPIO07
+  ir_rx_pin: GPIO39
 
   # SPI pins (for display)
-  spi_clk_pin: GPIO12
-  spi_mosi_pin: GPIO11
-  spi_miso_pin: GPIO13
+  spi_clk_pin: GPIO18
+  spi_mosi_pin: GPIO23
+  spi_miso_pin: GPIO19
 
+  # Ethernet (W5500)
+  eth_cs_pin: GPIO05
+  eth_interrupt_pin: GPIO35
+  eth_reset_pin: GPIO14
+  
   # Display control pins
-  display_cs_pin: GPIO47
-  display_dc_pin: GPIO38
-  display_reset_pin: GPIO48
-
-  # Ethernet pins (if using ethernet instead of wifi)
-  eth_cs_pin: GPIO10
-  eth_interrupt_pin: GPIO6
-  eth_reset_pin: GPIO5
+  display_cs_pin: GPIO15
+  display_dc_pin: GPIO04
+  display_reset_pin: GPIO32
 
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
-  min_version: 2026.1.4
+  min_version: 2026.5.0
   name_add_mac_suffix: false
   platformio_options:
     board_build.flash_mode: dio
 
 esp32:
-  variant: ESP32S3
+  id: esp32_id
+  variant: esp32
   flash_size: 8MB
   cpu_frequency: 240MHz
   framework:
     type: esp-idf
     version: recommended
+    advanced:
+      minimum_chip_revision: "3.1" 
+      sram1_as_iram: true
     sdkconfig_options:
-      CONFIG_ESP32S3_DATA_CACHE_64KB: "y"
-      CONFIG_ESP32S3_DATA_CACHE_LINE_64B: "y"
-      CONFIG_ESP32S3_INSTRUCTION_CACHE_32KB: "y"
       # Moves instructions and read only data from flash into PSRAM on boot.
       # Both enabled allows instructions to execute while a flash operation is in progress without needing to be placed in IRAM.
       # Considerably speeds up mWW at the cost of using more PSRAM.
@@ -78,10 +79,10 @@ esp32:
       CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: "y"
       CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
       CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
-      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y" 
+      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"
 
 logger:
-  level: INFO
+  level: DEBUG
 
 api:
 
@@ -94,7 +95,6 @@ wifi:
   password: !secret esphome_wifi_password
 
 psram:
-  mode: octal
   speed: 80MHz
   ignore_not_found: false
 
@@ -122,7 +122,7 @@ packages:
 
   # # Debug/local development fallback:
   # ma12070p_dac: !include packages/dac-ma12070p.yaml
-  # audio: !include packages/audio.yaml
+  # audio: !include ../packages/audio.yaml
   # media_player: !include packages/media-player.yaml
   # media_player_dac_mute: !include packages/media-player-addon-dac-mute.yaml
   # light: !include packages/light.yaml

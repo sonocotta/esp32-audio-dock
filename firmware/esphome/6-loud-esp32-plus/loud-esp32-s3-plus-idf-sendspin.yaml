@@ -1,7 +1,7 @@
 # ============================================================
 # Loud-ESP32-Plus - Media Player Configuration
 # ============================================================
-# ESP32 audio board with PCM5122 DAC, I2S output, with entry-level DSP
+# ESP32 audio board with Infineon MA12070P DAC, I2S output, with entry-level DSP
 # Configured with Sendspin for synchronized multi-room audio
 # Board-specific pinouts defined in substitutions
 # Functional blocks imported from /packages
@@ -17,6 +17,7 @@ substitutions:
   i2s_lrclk_pin: GPIO15
   i2s_bclk_pin: GPIO14
   i2s_dout_pin: GPIO16
+  bits_per_sample: 32bit
 
   # I2C pins for DAC control
   i2c_sda_pin: GPIO08
@@ -111,7 +112,6 @@ packages:
       # Optional: OLED displays clock when idling, and track/artist info when playing
       # - firmware/esphome/packages/sendspin-addon-oled.yaml
 
-      - firmware/esphome/packages/sendspin-audio-addon-ma12070p.yaml
       - firmware/esphome/packages/sendspin-addon-dac-mute.yaml
       
       - firmware/esphome/packages/light.yaml
@@ -126,7 +126,6 @@ packages:
   # sendspin: !include packages/sendspin.yaml
   # sendspin_dac_mute: !include packages/sendspin-addon-dac-mute.yaml
   # audio: !include packages/audio.yaml
-  # audio_ma12070p: !include packages/sendspin-audio-addon-ma12070p.yaml
   # oled: !include packages/sendspin-addon-oled.yaml
   # light: !include packages/light.yaml
   # ir_receiver: !include packages/ir-receiver.yaml

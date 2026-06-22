@@ -60,6 +60,7 @@ esp32:
     version: recommended
     advanced:
       minimum_chip_revision: "3.1" 
+      sram1_as_iram: true
     sdkconfig_options:
       # Moves instructions and read only data from flash into PSRAM on boot.
       # Both enabled allows instructions to execute while a flash operation is in progress without needing to be placed in IRAM.

@@ -1,29 +1,29 @@
 # ============================================================
-# Louder-ESP32-Plus - Sendspin Configuration
+# Louder-ESP32-Pro - Snapcast Client Configuration
 # ============================================================
-# ESP32 audio board with TAS5825M DAC (I2C+I2S) with built-in DSP
-# Configured with Sendspin for synchronized multi-room audio
-# Board-specific pinouts defined in substitutions
-# Functional blocks imported from /packages
+# Multi-room audio client using Snapcast protocol
+# Features: Synchronized audio playback, TAS5825M DAC,
+#           RGB LED, IR receiver, OLED clock display
+# Requires: Running Snapserver on network
+# Board-specific pinouts are defined in substitutions section
 # ============================================================
 
 substitutions:
-  name: esphome-web-8a2d98
-  friendly_name: Louder-ESP32-Plus
-  task_stack_in_psram: "false" 
+  name: esphome-web-c94a05
+  friendly_name: Louder-ESP32-Pro
+  task_stack_in_psram: "true"
 
-
-  # ===== Board-Specific Pinouts =====
-  # I2S Audio 
-  i2s_lrclk_pin: GPIO25
-  i2s_bclk_pin: GPIO26
-  i2s_dout_pin: GPIO22
+  # Board-specific pinout configuration
+  # I2S audio pins
+  i2s_lrclk_pin: GPIO15
+  i2s_bclk_pin: GPIO14
+  i2s_dout_pin: GPIO16
   
   # TAS5825M
   tas58xx_variant: TAS5825M
-  tas58xx_enable_pin: GPIO33
-  i2c_sda_pin: GPIO21
-  i2c_scl_pin: GPIO27
+  tas58xx_enable_pin: GPIO17
+  i2c_sda_pin: GPIO8
+  i2c_scl_pin: GPIO9
 
   # ===== DAC Overrides (optional) =====
   # tas58xx_dac_mode: PBTL 
@@ -32,60 +32,69 @@ substitutions:
   # tas58xx_volume_max: 0dB
   # tas58xx_volume_min: -60dB
   # tas58xx_refresh_eq: AUTO
-  
+
   # RGB LED
-  rgb_led_pin: GPIO12
+  rgb_led_pin: GPIO21
   
-  # IR Receiver
-  ir_rx_pin: GPIO39
+  # IR receiver
+  ir_rx_pin: GPIO07
 
   # SPI pins (for display)
-  spi_clk_pin: GPIO18
-  spi_mosi_pin: GPIO23
-  spi_miso_pin: GPIO19
-
-  # Ethernet (W5500)
-  eth_cs_pin: GPIO15
-  eth_interrupt_pin: GPIO35
-  eth_reset_pin: GPIO14
+  spi_clk_pin: GPIO12
+  spi_mosi_pin: GPIO11
+  spi_miso_pin: GPIO13
   
   # Display control pins
-  display_cs_pin: GPIO05
-  display_dc_pin: GPIO04
-  display_reset_pin: GPIO32
+  display_cs_pin: GPIO47
+  display_dc_pin: GPIO38
+  display_reset_pin: GPIO48
+  display_backlight_pin: GPIO42
 
-  # ESP32 optimal settings for Sendspin
-  media_source_buffer_size: 100000
+  # Fan pins
+  fan_input_pin: GPIO1
+  fan_pwn_pin: GPIO2
+
+  # Ethernet pins (if using ethernet instead of wifi)
+  eth_cs_pin: GPIO10
+  eth_interrupt_pin: GPIO6
+  eth_reset_pin: GPIO5
+
+  # ===== Snapcast Server Configuration =====
+  snapcast_server_ip: "192.168.1.49"
+  snapcast_server_port: "1704"
   
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
-  min_version: 2026.5.0
+  min_version: 2026.1.4
   name_add_mac_suffix: false
   platformio_options:
     board_build.flash_mode: dio
 
 esp32:
-  id: esp32_id
-  variant: esp32
+  variant: ESP32S3
   flash_size: 8MB
   cpu_frequency: 240MHz
   framework:
     type: esp-idf
     version: recommended
-    advanced:
-      minimum_chip_revision: "3.1" 
-      sram1_as_iram: true
     sdkconfig_options:
+      CONFIG_ESP32S3_DATA_CACHE_64KB: "y"
+      CONFIG_ESP32S3_DATA_CACHE_LINE_64B: "y"
+      CONFIG_ESP32S3_INSTRUCTION_CACHE_32KB: "y"
+
+      # Optional for ESP32-Louder used by Voice-PE
       # Moves instructions and read only data from flash into PSRAM on boot.
       # Both enabled allows instructions to execute while a flash operation is in progress without needing to be placed in IRAM.
       # Considerably speeds up mWW at the cost of using more PSRAM.
       CONFIG_SPIRAM_RODATA: "y"
       CONFIG_SPIRAM_FETCH_INSTRUCTIONS: "y"
+
       CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: "y"
       CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
+
       CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
-      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"
+      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"  # TLS1.3 support isn't enabled by default in IDF 5.1.5
 
 logger:
   level: INFO
@@ -101,6 +110,7 @@ wifi:
   password: !secret esphome_wifi_password
 
 psram:
+  mode: octal
   speed: 80MHz
   ignore_not_found: false
 
@@ -120,19 +130,22 @@ packages:
       # Option C: TAS58xx configured with bi-amp mode, with filters applied to both channels (HF or LF)
       # - firmware/esphome/packages/dac-tas58xx-presets.yaml
 
-      - firmware/esphome/packages/audio.yaml
-      - firmware/esphome/packages/sendspin.yaml
-      # Optional: OLED displays clock when idling, and track/artist info when playing
-      # - firmware/esphome/packages/sendspin-addon-oled.yaml
-      - firmware/esphome/packages/sendspin-audio-addon-external-dac.yaml
-      - firmware/esphome/packages/sendspin-addon-dac-enable.yaml
-      - firmware/esphome/packages/sendspin-addon-tas58xx.yaml
-      - firmware/esphome/packages/sendspin-addon-esp32.yaml
-      
       - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
+      - firmware/esphome/packages/oled.yaml
+
+      # Option A: @c-MM original port of esp32-snapclient client
+      # Basic implementation without DSP controls
+      - firmware/esphome/packages/snapclient-new.yaml
+      - firmware/esphome/packages/snapclient-addon-external-dac.yaml
+      - firmware/esphome/packages/snapclient-addon-dac-enable.yaml
+      - firmware/esphome/packages/snapclient-addon-tas58xx.yaml
+      # Option B: @farmed-switch fork of the c-MM snapclient with added DSP controls
+      # Implements software BQ-filters, but makes less sense for DSP-enabled DACs like TAS58XX
+      # - firmware/esphome/packages/snapclient-with-dsp.yaml
+      
       # Optional ethernet (replace wifi config if you use this, you need to exclude OLED package if you do this to free up SPI bus)
       # - firmware/esphome/packages/ethernet-w5500.yaml
 
@@ -140,16 +153,15 @@ packages:
   # external_dac: !include packages/dac-tas58xx.yaml
   # # external_dac: !include packages/dac-tas58xx-biamp.yaml
   # # external_dac: !include packages/dac-tas58xx-presets.yaml  
-
-  # sendspin_audio: !include packages/audio.yaml
-  # sendspin_external_dac: !include packages/sendspin-audio-addon-external-dac.yaml
-  # sendspin: !include packages/sendspin.yaml
-  # sendspin_enable_dac: !include packages/sendspin-addon-dac-enable.yaml
-  # sendspin_tas58xx: !include packages/sendspin-addon-tas58xx.yaml
-  # oled: !include packages/sendspin-addon-oled.yaml
-
-  # light: !include packages/light.yaml
+  
   # ir_receiver: !include packages/ir-receiver.yaml
+  # light: !include packages/light.yaml
+  # oled: !include packages/oled.yaml
   # monitoring: !include packages/monitoring.yaml
   # monitoring_wifi: !include packages/monitoring-wifi.yaml
   # # ethernet: !include packages/ethernet-w5500.yaml
+  # snapclient: !include packages/snapclient-new.yaml
+  # # snapclient_with_dsp: !include packages/snapclient-with-dsp.yaml
+  # external_dac_addon: !include packages/snapclient-addon-external-dac.yaml
+  # dac_enable: !include packages/snapclient-addon-dac-enable.yaml
+  # eq_enable: !include packages/snapclient-addon-tas58xx.yaml

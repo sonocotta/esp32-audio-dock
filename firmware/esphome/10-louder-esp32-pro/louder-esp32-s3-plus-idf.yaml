@@ -1,50 +1,58 @@
 # ============================================================
-# Loud-ESP32-S3-Plus - Media Player Configuration
+# Louder-ESP32-Pro - Sendspin Media Player Configuration
 # ============================================================
-# ESP32 audio board with Infineon MA12070P DAC, I2S output, with entry-level DSP
-# Features: Wi-Fi media player with mixer/resampler,
-#           announcements, RGB LED, IR receiver
-# Board-specific pinouts defined in substitutions
-# Functional blocks imported from /packages
+# Media player using Sendspin protocol with OLED display
+# Features: TAS5825M DAC, I2S output, SSD1306 display with
+#           scrolling text, RGB LED, IR receiver
+# Requires: Sendspin server/sender on network
+# Board-specific pinouts are defined in substitutions section
 # ============================================================
 
 substitutions:
-  name: esphome-web-2cb4b8
-  friendly_name: Loud-ESP32S3-Plus
+  name: esphome-web-c94a05
+  friendly_name: Louder-ESP32-Pro
   task_stack_in_psram: "true"
 
-  # ===== Board-Specific Pinouts =====
+  # Board-specific pinout configuration
   # I2S audio pins
   i2s_lrclk_pin: GPIO15
   i2s_bclk_pin: GPIO14
   i2s_dout_pin: GPIO16
-  bits_per_sample: 32bit
+  
+  # TAS5825M
+  tas58xx_variant: TAS5825M
+  tas58xx_enable_pin: GPIO17
+  i2c_sda_pin: GPIO8
+  i2c_scl_pin: GPIO9
 
-  # I2C pins for DAC control
-  i2c_sda_pin: GPIO08
-  i2c_scl_pin: GPIO09
-
-  # MA12070P DAC
-  ma12070p_enable_pin: GPIO17
-  ma12070p_mute_pin: GPIO18
-  # ma12070p_volume_max: 0dB
-  # ma12070p_volume_min: -80dB
+  # ===== DAC Overrides (optional) =====
+  # tas58xx_dac_mode: PBTL 
+  # tas58xx_mixer_mode: MONO
+  # tas58xx_analog_gain: 0db
+  # tas58xx_volume_max: 0dB
+  # tas58xx_volume_min: -60dB
+  # tas58xx_refresh_eq: AUTO
 
   # RGB LED
   rgb_led_pin: GPIO21
-
-  # IR Receiver
+  
+  # IR receiver
   ir_rx_pin: GPIO07
 
   # SPI pins (for display)
   spi_clk_pin: GPIO12
   spi_mosi_pin: GPIO11
   spi_miso_pin: GPIO13
-
+  
   # Display control pins
   display_cs_pin: GPIO47
   display_dc_pin: GPIO38
   display_reset_pin: GPIO48
+  display_backlight_pin: GPIO42
+
+  # Fan pins
+  fan_input_pin: GPIO1
+  fan_pwn_pin: GPIO2
 
   # Ethernet pins (if using ethernet instead of wifi)
   eth_cs_pin: GPIO10
@@ -70,15 +78,19 @@ esp32:
       CONFIG_ESP32S3_DATA_CACHE_64KB: "y"
       CONFIG_ESP32S3_DATA_CACHE_LINE_64B: "y"
       CONFIG_ESP32S3_INSTRUCTION_CACHE_32KB: "y"
+
+      # Optional for ESP32-Louder used by Voice-PE
       # Moves instructions and read only data from flash into PSRAM on boot.
       # Both enabled allows instructions to execute while a flash operation is in progress without needing to be placed in IRAM.
       # Considerably speeds up mWW at the cost of using more PSRAM.
       CONFIG_SPIRAM_RODATA: "y"
       CONFIG_SPIRAM_FETCH_INSTRUCTIONS: "y"
+
       CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: "y"
       CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
+
       CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
-      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y" 
+      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"  # TLS1.3 support isn't enabled by default in IDF 5.1.5
 
 logger:
   level: INFO
@@ -107,11 +119,21 @@ packages:
     url: https://github.com/sonocotta/esp32-audio-dock
     ref: main
     files:
-      - firmware/esphome/packages/dac-ma12070p.yaml
+      # Option A: TAS58xx configured with ganged 15-band EQ
+      - firmware/esphome/packages/dac-tas58xx.yaml
+      # Option B: TAS58xx configured with individual 15-band EQ per channel
+      # - firmware/esphome/packages/dac-tas58xx-biamp.yaml
+      # Option C: TAS58xx configured with bi-amp mode, with filters applied to both channels (HF or LF)
+      # - firmware/esphome/packages/dac-tas58xx-presets.yaml
+
       - firmware/esphome/packages/audio.yaml
+      - firmware/esphome/packages/audio-addon-external-dac.yaml
       - firmware/esphome/packages/media-player.yaml
-      - firmware/esphome/packages/media-player-addon-dac-mute.yaml
-      
+      - firmware/esphome/packages/media-player-addon-dac-enable.yaml
+      - firmware/esphome/packages/media-player-addon-tas58xx.yaml
+      - firmware/esphome/packages/tft-spi.yaml
+
+      - firmware/esphome/packages/fan.yaml
       - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
@@ -121,10 +143,18 @@ packages:
       # - firmware/esphome/packages/ethernet-w5500.yaml
 
   # # Debug/local development fallback:
-  # ma12070p_dac: !include packages/dac-ma12070p.yaml
+  # external_dac: !include packages/dac-tas58xx.yaml
+  # # external_dac: !include packages/dac-tas58xx-biamp.yaml
+  # # external_dac: !include packages/dac-tas58xx-presets.yaml  
+  
   # audio: !include packages/audio.yaml
+  # audio_external_dac: !include packages/audio-addon-external-dac.yaml
   # media_player: !include packages/media-player.yaml
-  # media_player_dac_mute: !include packages/media-player-addon-dac-mute.yaml
+  # media_player_dac_enable: !include packages/media-player-addon-dac-enable.yaml
+  # media_player_tas58xx: !include packages/media-player-addon-tas58xx.yaml
+  # tft: !include ../packages/tft-spi.yaml
+
+  # fan: !include ../packages/fan.yaml
   # light: !include packages/light.yaml
   # ir_receiver: !include packages/ir-receiver.yaml
   # monitoring: !include packages/monitoring.yaml
