@@ -108,8 +108,6 @@ packages:
       # Option C: TAS58xx configured with bi-amp mode, with filters applied to both channels (HF or LF)
       # - firmware/esphome/packages/dac-tas58xx-presets.yaml
 
-      - firmware/esphome/packages/light.yaml
-      - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
 

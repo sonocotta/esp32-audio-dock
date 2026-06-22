@@ -100,11 +100,9 @@ packages:
 
       - firmware/esphome/packages/audio.yaml
       - firmware/esphome/packages/audio-addon-external-dac.yaml
-      - firmware/esphome/packages/media-player.yaml
+      - firmware/esphome/packages/media-player-no-light.yaml
       - firmware/esphome/packages/media-player-addon-dac-enable.yaml
       - firmware/esphome/packages/media-player-addon-tas58xx.yaml
 
-      - firmware/esphome/packages/light.yaml
-      - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml

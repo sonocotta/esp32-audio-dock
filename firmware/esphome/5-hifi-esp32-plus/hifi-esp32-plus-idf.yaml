@@ -97,9 +97,9 @@ network:
 packages:
   esparagus_remote:
     url: https://github.com/sonocotta/esp32-audio-dock
-    ref: main
+    ref: features/new-boards-docs-update
     files:
-      # - firmware/esphome/packages/dac-pcm5122.yaml
+      - firmware/esphome/packages/dac-pcm5122.yaml
       - firmware/esphome/packages/audio.yaml
       - firmware/esphome/packages/audio-addon-external-dac.yaml
       - firmware/esphome/packages/media-player.yaml
@@ -114,7 +114,7 @@ packages:
       # - firmware/esphome/packages/ethernet-w5500.yaml
 
   # # Debug/local development fallback:
-  pcm5122_dac: !include ../packages/dac-pcm5122.yaml
+  # pcm5122_dac: !include ../packages/dac-pcm5122.yaml
   # audio: !include packages/audio.yaml
   # audio_external_dac: !include packages/audio-addon-external-dac.yaml
   # media_player: !include packages/media-player.yaml
