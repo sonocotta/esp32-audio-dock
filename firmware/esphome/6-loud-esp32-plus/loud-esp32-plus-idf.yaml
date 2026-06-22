@@ -105,7 +105,7 @@ network:
 packages:
   esparagus_remote:
     url: https://github.com/sonocotta/esp32-audio-dock
-    ref: features/new-boards-docs-update
+    ref: main
     files:
       - firmware/esphome/packages/dac-ma12070p.yaml
       - firmware/esphome/packages/audio.yaml
