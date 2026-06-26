@@ -1164,6 +1164,7 @@ You may support my work by ordering these products at Lectronz, Elecrow, and Tin
 - Loud-ESP32 at [Lectronz](https://lectronz.com/products/loud-esp32), [Elecrow](https://www.elecrow.com/loud-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/loud-esp32/)
 - Loud-ESP32-Plus at [Lectronz](https://lectronz.com/products/loud-esp32-plus), Elecrow (coming soon), and [Tindie](https://www.tindie.com/products/sonocotta/loud-esp32-plus/)
 - Louder-ESP32 at [Lectronz](https://lectronz.com/products/louder-esp32), [Elecrow](https://www.elecrow.com/louder-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32/)
+- Louder-ESP32-Mini at [Lectronz](https://lectronz.com/products/louder-esp32-mini), Elecrow (coming soon), and [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32-mini/)
 - Louder-ESP32-Plus at [Lectronz](https://lectronz.com/products/louder-esp32-plus), [Elecrow](https://www.elecrow.com/louder-esp32-plus.html), and [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32-plus/)
 - Amped-ESP32 at [Lectronz](https://lectronz.com/products/amped-esp32), [Elecrow](https://www.elecrow.com/amped-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32/)
 - Amped-ESP32-Plus at [Lectronz](https://lectronz.com/products/amped-esp32-plus), [Elecrow](https://www.elecrow.com/amped-esp32-plus.html), and [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32-plus/)
