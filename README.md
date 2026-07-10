@@ -32,26 +32,23 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
 - [ESP32 Audio Docks and Louder ESP](#esp32-audio-docks-and-louder-esp)
   - [Table of Contents](#table-of-contents)
   - [Motivation](#motivation)
-  - [HiFi-ESP32](#hifi-esp32)
-  - [HiFi-ESP32 Plus](#hifi-esp32-plus)
-  - [Loud-ESP32](#loud-esp32)
-  - [Loud-ESP32-Plus](#loud-esp32-plus)
-  - [Louder-ESP32](#louder-esp32)
+  - [HiFi-ESP32 and Hifi-ESP32-Plus](#hifi-esp32-and-hifi-esp32-plus)
+  - [Loud-ESP32 and Loud-ESP32-Plus](#loud-esp32-and-loud-esp32-plus)
+  - [Louder-ESP32 and Louder-ESP32 Plus](#louder-esp32-and-louder-esp32-plus)
   - [Louder-ESP32 Mini](#louder-esp32-mini)
-  - [Louder-ESP32 Plus](#louder-esp32-plus)
   - [Louder-ESP32 Pro](#louder-esp32-pro)
-  - [Amped-ESP32](#amped-esp32)
-  - [Amped-ESP32-Plus](#amped-esp32-plus)
+  - [Amped-ESP32 and Amped-ESP32-Plus](#amped-esp32-and-amped-esp32-plus)
+    - [TPA3110 vs TAP3118 designs](#tpa3110-vs-tap3118-designs)
   - [Features](#features)
     - [Onboard PSRAM](#onboard-psram)
   - [Boards Pinout](#boards-pinout)
     - [Legacy boards](#legacy-boards)
     - [HiFi-ESP32 and Amped-ESP32](#hifi-esp32-and-amped-esp32)
-    - [Amped-ESP32-Plus](#amped-esp32-plus-1)
+    - [Amped-ESP32-Plus](#amped-esp32-plus)
     - [HiFi-ESP32 Plus and Amped-ESP32 Plus](#hifi-esp32-plus-and-amped-esp32-plus)
-    - [Loud-ESP32](#loud-esp32-1)
-    - [Loud-ESP32-Plus](#loud-esp32-plus-1)
-    - [Louder-ESP32 and Louder-ESP32-Plus](#louder-esp32-and-louder-esp32-plus)
+    - [Loud-ESP32](#loud-esp32)
+    - [Loud-ESP32-Plus](#loud-esp32-plus)
+    - [Louder-ESP32 and Louder-ESP32-Plus](#louder-esp32-and-louder-esp32-plus-1)
     - [Ethernet (all boards)](#ethernet-all-boards)
     - [Optional peripheral (all boards)](#optional-peripheral-all-boards)
     - [Mic header](#mic-header)
@@ -88,11 +85,11 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [ESP Audio Duo](#esp-audio-duo)
     - [HiFi-ESP](#hifi-esp)
     - [Louder ESP](#louder-esp)
-    - [HiFi-ESP32](#hifi-esp32-1)
-    - [Loud-ESP32](#loud-esp32-2)
-    - [Amped-ESP32](#amped-esp32-1)
+    - [HiFi-ESP32](#hifi-esp32)
+    - [Loud-ESP32](#loud-esp32-1)
+    - [Amped-ESP32](#amped-esp32)
     - [Amped-ESP32 with TPA3118/TPA3128 amp](#amped-esp32-with-tpa3118tpa3128-amp)
-    - [Louder-ESP32](#louder-esp32-1)
+    - [Louder-ESP32](#louder-esp32)
     - [Optional SPI Ethernet module](#optional-spi-ethernet-module)
     - [BTL and PBTL mode (Louder and Amped boards)](#btl-and-pbtl-mode-louder-and-amped-boards)
       - [Power figures (comparison of BTL and PBTL modes)](#power-figures-comparison-of-btl-and-pbtl-modes)
@@ -122,15 +119,15 @@ I spent the last few years developing different solutions based on ESP devices. 
 
 I created those docks and subsequently development boards to be able to quickly prototype for the whole range of ESP8266 and ESP32 chips, starting with the simplest finger-sized toys and going all the way up to full-sized speakers.
 
-## HiFi-ESP32 
+## HiFi-ESP32 and Hifi-ESP32-Plus
 
 The **HiFi-ESP32** is a first-in-line product that uses the legendary PCM5100 series DAC with supreme audio quality. It exposes line-level output that you can plug into a stereo amplifier. Analog power comes through an Ultra-low-noise LDO, making sure no interference from the MCU comes through to your speakers. Spend as much as you need on the external amp to deliver the sound you like (personally, I prefer late 80's audio gear).
 
-<img width="3644" height="2461" alt="image" src="https://github.com/user-attachments/assets/d082c6e7-688b-4f92-97a0-f747006fbccd" />
+| **HiFi-ESP32** | **HiFi-ESP32-Plus** |
+|---|---|
+| <img width="3644" height="2461" alt="image" src="https://github.com/user-attachments/assets/d082c6e7-688b-4f92-97a0-f747006fbccd" /> | <img width="3003" height="2144" alt="image" src="https://github.com/user-attachments/assets/64a7b96f-d0c1-4572-9fd7-8407753628cf" />
 
-## HiFi-ESP32 Plus
-
-The **HiFi-ESP32 Plus** represents the next evolution of HiFi-ESP32 boards, featuring the advanced PCM5122 DAC with built-in DSP capabilities. This board maintains the same audio quality as the original HiFi-ESP32 while adding powerful digital signal processing features, including parametric EQ (6 BQs per channel), DRC, and crossover functionality (with output to downstream DAC). The PCM5122's flexible DSP engine can be configured for various audio enhancement scenarios, making it ideal for projects requiring sound tuning (why would you not), and opening the path to create 2.1 systems with PCM5122+PCM5102 master-slave config.
+The **HiFi-ESP32 Plus** represents the next evolution of the board, featuring the advanced PCM5122 DAC with built-in DSP capabilities. This board maintains the same audio quality as the original HiFi-ESP32 while adding powerful digital signal processing features, including parametric EQ (6 BQs per channel), DRC, and crossover functionality (with output to downstream DAC). The PCM5122's flexible DSP engine can be configured for various audio enhancement scenarios, making it ideal for projects requiring sound tuning (why would you not)
 
 **Key Features:**
 
@@ -140,29 +137,35 @@ The **HiFi-ESP32 Plus** represents the next evolution of HiFi-ESP32 boards, feat
 - Advanced audio processing features (DRC)
 - Same form factor and connectivity as HiFi-ESP32
 
-<img width="3003" height="2144" alt="image" src="https://github.com/user-attachments/assets/64a7b96f-d0c1-4572-9fd7-8407753628cf" />
-
-## Loud-ESP32
+## Loud-ESP32 and Loud-ESP32-Plus
 
 The **Loud-ESP32** uses a dual MAX98357 HiFi DAC with a built-in highly efficient D-class amp to deliver 3 to 5W of music power directly to your speakers. It is not too loud, but also very simple to use and fun to play with. When DAC is not in use, it goes into shutdown mode, making sure no hissing will keep you up at night. It powers from a standard USB-C power source, like a phone charger, etc.
 
-<img width="1443" height="1010" alt="image" src="https://github.com/user-attachments/assets/b6f2c2b7-c261-475a-8f22-c3fec4cec834" />
+| **Loud-ESP32** | **Loud-ESP32-Plus** |
+|---|---|
+| <img width="1443" height="1010" alt="image" src="https://github.com/user-attachments/assets/b6f2c2b7-c261-475a-8f22-c3fec4cec834" /> | <img width="1558" height="1154" alt="image" src="https://github.com/user-attachments/assets/4db9c620-bad8-4b72-b07a-69f18b183cc1" />
 
-## Loud-ESP32-Plus
+The **Loud-ESP32-Plus** model hires much more powerful [Infineon MA12070P](https://www.infineon.com/part/MA12070P) DAC with up to 60W per channel. Due to the D-class amp, they are highly efficient yet high-quality audio streamers. It lacks DSP features, but has most raw horsepower across the line. It is a work in rpogress, and it will become available as soon as I figure out the driver code.
 
-The Loud-ESP32-Plus model hires much more powerful [Infineon MA12070P](https://www.infineon.com/part/MA12070P) DAC with up to 60W per channel. Due to the D-class amp, they are highly efficient yet high-quality audio streamers. It lacks DSP features, but has most raw horsepower across the line. It is a work in rpogress, and it will become available as soon as I figure out the driver code.
-
-<img width="1558" height="1154" alt="image" src="https://github.com/user-attachments/assets/4db9c620-bad8-4b72-b07a-69f18b183cc1" />
-
-## Louder-ESP32
+## Louder-ESP32 and Louder-ESP32 Plus
 
 The **Louder-ESP32** is a top-of-the-range model that uses a modern, highly capable TAS5805M DAC and is aimed to be paired with medium-to-large speaker systems. With 25W per channel stereo output, it packs a punch and can easily enliven living quarters or dorm rooms. It is highly efficient, but much more demanding for power when cranked; therefore, it also uses an external power adapter using a standard  jack. This DAC has a built-in DSP, so you can have a lot of fun with complex EQ, soft-clipping, DRC compression, and AGL tools, among other things.
 
-<img width="2801" height="2105" alt="image" src="https://github.com/user-attachments/assets/4cfc5cd6-07bc-472d-95d2-36777389efe5" />
+| **Louder-ESP32** | **Louder-ESP32-Plus** |
+|---|---|
+| <img width="2801" height="2105" alt="image" src="https://github.com/user-attachments/assets/4cfc5cd6-07bc-472d-95d2-36777389efe5" /> | <img width="1860" height="1191" alt="image" src="https://github.com/user-attachments/assets/e2ce7558-e090-4ede-96b5-b187af0bfad4" />
+
+The **Louder-ESP32-Plus** upgrades DAc to TAS5825M model, which is more efficient (and therefore more powerful), and more capable. It introduces advanced DSP features that are not available on the base model, as it has much more powerful DSP processor.
+
+- TAS5825M DAC with integrated DSP
+- Digital volume control (avoids loss of resolution compared to software volume)
+- Gain digital control
+- Parametric EQ (15xBQ), 128-tap FIR, 3-band DRC, AGL
+- Advanced DSP: Smart Excursion, Smart Thermal, Smart Bass, SmartEQ
 
 ## Louder-ESP32 Mini
 
-Louder-ESP32-mini is a compact version of the Louder-ESP32, which would replace the standard speaker terminal on your old speakers, turning them into a hi-fi audio solution for your smart home.
+**Louder-ESP32-mini** is a compact and stipped-down version of the Louder-ESP32, which would replace the standard speaker terminal on your old speakers, turning them into a Hi-Fi audio solution for your smart home.
 
 It comes in two sizes that are most common among off-the-shelf speakers: 42x42mm (small speakers typically) and 52x52mm (for larger models).
 
@@ -173,18 +176,6 @@ It is designed to be as affordable as it can be, so more speakers can avoid land
 | Front | Back |
 |---|---|
 | <img width="1202" height="880" alt="image" src="https://github.com/user-attachments/assets/e8b126eb-b302-4bbc-b08b-134d6727ec22" /> | <img width="1155" height="920" alt="image" src="https://github.com/user-attachments/assets/34120e2b-6f47-4bf4-aa47-cffb0ad6e706" />
-
-## Louder-ESP32 Plus
-
-The **Louder-ESP32-Plus** upgrades DAc to TAS5825M model, which is more efficient (and therefore more powerful), and more capable. It introduces advanced DSP features that are not available on the base model, as it has much more powerful DSP processor.
-
-- TAS5825M DAC with integrated DSP
-- Digital volume control (avoids loss of resolution compared to software volume)
-- Gain digital control
-- Parametric EQ (15xBQ), 128-tap FIR, 3-band DRC, AGL
-- Advanced DSP: Smart Excursion, Smart Thermal, Smart Bass, SmartEQ
-
-<img width="1860" height="1191" alt="image" src="https://github.com/user-attachments/assets/e2ce7558-e090-4ede-96b5-b187af0bfad4" />
 
 ## Louder-ESP32 Pro
 
@@ -199,22 +190,16 @@ It is designed to be used with USB-PD-enabled power sources, so powering it is a
 <img width="1316" height="1171" alt="image" src="https://github.com/user-attachments/assets/e610f382-cf8a-4cfd-a7d8-97774dcc7654" />
 
 
-## Amped-ESP32
+## Amped-ESP32 and Amped-ESP32-Plus
 
-The PCM5100 HiFi DAC is combined with a highly efficient TPA3110D2 D-class amplifier (recently replaced by [TPA3128](https://www.ti.com/product/TPA3138D2), Rev H+). It brings all the best from the HiFi model and adds an onboard amp to form a complete solution that can be paired with speakers. It uses an external power source to feed hungry amps and the host MCU using an onboard drop-down converter. It has similar power capabilities to the Louder model, but it is much simpler to use since it only needs a valid I2S signal to operate, so a simple book example code will do it.
+The PCM5100 HiFi DAC is combined with a highly efficient TPA31-series D-class amplifier. It brings all the best from the HiFi model and adds an onboard amp to form a complete solution that can be paired with speakers. Compared to the Louder models, it has similar power capabilities, but it is much simpler to use since it only needs a valid I2S signal to operate, so a simple book example code will do it. It adds line-out, so you have a chance to switch betwwen built-in amp and external, if you need to. 
 
-Benefits that the new TPA3128 amp brings:
+| **Amped-ESP32** | **Amped-ESP32-Plus** |
+|---|---|
+| <img width="1983" height="1286" alt="image" src="https://github.com/user-attachments/assets/c041834a-6996-4180-b355-14eb599ecf69" /> | <img width="1686" height="1133" alt="image" src="https://github.com/user-attachments/assets/5d8d0b55-e65c-4329-b8ea-e371ff88d784" />
 
-- It is much more efficient (about half the heat with the same output power, compared to TPA3110), so the board can sustain higher power for longer
-- It has a true MUTE pin that can be connected to the Pi and shut down the output driver when no audio is playing
-- It can be powered from a 5V source, so if you're not looking for maximum power, you can use a USB-C power alone
-- Being a newer design, it has better audio quality. I can't hear it, but people say it sounds much better
 
-<img width="1983" height="1286" alt="image" src="https://github.com/user-attachments/assets/c041834a-6996-4180-b355-14eb599ecf69" />
-
-## Amped-ESP32-Plus
-
-Building upon the success of the Amped-ESP32, the **Amped-ESP32 Plus** combines the powerful PCM5122 DAC with the efficient TPA3110 or TPA3118 amplifier (depending on revision). This board offers the same DSP capabilities as the HiFi-ESP32-Plus while providing built-in amplification for direct speaker connection. The PCM5122's DSP features will enable advanced audio processing, including speaker correction, room EQ, and the possibility of creating 2.1 systems
+Building upon the success of the Amped-ESP32, the **Amped-ESP32 Plus** combines the powerful PCM5122 DAC with the same TPA31-series amplifier. This board offers the same DSP capabilities as the HiFi-ESP32-Plus while providing built-in amplification for direct speaker connection. The PCM5122's DSP features will enable advanced audio processing, including speaker correction, room EQ, and other enhancements.
 
 **Features:**
 
@@ -222,7 +207,14 @@ Building upon the success of the Amped-ESP32, the **Amped-ESP32 Plus** combines 
 - Digital EQ and dynamic range processing
 - Same power output as Amped-ESP32 with enhanced audio quality
 
-<img width="1686" height="1133" alt="image" src="https://github.com/user-attachments/assets/5d8d0b55-e65c-4329-b8ea-e371ff88d784" />
+### TPA3110 vs TAP3118 designs
+
+Recently all Amped boards were migrated to use the new [TPA3118](https://www.ti.com/product/TPA3118D2) amp. Benefits that the new TPA3118 amp brings:
+
+- It is more efficient (about half the heat with the same output power, compared to TPA3110), so the board can sustain higher power for longer
+- It has a true MUTE pin that can be connected to the GPIO and shut down the output driver when no audio is playing
+- It can be powered from a 5V source, so if you're not looking for maximum power, you can use a USB-C power alone
+- Being a newer design, it has better audio quality. I can't hear it, but people say it sounds better
 
 ## Features
 
@@ -259,11 +251,18 @@ Building upon the success of the Amped-ESP32, the **Amped-ESP32 Plus** combines 
 | Built-in mic (voice assist) | optional | optional | optional | optional | optional | ❌ | optional | ✅ | optional | optional |
 | Built-in IR reader | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ |
 | **Software support** |  |  |  |  |  |  |  |  |  |  |
-| Squeezelite-ESP32 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Snapclient | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| ESPHome (Media player) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| ESPHome (Sendspin player) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| ESPHome (Snapclient player) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [Squeezelite-ESP32](https://github.com/sle118/squeezelite-esp32)* | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [Snapclient](https://github.com/CarlosDerSeher/snapclient)** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [ESPHome](https://esphome.io/) (Media player) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [ESPHome](https://esphome.io/) (Sendspin player)*** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [ESPHome](https://esphome.io/) (Snapclient player)**** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+* Squeezelite-ESP32 support for the ESP32-S3 is an experimental feature and is not be fully stable. Please refer to the [original repo](https://github.com/sle118/squeezelite-esp32) for up-to-date support information
+** Snapclient support for the ESP32-S3 is in beta, and not fully stable as well. For best results 'classic' ESP32 is recommended.
+
+*** [Sendspin](https://www.sendspin-audio.com/) player is a beta feature, currently ESP32-S3 works considerably better than classic ESP32, but it is still in development and situation will change over time.
+
+**** [Snapclient component](https://github.com/c-MM/esphome-snapclient/) in the ESPHome is a beta feature, developed by the community. Please check the current development status for up-to-date support information.
 
 ### Onboard PSRAM
 
@@ -590,6 +589,8 @@ And LMS itself
 - It can also send audio to UPnP, Sonos, Chromecast, and AirPlay speakers/devices.
 
 All ESP32-based boards are tested with [Squeezelite-ESP32](https://github.com/sle118/squeezelite-esp32) software, which can be flashed using nothing but a web browser. You can use [Squeezelite-ESP32 installer](https://sonocotta.github.io/esp32-audio-dock/) for that purpose.
+
+Note that squeezelite team only supports officially 'classic' ESP32 boards. The ESP32-S3 build is done based on the latest code and S3-specific SDKCONFIG provided by the team, but accorging to them "It is not yet part of official releases, but it compiles & runs. The s3 does not have bluetooth audio. Note that CPU performances are greatly enhanced". It is not running stable at all times, but it might depend on the configuration also. 
 
 ### How to flash and configure
 
