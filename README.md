@@ -145,17 +145,17 @@ The **Loud-ESP32** uses a dual MAX98357 HiFi DAC with a built-in highly efficien
 |---|---|
 | <img width="1443" height="1010" alt="image" src="https://github.com/user-attachments/assets/b6f2c2b7-c261-475a-8f22-c3fec4cec834" /> | <img width="1558" height="1154" alt="image" src="https://github.com/user-attachments/assets/4db9c620-bad8-4b72-b07a-69f18b183cc1" />
 
-The **Loud-ESP32-Plus** model hires much more powerful [Infineon MA12070P](https://www.infineon.com/part/MA12070P) DAC with up to 60W per channel. Due to the D-class amp, they are highly efficient yet high-quality audio streamers. It lacks DSP features, but has most raw horsepower across the line. It is a work in rpogress, and it will become available as soon as I figure out the driver code.
+The **Loud-ESP32-Plus** model hires a much more powerful [Infineon MA12070P](https://www.infineon.com/part/MA12070P) DAC with up to 60W per channel. Due to the D-class amp, they are highly efficient yet high-quality audio streamers. It lacks DSP features, but has the most raw horsepower across the line. It is in beta testing, and I'm still trying to fix minor issues with the DAC driver.
 
 ## Louder-ESP32 and Louder-ESP32 Plus
 
-The **Louder-ESP32** is a top-of-the-range model that uses a modern, highly capable TAS5805M DAC and is aimed to be paired with medium-to-large speaker systems. With 25W per channel stereo output, it packs a punch and can easily enliven living quarters or dorm rooms. It is highly efficient, but much more demanding for power when cranked; therefore, it also uses an external power adapter using a standard  jack. This DAC has a built-in DSP, so you can have a lot of fun with complex EQ, soft-clipping, DRC compression, and AGL tools, among other things.
+The **Louder-ESP32** is a top-of-the-range model that uses a modern, highly capable TAS5805M DAC and is aimed at being paired with medium-to-large speaker systems. With 25W per channel stereo output, it packs a punch and can easily enliven living quarters or dorm rooms. It is highly efficient, but much more demanding for power when cranked; therefore, it also uses an external power adapter using a standard  jack. This DAC has a built-in DSP, so you can have a lot of fun with complex EQ, soft-clipping, DRC compression, and AGL tools, among other things.
 
 | **Louder-ESP32** | **Louder-ESP32-Plus** |
 |---|---|
 | <img width="2801" height="2105" alt="image" src="https://github.com/user-attachments/assets/4cfc5cd6-07bc-472d-95d2-36777389efe5" /> | <img width="1860" height="1191" alt="image" src="https://github.com/user-attachments/assets/e2ce7558-e090-4ede-96b5-b187af0bfad4" />
 
-The **Louder-ESP32-Plus** upgrades DAc to TAS5825M model, which is more efficient (and therefore more powerful), and more capable. It introduces advanced DSP features that are not available on the base model, as it has much more powerful DSP processor.
+The **Louder-ESP32-Plus** upgrades the DAC to the TAS5825M model, which is more efficient (and therefore more powerful) and more capable. It introduces advanced DSP features that are not available on the base model, as it has a much more powerful DSP processor.
 
 - TAS5825M DAC with integrated DSP
 - Digital volume control (avoids loss of resolution compared to software volume)
@@ -165,7 +165,7 @@ The **Louder-ESP32-Plus** upgrades DAc to TAS5825M model, which is more efficien
 
 ## Louder-ESP32 Mini
 
-**Louder-ESP32-mini** is a compact and stipped-down version of the Louder-ESP32, which would replace the standard speaker terminal on your old speakers, turning them into a Hi-Fi audio solution for your smart home.
+**Louder-ESP32-mini** is a compact and stripped-down version of the Louder-ESP32, which would replace the standard speaker terminal on your old speakers, turning them into a Hi-Fi audio solution for your smart home.
 
 It comes in two sizes that are most common among off-the-shelf speakers: 42x42mm (small speakers typically) and 52x52mm (for larger models).
 
@@ -209,11 +209,11 @@ Building upon the success of the Amped-ESP32, the **Amped-ESP32 Plus** combines 
 
 ### TPA3110 vs TAP3118 designs
 
-Recently all Amped boards were migrated to use the new [TPA3118](https://www.ti.com/product/TPA3118D2) amp. Benefits that the new TPA3118 amp brings:
+Recently, all Amped boards were migrated to use the new [TPA3118](https://www.ti.com/product/TPA3118D2) amp. Benefits that the new TPA3118 amp brings:
 
 - It is more efficient (about half the heat with the same output power, compared to TPA3110), so the board can sustain higher power for longer
 - It has a true MUTE pin that can be connected to the GPIO and shut down the output driver when no audio is playing
-- It can be powered from a 5V source, so if you're not looking for maximum power, you can use a USB-C power alone
+- It can be powered from a 5V source, so if you're not looking for maximum power, you can use a USB-C power adapter alone
 - Being a newer design, it has better audio quality. I can't hear it, but people say it sounds better
 
 ## Features
@@ -251,22 +251,23 @@ Recently all Amped boards were migrated to use the new [TPA3118](https://www.ti.
 | Built-in mic (voice assist) | optional | optional | optional | optional | optional | ❌ | optional | ✅ | optional | optional |
 | Built-in IR reader | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ |
 | **Software support** |  |  |  |  |  |  |  |  |  |  |
-| [Squeezelite-ESP32](https://github.com/sle118/squeezelite-esp32)* | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [Snapclient](https://github.com/CarlosDerSeher/snapclient)** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [Squeezelite-ESP32](https://github.com/sle118/squeezelite-esp32)** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [Snapclient](https://github.com/CarlosDerSeher/snapclient)*** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [ESPHome](https://esphome.io/) (Media player) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [ESPHome](https://esphome.io/) (Sendspin player)*** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [ESPHome](https://esphome.io/) (Snapclient player)**** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [ESPHome](https://esphome.io/) (Sendspin player)**** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [ESPHome](https://esphome.io/) (Snapclient player)***** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-* Squeezelite-ESP32 support for the ESP32-S3 is an experimental feature and is not be fully stable. Please refer to the [original repo](https://github.com/sle118/squeezelite-esp32) for up-to-date support information
-** Snapclient support for the ESP32-S3 is in beta, and not fully stable as well. For best results 'classic' ESP32 is recommended.
+** Squeezelite-ESP32 support for the ESP32-S3 is an experimental feature and is not fully stable; for styable operation, 'classic' ESP32 is recommended. Please refer to the [original repo](https://github.com/sle118/squeezelite-esp32) for up-to-date support information
 
-*** [Sendspin](https://www.sendspin-audio.com/) player is a beta feature, currently ESP32-S3 works considerably better than classic ESP32, but it is still in development and situation will change over time.
+*** Snapclient support for the ESP32-S3 is in beta and not fully stable as well. For best results, 'classic' ESP32 is recommended.
 
-**** [Snapclient component](https://github.com/c-MM/esphome-snapclient/) in the ESPHome is a beta feature, developed by the community. Please check the current development status for up-to-date support information.
+**** [Sendspin](https://www.sendspin-audio.com/) player is a beta feature and in active development; currently, ESP32-S3 works considerably better than classic ESP32, but it is still in development, and the situation will improve over time.
+
+***** [Snapclient component](https://github.com/c-MM/esphome-snapclient/) in ESPHome is a beta feature, developed by the community. Please check the current development status for up-to-date support information.
 
 ### Onboard PSRAM
 
-Audio streaming requires proper buffering to work; even with the ESP32's 500K of RAM, it is a challenging task. For that reason, most of the projects will require WROVER modules that have onboard PSRAM chips.  All ESP32 Audio boards have an 8MB PSRAM chip onboard, connected via a high-speed interface. Any code using PSRAM just works out-of-the box.
+Audio streaming requires proper buffering to work; even with the ESP32's 500K of RAM, it is a challenging task. For that reason, most of the projects will require WROVER modules that have onboard PSRAM chips.  All ESP32 Audio boards have an 8MB PSRAM chip onboard, connected via a high-speed interface. Any code using PSRAM just works out of the box.
 
 ## Boards Pinout
 
@@ -580,7 +581,7 @@ As of mid-2025 work is ongoing ([1](https://github.com/c-MM/esphome-snapclient/)
 
 Squeezelite-ESP32 is a multimedia software suite that started as a renderer (or player) of LMS (Logitech Media Server). Now it is extended with 
 - **Spotify** over-the-air player using SpotifyConnect (thanks to cspot)
-- **AirPlay** controller (iPhone, iTunes ...) and enjoy synchronization multiroom as well (although it's AirPlay 1 only)
+- **AirPlay** controller (iPhone, iTunes ...) and enjoy multi-room synchronization as well (although it's AirPlay 1 only)
 - Traditional **Bluetooth** device (iPhone, Android)
 
 And LMS itself
@@ -590,11 +591,11 @@ And LMS itself
 
 All ESP32-based boards are tested with [Squeezelite-ESP32](https://github.com/sle118/squeezelite-esp32) software, which can be flashed using nothing but a web browser. You can use [Squeezelite-ESP32 installer](https://sonocotta.github.io/esp32-audio-dock/) for that purpose.
 
-Note that squeezelite team only supports officially 'classic' ESP32 boards. The ESP32-S3 build is done based on the latest code and S3-specific SDKCONFIG provided by the team, but accorging to them "It is not yet part of official releases, but it compiles & runs. The s3 does not have bluetooth audio. Note that CPU performances are greatly enhanced". It is not running stable at all times, but it might depend on the configuration also. 
+Note that the squeezelite team only supports officially 'classic' ESP32 boards. The ESP32-S3 build is done based on the latest code and S3-specific SDKCONFIG provided by the team, but according to them, "It is not yet part of official releases, but it compiles & runs. The S3 does not have Bluetooth audio. Note that CPU performance is greatly enhanced". It is not running stably at all times, but it might depend on the configuration also. 
 
 ### How to flash and configure
 
-Use [Installer for ESP Audio Dock](https://sonocotta.github.io/esp32-audio-dock/) to flash firmware first. It has been preconfigured to work with ESP Audio boards and will configure all hardware automatically.
+Use [Installer for ESP Audio Dock](https://sonocotta.github.io/esp32-audio-dock/) to flash the firmware first. It has been preconfigured to work with ESP Audio boards and will configure all hardware automatically.
 
 <details>
   <summary>Install instructions</summary>
