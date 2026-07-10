@@ -37,6 +37,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
   - [Louder-ESP32 and Louder-ESP32 Plus](#louder-esp32-and-louder-esp32-plus)
   - [Louder-ESP32 Mini](#louder-esp32-mini)
   - [Louder-ESP32 Pro](#louder-esp32-pro)
+    - [Recommended power adapter](#recommended-power-adapter)
   - [Amped-ESP32 and Amped-ESP32-Plus](#amped-esp32-and-amped-esp32-plus)
     - [TPA3110 vs TAP3118 designs](#tpa3110-vs-tap3118-designs)
   - [Features](#features)
@@ -51,6 +52,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [Louder-ESP32 and Louder-ESP32-Plus](#louder-esp32-and-louder-esp32-plus-1)
     - [Ethernet (all boards)](#ethernet-all-boards)
     - [Optional peripheral (all boards)](#optional-peripheral-all-boards)
+    - [Fan (optional on Louder-ESP32-Pro boards)](#fan-optional-on-louder-esp32-pro-boards)
     - [Mic header](#mic-header)
     - [TFT and Fan header (Louder-ESP32 Pro boards)](#tft-and-fan-header-louder-esp32-pro-boards)
   - [Which software is right for me](#which-software-is-right-for-me)
@@ -185,10 +187,17 @@ It comes in Raspberry Pi 5 shape with the most important component placed to fol
 
 Louder-ESP32-Pro is equipped with a high-quality TAS5825M DAC with powerful DSP features, allowing audio tuning to turn your speakers into high-quality audio streamers, big or small likewise. Onboard ESP32-S3 with 8MB PSRAM is there to ensure enough horsepower for solid streaming capabilities.
 
-It is designed to be used with USB-PD-enabled power sources, so powering it is as easy as plugging in a standard laptop power charger. For maximum power, a 65W power source is recommended, but it would also happily accept quick-charge phone power adapters, and even standard USB-C power adapters, with limited output power
-
 <img width="1316" height="1171" alt="image" src="https://github.com/user-attachments/assets/e610f382-cf8a-4cfd-a7d8-97774dcc7654" />
 
+### Recommended power adapter
+
+Louder-ESP32-Pro is designed to be powered from a USB-C power source, so powering it is as easy as plugging in a standard laptop power charger. It can accept a wide range of voltages, but for maximum performance, a 20V 3.25A 65W power adapter is recommended. This will ensure that the board can deliver its full audio output capabilities without power limitations.
+
+|  Model | Image |
+|---|---|
+| [20V 3.25A 65W AC Laptop Power adapter Charger](https://pl.aliexpress.com/item/1005007070762655.html) | (image) |
+
+It will also work from Quick-charge power adapaters (9V, 12V) that support USB-PD protocol, and even bare USB-C power sources, but the maximum output will be limited to power adapter capabilities.
 
 ## Amped-ESP32 and Amped-ESP32-Plus
 
@@ -365,6 +374,14 @@ Audio streaming requires proper buffering to work; even with the ESP32's 500K of
 | ESP32-S3                 | 7       | 9        | SPI2/20MHz          | 12           | 11            | 13            | 39          | (37)        | 38          |
 | ESP32-S3 (Rev J3+)       | 7       | 9        | SPI2/20MHz          | 12           | 11            | 13            | 47          | 38          | 48          |
 | HIFI-ESP32-S3 (Rev G2+)  | 7       | 9        | SPI2/20MHz          | 12           | 11            | 13            | 39          | 40          | 38          |
+
+### Fan (optional on Louder-ESP32-Pro boards)
+
+Louder-ESP32-Pro have a 4-pin fan connector, with a size and pinout borrowed from the Raspberry Pi 5 specification. It can be used to connect a 5V fan, which can be controlled by the onboard ESP32-S3. The fan speed can be set in software, and the actual speed can be read back from the fan's tachometer output.
+
+|          | IN (RPM read) | OUT (speed set) 
+|----------|---------|----------|
+| ESP32-S3 | 1      | 2       | 
 
 ### Mic header
 
