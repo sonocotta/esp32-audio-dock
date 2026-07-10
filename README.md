@@ -195,9 +195,9 @@ Louder-ESP32-Pro is designed to be powered from a USB-C power source, so powerin
 
 |  Model | Image |
 |---|---|
-| [20V 3.25A 65W AC Laptop Power adapter Charger](https://pl.aliexpress.com/item/1005007070762655.html) | (image) |
+| [20V 3.25A 65W AC Laptop Power adapter Charger](https://pl.aliexpress.com/item/1005007070762655.html) | <img width="960" height="960" alt="image" src="https://github.com/user-attachments/assets/5eb26e50-d68c-425d-b89a-2ebeef7f8cf7" />
 
-It will also work from Quick-charge power adapaters (9V, 12V) that support USB-PD protocol, and even bare USB-C power sources, but the maximum output will be limited to power adapter capabilities.
+It will also work from Quick-charge power adapters (9V, 12V) that support USB-PD protocol, and even bare USB-C power sources, but the maximum output will be limited to the power adapter's capabilities.
 
 ## Amped-ESP32 and Amped-ESP32-Plus
 
