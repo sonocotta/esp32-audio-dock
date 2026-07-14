@@ -366,6 +366,7 @@ docker run --rm \
   -v "$(pwd)/1-hifi-esp32:/config" \
   -v "$(pwd)/packages:/config/packages" \
   -v "$(pwd)/secrets/secrets.yaml:/config/secrets.yaml" \
+  -v "$(pwd)/.esphome-cache:/cache" \
   -it esphome/esphome:latest \
   run /config/hifi-esp32-idf.yaml --device OTA
 ```
