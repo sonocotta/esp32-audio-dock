@@ -21,7 +21,7 @@ dac_controlset,data,string,"{""init"":[{""reg"":53,""val"":8},{""reg"":64,""val"
 dhcp_tmout,data,string,8
 display_config,data,string,
 enable_airplay,data,string,1
-enable_bt_sink,data,string,1
+enable_bt_sink,data,string,0
 enable_cspot,data,string,1
 equalizer,data,string,
 eth_config,data,string,
@@ -48,5 +48,6 @@ sleep_config,data,string,
 spdif_config,data,string,
 spi_config,data,string,
 stats,data,string,n
+telnet_enable,data,string,n
 telnet_block,data,string,500
 telnet_buffer,data,string,40000
