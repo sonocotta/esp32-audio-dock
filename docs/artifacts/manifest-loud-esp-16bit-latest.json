@@ -1,6 +1,6 @@
 {
   "name": "loud-esp-16bit",
-  "version": "a71aff68",
+  "version": "02036822",
   "home_assistant_domain": "slim_player",
   "funding_url": "https://esphome.io/guides/supporters.html",
   "new_install_prompt_erase": true,
@@ -10,11 +10,11 @@
       "chipFamily": "ESP32",
       "parts": [
         {
-          "path": "binaries/I2S-4MFlash-sdkconfig.esp32-16bit/bootloader-a71aff68.bin",
+          "path": "binaries/I2S-4MFlash-sdkconfig.esp32-16bit/bootloader-02036822.bin",
           "offset": "0x1000"
         },
         {
-          "path": "binaries/I2S-4MFlash-sdkconfig.esp32-16bit/partition-table-a71aff68.bin",
+          "path": "binaries/I2S-4MFlash-sdkconfig.esp32-16bit/partition-table-02036822.bin",
           "offset": "0x8000"
         },
         {
@@ -22,15 +22,15 @@
           "offset": "0x9000"
         },
         {
-          "path": "binaries/I2S-4MFlash-sdkconfig.esp32-16bit/ota_data_initial-a71aff68.bin",
+          "path": "binaries/I2S-4MFlash-sdkconfig.esp32-16bit/ota_data_initial-02036822.bin",
           "offset": "0xd000"
         },
         {
-          "path": "binaries/I2S-4MFlash-sdkconfig.esp32-16bit/recovery-a71aff68.bin",
+          "path": "binaries/I2S-4MFlash-sdkconfig.esp32-16bit/recovery-02036822.bin",
           "offset": "0x10000"
         },
         {
-          "path": "binaries/I2S-4MFlash-sdkconfig.esp32-16bit/squeezelite-a71aff68.bin",
+          "path": "binaries/I2S-4MFlash-sdkconfig.esp32-16bit/squeezelite-02036822.bin",
           "offset": "0x150000"
         },
         {
