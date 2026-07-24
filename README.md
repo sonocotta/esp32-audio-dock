@@ -1172,8 +1172,8 @@ Most of the speakers with 42mm or 55mm square terminals would work without any m
 
 | A  | B  | C |
 |----|----|----|
-| image placeholder |
-| image placeholder |
+| <img width="1705" height="1219" alt="image" src="https://github.com/user-attachments/assets/4b6c29b4-39c1-49f1-a762-db02f6ad7673" /> | <img width="1710" height="1229" alt="image" src="https://github.com/user-attachments/assets/9736c87d-7d2e-4020-b811-aa89be68a120" /> | <img width="1702" height="1211" alt="image" src="https://github.com/user-attachments/assets/13ac706e-2ca5-4512-b6b6-ea12e18ea986" />
+|  <img width="1707" height="1215" alt="image" src="https://github.com/user-attachments/assets/4c033f9b-ea6c-4c0b-afaf-b396689df1d9" /> | <img width="1696" height="1219" alt="image" src="https://github.com/user-attachments/assets/96a33d7f-0d32-46c2-bf76-229216213898" /> | <img width="1483" height="1164" alt="image" src="https://github.com/user-attachments/assets/feaf74de-3b1e-422c-912f-6c199f5ca5ef" />
 
 The main benefit of the 55mm model is an onboard USB PD-trigger chip that allows use with 65W USB-C power adapters. Compared to the 5W limit of the 42mm model, this gives a healthy power headroom when used with larger speakers.
 
