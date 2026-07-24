@@ -1180,18 +1180,20 @@ The main benefit of the 55mm model is an onboard USB PD-trigger chip that allows
 
 ### Louder-ESP32 Mini USB-PD note
 
-While 55mm variant has a [Hynetek HUSB238](https://www.hynetek.com/uploadfiles/site/219/news/aabbbbdb-48c9-4a44-a6dc-2c15f53282e6.pdf) USB-PD trigger chip, capable of pulling more power from the PD-enabled power adapters (most commonly modern laptop power adapters), there are certan limitations to the way it can be used.
+While the 55mm variant has a [Hynetek HUSB238](https://www.hynetek.com/uploadfiles/site/219/news/aabbbbdb-48c9-4a44-a6dc-2c15f53282e6.pdf) USB-PD trigger chip, capable of pulling more power from the PD-enabled power adapters (most commonly modern laptop power adapters), there are certain limitations to the way it can be used.
 
-The chip allows two modes of operation: (a) "Dumb" GPIO mode, where voltage is requested via pin configuration and no code needed, it will work right from the start; and (b) "Smart" mode where voltage /curent is requested via I2C and reported back to the host.
+The chip allows two modes of operation: (a) "Dumb" GPIO mode, where voltage is requested via pin configuration and no code is needed; it will work right from the start; and (b) "Smart" mode, where voltage /curent is requested via I2C and reported back to the host.
 
-The default mode of operation of the Louder-ESP32-Mini (55mm) is "Smart" mode, that requires I2C driver, that actively sets required voltage on start. The ESPhome driver is currently in development ([PR6693](https://github.com/esphome/esphome/pull/6693) and [PR16572](https://github.com/esphome/esphome/pull/16572)) and might be available in the nearest future, but not today.
+The default mode of operation of the Louder-ESP32-Mini (55mm) is "Smart" mode, which requires an I2C driver that actively sets the required voltage on start. The ESPhome driver is currently in development ([PR6693](https://github.com/esphome/esphome/pull/6693) and [PR16572](https://github.com/esphome/esphome/pull/16572)) and might be available in the near future, but not today.
 
-However it is fairly easy to change mode of operation to GPIO, so it would alwayr sequire maximum aviailbale power from the power adapter. For this you need to dotwo changes:
+However, it is fairly easy to change the mode of operation to GPIO, so it would always require maximum available power from the power adapter. For this, you need to do two changes:
 
-- Cut I2C line from the MCU - it will set vlatge and current to the maximum availble)
+- Cut the I2C line from the MCU - it will set voltage and current to the maximum available
 - Remove 1M resistor marked with (*) - it will force GPIO mode
 
-If you decide to go with the change, since your software can't trigger higher voltage, I advice not to remove resistor completely, but disconnect it on one end - this way you can go back to "Smart" mdoe later on.
+<img width="915" height="635" alt="image" src="https://github.com/user-attachments/assets/6ee621e5-6486-45ed-9ca5-e0ad664559b2" />
+
+If you decide to go with the change, since your software can't trigger higher voltage, I advise not to remove the resistor completely, but disconnect it on one end - this way you can go back to "Smart" mode later on.
 
 ## Community projects
 
