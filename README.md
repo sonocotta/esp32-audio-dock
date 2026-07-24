@@ -112,6 +112,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [Case](#case)
     - [Louder-ESP32 Pro case](#louder-esp32-pro-case)
     - [Louder-ESP32 Mini shell](#louder-esp32-mini-shell)
+    - [Louder-ESP32 Mini Speakers Compatibility](#louder-esp32-mini-speakers-compatibility)
   - [Community projects](#community-projects)
   - [Where to buy](#where-to-buy)
 
@@ -1164,6 +1165,17 @@ Since the Louder-ESP32 Mini is designed to fit a standard speaker terminal, a ve
 | <img width="600" alt="image" src="https://github.com/user-attachments/assets/00830aad-fe9e-45ec-b202-29d284efd4d6" /> | <img width="600" alt="image" src="https://github.com/user-attachments/assets/348ec4db-b4ce-4282-916f-faf084f85860" />
 
 You can pull it from the [folder](/hardware/9-louder-esp32-mini/3d/) or pull directly from Tinkercad ([42mm](https://www.tinkercad.com/things/3qzMPw0aLqx-louder-esp32-mini-shell) and [55mm](https://www.tinkercad.com/things/i2f2N5D1MD0-louder-esp32-mini-m-shell) model) and modify if needed. The shell is designed to be printed without support, and it is perfectly okay to print it with PLA plastic or similar material. 
+
+### Louder-ESP32 Mini Speakers Compatibility
+
+Most of the speakers with 42mm or 55mm square terminals would work without any mechanical work needed. Smaller terminals can be extended for Louder-ESP32-mini use with basic mechanical work 
+
+| A  | B  | C |
+|----|----|----|
+| image placeholder |
+| image placeholder |
+
+The main benefit of the 55mm model is an onboard USB PD-trigger chip that allows use with 65W USB-C power adapters. Compared to the 5W limit of the 42mm model, this gives a healthy power headroom when used with larger speakers.
 
 ## Community projects
 
