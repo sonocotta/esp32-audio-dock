@@ -8,13 +8,17 @@ This directory contains ESPHome firmware configurations for all ESP32 Audio Dock
   - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
   - [Hardware Variants](#hardware-variants)
+    - [0. Legacy Boards](#0-legacy-boards)
     - [1. HiFi-ESP32](#1-hifi-esp32)
     - [2. Loud-ESP32](#2-loud-esp32)
     - [3. Louder-ESP32](#3-louder-esp32)
     - [4. Amped-ESP32](#4-amped-esp32)
     - [5. HiFi-ESP32-Plus](#5-hifi-esp32-plus)
+    - [6. Loud-ESP32-Plus](#6-loud-esp32-plus)
     - [7. Louder-ESP32-Plus](#7-louder-esp32-plus)
     - [8. Amped-ESP32-Plus](#8-amped-esp32-plus)
+    - [9. Louder-ESP32-Mini](#9-louder-esp32-mini)
+    - [10. Louder-ESP32-Pro](#10-louder-esp32-pro)
   - [Configuration Variants](#configuration-variants)
     - [Standard Media Player](#standard-media-player)
     - [Snapclient](#snapclient)
@@ -43,7 +47,9 @@ This directory contains ESPHome firmware configurations for all ESP32 Audio Dock
     - [Audio Addon Packages](#audio-addon-packages)
     - [Media Player Addon Packages](#media-player-addon-packages)
     - [Sendspin Addon Packages](#sendspin-addon-packages)
+    - [Snapclient Addon Packages](#snapclient-addon-packages)
     - [Feature Packages](#feature-packages)
+    - [Voice Assistant Packages](#voice-assistant-packages)
     - [Using Packages](#using-packages)
     - [Remote Package Import](#remote-package-import)
   - [Additional Resources](#additional-resources)
@@ -60,7 +66,7 @@ All configurations use:
 - **Shared secrets** for Wi-Fi credentials and API keys
 - **Common features**: Wi-Fi, OTA updates, API, debug logging, RGB LED, IR receiver
 
-Most boards are available in both **ESP32** and **ESP32-S3** variants within the same directory, the S3 variants carry `-s3-` in their filename. Plus-series boards (`5-`, `7-`, `8-`) are ESP32-S3 only unless noted otherwise.
+Most boards are available in both **ESP32** and **ESP32-S3** variants within the same directory, the S3 variants carry `-s3-` in their filename. Plus-series boards (`5-`, `6-`, `7-`, `8-`) are available in both ESP32 and ESP32-S3 unless noted otherwise. Mini (`9-`) and Pro (`10-`) boards are ESP32-S3 only.
 
 Each hardware variant has 3-4 firmware options depending on your use case.
 
@@ -68,12 +74,30 @@ Each hardware variant has 3-4 firmware options depending on your use case.
 
 ## Hardware Variants
 
+### 0. Legacy Boards
+
+**DAC**: PCM5100 (I2S) or external I2S DAC  
+**MCU**: ESP32 / ESP32-S2 / ESP32-S3  
+**Target**: Simple reference/example implementations using Arduino framework  
+**Features**: Basic I2S media player, no modular packages
+
+**Directory**: `0-legacy-boards/`
+
+**Configurations:**
+- `esp32-duo-media-player.yaml` — Dual-core ESP32 with I2S
+- `esp32-s2-solo-media-player.yaml` — ESP32-S2 single-core with I2S
+- `esp32-s3-solo-media-player.yaml` — ESP32-S3 with I2S
+
+> **Note**: These are early reference implementations using the Arduino framework. They are not recommended for new builds — use the IDF-based configurations for better performance.
+
+---
+
 ### 1. HiFi-ESP32
 
 **DAC**: PCM5100 (I2S)  
 **MCU**: ESP32 / ESP32-S3  
 **Target**: High-quality line-level audio output, 2.1V RMS  
-**Features**: RGB LED, IR receiver
+**Features**: RGB LED, IR receiver, optional OLED display, optional Ethernet (W5500)
 
 **Directory**: `1-hifi-esp32/`
 
@@ -81,6 +105,8 @@ Each hardware variant has 3-4 firmware options depending on your use case.
 - `hifi-esp32-idf.yaml` / `hifi-esp32-s3-idf.yaml` - Standard media player with mixer/resampler
 - `hifi-esp32-idf-snapclient.yaml` / `hifi-esp32-s3-idf-snapclient.yaml` - Snapcast client with software DSP controls
 - `hifi-esp32-idf-sendspin.yaml` / `hifi-esp32-s3-idf-sendspin.yaml` - Sendspin synchronized playback, very much experimental but working quite impressively well
+- `hifi-esp32-s3-idf-voice-assist.yaml` - Voice assistant with wake word detection (S3 only)
+- `hifi-esp32-s3-idf-voice-assist-sendspin.yaml` - Voice assistant with Sendspin synchronized playback (S3 only)
 
 **Packages used**: `audio.yaml`, `media-player.yaml`, `light.yaml`, `ir-receiver.yaml`, `monitoring.yaml`, `oled.yaml`  
 **Optional**: `ethernet-w5500.yaml`
@@ -171,6 +197,29 @@ Each hardware variant has 3-4 firmware options depending on your use case.
 
 ---
 
+### 6. Loud-ESP32-Plus
+
+**DAC**: Infineon MA12070P (I2C + I2S) with built-in DSP  
+**MCU**: ESP32 / ESP32-S3  
+**Target**: High-efficiency Class-D amplification with entry-level DSP  
+**Features**: RGB LED, IR receiver, optional OLED display, optional Ethernet (W5500), I2C volume/mute control
+
+**Directory**: `6-loud-esp32-plus/`
+
+**Configurations:**
+- `loud-esp32-plus-idf.yaml` / `loud-esp32-s3-plus-idf.yaml` - Standard media player with MA12070P DSP
+- `loud-esp32-plus-idf-sendspin.yaml` / `loud-esp32-s3-plus-idf-sendspin.yaml` - Sendspin synchronized playback
+- `loud-esp32-s3-plus-idf-snapclient.yaml` - Snapcast client (S3 only, 32-bit I2S required)
+
+The MA12070P is a high-efficiency Class-D audio amplifier with I2C digital volume control and built-in DSP. It provides software-configurable volume, mute, and enable control via I2C.
+
+> **Note**: The snapclient configuration requires 32-bit I2S data, which is required for this DAC. At this moment snapclient doen't allow this.
+
+**Packages used**: `dac-ma12070p.yaml`, `audio.yaml`, `media-player.yaml`, `media-player-addon-dac-mute.yaml`, `light.yaml`, `ir-receiver.yaml`, `monitoring.yaml`, `monitoring-wifi.yaml`  
+**Optional**: `ethernet-w5500.yaml`, `oled.yaml`
+
+---
+
 ### 7. Louder-ESP32-Plus
 
 **DAC**: TAS5825M (I2C + I2S) with built-in DSP  
@@ -223,6 +272,48 @@ The DSP also allows adjusting the gain per channel, which is essentially a balan
 
 ---
 
+### 9. Louder-ESP32-Mini
+
+**DAC**: TAS5805M (I2C + I2S) with built-in DSP  
+**MCU**: ESP32-S3  
+**Target**: Compact high-power audio in PBTL mono configuration  
+**Features**: No RGB LED or IR receiver (minimal footprint design), USB-PD support on some variants
+
+**Directory**: `9-louder-esp32-mini/`
+
+**Configurations:**
+- `louder-esp32-s3-mini.yaml` - Standard media player with TAS5805M DSP (no LED)
+- `louder-esp32-s3-mini-snapclient.yaml` - Snapcast client (no LED)
+- `louder-esp32-s3-mini-sendspin-mono.yaml` - Sendspin synchronized mono playback (no LED)
+- `louder-esp32-s3-mini-m-sendspin-mono.yaml` - Sendspin mono with USB-PD detection (external component: husb238, work in progress!)
+
+The Mini boards are designed for compact installations where a full-sized board won't fit. They feature TAS5805M DAC in PBTL (mono) configuration for maximum power from a compact form factor. Mixer mode (MONO/LEFT/RIGHT) can be selected per-config.
+
+---
+
+### 10. Louder-ESP32-Pro
+
+**DAC**: TAS5825M (I2C + I2S) with built-in DSP  
+**MCU**: ESP32-S3  
+**Target**: High-power audio with TFT display, fan cooling, and voice assistant support  
+**Features**: RGB LED, IR receiver, TFT SPI display (ST7789/ILI9341), active fan control, optional Ethernet (W5500), microphone (voice assistant)
+
+**Directory**: `10-louder-esp32-pro/`
+
+**Configurations:**
+- `louder-esp32-s3-pro-idf.yaml` - Standard media player with TAS5825M DSP, TFT display, fan control
+- `louder-esp32-s3-pro-idf-sendspin.yaml` - Sendspin synchronized playback with TFT display
+- `louder-esp32-s3-pro-idf-snapclient.yaml` - Snapcast client with OLED display
+- `louder-esp32-s3-pro-idf-voice-assist.yaml` - Voice assistant with wake word detection
+
+The Pro board is a feature-rich platform with:
+- **TFT SPI display** (ST7789 or ILI9341) for track info, album art, and clock
+- **Active fan control** for thermal management during extended high-power operation
+- **I2S microphone** for voice assistant capabilities
+- **TAS5825M DAC** with full 15-band EQ, bi-amp mode, and presets
+
+---
+
 ## Configuration Variants
 
 ### Standard Media Player
@@ -255,6 +346,9 @@ Snapcast client implementation with enhanced features:
   - Range: -15dB to +15dB per band
 - Perfect audio synchronization across multiple devices
 - Low latency streaming
+- Two snapclient implementations available:
+  - **Basic** (`snapclient-new.yaml`): @c-MM original port, no DSP controls
+  - **With DSP** (`snapclient-with-dsp.yaml`): @farmed-switch fork with software BQ-filters
 
 **Best for**: Multi-room synchronized audio with a central Snapcast server
 
@@ -286,7 +380,7 @@ Sendspin synchronized audio playback:
 
 **Best for**: Multi-room audio without external server infrastructure
 
-**Note**: Experimental feature, firmware version 2026.2.0+ required
+**Note**: Experimental feature, firmware version 2026.5.0+ required for latest sendspin features
 
 <img width="846" height="1198" alt="image" src="https://github.com/user-attachments/assets/54a9b535-8296-4267-bf6b-4abd00b070f8" />
 
@@ -303,33 +397,43 @@ Full-featured voice assistant with wake word detection:
 - Speaker output with announcement ducking
 - Native Home Assistant Voice integration
 - Visual feedback via RGB LED phases (idle / listening / thinking / replying / error / muted)
+- Also available with Sendspin synchronized playback (`*-voice-assist-sendspin.yaml`)
 
-**Available on**: Louder-ESP32-Plus (`7-louder-esp32-plus/`), Amped-ESP32-Plus (`8-amped-esp32-plus/`)
+**Available on**:
+- HiFi-ESP32 S3 (`1-hifi-esp32/`) — S3 only
+- Louder-ESP32-Plus (`7-louder-esp32-plus/`) — S3 only
+- Amped-ESP32-Plus (`8-amped-esp32-plus/`) — S3 only
+- Louder-ESP32-Pro (`10-louder-esp32-pro/`) — S3 only
 
-**Requirements**: Home Assistant with voice assistant configured, ESPHome firmware 2026.1.4+
+**Requirements**: Home Assistant with voice assistant configured, ESPHome firmware 2026.1.4+, esparagus-echo microphone packages (included via remote import)
 
 ---
 
 ## Quick Start
 
 1. **Choose your hardware variant** from the directories:
-   - `1-hifi-esp32/` - PCM5100 line-level output
-   - `2-loud-esp32/` - MAX98357A built-in amp
-   - `3-louder-esp32/` - TAS5805M high-power with DSP
-   - `4-amped-esp32/` - PCM5100 + TPA3110 amp
-   - `5-hifi-esp32-plus/` - PCM5122 with DSP
-   - `7-louder-esp32-plus/` - TAS5825M high-power with DSP (ESP32 / ESP32-S3)
-   - `8-amped-esp32-plus/` - PCM5122 + amp + voice assist (ESP32 / ESP32-S3)
+   - `0-legacy-boards/` — Legacy Arduino-based examples (not recommended for new builds)
+   - `1-hifi-esp32/` — PCM5100 line-level output
+   - `2-loud-esp32/` — MAX98357A built-in amp
+   - `3-louder-esp32/` — TAS5805M high-power with DSP
+   - `4-amped-esp32/` — PCM5100 + TPA3110 amp
+   - `5-hifi-esp32-plus/` — PCM5122 with DSP
+   - `6-loud-esp32-plus/` — MA12070P high-efficiency Class-D
+   - `7-louder-esp32-plus/` — TAS5825M high-power with DSP (ESP32 / ESP32-S3)
+   - `8-amped-esp32-plus/` — PCM5122 + amp + voice assist (ESP32 / ESP32-S3)
+   - `9-louder-esp32-mini/` — TAS5805M compact PBTL mono (ESP32-S3)
+   - `10-louder-esp32-pro/` — TAS5825M with TFT display and fan (ESP32-S3)
 
 2. **Choose your MCU variant** (where applicable):
-   - `*-esp32-*` - ESP32 variant
-   - `*-esp32-s3-*` - ESP32-S3 variant
+   - `*-esp32-*` — ESP32 variant
+   - `*-esp32-s3-*` — ESP32-S3 variant
 
 3. **Choose your configuration variant**:
    - Standard: `*-idf.yaml`
    - Snapclient: `*-snapclient.yaml`
    - Sendspin: `*-sendspin.yaml`
-   - Voice Assistant: `*-voice-assist.yaml` (Plus boards only)
+   - Voice Assistant: `*-voice-assist.yaml` (selected boards, S3 only)
+   - Voice Assistant + Sendspin: `*-voice-assist-sendspin.yaml` (HiFi-ESP32 S3 only)
 
 4. **Configure secrets** (see [Secrets Management](#secrets-management))
 
@@ -481,9 +585,9 @@ substitutions:
 Most functionality is imported from packages. To customize:
 
 1. **Base audio packages**: `packages/audio.yaml`, `packages/sendspin-audio.yaml`
-2. **DAC-specific packages**: `packages/dac-tas5805m.yaml`, `packages/dac-pcm5122.yaml`, `packages/dac-tas58xx.yaml`
-3. **Feature addons**: `packages/media-player-addon-*.yaml`, `packages/sendspin-addon-*.yaml`
-4. **Optional features**: `packages/ethernet-w5500.yaml`, `packages/oled.yaml`
+2. **DAC-specific packages**: `packages/dac-tas58xx.yaml`, `packages/dac-pcm5122.yaml`, `packages/dac-ma12070p.yaml`, `packages/dac-tas58xx-biamp.yaml`, `packages/dac-tas58xx-presets.yaml`
+3. **Feature addons**: `packages/media-player-addon-*.yaml`, `packages/sendspin-addon-*.yaml`, `packages/snapclient-addon-*.yaml`
+4. **Optional features**: `packages/ethernet-w5500.yaml`, `packages/oled.yaml`, `packages/tft-spi.yaml`, `packages/fan.yaml`
 
 Feel free to experiment with IR/RGB/Rotary/OLED configuration. Only the most basic configuration is provided to get you started. Don't hesitate to extend it.
 
@@ -518,20 +622,25 @@ The package system promotes code reusability across different hardware variants.
 
 - **`audio.yaml`**: Base I2S audio configuration — defines `i2s_speaker_id`, mixer, resampler
 - **`media-player.yaml`**: Media player with announcement ducking — defines `external_media_player`
-- **`sendspin-audio.yaml`**: I2S audio stack for Sendspin — defines `i2s_speaker_id` for Sendspin
-- **`sendspin.yaml`**: Sendspin multi-room player — defines `external_media_player` and `sendspin_group_media_player`
-- **`snapclient.yaml`**: Snapcast client
-- **`snapclient-with-dsp.yaml`**: Snapcast client with 18-band software EQ
+- **`media-player-no-light.yaml`**: Media player without RGB LED control — for boards without LEDs (e.g., Louder-ESP32-Mini)
+- **`sendspin.yaml`**: Sendspin multi-room player — defines `sendspin_group_media_player`, `external_media_player`, and audio sources
+- **`sendspin-no-light.yaml`**: Sendspin without RGB LED control — for boards without LEDs
+- **`snapclient-new.yaml`**: Snapcast client (@c-MM original port, basic implementation)
+- **`snapclient-with-dsp.yaml`**: Snapcast client with 18-band software EQ (@farmed-switch fork)
 - **`light.yaml`**: RGB LED support (WS2812)
 - **`ir-receiver.yaml`**: Infrared remote control
 - **`monitoring.yaml`**: Debug and system monitoring
+- **`monitoring-wifi.yaml`**: Extended Wi-Fi diagnostics — signal strength, IP address, and connection state sensors
 - **`oled.yaml`**: SSD1306 OLED display
+- **`tft-spi.yaml`**: TFT SPI display (ST7789/ILI9341) — used on Pro boards
+- **`fan.yaml`**: Active fan control with temperature sensor — used on Pro boards
 
 ### DAC Packages
 
 - **`dac-switch.yaml`**: Simple GPIO enable/disable switch for MAX98357A (Loud-ESP32)
 - **`dac-pcm5122.yaml`**: PCM5122 DAC via I2C with volume, EQ and DSP controls (HiFi-ESP32-Plus, Amped-ESP32-Plus)
-- **`dac-tas58xx.yaml`**: TAS5805M/TAS5825M DAC using the unified `tas58xx` driver — 15-band EQ, mixer, gain control (Louder-ESP32, Louder-ESP32-Plus)
+- **`dac-ma12070p.yaml`**: Infineon MA12070P Class-D amplifier with I2C control — digital volume, mute, enable (Loud-ESP32-Plus)
+- **`dac-tas58xx.yaml`**: TAS5805M/TAS5825M DAC using the unified `tas58xx` driver — 15-band EQ, mixer, gain control (Louder-ESP32, Louder-ESP32-Plus, Louder-ESP32-Mini, Louder-ESP32-Pro)
 - **`dac-tas58xx-biamp.yaml`**: TAS58xx in bi-amp mode with per-channel EQ
 - **`dac-tas58xx-presets.yaml`**: TAS58xx with high/low frequency filter presets for subwoofer/satellite setups
 
@@ -539,31 +648,58 @@ The package system promotes code reusability across different hardware variants.
 
 These addon packages extend the base audio stack to connect an external DAC component:
 
-- **`audio-addon-external-dac.yaml`**: Extends `i2s_speaker_id` to add `audio_dac: external_dac` — needed for Louder-ESP32 and HiFi-ESP32-Plus
+- **`audio-addon-external-dac.yaml`**: Extends `i2s_speaker_id` to add `audio_dac: external_dac` — needed for Louder-ESP32, HiFi-ESP32-Plus, and other boards with I2C-controlled DACs
 - **`sendspin-audio-addon-external-dac.yaml`**: Same as above but extends the Sendspin audio stack
+- **`sendspin-audio-addon-ma12070p.yaml`**: Extends Sendspin audio stack specifically for MA12070P DAC
 
 ### Media Player Addon Packages
 
 These addon packages extend `external_media_player` with board-specific behavior:
 
-- **`media-player-addon-dac-enable.yaml`**: Turns DAC GPIO on when playback starts, off when idle — used on Loud-ESP32, HiFi-ESP32-Plus
+- **`media-player-addon-dac-enable.yaml`**: Turns DAC GPIO on when playback starts, off when idle — used on Loud-ESP32, HiFi-ESP32-Plus, Louder-ESP32, Louder-ESP32-Mini
+- **`media-player-addon-dac-enable-dual.yaml`**: Same as above but for dual DAC configurations
+- **`media-player-addon-dac-mute.yaml`**: Controls DAC mute via I2C (MA12070P) or GPIO on play/idle — used on Loud-ESP32-Plus
 - **`media-player-addon-amp-unmute.yaml`**: Unmutes the TPA3110/TPA3128 amplifier on playback — used on Amped-ESP32
 - **`media-player-addon-tas58xx.yaml`**: TAS58xx-specific playback hooks — plays startup sync sound on boot, enables DAC on play, overtemp monitoring
+- **`media-player-addon-tas58xx-dual.yaml`**: Same as above for dual TAS58xx configurations
 
 ### Sendspin Addon Packages
 
 These addon packages extend Sendspin player components with board-specific behavior:
 
 - **`sendspin-addon-dac-enable.yaml`**: Turns DAC GPIO on/off with Sendspin playback state
+- **`sendspin-addon-dac-mute.yaml`**: Controls DAC mute via I2C (MA12070P) with Sendspin playback
 - **`sendspin-addon-amp-unmute.yaml`**: Unmutes amplifier with Sendspin playback
 - **`sendspin-addon-tas58xx.yaml`**: TAS58xx hooks for Sendspin — startup sync sound on boot, DAC enable on play
+- **`sendspin-addon-esp32.yaml`**: ESP32 (non-S3) specific wifi/audio optimizations for Sendspin
 - **`sendspin-addon-oled.yaml`**: Scrolling track info on OLED display during Sendspin playback
+- **`sendspin-addon-tft.yaml`**: Track info and display management on TFT SPI display during Sendspin playback (Pro boards)
+- **`sendspin-addon-voice-assist-tas58xx.yaml`**: TAS58xx hooks for voice assistant + Sendspin combined configs
+
+### Snapclient Addon Packages
+
+These addon packages extend snapclient with board-specific behavior:
+
+- **`snapclient-addon-dac-enable.yaml`**: Enables DAC GPIO on snapclient play
+- **`snapclient-addon-dac-mute.yaml`**: Controls DAC mute via I2C (MA12070P) with snapclient playback
+- **`snapclient-addon-external-dac.yaml`**: Extends snapclient to use external I2C DAC
+- **`snapclient-addon-tas58xx.yaml`**: TAS58xx EQ control and startup sync for snapclient
+- **`snapclient-addon-amp-enable.yaml`**: Enables amplifier with snapclient playback
 
 ### Feature Packages
 
-- **`ethernet-w5500.yaml`**: W5500 SPI Ethernet module (replaces Wi-Fi config when used)
 - **`amp-unmute.yaml`**: GPIO switch definition for TPA3110/TPA3128 amplifier mute control
-- **`monitoring-wifi.yaml`**: Extended Wi-Fi diagnostics — signal strength, IP address, and connection state sensors
+- **`ethernet-w5500.yaml`**: W5500 SPI Ethernet module (replaces Wi-Fi config when used)
+
+### Voice Assistant Packages
+
+Voice assistant packages are sourced from the external [esparagus-echo](https://github.com/sonocotta/esparagus-echo) repository and imported via remote packages:
+
+- **`microphone-i2s.yaml`**: I2S microphone configuration
+- **`microphone.yaml`**: Microphone sensor entity
+- **`voice-assist.yaml`**: Full voice assistant with wake word detection
+- **`voice-assist-sendspin.yaml`**: Voice assistant combined with Sendspin synchronized playback
+- **`media-player-addon-voice-assist.yaml`**: Media player hooks for voice assistant integration
 
 ### Using Packages
 
@@ -599,7 +735,7 @@ packages:
       - firmware/esphome/packages/oled.yaml
 ```
 
-Uncomment this block and remove the local `!include` imports to use the latest published packages from the repository automatically.
+Uncomment this block and remove the local `!include` imports to use the latest published packages from the repository automatically. Many configs already use the remote import method by default.
 
 ---
 
