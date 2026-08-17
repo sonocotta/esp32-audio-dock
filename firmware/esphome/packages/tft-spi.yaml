@@ -42,14 +42,9 @@ switch:
 
 ### Example display configuration, showing the current playback state
 display:
-  - platform: ili9xxx
+  - platform: mipi_spi
     id: tft_display
     model: ${display_model}
-    dimensions:
-      width: 320
-      height: 240
-      offset_height: 0
-      offset_width: 0
     invert_colors: true
     dc_pin: ${display_dc_pin}
     reset_pin: ${display_reset_pin}
