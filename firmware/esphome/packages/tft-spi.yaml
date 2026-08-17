@@ -10,6 +10,9 @@
 #   - display_reset_pin
 # ============================================================
 
+defaults:
+  display_model: ILI9341
+
 # prerequisites:
 font:
   - file:
@@ -41,7 +44,7 @@ switch:
 display:
   - platform: ili9xxx
     id: tft_display
-    model: ILI9341
+    model: ${display_model}
     dimensions:
       width: 320
       height: 240
