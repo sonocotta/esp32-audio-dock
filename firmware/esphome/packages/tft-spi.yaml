@@ -10,6 +10,9 @@
 #   - display_reset_pin
 # ============================================================
 
+defaults:
+  display_model: ILI9341
+
 # prerequisites:
 font:
   - file:
@@ -39,14 +42,9 @@ switch:
 
 ### Example display configuration, showing the current playback state
 display:
-  - platform: ili9xxx
+  - platform: mipi_spi
     id: tft_display
-    model: ILI9341
-    dimensions:
-      width: 320
-      height: 240
-      offset_height: 0
-      offset_width: 0
+    model: ${display_model}
     invert_colors: true
     dc_pin: ${display_dc_pin}
     reset_pin: ${display_reset_pin}
