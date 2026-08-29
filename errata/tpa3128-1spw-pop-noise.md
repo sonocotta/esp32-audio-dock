@@ -36,8 +36,8 @@ On boards equipped with the TPA3128 amp, you can switch the modulation mode from
 
 | Step | Description | Image |
 |---|---|---|
-| 1 | Locate the modulation-select solder bridge on the back side of the PCB, in the amp area. Cut the "1SPW" solder bridge with a sharp knife. Make sure these no electrical connections are left. | _Photo placeholder_ |
-| 2 | Change the solder bridge state to select BD modulation mode instead of the default 1SPW. | _Photo placeholder_ |
+| 1 | Locate the modulation-select solder bridge on the back side of the PCB, in the amp area. Cut the "1SPW" solder bridge with a sharp knife. Make sure these no electrical connections are left. | <img width="505" height="436" alt="image" src="https://github.com/user-attachments/assets/23f2a14e-8bd6-4b31-b72e-be4340a7c05e" />
+| 2 | Change the solder bridge state to select BD modulation mode instead of the default 1SPW. | <img width="426" height="389" alt="image" src="https://github.com/user-attachments/assets/2dfd1b20-6c49-4e06-866c-f9a5b7d92b42" />
 
 **Additional Notes:**
 
