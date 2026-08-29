@@ -116,6 +116,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [Louder-ESP32 Mini USB-PD note](#louder-esp32-mini-usb-pd-note)
   - [Community projects](#community-projects)
   - [Where to buy](#where-to-buy)
+  - [Errata](#errata)
 
 ## Motivation
 
@@ -833,6 +834,8 @@ Help came with a newer TPA3128 amp with revision H of the Amped-ESP32
 
 <img width="1291" height="864" alt="image" src="https://github.com/user-attachments/assets/448377ee-ece4-443a-9b6c-31874d50568b" />
 
+⚠️ TPA3128 boards default to 1SPW modulation, which causes audible pops when exiting MUTE and a quiet static noise afterward. See [errata: TPA3128 1SPW modulation pop and static noise issue](/errata/tpa3128-1spw-pop-noise.md) for a permanent hardware fix.
+
 On the latest revisions I'm switching over to the TPA3118 amp, replacing TPA3128 for a few reasons:
 
 - MUTE schematic is updated to slow down voltage ramping speed on turn on – this helps reduce pop noise to “I can no longer hear it” level
@@ -1219,3 +1222,7 @@ You may support my work by ordering these products at Lectronz, Elecrow, and Tin
 - Louder-ESP32-Pro at [Lectronz](https://lectronz.com/products/louder-esp32-pro) and [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32-pro/) (Elecrow coming soon as well!)
 - Amped-ESP32 at [Lectronz](https://lectronz.com/products/amped-esp32), [Elecrow](https://www.elecrow.com/amped-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32/)
 - Amped-ESP32-Plus at [Lectronz](https://lectronz.com/products/amped-esp32-plus), [Elecrow](https://www.elecrow.com/amped-esp32-plus.html), and [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32-plus/)
+
+## Errata
+
+- [TPA3128 1SPW modulation pop and static noise issue](/errata/tpa3128-1spw-pop-noise.md)
