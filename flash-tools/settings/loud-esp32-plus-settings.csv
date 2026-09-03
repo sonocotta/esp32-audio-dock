@@ -24,7 +24,7 @@ enable_airplay,data,string,1
 enable_bt_sink,data,string,1
 enable_cspot,data,string,1
 equalizer,data,string,
-eth_config,data,string,
+eth_config,data,string,"model=w5500,cs=5,speed=20000000,intr=35,rst=14"
 ethtmout,data,string,8
 gpio_exp_config,data,string,
 host_name,data,string,loud-esp32-plus
@@ -46,7 +46,7 @@ rotary_config,data,string,
 set_GPIO,data,string,"39=ir,13=gnd,33=amp"
 sleep_config,data,string,
 spdif_config,data,string,
-spi_config,data,string,
+spi_config,data,string,"mosi=23,clk=18,host=1,miso=19"
 stats,data,string,n
 telnet_block,data,string,500
 telnet_buffer,data,string,40000
