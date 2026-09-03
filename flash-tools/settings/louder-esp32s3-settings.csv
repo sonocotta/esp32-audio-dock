@@ -46,7 +46,7 @@ rotary_config,data,string,
 set_GPIO,data,string,"17=vcc,7=ir"
 sleep_config,data,string,
 spdif_config,data,string,
-spi_config,data,string,
+spi_config,data,string,"mosi=11,clk=12,host=1,miso=13"
 stats,data,string,n
 telnet_enable,data,string,n
 telnet_block,data,string,500
