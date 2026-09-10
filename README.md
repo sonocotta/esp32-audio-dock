@@ -42,6 +42,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [TPA3110 vs TAP3118 designs](#tpa3110-vs-tap3118-designs)
   - [Features](#features)
     - [Onboard PSRAM](#onboard-psram)
+  - [Which chip: ESP32 or ESP32-S3?](#which-chip-esp32-or-esp32-s3)
   - [Boards Pinout](#boards-pinout)
     - [Legacy boards](#legacy-boards)
     - [HiFi-ESP32 and Amped-ESP32](#hifi-esp32-and-amped-esp32)
@@ -72,7 +73,8 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [How to flash and configure](#how-to-flash-and-configure)
     - [Ethernet configuration](#ethernet-configuration)
     - [Squeezelite-esp32 reboots and connection drops](#squeezelite-esp32-reboots-and-connection-drops)
-  - [Airplay-2](#airplay-2)
+  - [AirPlay 1 & 2](#airplay-1--2)
+    - [TAS58xx DSP: full parametric EQ and crossover control](#tas58xx-dsp-full-parametric-eq-and-crossover-control)
     - [How to Get Started](#how-to-get-started)
   - [Other smart home options](#other-smart-home-options)
     - [Building Tasmota with I2S support](#building-tasmota-with-i2s-support)
@@ -268,6 +270,7 @@ Recently, all Amped boards were migrated to use the new [TPA3118](https://www.ti
 | [ESPHome](https://esphome.io/) (Media player) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [ESPHome](https://esphome.io/) (Sendspin player)**** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [ESPHome](https://esphome.io/) (Snapclient player)***** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [AirPlay 1 & 2](https://github.com/rbouteiller/airplay-esp32)****** | ✅ | 🔜 | ✅ | ❌ | ✅ | 🔜 | ✅ | 🔜 | ✅ | 🔜 |
 
 ** Squeezelite-ESP32 support for the ESP32-S3 is an experimental feature and is not fully stable; for styable operation, 'classic' ESP32 is recommended. Please refer to the [original repo](https://github.com/sle118/squeezelite-esp32) for up-to-date support information
 
@@ -277,9 +280,33 @@ Recently, all Amped boards were migrated to use the new [TPA3118](https://www.ti
 
 ***** [Snapclient component](https://github.com/c-MM/esphome-snapclient/) in ESPHome is a beta feature, developed by the community. Please check the current development status for up-to-date support information.
 
+****** See [AirPlay 1 & 2](#airplay-1--2) below. 🔜 means the DAC is planned but not yet supported: HiFi-ESP32-Plus and Amped-ESP32-Plus will get basic playback on their PCM5122 (no DSP exposed), and Louder-ESP32-mini/Pro will get the same TAS5805M/TAS5825M support (including full DSP) as their siblings once a build matches their exact pinout. Loud-ESP32-Plus (MA12070P) is not currently planned.
+
 ### Onboard PSRAM
 
 Audio streaming requires proper buffering to work; even with the ESP32's 500K of RAM, it is a challenging task. For that reason, most of the projects will require WROVER modules that have onboard PSRAM chips.  All ESP32 Audio boards have an 8MB PSRAM chip onboard, connected via a high-speed interface. Any code using PSRAM just works out of the box.
+
+## Which chip: ESP32 or ESP32-S3?
+
+Most boards in this line are sold with either the 'classic' ESP32 or the newer ESP32-S3. They are not interchangeable for every use case, and picking the wrong one is the single most common support question — here's the short version:
+
+- **ESP32-S3 is the newer, more capable chip** — more RAM headroom, a faster CPU, and native USB — but it has **no Bluetooth Classic radio**, so Bluetooth A2DP only works on the original ESP32.
+- **Squeezelite-ESP32 and standalone Snapclient**: pick the **classic ESP32**. Neither firmware is fine-tuned for the S3 yet, and current S3 support is noticeably laggier.
+- **ESPHome / Home Assistant media player**: pick **ESP32-S3**. The new Sendspin renderer runs much better on the S3's extra headroom.
+- **Voice assistant (wake word) in Home Assistant**: **ESP32-S3 is mandatory** — the classic ESP32 doesn't have the RAM/CPU headroom to run it.
+- **AirPlay 1 & 2** ([rbouteiller/airplay-esp32](https://github.com/rbouteiller/airplay-esp32)): both chips are fully supported on the boards it currently targets; ESP32-S3 is preferred for its extra performance headroom.
+
+| Your use case | Pick |
+|---|---|
+| Bluetooth A2DP from a phone/laptop | **ESP32** |
+| Squeezelite-ESP32 or standalone Snapclient | **ESP32** |
+| ESPHome media player / Sendspin | **ESP32-S3** |
+| Home Assistant voice assistant | **ESP32-S3** |
+| AirPlay 1 & 2 | Either — **ESP32-S3** for more headroom |
+
+If none of that applies to you and you just want the safe default, pick **ESP32-S3** — it's the newer chip. Only choose classic ESP32 if you specifically need Bluetooth A2DP, or plan to run Squeezelite-ESP32/Snapclient today.
+
+Note that **Louder-ESP32-mini** and **Louder-ESP32-Pro** are ESP32-S3-only designs — there is no chip choice to make on those two.
 
 ## Boards Pinout
 
@@ -671,26 +698,51 @@ squeezelite -o i2s -s -disable -b 500:2000 -C 30 -d all=sdebug
 
 ![image](https://github.com/user-attachments/assets/6b4096bd-0793-458b-a0fe-3282418f773f)
 
-## Airplay-2
+## AirPlay 1 & 2
 
-The drawback is squeezelite's implementation is a first version of AirPlay. This [new, open-source implementation](https://github.com/rbouteiller/airplay-esp32) of the Airplay protocol is a standalone v2 alternative, with great work done by the community despite lack of help from Apple!
+Squeezelite's built-in AirPlay is a first-generation implementation. [rbouteiller/airplay-esp32](https://github.com/rbouteiller/airplay-esp32) is a standalone, open-source **AirPlay 1 & 2** receiver for the ESP32 family — actively developed, with great work done by the community despite the lack of help from Apple.
 
-The good news is the project supports Louder boards out of the box (the rest of the boards are cmoing soon as well). You just need to pull the code from the repo and flash it to your device. A code-free web-installer is coming as well.
+It now supports HiFi-ESP32, Loud-ESP32, Louder-ESP32 and Louder-ESP32-Plus, and Amped-ESP32 out of the box, on both the 'classic' ESP32 and ESP32-S3 revisions, flashable straight from a browser — no toolchain required. Current features:
+
+- **AirPlay 1 & 2** — appears natively in Control Center and any AirPlay app, with PTP-based multi-room sync
+- **Sendspin** (experimental) — an open multi-room protocol renderer sharing the same output path, DSP, and volume control as AirPlay
+- **Bluetooth A2DP** on the classic ESP32 revision — phones and laptops can stream directly whenever AirPlay is idle (the ESP32-S3 has no Bluetooth Classic radio)
+- **On-device display** — the optional OLED add-on, or the Louder-ESP32-Pro's color TFT, shows track metadata and progress for AirPlay, Bluetooth, and Sendspin alike
+- **USB audio (UAC)** — the ESP32-S3 revision can be built as a USB sound card for a connected computer, sharing the same DAC path
+- **Full DSP control** on Louder-ESP32/Louder-ESP32-Plus — the TAS5805M/TAS5825M's on-chip EQ is fully exposed: 15 cascaded biquad sections per channel, each an arbitrary peaking filter, shelf, high/low pass, band pass, notch, phase shift, or raw coefficients, plus a crossover builder (and, on the TAS5825M, full PurePath Console 3 tuning replay)
+
+**Not yet there:**
+
+- **HiFi-ESP32-Plus and Amped-ESP32-Plus** (PCM5122): support is planned, driving the DAC the same way the base PCM5100A boards are (basic playback and multi-room), without exposing the PCM5122's own on-chip EQ/DRC
+- **Louder-ESP32-mini and Louder-ESP32-Pro**: the TAS5805M/TAS5825M driver already exists for the Louder-ESP32 family, including its full DSP control — a build matching these boards' exact pinout is planned
+- **Loud-ESP32-Plus** (Infineon MA12070P): not currently planned — there's no driver for this DAC in the project
+
+### TAS58xx DSP: full parametric EQ and crossover control
+
+On Louder-ESP32 and Louder-ESP32-Plus, AirPlay's web UI exposes the TAS5805M/TAS5825M's on-chip DSP in full, not just a basic tone control:
+
+- **15 biquad (BQ) filters per channel**, usable as a full 15-band parametric equalizer
+- **Bi-amp filter configuration** for 2-way speaker systems — split the signal between tweeter and woofer with independent filter chains per amplifier
+- **Low-pass filtering for subwoofer tuning and bass enhancement**
+- **Generic filters for speaker and room equalization** — peaking filters, shelf filters, and EQ sections with a configurable Q-factor, applied per channel individually or to both at once
+
+*(screenshots coming soon)*
+
+**Work in progress:** REW (Room EQ Wizard) integration, to drive automatic room-correction algorithms directly from a measured response.
 
 ### How to Get Started
 
-While I'm working on a simplified web-installer with pre-built binaries, you can try it out right away with the help of another community project - Platformio. All you need to do is install [vscode](https://code.visualstudio.com/), add [platformio plugin](https://docs.platformio.org/en/latest/integration/ide/vscode.html), and you're ready to go.
+The easiest way is the browser-based [web-installer](https://rbouteiller.github.io/airplay-esp32/getting-started/flashing/) — plug your board in over USB and flash it directly from Chrome, Edge, or Opera. No toolchain, no downloads, no command line.
 
-Pull the AirPlay code somewhere into your filesystem first:
+If you want to build it yourself — to try a board without a prebuilt image yet, or to change build settings — you can use [PlatformIO](https://platformio.org/). Install [vscode](https://code.visualstudio.com/) and the [platformio plugin](https://docs.platformio.org/en/latest/integration/ide/vscode.html), then pull the code:
 
 ```sh
-git clone https://github.com/rbouteiller/airplay-esp32 && code airplay-esp32
-
+git clone --recursive https://github.com/rbouteiller/airplay-esp32 && code airplay-esp32
 ```
 
-When VSCode loads, find the Platformio tab in the left navigation, select `esparagus-audio-brick` or `esparagus-louder` in the list of available configs, and run the `Upload Filesystem image` and `Upload and Monitor` tasks (assuming you have your board connected to the USB).
+When VSCode loads, find the PlatformIO tab in the left navigation, select the environment matching your board (e.g. `louder-esp32-bt`, `louder-esp32-plus-bt`, `louder-esp32-s3`, `hifi-esp32-bt`, `loud-esp32-bt`, `amped-esp32-bt` — see the project's [build environments](https://rbouteiller.github.io/airplay-esp32/reference/build-environments/) for the full list) and run the `Upload Filesystem Image` and `Upload and Monitor` tasks (assuming your board is connected over USB).
 
-The Platformio magic happens now, pulling all the dependencies, platform files, frameworks, and building a binary for your board. Once it is flashed, all that is left to do is configure Wifi credentials using the built-in access point or connect Ethernet, if you're looking for lower latency.
+The PlatformIO magic happens now, pulling all the dependencies, platform files, and frameworks, and building a binary for your board. Once it is flashed, all that is left to do is configure WiFi credentials using the built-in access point or connect Ethernet, if you're looking for lower latency.
 
 ## Other smart home options
 
