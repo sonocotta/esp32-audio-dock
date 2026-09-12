@@ -1,0 +1,33 @@
+# ============================================================
+# HUSB238A - USB-PD Sink Controller (Optional)
+# ============================================================
+# Requires:
+#   - i2c already configured (sda/scl pins) in the main config
+# ============================================================
+
+external_components:
+  - source: github://sonocotta/esphome-husb238a
+    components: [ husb238a ]
+
+husb238a:
+  id: husb_01
+  address: 0x42
+
+binary_sensor:
+  - platform: husb238a
+    attached: "USB-PD Attached"
+
+sensor:
+  - platform: husb238a
+    voltage: "Contracted Voltage"
+    current: "Contracted Current"
+    selected_voltage: "Selected Voltage"
+
+text_sensor:
+  - platform: husb238a
+    status: "Last request status"
+    capabilities: "Capabilities"
+
+select:
+  - platform: husb238a
+    voltage: "Voltage selector"

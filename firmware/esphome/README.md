@@ -277,15 +277,21 @@ The DSP also allows adjusting the gain per channel, which is essentially a balan
 **DAC**: TAS5805M (I2C + I2S) with built-in DSP  
 **MCU**: ESP32-S3  
 **Target**: Compact high-power audio in PBTL mono configuration  
-**Features**: No RGB LED or IR receiver (minimal footprint design), USB-PD support on some variants
+**Features**: No RGB LED or IR receiver (minimal footprint design), USB-PD support on the 55mm variant
 
 **Directory**: `9-louder-esp32-mini/`
 
-**Configurations:**
-- `louder-esp32-s3-mini.yaml` - Standard media player with TAS5805M DSP (no LED)
-- `louder-esp32-s3-mini-snapclient.yaml` - Snapcast client (no LED)
-- `louder-esp32-s3-mini-sendspin-mono.yaml` - Sendspin synchronized mono playback (no LED)
-- `louder-esp32-s3-mini-m-sendspin-mono.yaml` - Sendspin mono with USB-PD detection (external component: husb238, work in progress!)
+The Mini board comes in two physical sizes, identified by the number in the filename (board edge length in mm):
+
+**42mm variant** (no USB-PD):
+- `louder-esp32-s3-mini-42.yaml` - Standard media player with TAS5805M DSP (no LED)
+- `louder-esp32-s3-mini-42-snapclient.yaml` - Snapcast client (no LED)
+- `louder-esp32-s3-mini-42-sendspin.yaml` - Sendspin synchronized mono playback (no LED)
+
+**55mm variant** (USB-PD via HUSB238A):
+- `louder-esp32-s3-mini-55.yaml` - Standard media player with TAS5805M DSP (no LED, `husb238a.yaml` package)
+- `louder-esp32-s3-mini-55-snapclient.yaml` - Snapcast client (no LED, `husb238a.yaml` package)
+- `louder-esp32-s3-mini-55-sendspin.yaml` - Sendspin synchronized mono playback (no LED, `husb238a.yaml` package, work in progress!)
 
 The Mini boards are designed for compact installations where a full-sized board won't fit. They feature TAS5805M DAC in PBTL (mono) configuration for maximum power from a compact form factor. Mixer mode (MONO/LEFT/RIGHT) can be selected per-config.
 
@@ -690,6 +696,7 @@ These addon packages extend snapclient with board-specific behavior:
 
 - **`amp-unmute.yaml`**: GPIO switch definition for TPA3110/TPA3128 amplifier mute control
 - **`ethernet-w5500.yaml`**: W5500 SPI Ethernet module (replaces Wi-Fi config when used)
+- **`husb238a.yaml`**: HUSB238A USB-PD sink controller over I2C — attached/voltage/current sensing, capabilities, and voltage selection (Louder-ESP32-Mini, optional)
 
 ### Voice Assistant Packages
 

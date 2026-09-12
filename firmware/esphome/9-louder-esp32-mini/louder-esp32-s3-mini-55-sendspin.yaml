@@ -1,8 +1,6 @@
 substitutions:
   name: esphome-web-83d108
   friendly_name: Louder-ESP32-Mini-55
-  # name: esphome-web-c94a08
-  # friendly_name: Louder-ESP32-M1-Mini
   task_stack_in_psram: "true" 
 
   # ===== Board-Specific Pinouts =====
@@ -28,7 +26,7 @@ substitutions:
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
-  min_version: 2026.5.0
+  min_version: 2026.7.0
   name_add_mac_suffix: false
   platformio_options:
     board_build.flash_mode: dio
@@ -53,9 +51,9 @@ esp32:
       CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
       CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
       CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y" 
-
+  
 logger:
-  level: INFO
+  level: DEBUG
 
 api:
 
@@ -88,6 +86,8 @@ packages:
       # Option C: TAS58xx configured with bi-amp mode, with filters applied to both channels (HF or LF)
       # - firmware/esphome/packages/dac-tas58xx-presets.yaml
       
+      - firmware/esphome/packages/husb238a.yaml
+      
       - firmware/esphome/packages/audio.yaml
       - firmware/esphome/packages/sendspin-no-light.yaml
       - firmware/esphome/packages/sendspin-audio-addon-external-dac.yaml
@@ -97,15 +97,5 @@ packages:
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
 
-external_components:
-  - source: github://pr#16572
-    components: [husb238]
-    refresh: 1h
-
-husb238:
-  id: husb_01
-
-binary_sensor:
-  - platform: husb238
-    attached: "USB-PD Attached"
-    cc_direction: "USB-PD CC Direction"
+  # husb238a: !include ../packages/husb238a.yaml
+    
