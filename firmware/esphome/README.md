@@ -285,7 +285,7 @@ The DSP also allows adjusting the gain per channel, which is essentially a balan
 - `louder-esp32-s3-mini.yaml` - Standard media player with TAS5805M DSP (no LED)
 - `louder-esp32-s3-mini-snapclient.yaml` - Snapcast client (no LED)
 - `louder-esp32-s3-mini-sendspin-mono.yaml` - Sendspin synchronized mono playback (no LED)
-- `louder-esp32-s3-mini-m-sendspin-mono.yaml` - Sendspin mono with USB-PD detection (external component: husb238, work in progress!)
+- `louder-esp32-s3-mini-m-sendspin-mono.yaml` - Sendspin mono with USB-PD detection via HUSB238A (optional `husb238a.yaml` package, work in progress!)
 
 The Mini boards are designed for compact installations where a full-sized board won't fit. They feature TAS5805M DAC in PBTL (mono) configuration for maximum power from a compact form factor. Mixer mode (MONO/LEFT/RIGHT) can be selected per-config.
 
@@ -690,6 +690,7 @@ These addon packages extend snapclient with board-specific behavior:
 
 - **`amp-unmute.yaml`**: GPIO switch definition for TPA3110/TPA3128 amplifier mute control
 - **`ethernet-w5500.yaml`**: W5500 SPI Ethernet module (replaces Wi-Fi config when used)
+- **`husb238a.yaml`**: HUSB238A USB-PD sink controller over I2C — attached/voltage/current sensing, capabilities, and voltage selection (Louder-ESP32-Mini, optional)
 
 ### Voice Assistant Packages
 
