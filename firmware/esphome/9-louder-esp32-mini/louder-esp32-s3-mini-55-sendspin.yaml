@@ -96,3 +96,6 @@ packages:
 
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
+
+  # husb238a: !include ../packages/husb238a.yaml
+    

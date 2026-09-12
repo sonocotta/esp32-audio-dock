@@ -286,12 +286,12 @@ The Mini board comes in two physical sizes, identified by the number in the file
 **42mm variant** (no USB-PD):
 - `louder-esp32-s3-mini-42.yaml` - Standard media player with TAS5805M DSP (no LED)
 - `louder-esp32-s3-mini-42-snapclient.yaml` - Snapcast client (no LED)
-- `louder-esp32-s3-mini-42-sendspin-mono.yaml` - Sendspin synchronized mono playback (no LED)
+- `louder-esp32-s3-mini-42-sendspin.yaml` - Sendspin synchronized mono playback (no LED)
 
 **55mm variant** (USB-PD via HUSB238A):
 - `louder-esp32-s3-mini-55.yaml` - Standard media player with TAS5805M DSP (no LED, `husb238a.yaml` package)
 - `louder-esp32-s3-mini-55-snapclient.yaml` - Snapcast client (no LED, `husb238a.yaml` package)
-- `louder-esp32-s3-mini-55-sendspin-mono.yaml` - Sendspin synchronized mono playback (no LED, `husb238a.yaml` package, work in progress!)
+- `louder-esp32-s3-mini-55-sendspin.yaml` - Sendspin synchronized mono playback (no LED, `husb238a.yaml` package, work in progress!)
 
 The Mini boards are designed for compact installations where a full-sized board won't fit. They feature TAS5805M DAC in PBTL (mono) configuration for maximum power from a compact form factor. Mixer mode (MONO/LEFT/RIGHT) can be selected per-config.
 
