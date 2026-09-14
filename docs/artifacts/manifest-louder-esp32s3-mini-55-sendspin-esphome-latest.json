@@ -1,6 +1,6 @@
 {
   "name": "louder-esp32s3-mini-55-sendspin",
-  "version": "dev",
+  "version": "2026.09.14-2dd8bf51",
   "home_assistant_domain": "esphome",
   "funding_url": "https://esphome.io/guides/supporters.html",
   "new_install_prompt_erase": true,
