@@ -1,15 +1,6 @@
 name: Build Squeezelite Binaries
 
 on:
-  push:
-    branches:
-      - main
-      - features/*
-    paths:
-      - 'firmware/squeezelite-esp32/**'
-      - '.github/workflows/build-squeezelite-binaries.yml'
-      - 'squeezelite-configs/**'
-      - 'flash-tools/settings/**'
   pull_request:
     branches:
       - main
