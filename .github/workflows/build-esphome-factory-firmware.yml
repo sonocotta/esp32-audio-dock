@@ -1,0 +1,225 @@
+name: Build ESPHome Factory Firmware
+
+# Builds the shippable ("factory") ESPHome image(s) that end users
+# install and auto-update through GitHub Pages - mirrors the same
+# system built for the sister repo esparagus-media-center (browser
+# flash via ESP Web Tools + pull-based OTA + Improv Wi-Fi onboarding).
+#
+# Unlike build-esphome-configs.yml (which just sanity-compiles every
+# dev config on every push/PR), this workflow produces the actual
+# artifacts served from docs/: the ESP Web Tools flash manifest +
+# firmware.factory.bin, and the OTA manifest + firmware.ota.bin that
+# already-provisioned devices poll for updates. It only runs for
+# configs that live under firmware/esphome/distribution/*.factory.yaml,
+# one matrix entry per shippable device - add a new board by adding a
+# row to the matrix below plus its distribution/*.yaml + *.factory.yaml
+# pair and docs/artifacts/templates/esphome/*-template.json pair.
+#
+# The matrix job only compiles + uploads artifacts (never commits
+# directly - a dozen matrix legs racing to push to the same branch via
+# git-auto-commit-action would drop or conflict with each other's
+# commits); a single `finalize` job downloads every leg's output and
+# makes one combined commit, mirroring build-squeezelite-binaries.yml's
+# prepare/build*/finalize shape.
+#
+# ESPHome templates live in docs/artifacts/templates/esphome/ - its
+# own subdirectory, deliberately not dropped into the flat
+# docs/artifacts/templates/ directory that build-squeezelite-binaries.yml
+# globs non-recursively (*.json directly in that dir). Keeping ours in
+# a subdirectory means that glob never sees them, so the two pipelines
+# can't clobber each other's generated manifests.
+#
+# On a pull_request the build matrix still compiles every real factory
+# config end to end (catching breakage the excluded-from-the-matrix
+# distribution/*.yaml would otherwise slip through with, see
+# build-esphome-configs.yml), but `finalize` never runs - only a push to
+# main writes to docs/artifacts, the GitHub Pages source.
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'firmware/esphome/distribution/**'
+      - 'firmware/esphome/packages/**'
+      - 'docs/artifacts/templates/esphome/**'
+      - '.github/workflows/build-esphome-factory-firmware.yml'
+  pull_request:
+    paths:
+      - 'firmware/esphome/distribution/**'
+      - 'firmware/esphome/packages/**'
+      - 'docs/artifacts/templates/esphome/**'
+      - '.github/workflows/build-esphome-factory-firmware.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: build-esphome-factory-firmware
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build ${{ matrix.device.slug }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        device:
+          - slug: hifi-esp32-sendspin
+            config_file: hifi-esp32-idf-sendspin.factory.yaml
+          - slug: hifi-esp32-plus-sendspin
+            config_file: hifi-esp32-plus-idf-sendspin.factory.yaml
+          - slug: hifi-esp32s3-sendspin
+            config_file: hifi-esp32-s3-idf-sendspin.factory.yaml
+          - slug: hifi-esp32s3-plus-sendspin
+            config_file: hifi-esp32-s3-plus-idf-sendspin.factory.yaml
+          - slug: loud-esp32-sendspin
+            config_file: loud-esp32-idf-sendspin.factory.yaml
+          - slug: loud-esp32-plus-sendspin
+            config_file: loud-esp32-plus-idf-sendspin.factory.yaml
+          - slug: loud-esp32s3-sendspin
+            config_file: loud-esp32-s3-idf-sendspin.factory.yaml
+          - slug: loud-esp32s3-g-sendspin
+            config_file: loud-esp32-s3-g-idf-sendspin.factory.yaml
+          - slug: loud-esp32s3-plus-sendspin
+            config_file: loud-esp32-s3-plus-idf-sendspin.factory.yaml
+          - slug: louder-esp32-sendspin
+            config_file: louder-esp32-idf-sendspin.factory.yaml
+          - slug: louder-esp32-plus-sendspin
+            config_file: louder-esp32-plus-idf-sendspin.factory.yaml
+          - slug: louder-esp32s3-sendspin
+            config_file: louder-esp32-s3-idf-sendspin.factory.yaml
+          - slug: louder-esp32s3-plus-sendspin
+            config_file: louder-esp32-s3-plus-idf-sendspin.factory.yaml
+          - slug: louder-esp32s3-mini-42-sendspin
+            config_file: louder-esp32-s3-mini-42-sendspin.factory.yaml
+          - slug: louder-esp32s3-mini-55-sendspin
+            config_file: louder-esp32-s3-mini-55-sendspin.factory.yaml
+          - slug: louder-esp32s3-pro-sendspin
+            config_file: louder-esp32-s3-pro-idf-sendspin.factory.yaml
+          - slug: amped-esp32-sendspin
+            config_file: amped-esp32-idf-sendspin.factory.yaml
+          - slug: amped-esp32-plus-sendspin
+            config_file: amped-esp32-plus-idf-sendspin.factory.yaml
+          - slug: amped-esp32s3-sendspin
+            config_file: amped-esp32-s3-idf-sendspin.factory.yaml
+          - slug: amped-esp32s3-plus-sendspin
+            config_file: amped-esp32-s3-plus-idf-sendspin.factory.yaml
+    env:
+      DEVICE_SLUG: ${{ matrix.device.slug }}
+      CONFIG_DIR: firmware/esphome/distribution
+      CONFIG_FILE: ${{ matrix.device.config_file }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compute version
+        id: version
+        run: |
+          SHORT_SHA=$(git rev-parse --short=8 HEAD)
+          VERSION="$(date -u +%Y.%m.%d)-${SHORT_SHA}"
+          echo "short_sha=$SHORT_SHA" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Building $CONFIG_FILE as version $VERSION ($SHORT_SHA)"
+
+      - name: Stamp version into factory config
+        run: |
+          sed -i "s/^  version: dev\$/  version: \"${{ steps.version.outputs.version }}\"/" \
+            "$CONFIG_DIR/$CONFIG_FILE"
+          grep -n "version:" "$CONFIG_DIR/$CONFIG_FILE" | head -5
+
+      - name: Compile factory firmware
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}/$CONFIG_DIR:/config" \
+            ghcr.io/esphome/esphome:2026.8.1 \
+            compile "/config/$CONFIG_FILE"
+
+      - name: Collect build artifacts
+        id: collect
+        run: |
+          set -euo pipefail
+          BUILD_DIR=$(find "$CONFIG_DIR/.esphome/build" -maxdepth 1 -mindepth 1 -type d | head -1)
+
+          echo "--- Debug: build output ---"
+          find "$BUILD_DIR" -maxdepth 3
+
+          FACTORY_BIN=$(find "$BUILD_DIR" -name firmware.factory.bin | head -1)
+          OTA_BIN=$(find "$BUILD_DIR" -name firmware.ota.bin | head -1)
+          [ -n "$FACTORY_BIN" ] && [ -n "$OTA_BIN" ] || {
+            echo "::error::Could not locate firmware.factory.bin / firmware.ota.bin under $BUILD_DIR"
+            exit 1
+          }
+
+          OUT_DIR="staging/binaries/esphome/${DEVICE_SLUG}"
+          mkdir -p "$OUT_DIR"
+          cp "$FACTORY_BIN" "$OUT_DIR/firmware.factory.bin"
+          cp "$OTA_BIN" "$OUT_DIR/firmware.ota.bin"
+
+          MD5=$(md5sum "$OUT_DIR/firmware.ota.bin" | cut -d' ' -f1)
+          echo "md5=$MD5" >> "$GITHUB_OUTPUT"
+          echo "Factory+OTA binaries copied to $OUT_DIR (ota md5=$MD5)"
+
+      - name: Render manifests
+        run: |
+          set -euo pipefail
+          TEMPLATE_DIR=docs/artifacts/templates/esphome
+          OUT_DIR=staging
+
+          render() {
+            local tpl="$1"
+            local outname
+            outname=$(basename "${tpl/-template/-latest}")
+            jq --arg version "${{ steps.version.outputs.version }}" \
+               --arg commitid "${{ steps.version.outputs.short_sha }}" \
+               --arg md5 "${{ steps.collect.outputs.md5 }}" \
+               '.. |= (if type == "string" then
+                    gsub("\\$version"; $version)
+                    | gsub("\\$commitid"; $commitid)
+                    | gsub("\\$md5"; $md5)
+                  else . end)' \
+               "$tpl" > "$OUT_DIR/$outname"
+            echo "Rendered $OUT_DIR/$outname"
+          }
+
+          render "$TEMPLATE_DIR/manifest-${DEVICE_SLUG}-esphome-template.json"
+          render "$TEMPLATE_DIR/ota-manifest-${DEVICE_SLUG}-template.json"
+
+      - name: Upload staged artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: esphome-${{ matrix.device.slug }}
+          path: staging/
+
+  finalize:
+    name: Publish to docs/artifacts
+    needs: build
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download all staged artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: esphome-*
+          path: staging
+          merge-multiple: true
+
+      - name: Copy staged output into docs/artifacts
+        run: |
+          set -euo pipefail
+          echo "--- Debug: staged output ---"
+          find staging -maxdepth 4
+          cp -r staging/binaries docs/artifacts/
+          find staging -maxdepth 1 -name "*.json" -exec cp {} docs/artifacts/ \;
+
+      - name: Commit artifacts
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Build ESPHome factory firmware"
+          file_pattern: "docs/artifacts/**"

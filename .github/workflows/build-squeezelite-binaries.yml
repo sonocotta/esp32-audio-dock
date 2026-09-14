@@ -18,7 +18,7 @@ on:
       - 'firmware/squeezelite-esp32/**'
       - '.github/workflows/build-squeezelite-binaries.yml'
       - 'squeezelite-configs/**'
-      - 'docs/artifacts/templates/**'
+      - 'docs/artifacts/templates/squeezelite/**'
       - 'flash-tools/settings/**'
 
 jobs:
@@ -281,7 +281,13 @@ jobs:
         SUBMODULE_COMMIT: ${{ needs.prepare.outputs.build_number }}
       run: |
         set -euo pipefail
-        TEMPLATE_DIR=docs/artifacts/templates
+        # Scoped to its own subdirectory (not docs/artifacts/templates/
+        # directly) so this loop only ever picks up squeezelite's own
+        # templates - other firmware pipelines (e.g. ESPHome) keep their
+        # templates in sibling directories under docs/artifacts/templates/,
+        # and this loop would otherwise clobber those since it substitutes
+        # only $commitid and doesn't know about their placeholders.
+        TEMPLATE_DIR=docs/artifacts/templates/squeezelite
         OUT_DIR=docs/artifacts
         mkdir -p "$OUT_DIR"
         SHORT_COMMIT="${SUBMODULE_COMMIT:-unknown}"

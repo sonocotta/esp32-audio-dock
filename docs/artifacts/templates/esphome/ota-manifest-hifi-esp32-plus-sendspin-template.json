@@ -1,0 +1,16 @@
+{
+    "name": "hifi-esp32-plus-sendspin",
+    "version": "$version",
+    "builds": [
+        {
+            "chipFamily": "ESP32",
+            "ota": {
+                "md5": "$md5",
+                "path": "https://sonocotta.github.io/esp32-audio-dock/artifacts/binaries/esphome/hifi-esp32-plus-sendspin/firmware.ota.bin",
+                "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/$commitid",
+                "summary": "HiFi-ESP32-Plus Sendspin firmware $version"
+            }
+        }
+    ],
+    "manifest_name": "ota-manifest-hifi-esp32-plus-sendspin-latest.json"
+}

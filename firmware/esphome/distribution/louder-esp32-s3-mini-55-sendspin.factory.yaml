@@ -1,0 +1,87 @@
+# ============================================================
+# Louder-ESP32-Mini 55mm (Sendspin) - Factory / shippable firmware
+# ============================================================
+# Layers the "shippable product" concerns on top of the plain
+# device config (louder-esp32-s3-mini-55-sendspin.yaml, in this
+# same directory): pull-based OTA updates, an Improv Wi-Fi
+# onboarding flow, and a project identity used by the update entity
+# + the ESPHome Dashboard "adopt" flow.
+#
+# !! Experimental - the dev config this wraps is flagged "work in
+# progress!" in the repo's README. !!
+#
+# No RGB LED on this board (minimal footprint design), so there is
+# no status-LED script here; onboarding still works the same way
+# (Improv over BLE or the USB/serial session used to flash it), just
+# with no visual feedback beyond what the ESP Web Tools page shows.
+#
+# `version` is substituted by CI at build time (see
+# .github/workflows/build-esphome-factory-firmware.yml); "dev" is
+# only used for local/manual compiles.
+# ============================================================
+
+substitutions:
+  version: dev
+
+packages:
+  louder-esp32-s3-mini-55-sendspin: !include louder-esp32-s3-mini-55-sendspin.yaml
+
+esphome:
+  name_add_mac_suffix: true
+  project:
+    name: sonocotta.louder-esp32s3-mini-55-sendspin
+    version: "${version}"
+
+globals:
+  # Drives the improv_ble_in_progress state; kept even without an LED
+  # to script off of, for parity/diagnostics via the API/logs.
+  - id: improv_ble_in_progress
+    type: bool
+    restore_value: no
+    initial_value: "false"
+
+http_request:
+
+ota:
+  - platform: http_request
+    id: ota_http_request
+
+update:
+  - platform: http_request
+    name: Firmware Update
+    id: update_http_request
+    source: https://sonocotta.github.io/esp32-audio-dock/artifacts/ota-manifest-louder-esp32s3-mini-55-sendspin-latest.json
+    update_interval: 6h
+
+# Lets anyone running their own ESPHome Dashboard "adopt" this device
+# from the real (non-factory) config that actually matches its hardware.
+dashboard_import:
+  package_import_url: github://sonocotta/esp32-audio-dock/firmware/esphome/9-louder-esp32-mini/louder-esp32-s3-mini-55-sendspin.yaml@main
+  import_full_config: false
+
+# ===== Wi-Fi onboarding (Improv) =====
+# No Wi-Fi network is baked into the image (see louder-esp32-s3-mini-55-sendspin.yaml);
+# each unit is provisioned individually over Improv, either via the
+# ESP Web Tools install page (BLE or the same USB/serial session used
+# to flash it) or any Improv-compatible phone app.
+wifi:
+  on_connect:
+    - delay: 5s # gives time for improv results to be transmitted
+    - ble.disable:
+
+improv_serial:
+
+esp32_ble:
+  name: louder-mini55
+
+esp32_improv:
+  # No dedicated onboarding button on this board - physical possession
+  # of the device during the flash/provisioning session is the
+  # authorization boundary here.
+  authorizer: none
+  on_start:
+    - lambda: id(improv_ble_in_progress) = true;
+  on_provisioned:
+    - lambda: id(improv_ble_in_progress) = false;
+  on_stop:
+    - lambda: id(improv_ble_in_progress) = false;

@@ -2,98 +2,30 @@
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
 
-        gtag('config', 'G-2Y73KZM5E0');</script><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="x-ua-compatible" content="ie=edge"/><title>ESP Audio Dock Squeezelite-ESP32 Installer</title><script type="module" src="https://unpkg.com/esp-web-tools@8.0.1/dist/web/install-button.js?module"></script><script defer="defer" src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script><style>/* Add this CSS to your existing styles */
-        body,
-        html {
-            margin: 0;
-            display: flex;
-            flex-direction: column;
+        gtag('config', 'G-2Y73KZM5E0');</script><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="x-ua-compatible" content="ie=edge"/><title>ESP Audio Dock Firmware Installer</title><script type="module" src="https://unpkg.com/esp-web-tools@8.0.1/dist/web/install-button.js?module"></script><script defer="defer" src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script><script defer="defer" src="js/main.js"></script><link href="css/main.css" rel="stylesheet"></head><body></body><div class="app-container" id="main-content" x-data="{
+        groups: [],
+        active: {},
+        firmwaresOf(device) {
+            return device.firmwares || [{ id: 'default', manifests: device.manifests || [] }];
+        },
+        activeFirmware(device, deviceKey) {
+            const firmwares = this.firmwaresOf(device);
+            const id = this.active[deviceKey] || firmwares[0].id;
+            return firmwares.find(f => f.id === id) || firmwares[0];
+        },
+        selectFirmware(deviceKey, id) {
+            this.active[deviceKey] = id;
         }
-
-
-        .container {
-            flex-grow: 1; /* Allow content to push the footer down */
-        }
-
-        .footer {
-            position: relative;
-            bottom: 0;
-            width: 100%;
-        }
-
-        /* Carousel styling */
-        .carousel-container {
-            position: relative;
-            width: 100%;
-            height: 200px;
-            /* Adjust height as needed */
-            overflow: hidden;
-        }
-
-        .carousel-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
-
-        .carousel-image.active {
-            opacity: 1;
-        }
-
-        .carousel-controls {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-        }
-
-        .carousel-control {
-            width: 10px;
-            height: 10px;
-            margin: 0 5px;
-            background-color: #ccc;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        .carousel-control.active {
-            background-color: #333;
-        }
-
-        #toc {
-            position: fixed; /* Keeps it in place on scroll */
-            top: 0; /* Adjust vertical position */
-            right: 0; /* Sticks to the left */
-            width: 300px; /* Set a fixed width */
-            overflow-y: auto; /* Add vertical scrollbar if content overflows */
-            height: 100vh; /* Makes TOC fill viewport height */
-            padding: 10px;
-            background-color: #f0f0f0; /* Optional: add background color */
-            border-right: 1px solid #ddd; /* Optional: add border */
-        }
-
-        #toc a {
-            display: block;  /* Makes each <a> a block element */
-        }
-
-        #main-content { /* Prevents content from being hidden behind the TOC */
-            margin-left: 210px; /* Adjust to accommodate TOC width + padding + border */
-        }</style><script defer="defer" src="js/main.js"></script><link href="css/main.css" rel="stylesheet"></head><body></body><div class="container" id="main-content" style="height: 100%;" x-data="{ groups: [] }" x-init="
-            fetch('artifacts/devices.json')
-            .then(response => response.json())
-            .then(data => groups = data)
-            .catch(error => console.error('Error loading devices:', error));
-        "><div id="toc" class="d-none d-xxl-block"><h3>Table of Contents</h3><template x-for="item in groups" :key="item.id"><a :href="'#' + item.id" x-text="item.title"></a></template></div><div class="jumbotron" style="width: 100%; height: 75%"><h1 class="display-5">Firmware for ESP Audio Dock</h1><p class="lead">You've reached the installer page of the Squeezelite-ESP32 project, where you can initialize new devices.</p><hr class="my-4"><p>Plug the device to your computer using a USB cable, select the device you have and click on the connect button.</p><p>By default, the connect button allows setting up wifi credentials for devices already flashed with support for improv-wifi-serial</p><p>It is highly recommended to use the 16 bits versions. See the <a href="https://github.com/sle118/squeezelite-esp32#performances">readme</a> for more details</p></div><template x-for="group in groups" :key="group.title"><div><h3 :id="group.id" x-text="group.title"></h3><div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3"><template x-for="(device, deviceIndex) in group.devices" :key="device.title"><div class="col"><div class="card shadow-sm"><div class="carousel-container" x-data="{
-                                    currentImage: 0,
-                                    init() {
-                                        setInterval(() => {
-                                            this.currentImage = (this.currentImage + 1) % this.device.images.length;
-                                        }, 3000);
-                                    }
-                                }"><template x-for="(image, imageIndex) in device.images" :key="imageIndex"><img :src="image" class="carousel-image" alt="Device Image" loading="lazy" x-bind:class="{ active: imageIndex === currentImage }"></template><div class="carousel-controls" x-show="device.images.length > 1"><template x-for="(image, imageIndex) in device.images" :key="imageIndex"><div class="carousel-control" x-bind:class="{ active: imageIndex === currentImage }" @click="currentImage = imageIndex"></div></template></div></div><div class="card-body"><h5 class="card-title" x-text="device.title"></h5><p class="card-text" x-html="device.description"></p><template x-for="manifest in device.manifests" :key="manifest.path"><div class="mb-2"><esp-web-install-button :manifest="manifest.path"><button type="button" class="btn btn-primary btn-sm w-100" slot="activate" x-text="manifest.label"></button> <span slot="not-allowed"><div class="alert alert-dismissible alert-danger"><button type="button" class="btn-close" data-bs-dismiss="alert"></button><strong>Not Allowed</strong><div>Flashing is only supported from the local host or from a secure web site.</div></div></span><span slot="notsupported"><div class="alert alert-dismissible alert-danger"><button type="button" class="btn-close" data-bs-dismiss="alert"></button><strong>Browser Not Supported</strong> <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Serial_API#browser_compatibility">Make sure you are using a compatible browser</a></div></span></esp-web-install-button></div></template></div></div></div></template></div></div></template></div><footer class="footer mt-auto py-3 bg-light"><div class="container"><div class="row"><div class="col-12 text-center"><a href="https://github.com/sle118/squeezelite-esp32">Squeezelite-ESP32</a> &mdash; <a href="https://github.com/sle118/squeezelite-esp32-installer">Squeezelite-ESP32 Installer</a> &mdash; <a href="https://sonocotta.github.io/esp32-audio-dock/">ESP Audio Docks Squeezelite-ESP32 Installer</a> &mdash; <a href="https://esphome.github.io/esp-web-tools/">Installer based on ESP Web Tools</a></div></div></div></footer></html>
+    }" x-init="
+        fetch('artifacts/devices.json')
+        .then(response => response.json())
+        .then(data => groups = data)
+        .catch(error => console.error('Error loading devices:', error));
+    "><nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom sticky-top"><div class="container-fluid"><a class="navbar-brand fw-semibold" href="#">🔊 ESP Audio Dock Firmware Installer</a> <a class="btn btn-outline-secondary btn-sm" href="https://github.com/sonocotta/esp32-audio-dock" target="_blank" rel="noopener">View on GitHub</a></div></nav><div class="container py-4"><div class="row"><div class="col-xxl-9"><div class="hero rounded-4 p-4 p-md-5 mb-5"><h1 class="display-6 fw-bold mb-3">Flash and provision ESP Audio Dock boards from your browser</h1><p class="lead">No local toolchain, no dashboard - plug the board in over USB and click Install below.</p><hr class="my-4"><div class="row g-3 firmware-note text-body-secondary"><div class="col-md-4"><strong class="text-body">1. Connect</strong><br>Plug the device into your computer with a USB cable, then click an Install button on the board you have.</div><div class="col-md-4"><strong class="text-body">2. Provision Wi-Fi</strong><br>ESPHome images ask for Wi-Fi credentials right in the browser (Improv) during setup - no secrets baked into the firmware. Squeezelite-ESP32 images use the same connect button to set up Improv-serial Wi-Fi on already-flashed devices.</div><div class="col-md-4"><strong class="text-body">3. Stay updated</strong><br>ESPHome images check GitHub Pages for new firmware automatically; no need to reflash for future updates.</div></div><p class="firmware-note mt-3 mb-0">On Linux you may need to add your user to the <code>dialout</code> group (or adjust permissions on <code>/dev/ttyUSBX</code>) for the browser to see the device. Installing requires Chrome, Edge, or another browser with <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Serial_API#browser_compatibility" target="_blank" rel="noopener">Web Serial support</a>. For Squeezelite-ESP32, the 16-bit build is recommended for most boards - see the <a href="https://github.com/sle118/squeezelite-esp32#performances" target="_blank" rel="noopener">readme</a> for details.</p></div><template x-for="group in groups" :key="group.title"><div class="mb-5"><h3 :id="group.id" class="mb-3" x-text="group.title"></h3><div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3"><template x-for="(device, deviceIndex) in group.devices" :key="device.title"><div class="col" x-data="{ deviceKey: group.id + ':' + deviceIndex }"><div class="card device-card h-100 shadow-sm"><div class="carousel-container" x-data="{
+                                            currentImage: 0,
+                                            init() {
+                                                setInterval(() => {
+                                                    this.currentImage = (this.currentImage + 1) % this.device.images.length;
+                                                }, 3000);
+                                            }
+                                        }"><template x-for="(image, imageIndex) in device.images" :key="imageIndex"><img :src="image" class="carousel-image" alt="Device Image" loading="lazy" x-bind:class="{ active: imageIndex === currentImage }"></template><div class="carousel-controls" x-show="device.images.length > 1"><template x-for="(image, imageIndex) in device.images" :key="imageIndex"><div class="carousel-control" x-bind:class="{ active: imageIndex === currentImage }" @click="currentImage = imageIndex"></div></template></div></div><div class="card-body d-flex flex-column"><h5 class="card-title" x-text="device.title"></h5><p class="card-text" x-html="device.description"></p><ul class="nav nav-pills firmware-tabs gap-1 mb-2" x-show="firmwaresOf(device).length > 1"><template x-for="fw in firmwaresOf(device)" :key="fw.id"><li class="nav-item"><button type="button" class="nav-link" :class="{ active: activeFirmware(device, deviceKey).id === fw.id }" @click="selectFirmware(deviceKey, fw.id)"><span x-text="fw.label"></span> <span class="badge text-bg-success ms-1" x-show="fw.badge" x-text="fw.badge"></span></button></li></template></ul><p class="firmware-note text-body-secondary" x-show="activeFirmware(device, deviceKey).note" x-text="activeFirmware(device, deviceKey).note"></p><div class="mt-auto"><template x-for="manifest in activeFirmware(device, deviceKey).manifests" :key="manifest.path"><div class="mb-2"><esp-web-install-button :manifest="manifest.path"><button type="button" class="btn btn-primary btn-sm w-100" slot="activate" x-text="manifest.label"></button> <span slot="not-allowed"><div class="alert alert-dismissible alert-danger mb-0 mt-2"><button type="button" class="btn-close" data-bs-dismiss="alert"></button><strong>Not Allowed</strong><div>Flashing is only supported from the local host or from a secure web site.</div></div></span><span slot="notsupported"><div class="alert alert-dismissible alert-danger mb-0 mt-2"><button type="button" class="btn-close" data-bs-dismiss="alert"></button><strong>Browser Not Supported</strong> <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Serial_API#browser_compatibility">Make sure you are using a compatible browser</a></div></span></esp-web-install-button></div></template></div></div></div></div></template></div></div></template></div><div class="col-xxl-3 d-none d-xxl-block"><div id="toc" class="position-sticky"><div class="card border-0 bg-body-tertiary"><div class="card-body"><h6 class="text-uppercase text-body-secondary small fw-semibold mb-2">On this page</h6><div class="list-group list-group-flush"><template x-for="item in groups" :key="item.id"><a class="list-group-item list-group-item-action" :href="'#' + item.id" x-text="item.title"></a></template></div></div></div></div></div></div></div><footer class="app-footer mt-auto py-3 bg-body-tertiary border-top"><div class="container"><div class="row"><div class="col-12 text-center firmware-note text-body-secondary"><a href="https://esphome.io/">ESPHome</a> &mdash; <a href="https://github.com/sle118/squeezelite-esp32">Squeezelite-ESP32</a> &mdash; <a href="https://github.com/sle118/squeezelite-esp32-installer">Squeezelite-ESP32 Installer</a> &mdash; <a href="https://esphome.github.io/esp-web-tools/">Installer based on ESP Web Tools</a></div></div></div></footer></div></html>

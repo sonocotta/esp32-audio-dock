@@ -1,0 +1,20 @@
+{
+    "name": "louder-esp32-plus-sendspin",
+    "version": "$version",
+    "home_assistant_domain": "esphome",
+    "funding_url": "https://esphome.io/guides/supporters.html",
+    "new_install_prompt_erase": true,
+    "new_install_improv_wait_time": 20,
+    "builds": [
+        {
+            "chipFamily": "ESP32",
+            "parts": [
+                {
+                    "path": "binaries/esphome/louder-esp32-plus-sendspin/firmware.factory.bin",
+                    "offset": 0
+                }
+            ]
+        }
+    ],
+    "manifest_name": "manifest-louder-esp32-plus-sendspin-esphome-latest.json"
+}

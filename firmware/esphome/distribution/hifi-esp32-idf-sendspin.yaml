@@ -1,0 +1,114 @@
+# ============================================================
+# HiFi-ESP32 - Sendspin Configuration (Factory-shippable copy)
+# ============================================================
+# ESP32 audio board with PCM5100 DAC, I2S output
+# Configured with Sendspin for synchronized multi-room audio
+#
+# This is a factory-shippable copy of
+# ../1-hifi-esp32/hifi-esp32-idf-sendspin.yaml, kept in sync by hand.
+# It differs from the dev config in the ways a binary that ships to
+# strangers must:
+#   - No `!secret` Wi-Fi credentials or OTA password baked in (those
+#     only exist on the developer's own machine) — Wi-Fi is instead
+#     provisioned per-unit via Improv (see the sibling .factory.yaml).
+#   - `esphome.ota` is provided by the .factory.yaml overlay
+#     (platform: http_request) instead of platform: esphome.
+# Board-specific pinouts defined in substitutions
+# Functional blocks imported from /packages
+# ============================================================
+
+substitutions:
+  name: hifi-esp32
+  friendly_name: HIFI-ESP32
+  task_stack_in_psram: "false"
+
+  # ===== Board-Specific Pinouts =====
+  # I2S Audio (PCM5100 DAC)
+  i2s_lrclk_pin: GPIO25
+  i2s_bclk_pin: GPIO26
+  i2s_dout_pin: GPIO22
+
+  # RGB LED
+  rgb_led_pin: GPIO12
+
+  # IR Receiver
+  ir_rx_pin: GPIO39
+
+  # Ethernet (W5500)
+  eth_cs_pin: GPIO05
+  eth_interrupt_pin: GPIO35
+  eth_reset_pin: GPIO14
+
+  # SPI pins
+  spi_clk_pin: GPIO18
+  spi_mosi_pin: GPIO23
+  spi_miso_pin: GPIO19
+
+  # Display control pins
+  display_cs_pin: GPIO15
+  display_dc_pin: GPIO04
+  display_reset_pin: GPIO32
+
+  # ESP32 optimal settings for Sendspin
+  media_source_buffer_size: 100000
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  min_version: 2026.5.0
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  id: esp32_id
+  variant: esp32
+  flash_size: 8MB
+  cpu_frequency: 240MHz
+  framework:
+    type: esp-idf
+    version: recommended
+    advanced:
+      minimum_chip_revision: "3.1"
+      sram1_as_iram: true
+    sdkconfig_options:
+      # Moves instructions and read only data from flash into PSRAM on boot.
+      # Both enabled allows instructions to execute while a flash operation is in progress without needing to be placed in IRAM.
+      # Considerably speeds up mWW at the cost of using more PSRAM.
+      CONFIG_SPIRAM_RODATA: "y"
+      CONFIG_SPIRAM_FETCH_INSTRUCTIONS: "y"
+      CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: "y"
+      CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
+      CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
+      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"
+
+logger:
+  level: DEBUG
+
+api:
+
+# Wi-Fi credentials are never baked in: this image ships with no
+# configured network and is provisioned per-unit over Improv
+# (BLE + Serial), wired up in the .factory.yaml overlay.
+wifi:
+  id: wifi_id
+
+psram:
+  speed: 80MHz
+
+network:
+  enable_ipv6: true
+
+# ===== Packages =====
+packages:
+  esparagus_remote:
+    url: https://github.com/sonocotta/esp32-audio-dock
+    ref: main
+    files:
+      - firmware/esphome/packages/audio.yaml
+      - firmware/esphome/packages/sendspin.yaml
+      - firmware/esphome/packages/sendspin-addon-esp32.yaml
+
+      - firmware/esphome/packages/light.yaml
+      - firmware/esphome/packages/ir-receiver.yaml
+      - firmware/esphome/packages/monitoring.yaml
+      - firmware/esphome/packages/monitoring-wifi.yaml
