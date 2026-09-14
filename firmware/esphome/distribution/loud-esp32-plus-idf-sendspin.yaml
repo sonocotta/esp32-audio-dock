@@ -1,0 +1,127 @@
+# ============================================================
+# Loud-ESP32-Plus - Sendspin Configuration (Factory-shippable copy)
+# ============================================================
+# ESP32 audio board with Infineon MA12070P DAC, I2S output, with entry-level DSP
+# Configured with Sendspin for synchronized multi-room audio
+#
+# This is a factory-shippable copy of
+# ../6-loud-esp32-plus/loud-esp32-plus-idf-sendspin.yaml, kept in
+# sync by hand. It differs from the dev config in the ways a binary
+# that ships to strangers must:
+#   - No `!secret` Wi-Fi credentials or OTA password baked in (those
+#     only exist on the developer's own machine) — Wi-Fi is instead
+#     provisioned per-unit via Improv (see the sibling .factory.yaml).
+#   - `esphome.ota` is provided by the .factory.yaml overlay
+#     (platform: http_request) instead of platform: esphome.
+# Board-specific pinouts defined in substitutions
+# Functional blocks imported from /packages
+# ============================================================
+
+substitutions:
+  name: loud-esp32-plus
+  friendly_name: Loud-ESP32-Plus
+  task_stack_in_psram: "false"
+
+  # ===== Board-Specific Pinouts =====
+  # I2S Audio
+  i2s_lrclk_pin: GPIO25
+  i2s_bclk_pin: GPIO26
+  i2s_dout_pin: GPIO22
+  bits_per_sample: 32bit
+
+  # I2C pins for DAC control
+  i2c_sda_pin: GPIO21
+  i2c_scl_pin: GPIO27
+
+  # MA12070P DAC
+  ma12070p_enable_pin: GPIO13
+  ma12070p_mute_pin: GPIO33
+  # ma12070p_volume_max: 0dB
+  # ma12070p_volume_min: -80dB
+
+  # RGB LED
+  rgb_led_pin: GPIO12
+
+  # IR Receiver
+  ir_rx_pin: GPIO39
+
+  # SPI pins (for display)
+  spi_clk_pin: GPIO18
+  spi_mosi_pin: GPIO23
+  spi_miso_pin: GPIO19
+
+  # Ethernet (W5500)
+  eth_cs_pin: GPIO05
+  eth_interrupt_pin: GPIO35
+  eth_reset_pin: GPIO14
+
+  # Display control pins
+  display_cs_pin: GPIO15
+  display_dc_pin: GPIO04
+  display_reset_pin: GPIO32
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  min_version: 2026.5.0
+  name_add_mac_suffix: false
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  id: esp32_id
+  variant: esp32
+  flash_size: 8MB
+  cpu_frequency: 240MHz
+  framework:
+    type: esp-idf
+    version: recommended
+    advanced:
+      minimum_chip_revision: "3.1"
+      sram1_as_iram: true
+    sdkconfig_options:
+      # Moves instructions and read only data from flash into PSRAM on boot.
+      # Both enabled allows instructions to execute while a flash operation is in progress without needing to be placed in IRAM.
+      # Considerably speeds up mWW at the cost of using more PSRAM.
+      CONFIG_SPIRAM_RODATA: "y"
+      CONFIG_SPIRAM_FETCH_INSTRUCTIONS: "y"
+      CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: "y"
+      CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
+      CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
+      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"
+
+logger:
+  level: DEBUG
+
+api:
+
+# Wi-Fi credentials are never baked in: this image ships with no
+# configured network and is provisioned per-unit over Improv
+# (BLE + Serial), wired up in the .factory.yaml overlay.
+wifi:
+  id: wifi_id
+
+psram:
+  speed: 80MHz
+  ignore_not_found: false
+
+network:
+  enable_ipv6: true
+
+# ===== Packages =====
+packages:
+  esparagus_remote:
+    url: https://github.com/sonocotta/esp32-audio-dock
+    ref: main
+    files:
+      - firmware/esphome/packages/dac-ma12070p.yaml
+      - firmware/esphome/packages/audio.yaml
+      - firmware/esphome/packages/sendspin.yaml
+
+      - firmware/esphome/packages/sendspin-addon-dac-mute.yaml
+      - firmware/esphome/packages/sendspin-addon-esp32.yaml
+
+      - firmware/esphome/packages/light.yaml
+      - firmware/esphome/packages/ir-receiver.yaml
+      - firmware/esphome/packages/monitoring.yaml
+      - firmware/esphome/packages/monitoring-wifi.yaml

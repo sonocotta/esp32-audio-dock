@@ -1,0 +1,16 @@
+{
+    "name": "louder-esp32s3-mini-55-sendspin",
+    "version": "$version",
+    "builds": [
+        {
+            "chipFamily": "ESP32-S3",
+            "ota": {
+                "md5": "$md5",
+                "path": "https://sonocotta.github.io/esp32-audio-dock/artifacts/binaries/esphome/louder-esp32s3-mini-55-sendspin/firmware.ota.bin",
+                "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/$commitid",
+                "summary": "Louder-ESP32-Mini (55mm, experimental) Sendspin firmware $version"
+            }
+        }
+    ],
+    "manifest_name": "ota-manifest-louder-esp32s3-mini-55-sendspin-latest.json"
+}

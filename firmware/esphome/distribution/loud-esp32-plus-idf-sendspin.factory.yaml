@@ -1,0 +1,119 @@
+# ============================================================
+# Loud-ESP32-Plus (Sendspin) - Factory / shippable firmware
+# ============================================================
+# Layers the "shippable product" concerns on top of the plain
+# device config (loud-esp32-plus-idf-sendspin.yaml, in this same
+# directory): pull-based OTA updates, an Improv Wi-Fi onboarding
+# flow, and a project identity used by the update entity + the
+# ESPHome Dashboard "adopt" flow.
+#
+# `version` is substituted by CI at build time (see
+# .github/workflows/build-esphome-factory-firmware.yml); "dev" is
+# only used for local/manual compiles.
+# ============================================================
+
+substitutions:
+  version: dev
+
+packages:
+  loud-esp32-plus-idf-sendspin: !include loud-esp32-plus-idf-sendspin.yaml
+
+esphome:
+  name_add_mac_suffix: true
+  project:
+    name: sonocotta.loud-esp32-plus-sendspin
+    version: "${version}"
+  on_boot:
+    priority: 600
+    then:
+      - script.execute: control_leds
+
+globals:
+  # Drives the LED status script while Improv BLE onboarding is active.
+  - id: improv_ble_in_progress
+    type: bool
+    restore_value: no
+    initial_value: "false"
+
+http_request:
+
+ota:
+  - platform: http_request
+    id: ota_http_request
+
+update:
+  - platform: http_request
+    name: Firmware Update
+    id: update_http_request
+    source: https://sonocotta.github.io/esp32-audio-dock/artifacts/ota-manifest-loud-esp32-plus-sendspin-latest.json
+    update_interval: 6h
+
+# Lets anyone running their own ESPHome Dashboard "adopt" this device
+# from the real (non-factory) config that actually matches its hardware.
+dashboard_import:
+  package_import_url: github://sonocotta/esp32-audio-dock/firmware/esphome/6-loud-esp32-plus/loud-esp32-plus-idf-sendspin.yaml@main
+  import_full_config: false
+
+# ===== Wi-Fi onboarding (Improv) =====
+# No Wi-Fi network is baked into the image (see loud-esp32-plus-idf-sendspin.yaml);
+# each unit is provisioned individually over Improv, either via the
+# ESP Web Tools install page (BLE or the same USB/serial session used
+# to flash it) or any Improv-compatible phone app.
+wifi:
+  on_connect:
+    - delay: 5s # gives time for improv results to be transmitted
+    - ble.disable:
+    - script.execute: control_leds
+
+improv_serial:
+
+esp32_ble:
+  name: loud-esp32+
+
+esp32_improv:
+  # No dedicated onboarding button on this board - physical possession
+  # of the device during the flash/provisioning session is the
+  # authorization boundary here.
+  authorizer: none
+  on_start:
+    - lambda: id(improv_ble_in_progress) = true;
+    - script.execute: control_leds
+  on_provisioned:
+    - lambda: id(improv_ble_in_progress) = false;
+    - script.execute: control_leds
+  on_stop:
+    - lambda: id(improv_ble_in_progress) = false;
+    - script.execute: control_leds
+
+# ===== Status LED =====
+# Reuses the board's RGB LED (light.yaml) to surface onboarding
+# state. Only touches the LED for these transient states; normal
+# playback/announcement LED behavior (sendspin.yaml) takes over the
+# rest of the time.
+script:
+  - id: control_leds
+    then:
+      - if:
+          condition:
+            lambda: return id(improv_ble_in_progress);
+          then:
+            - light.turn_on:
+                id: rgb_front_led
+                red: 0%
+                green: 40%
+                blue: 100%
+                brightness: 60%
+          else:
+            - if:
+                condition:
+                  wifi.connected:
+                then:
+                  - light.turn_off:
+                      id: rgb_front_led
+                else:
+                  - light.turn_on:
+                      id: rgb_front_led
+                      red: 100%
+                      green: 25%
+                      blue: 0%
+                      brightness: 40%

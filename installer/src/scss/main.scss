@@ -12,9 +12,9 @@
 // 1. Basics
 //---------------------------------------------
 
-@import "~bootswatch/dist/cosmo/variables";
+@import "~bootswatch/dist/zephyr/variables";
 @import "~bootstrap/scss/bootstrap";
-@import "~bootswatch/dist/cosmo/bootswatch";
+@import "~bootswatch/dist/zephyr/bootswatch";
 
 //@import "fonts";
 
@@ -25,11 +25,87 @@
 // 2. Page Layout
 //---------------------------------------------
 
-// body {
-// }
+body,
+html {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-container {
+    flex-grow: 1;
+}
+
+.app-footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.hero {
+    background: linear-gradient(135deg, rgba(var(--bs-primary-rgb), 0.08), rgba(var(--bs-primary-rgb), 0.02));
+    border: 1px solid var(--bs-border-color);
+}
+
+#toc {
+    top: 5.5rem;
+}
+
+#toc .list-group-item {
+    border: 0;
+    padding: 0.35rem 0.75rem;
+    background: transparent;
+}
+
+#toc .list-group-item:hover {
+    text-decoration: underline;
+}
 
 //---------------------------------------------
 // 3.Components
 //---------------------------------------------
 
 @import "components/slider";
+
+// Device cards
+.device-card {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    overflow: hidden;
+}
+
+.device-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.1) !important;
+}
+
+// Bootstrap's .row stretches direct children by default, but our .col
+// wrapper also carries Alpine's x-data - making it a flex container
+// itself guarantees the h-100 card inside actually fills that height.
+.row > .col {
+    display: flex;
+}
+
+.firmware-tabs .nav-link {
+    border-radius: 50rem;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.85rem;
+    border: 1px solid var(--bs-border-color);
+    background: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    cursor: pointer;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.firmware-tabs .nav-link:hover {
+    border-color: var(--bs-primary);
+    color: var(--bs-primary);
+    background: rgba(var(--bs-primary-rgb), .08);
+}
+
+.firmware-tabs .nav-link.active {
+    border-color: var(--bs-primary);
+}
+
+.firmware-note {
+    font-size: 0.85rem;
+}

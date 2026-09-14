@@ -1,0 +1,16 @@
+{
+  "name": "loud-esp32-plus-sendspin",
+  "version": "dev",
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "ota": {
+        "md5": "3c053bb39deaf8c67aeef36a8f9e68c9",
+        "path": "https://sonocotta.github.io/esp32-audio-dock/artifacts/binaries/esphome/loud-esp32-plus-sendspin/firmware.ota.bin",
+        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/856ebd43",
+        "summary": "Loud-ESP32-Plus Sendspin firmware dev"
+      }
+    }
+  ],
+  "manifest_name": "ota-manifest-loud-esp32-plus-sendspin-latest.json"
+}

@@ -1,0 +1,114 @@
+# ============================================================
+# Louder-ESP32-Mini (42mm) - Sendspin Configuration (Factory-shippable copy)
+# ============================================================
+# ESP32-S3 audio board with TAS5805M DAC (I2C+I2S) with built-in DSP,
+# PBTL mono, compact 42mm enclosure. No RGB LED or IR receiver on
+# this board (minimal footprint design).
+# Configured with Sendspin for synchronized multi-room audio
+#
+# This is a factory-shippable copy of
+# ../9-louder-esp32-mini/louder-esp32-s3-mini-42-sendspin.yaml, kept
+# in sync by hand. It differs from the dev config in the ways a
+# binary that ships to strangers must:
+#   - No `!secret` Wi-Fi credentials or OTA password baked in (those
+#     only exist on the developer's own machine) — Wi-Fi is instead
+#     provisioned per-unit via Improv (see the sibling .factory.yaml).
+#   - `esphome.ota` is provided by the .factory.yaml overlay
+#     (platform: http_request) instead of platform: esphome.
+# Board-specific pinouts defined in substitutions
+# Functional blocks imported from /packages
+# ============================================================
+
+substitutions:
+  name: louder-esp32s3-mini-42
+  friendly_name: Louder-ESP32-M2-Mini
+  task_stack_in_psram: "true"
+
+  # ===== Board-Specific Pinouts =====
+  # I2S audio pins
+  i2s_lrclk_pin: GPIO15
+  i2s_bclk_pin: GPIO14
+  i2s_dout_pin: GPIO16
+
+  # TAS5805M
+  tas58xx_variant: TAS5805M
+  tas58xx_enable_pin: GPIO17
+  i2c_sda_pin: GPIO8
+  i2c_scl_pin: GPIO9
+
+  # ===== DAC Overrides =====
+  tas58xx_dac_mode: PBTL
+  tas58xx_mixer_mode: MONO
+  tas58xx_analog_gain: 0db
+  tas58xx_volume_max: 0dB
+  tas58xx_volume_min: -60dB
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  min_version: 2026.5.0
+  name_add_mac_suffix: false
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  variant: ESP32S3
+  flash_size: 8MB
+  cpu_frequency: 240MHz
+  framework:
+    type: esp-idf
+    version: recommended
+    sdkconfig_options:
+      CONFIG_ESP32S3_DATA_CACHE_64KB: "y"
+      CONFIG_ESP32S3_DATA_CACHE_LINE_64B: "y"
+      CONFIG_ESP32S3_INSTRUCTION_CACHE_32KB: "y"
+      # Moves instructions and read only data from flash into PSRAM on boot.
+      # Both enabled allows instructions to execute while a flash operation is in progress without needing to be placed in IRAM.
+      # Considerably speeds up mWW at the cost of using more PSRAM.
+      CONFIG_SPIRAM_RODATA: "y"
+      CONFIG_SPIRAM_FETCH_INSTRUCTIONS: "y"
+      CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: "y"
+      CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
+      CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
+      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"
+
+logger:
+  level: DEBUG
+
+api:
+
+# Wi-Fi credentials are never baked in: this image ships with no
+# configured network and is provisioned per-unit over Improv
+# (BLE + Serial), wired up in the .factory.yaml overlay.
+wifi:
+  id: wifi_id
+
+psram:
+  mode: octal
+  speed: 80MHz
+  ignore_not_found: false
+
+network:
+  enable_ipv6: true
+
+# ===== Packages =====
+packages:
+  esparagus_remote:
+    url: https://github.com/sonocotta/esp32-audio-dock
+    ref: main
+    files:
+      # Option A: TAS58xx configured with ganged 15-band EQ
+      - firmware/esphome/packages/dac-tas58xx.yaml
+      # Option B: TAS58xx configured with individual 15-band EQ per channel
+      # - firmware/esphome/packages/dac-tas58xx-biamp.yaml
+      # Option C: TAS58xx configured with bi-amp mode, with filters applied to both channels (HF or LF)
+      # - firmware/esphome/packages/dac-tas58xx-presets.yaml
+
+      - firmware/esphome/packages/audio.yaml
+      - firmware/esphome/packages/sendspin-no-light.yaml
+      - firmware/esphome/packages/sendspin-audio-addon-external-dac.yaml
+      - firmware/esphome/packages/sendspin-addon-dac-enable.yaml
+      - firmware/esphome/packages/sendspin-addon-tas58xx.yaml
+
+      - firmware/esphome/packages/monitoring.yaml
+      - firmware/esphome/packages/monitoring-wifi.yaml

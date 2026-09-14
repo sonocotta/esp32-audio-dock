@@ -1,0 +1,16 @@
+{
+    "name": "amped-esp32s3-sendspin",
+    "version": "$version",
+    "builds": [
+        {
+            "chipFamily": "ESP32-S3",
+            "ota": {
+                "md5": "$md5",
+                "path": "https://sonocotta.github.io/esp32-audio-dock/artifacts/binaries/esphome/amped-esp32s3-sendspin/firmware.ota.bin",
+                "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/$commitid",
+                "summary": "Amped-ESP32-S3 Sendspin firmware $version"
+            }
+        }
+    ],
+    "manifest_name": "ota-manifest-amped-esp32s3-sendspin-latest.json"
+}
