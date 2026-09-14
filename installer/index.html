@@ -166,6 +166,62 @@
                         </div>
                     </div>
                 </template>
+
+                <div class="mb-5">
+                    <h3 id="more-firmware" class="mb-1">Looking for something else?</h3>
+                    <p class="text-body-secondary mb-3">
+                        AirPlay and standalone Snapcast aren't built from this repo, so they live on their own
+                        installer pages - browser-flashable too, just hop over to install them.
+                    </p>
+                    <div class="row row-cols-1 row-cols-md-2 g-3">
+                        <div class="col">
+                            <div class="card device-card h-100 shadow-sm">
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">AirPlay 1 &amp; 2</h5>
+                                    <p class="card-text">
+                                        A standalone AirPlay 1 &amp; 2 receiver from
+                                        <a href="https://github.com/rbouteiller/airplay-esp32" target="_blank" rel="noopener">rbouteiller/airplay-esp32</a>
+                                        - appears natively in Control Center with PTP-based multi-room sync. Also bundles the
+                                        experimental Sendspin renderer and, on classic ESP32 boards, Bluetooth A2DP.
+                                    </p>
+                                    <ul class="firmware-note text-body-secondary mb-3">
+                                        <li>Supports HiFi-ESP32, Loud-ESP32, Louder-ESP32, Louder-ESP32-Plus, and Amped-ESP32 today (both ESP32 / ESP32-S3)</li>
+                                        <li>Not yet available for HiFi/Amped-ESP32-Plus, Louder-ESP32-mini/Pro, or Loud-ESP32-Plus - see the readme for the current roadmap</li>
+                                        <li>Full 15-band parametric EQ + crossover control on Louder-ESP32 and Louder-ESP32-Plus</li>
+                                    </ul>
+                                    <div class="mt-auto">
+                                        <a class="btn btn-primary btn-sm w-100" href="https://rbouteiller.github.io/airplay-esp32/getting-started/flashing/" target="_blank" rel="noopener">
+                                            Open the AirPlay installer
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card device-card h-100 shadow-sm">
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">Standalone Snapclient</h5>
+                                    <p class="card-text">
+                                        A Snapcast client build maintained by
+                                        <a href="https://github.com/sonocotta/esparagus-snapclient" target="_blank" rel="noopener">sonocotta/esparagus-snapclient</a>
+                                        (built on <a href="https://github.com/CarlosDerSeher/snapclient" target="_blank" rel="noopener">CarlosDerSeher/snapclient</a>)
+                                        for perfectly synchronized multi-room playback, independent of the ESPHome/Squeezelite builds above.
+                                    </p>
+                                    <ul class="firmware-note text-body-secondary mb-3">
+                                        <li>Zero configuration - auto-discovers your Snapcast server (Music Assistant, a Raspberry Pi, etc.)</li>
+                                        <li>Available for every ESP32 Audio Dock board</li>
+                                        <li>Pick classic ESP32 over S3 for now - S3 support is still in beta and noticeably laggier</li>
+                                    </ul>
+                                    <div class="mt-auto">
+                                        <a class="btn btn-primary btn-sm w-100" href="https://sonocotta.github.io/esparagus-snapclient/" target="_blank" rel="noopener">
+                                            Open the Snapclient installer
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="col-xxl-3 d-none d-xxl-block">
@@ -177,6 +233,7 @@
                                 <template x-for="item in groups" :key="item.id">
                                     <a class="list-group-item list-group-item-action" :href="'#' + item.id" x-text="item.title"></a>
                                 </template>
+                                <a class="list-group-item list-group-item-action" href="#more-firmware">Looking for something else?</a>
                             </div>
                         </div>
                     </div>
