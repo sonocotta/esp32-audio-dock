@@ -13,8 +13,17 @@ then
     NVS_GEN=$IDF_PATH/components/nvs_flash/nvs_partition_generator/nvs_partition_gen.py
 
     for file in ./*.csv; do
-        echo -e "${GREEN}Generating $file -> ../firmware/${file%.csv}.bin${NC}"
-        $NVS_GEN generate "$file" "../firmware/${file%.csv}.bin" 65536
+        name=$(basename "$file" .csv)
+        # common-esp-nvs.csv targets the shared "nvs" partition (0x9000, size
+        # 0x4000); every other file here targets the per-device "settings"
+        # partition (size 0x10000). Sizes must match partitions.csv.
+        if [ "$name" == "common-esp-nvs" ]; then
+            size=16384
+        else
+            size=65536
+        fi
+        echo -e "${GREEN}Generating $file -> ../firmware/${name}.bin (size $size)${NC}"
+        $NVS_GEN generate "$file" "../firmware/${name}.bin" $size
     done
 	
 else

@@ -310,8 +310,16 @@ jobs:
               [ -f \"\$file\" ] || continue
               base=\$(basename \"\$file\" .csv)
               out=\"docs/artifacts/binaries/nvs-settings/\${base}.bin\"
-              echo \"Generating \$file -> \$out\"
-              python3 \"\$NVS_GEN\" generate \"\$file\" \"\$out\" 65536
+              # common-esp-nvs.csv targets the shared \"nvs\" partition (0x9000,
+              # size 0x4000); every other file here targets the per-device
+              # \"settings\" partition (size 0x10000). Sizes must match partitions.csv.
+              if [ \"\$base\" == \"common-esp-nvs\" ]; then
+                size=0x4000
+              else
+                size=0x10000
+              fi
+              echo \"Generating \$file -> \$out (size \$size)\"
+              python3 \"\$NVS_GEN\" generate \"\$file\" \"\$out\" \$size
             done
             echo '--- Debug: listing generated NVS settings binaries ---'
             ls -la docs/artifacts/binaries/nvs-settings/ || true

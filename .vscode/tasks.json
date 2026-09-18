@@ -2,7 +2,7 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "ESP-IDF 4.4.7: Open Shell in Container",
+			"label": "Squeezelite: ESP-IDF 4.4.7: Open Shell in Container",
 			"type": "shell",
 			"command": "docker",
 			"args": [
@@ -35,7 +35,7 @@
 			"isBackground": false
 		},
 		{
-			"label": "ESP-IDF 4.3.5: Open Shell in Container",
+			"label": "Squeezelite: ESP-IDF 4.3.5: Open Shell in Container",
 			"type": "shell",
 			"command": "docker",
 			"args": [
@@ -68,7 +68,7 @@
 			"isBackground": false
 		},
 		{
-			"label": "ESP-IDF 4.3.5 (sle118): Open Shell in Container",
+			"label": "Squeezelite: ESP-IDF 4.3.5 (sle118): Open Shell in Container",
 			"type": "shell",
 			"command": "docker",
 			"args": [
@@ -97,7 +97,7 @@
 			"isBackground": false
 		},
 		{
-			"label": "ESP-IDF: Generate Settings Binaries",
+			"label": "Squeezelite: ESP-IDF: Generate Settings Binaries",
 			"type": "shell",
 			"command": "docker",
 			"args": [
@@ -126,110 +126,6 @@
 			"type": "shell",
 			"command": "python3 -m http.server 8008 -d docs",
 			"isBackground": true,
-			"problemMatcher": []
-		},
-		{
-			"label": "ESPHome: Build Current File (Stable)",
-			"type": "shell",
-			"command": "docker",
-			"args": [
-				"run",
-				"--rm",
-				"-v",
-				"${fileDirname}:/config",
-				"-v",
-				"${workspaceFolder}/firmware/esphome/packages:/config/packages",
-				"-v",
-				"${workspaceFolder}/firmware/esphome/secrets/secrets.yaml:/config/secrets.yaml",
-				"-v",
-				"${workspaceFolder}/.esphome-cache:/cache",
-				"-e",
-				"PLATFORMIO_BUILD_CACHE_DIR=/cache/.pio-cache",
-				"-it",
-				"esphome/esphome:latest",
-				"compile",
-				"/config/${fileBasename}"
-			],
-			"problemMatcher": [],
-			"group": "build"
-		},
-		{
-			"label": "ESPHome: Build Current File (Develop)",
-			"type": "shell",
-			"command": "docker",
-			"args": [
-				"run",
-				"--rm",
-				"-v",
-				"${fileDirname}:/config",
-				"-v",
-				"${workspaceFolder}/firmware/esphome/packages:/config/packages",
-				"-v",
-				"${workspaceFolder}/firmware/esphome/secrets/secrets.yaml:/config/secrets.yaml",
-				"-v",
-				"${workspaceFolder}/.esphome-cache:/cache",
-				"-e",
-				"PLATFORMIO_BUILD_CACHE_DIR=/cache/.pio-cache",
-				"-it",
-				"esphome/esphome:dev",
-				"compile",
-				"/config/${fileBasename}"
-			],
-			"problemMatcher": [],
-			"group": "build"
-		},
-		{
-			"label": "ESPHome: Build and Upload OTA (Stable)",
-			"type": "shell",
-			"command": "docker",
-			"args": [
-				"run",
-				"--rm",
-				"--network=host",
-				"-v",
-				"${fileDirname}:/config",
-				"-v",
-				"${workspaceFolder}/firmware/esphome/packages:/config/packages",
-				"-v",
-				"${workspaceFolder}/firmware/esphome/secrets/secrets.yaml:/config/secrets.yaml",
-				"-v",
-				"${workspaceFolder}/.esphome-cache:/cache",
-				"-e",
-				"PLATFORMIO_BUILD_CACHE_DIR=/cache/.pio-cache",
-				"-it",
-				"esphome/esphome:latest",
-				"run",
-				"/config/${fileBasename}",
-				"--device",
-				"OTA"
-			],
-			"problemMatcher": []
-		},
-		{
-			"label": "ESPHome: Build and Upload OTA (Develop)",
-			"type": "shell",
-			"command": "docker",
-			"args": [
-				"run",
-				"--rm",
-				"--network=host",
-				"-v",
-				"${fileDirname}:/config",
-				"-v",
-				"${workspaceFolder}/firmware/esphome/packages:/config/packages",
-				"-v",
-				"${workspaceFolder}/firmware/esphome/secrets/secrets.yaml:/config/secrets.yaml",
-				"-v",
-				"${workspaceFolder}/.esphome-cache:/cache",
-				"-e",
-				"PLATFORMIO_BUILD_CACHE_DIR=/cache/.pio-cache",
-				"-it",
-				"esphome/esphome:dev",
-				"run",
-				"/config/${fileBasename}",
-				"--device",
-				"OTA"
-			],
 			"problemMatcher": []
 		}
 	]
