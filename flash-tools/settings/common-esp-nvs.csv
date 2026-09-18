@@ -1,0 +1,4 @@
+key,type,encoding,value
+config,namespace,,
+ssid,data,string,
+password,data,string,
