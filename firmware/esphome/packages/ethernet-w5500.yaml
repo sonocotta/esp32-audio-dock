@@ -18,5 +18,13 @@ ethernet:
   cs_pin: ${eth_cs_pin}
   interrupt_pin: ${eth_interrupt_pin}
   reset_pin: ${eth_reset_pin}
+  # See https://esphome.io/components/ethernet/#spi-configuration-variables 
+  # "Higher clock_speed, including default, might cause rx errors and dropped packets"
+  #
+  # Lowered it to the lowest possible value to prevent "no mem for receive buffer" errors
+  # This lowers the effective bandwidth to about 8Mbps, but since a 48khz/16-bit/2ch FLAC
+  # uses about 1.5Mbps this is still way beyond what is actually needed. Even if we add
+  # 2 microphones sending data at 16kHz, 16 bit mono PCM stream this adds just 512kpbs.
+  clock_speed: 8MHz
 
 # wifi: !remove
