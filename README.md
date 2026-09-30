@@ -112,6 +112,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
       - [Software side](#software-side)
     - [TFT screen](#tft-screen)
     - [Case](#case)
+    - [Parametric OpenSCAD desktop case](#parametric-openscad-desktop-case)
     - [Louder-ESP32 Pro case](#louder-esp32-pro-case)
     - [Louder-ESP32 Mini shell](#louder-esp32-mini-shell)
     - [Louder-ESP32 Mini Speakers Compatibility](#louder-esp32-mini-speakers-compatibility)
@@ -1207,6 +1208,28 @@ Also, community members created a few 3D-printable designs for Louder-ESP32 boar
 | [#6](https://www.thingiverse.com/thing:7016604) | <img width="639" height="426" alt="image" src="https://github.com/user-attachments/assets/10ba6360-2e99-4690-83a4-fef0e1cad23d" />
 | [#7](https://www.thingiverse.com/thing:6333131) | ![image](https://github.com/user-attachments/assets/6e37b6ce-443e-4067-8a7a-e3b49e5e8ad3)
 | [#8](https://www.thingiverse.com/thing:6326927) | ![image](https://github.com/user-attachments/assets/cf2983fa-0c92-4798-9cb5-5e4e97d70970)
+
+### Parametric OpenSCAD desktop case
+
+A community member (who asked to remain anonymous) kindly shared a parametric [OpenSCAD](https://openscad.org/) desktop case design, published here for free use. It fits the Louder-ESP32, Louder-ESP32-Plus, Amped-ESP32 and Amped-ESP32-Plus boards as is. Loud-ESP32 and Loud-ESP32-Plus boards should fit with minor adjustments.
+
+| Render | Assembled device |
+|----|----|
+| _Render placeholder_ | _Photo placeholder_ |
+
+The design is a wedge-shaped enclosure that stands on the desk with the front panel facing the user. It is split into a few printable parts:
+
+- **Housing** - the main shell, with a DC barrel jack cutout on the side and four screw channels for M3 screws
+- **Housing with terminal** - the same shell with an extra cutout and mounting holes for a speaker terminal plate on the back
+- **Front** - the front panel with board mounting standoffs, an OLED screen window, an IR sensor window and embossed text
+- **Clamp** - a small bracket that holds the OLED screen against the front panel
+
+Files:
+
+- [Amped_Case.scad](/hardware/3d/Amped_Case.scad) - base design (Amped-ESP32 labeling)
+- [Louder_Display.scad](/hardware/3d/Louder_Display.scad) - Louder-ESP32 variant with a taller front panel and display adapter
+
+To export a part, open the file in OpenSCAD, set the `part` variable at the top (`1` - Housing, `2` - Housing with terminal, `3` - Front, `4` - Clamp, `5` - all parts assembled for preview), render (F6) and export to STL. The main dimensions (`X`, `Y` - front panel size, `HF`, `HR` - depth at the top and the bottom, `R` - edge radius, `W` - wall thickness) and the front text (`text1`, `text2`, ...) are defined as variables, so it is easy to adapt the case to your board or your taste. Screw threads are modelled directly in the print, so M3 screws can be driven into the front panel without inserts.
 
 ### Louder-ESP32 Pro case
 
