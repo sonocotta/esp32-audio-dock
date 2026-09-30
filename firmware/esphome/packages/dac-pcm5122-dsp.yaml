@@ -1,0 +1,106 @@
+# ============================================================
+# PCM5122 DAC - I2C Control, Digital volume, Gain and Mute
+# ============================================================
+# Requires substitutions:
+#   - i2c_sda_pin
+#   - i2c_scl_pin
+# ============================================================
+
+substitutions:
+  pcm5122_dac_restore_mode: ALWAYS_OFF
+  pcm5122_dac_analog_gain: 0dB
+  pcm5122_i2c_address: 0x4d
+  pcm5122_max_volume_db: 0dB
+  pcm5122_min_volume_db: -60dB
+  pcm5122_dac_mixer_mode: STEREO
+
+
+external_components:
+  - source: github://sonocotta/esphome-pcm5122
+    components: [ pcm5122 ]
+    refresh: 24h
+
+i2c:
+  sda: ${i2c_sda_pin}
+  scl: ${i2c_scl_pin}
+  frequency: 400kHz
+  scan: true
+
+audio_dac:
+  - platform: pcm5122
+    id: external_dac
+    address: ${pcm5122_i2c_address}         # I2C address of the DAC, it is 0x4C n the HiFi-ESP32 Rev H, and 0x4D on the rev H1+
+    enable_pin: ${pcm5122_enable_pin}       # optional, to enable/disable the DAC (XSMT pin)
+    volume_max: ${pcm5122_max_volume_db}    # maximum volume range 0dB, can go up to +24dB
+    volume_min: ${pcm5122_min_volume_db}    # minimum volume range -60dB, can go down to -103dB
+    analog_gain: ${pcm5122_dac_analog_gain} # or -6Db for 1V RMS output, default is 0dB = 2V RMS output
+    mixer_mode: ${pcm5122_dac_mixer_mode}   # MIXER MODE: STEREO, STEREO_INVERSE, LEFT, RIGHT
+
+switch:
+  - platform: pcm5122
+    enable_dac:
+      name: Enable DAC
+      id: enable_dac
+      restore_mode: ${pcm5122_dac_restore_mode}
+
+select:
+  - platform: pcm5122
+    process_flow:
+      name: PCM5122 Process Flow
+      id: pcm5122_process_flow
+
+number:
+  - platform: pcm5122
+    band_1:
+      filter_type: "Low Shelf"              # Filter type: one of "Low Shelf", "High Shelf", "Equalizer", "Low Pass", "High Pass"
+      frequency: 50                         # Filter center frequency in Hz
+      q_factor: 1.5                         # Q-factor (if applicable to selected filter), 0.1 .. 10.0
+      min_gain: -12dB                       # Minimum slider value, can go down to -24 dB 
+      max_gain: 12dB                        # Maximum slider value, can go up to 24 dB
+      gain:
+        name: "63 Hz"
+
+    band_2:   
+      filter_type: "Equalizer"
+      frequency: 250
+      q_factor: 1.0  
+      min_gain: -12dB
+      max_gain: 12dB
+      gain:
+        name: "250 Hz"
+
+    band_3:   
+      filter_type: "Equalizer"
+      frequency: 1000
+      q_factor: 0.9  
+      min_gain: -12dB
+      max_gain: 12dB
+      gain:
+        name: "1000 Hz"
+
+    band_4:   
+      filter_type: "Equalizer"
+      frequency: 4000
+      q_factor: 0.8  
+      min_gain: -12dB
+      max_gain: 12dB
+      gain:
+        name: "4000 Hz"
+
+    band_5:   
+      filter_type: "Equalizer"
+      frequency: 8000
+      q_factor: 0.7  
+      min_gain: -12dB
+      max_gain: 12dB
+      gain:
+        name: "8000 Hz"
+
+    band_6:   
+      filter_type: "High Shelf"
+      frequency: 16000
+      q_factor: 0.6  
+      min_gain: -12dB
+      max_gain: 12dB
+      gain:
+        name: "16000 Hz"
