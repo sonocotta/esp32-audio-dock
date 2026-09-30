@@ -14,7 +14,7 @@ light:
   - platform: esp32_rmt_led_strip
     id: rgb_front_led
     name: "${friendly_name} LED"
-    rgb_order: GRB
+    channel_colors: GRB
     pin: ${rgb_led_pin}
     num_leds: ${num_leds}
     chipset: ws2812
