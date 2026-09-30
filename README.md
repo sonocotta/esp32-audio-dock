@@ -1215,7 +1215,7 @@ A community member (who asked to remain anonymous) kindly shared a parametric [O
 
 | Render | Assembled device |
 |----|----|
-| _Render placeholder_ | _Photo placeholder_ |
+| <img width="1367" height="872" alt="image" src="https://github.com/user-attachments/assets/dbf5ee06-8894-47db-b341-2bd3e3f7e186" /> | <img width="1036" height="760" alt="image" src="https://github.com/user-attachments/assets/680025e0-f8b5-499e-997b-0695cbff24dc" /> |
 
 The design is a wedge-shaped enclosure that stands on the desk with the front panel facing the user. It is split into a few printable parts:
 
