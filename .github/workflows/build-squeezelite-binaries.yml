@@ -6,7 +6,7 @@ on:
       - main
       - features/*
     paths:
-      - 'firmware/squeezelite-esp32/**'
+      - 'firmware/squeezelite-esp32'
       - '.github/workflows/build-squeezelite-binaries.yml'
       - 'squeezelite-configs/**'
       - 'docs/artifacts/templates/squeezelite/**'
