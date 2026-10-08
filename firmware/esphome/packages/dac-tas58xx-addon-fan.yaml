@@ -1,0 +1,44 @@
+# ============================================================
+# TAS58XX DAC addon - drive the cooling fan from DAC temperature
+# ============================================================
+# Runs fan_pwm at full speed as soon as the DAC reports an over-temperature
+# warning or an over-temperature shutdown, and stops it once both clear.
+#
+# Requires:
+#   - one of the fan packages (fan.yaml / fan-dumb.yaml), which provides the
+#     ledc output with id 'fan_pwm'
+#   - the tas58xx binary_sensor block carrying both of these ids:
+#       over_temp_warning:  id: over_temperature_warning
+#       over_temp_shutdown: id: over_temperature_shutdown
+#     (the dac-tas58xx*.yaml packages already set the first one)
+#
+# Optional substitutions:
+#   - tas58xx_fan_level: 100% (default) - output level while overheating
+#
+# Note: this writes the ledc output directly, so the "Cooling Fan" entity in
+# Home Assistant does not reflect the override, and changing that entity while
+# the override is active overwrites the level until the next transition.
+#
+# Dependencies: one of the dac-tas58xx*.yaml packages, one of the fan*.yaml packages
+# ============================================================
+
+substitutions:
+  tas58xx_fan_level: "100%"    # Output level applied to fan_pwm while the DAC is too hot
+
+binary_sensor:
+  - platform: template
+    id: tas58xx_overheating
+    name: DAC Overheating
+    internal: true
+    lambda: |-
+      return id(over_temperature_warning).state || id(over_temperature_shutdown).state;
+    on_press:
+      - logger.log:
+          format: "DAC over-temperature reported - forcing cooling fan to %s"
+          args: ['"${tas58xx_fan_level}"']
+      - output.set_level:
+          id: fan_pwm
+          level: ${tas58xx_fan_level}
+    on_release:
+      - logger.log: "DAC temperature back to normal - releasing cooling fan"
+      - output.turn_off: fan_pwm
