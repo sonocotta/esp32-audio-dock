@@ -25,12 +25,19 @@ jobs:
       - name: Find ESPHome configs
         id: find-configs
         run: |
+          # firmware/esphome/distribution/*.yaml are building blocks meant to be
+          # compiled only as part of a *.factory.yaml overlay (e.g. they ship with
+          # no Wi-Fi SSID/AP configured, relying on the overlay's esp32_improv /
+          # improv_serial to satisfy that at runtime) - they fail if compiled
+          # standalone here. build-esphome-factory-firmware.yml compiles and
+          # validates them instead.
           configs=$(find firmware/esphome -maxdepth 2 -name "*.yaml" -type f \
             | grep -v "/packages/" \
-            | grep -v "/packages-archive/" \
             | grep -v "/0-legacy-boards/" \
+            | grep -v "/packages-archive/" \
             | grep -v "/secrets/" \
             | grep -v "secrets.yaml" \
+            | grep -v "/distribution/" \
             | jq -R -s -c 'split("\n")[:-1]')
           echo "configs=$configs" >> $GITHUB_OUTPUT
           echo "Found configs:"

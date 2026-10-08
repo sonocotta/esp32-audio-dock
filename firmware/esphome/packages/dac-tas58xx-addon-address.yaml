@@ -1,0 +1,25 @@
+# ============================================================
+# TAS58XX DAC addon - override the I2C address
+# ============================================================
+# Include this AFTER one of dac-tas58xx.yaml / dac-tas58xx-biamp.yaml /
+# dac-tas58xx-presets.yaml, for a board whose DAC is strapped to an I2C
+# address other than the part's default.
+#
+# Requires substitutions:
+#   - tas58xx_address:  the DAC's I2C address, e.g. 0x60
+#
+# Without this addon the component picks the address from tas58xx_variant
+# (0x2D for TAS5805M, 0x4C for TAS5825M), which is what every board with a
+# default-strapped DAC wants - so leaving this package out keeps the
+# existing behaviour untouched.
+#
+# Note: an explicit address is only honoured by a component branch that
+# supports it. On 'main' the address is replaced with the variant default
+# before it reaches the driver, so this addon has no effect there - use
+# tas58xx_branch: dev until that is fixed upstream.
+# Dependencies: one of the dac-tas58xx*.yaml packages
+# ============================================================
+
+audio_dac:
+  - id: !extend external_dac
+    address: ${tas58xx_address}

@@ -1,0 +1,14 @@
+substitutions:
+  fan_pwn_pin: GPIO4 
+
+output:
+  - platform: ledc
+    pin: ${fan_pwn_pin}
+    id: fan_pwm
+    frequency: 25000 Hz
+    inverted: false
+
+fan:
+  - platform: speed
+    output: fan_pwm
+    name: "Cooling Fan"

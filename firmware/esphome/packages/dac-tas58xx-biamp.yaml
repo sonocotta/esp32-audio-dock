@@ -171,6 +171,7 @@ binary_sensor:
       name: PCDD Under Voltage
     over_temp_shutdown:
       name: Over Temperature Shutdown Fault
+      id: over_temperature_shutdown
     over_temp_warning:
       name: Over Temperature Warning
       id: over_temperature_warning
