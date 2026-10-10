@@ -128,9 +128,18 @@ packages:
       - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
-      - firmware/esphome/packages/voice-assist.yaml
       # Optional ethernet (replace wifi config if you use this, you need to exclude OLED package if you do this to free up SPI bus)
       # - firmware/esphome/packages/ethernet-w5500.yaml
+
+  esparagus_echo:
+    url: https://github.com/sonocotta/esparagus-echo
+    ref: main
+    files:
+      - firmware/esphome/packages/microphone-i2s.yaml
+      - firmware/esphome/packages/microphone.yaml
+      
+      - firmware/esphome/packages/media-player-addon-voice-assist.yaml
+      - firmware/esphome/packages/voice-assist.yaml
 
   # # Debug/local development fallback:
   # external_dac: !include packages/dac-tas58xx.yaml
