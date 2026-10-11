@@ -1,0 +1,36 @@
+# ============================================================
+# Louder-ESP32-S3 (Sendspin) - Factory / shippable firmware, OLED screen
+# ============================================================
+# Screen-enabled sibling of louder-esp32-s3-idf-sendspin.factory.yaml: the very same image
+# plus the sendspin-addon-oled.yaml display package, for
+# boards that have a OLED screen connected. The plain image ships
+# without a display because driving one with nothing connected
+# just burns CPU/RAM that audio needs.
+#
+# Published as its own build (own project name + OTA manifest) so
+# screen-less units never auto-update into the display build or
+# vice versa.
+#
+# `version` is substituted by CI at build time (see
+# .github/workflows/build-esphome-factory-firmware.yml); "dev" is
+# only used for local/manual compiles.
+# ============================================================
+
+substitutions:
+  version: dev
+
+packages:
+  louder-esp32-s3-idf-sendspin-factory: !include louder-esp32-s3-idf-sendspin.factory.yaml
+  display_remote:
+    url: https://github.com/sonocotta/esp32-audio-dock
+    ref: main
+    files:
+      - firmware/esphome/packages/sendspin-addon-oled.yaml
+
+esphome:
+  project:
+    name: sonocotta.louder-esp32s3-sendspin-oled
+
+update:
+  - id: !extend update_http_request
+    source: https://sonocotta.github.io/esp32-audio-dock/artifacts/ota-manifest-louder-esp32s3-sendspin-oled-latest.json
