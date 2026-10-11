@@ -29,16 +29,48 @@ time:
   - platform: sntp
     id: sntp_time
 
+switch:
+  # Blanks the screen; the clock is drawn only while this is on
+  - platform: template
+    name: "Screen"
+    id: switch_screen
+    icon: mdi:monitor
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
+    turn_on_action:
+      - component.update: spi_display
+    turn_off_action:
+      - component.update: spi_display
+
+  # Rotates the screen upside down; applied on the fly and restored after reboot
+  - platform: template
+    name: "Screen Flip"
+    id: switch_screen_flip
+    icon: mdi:screen-rotation
+    entity_category: config
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
+    turn_on_action:
+      - lambda: id(spi_display).set_rotation(display::DISPLAY_ROTATION_180_DEGREES);
+      - component.update: spi_display
+    turn_off_action:
+      - lambda: id(spi_display).set_rotation(display::DISPLAY_ROTATION_0_DEGREES);
+      - component.update: spi_display
+
 ### Example display configuration, showing the current playback state
 display:
   - platform: ssd1306_spi
     model: SH1106 128x64
+    id: spi_display
     cs_pin: ${display_cs_pin}
     dc_pin: ${display_dc_pin}
     reset_pin: ${display_reset_pin}
     rotation: 180
     update_interval: 1s
     lambda: |-
+        // screen switched off: leave the buffer blank
+        if (!id(switch_screen).state) return;
+
         // display clock
         auto hours = id(sntp_time).now().hour;
         auto minutes = id(sntp_time).now().minute;

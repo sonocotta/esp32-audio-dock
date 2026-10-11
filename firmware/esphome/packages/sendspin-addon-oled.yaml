@@ -116,6 +116,21 @@ switch:
       - display.page.show: page_off
       - component.update: spi_display
 
+  # Rotates the screen upside down; applied on the fly and restored after reboot
+  - platform: template
+    name: "Screen Flip"
+    id: switch_screen_flip
+    icon: mdi:screen-rotation
+    entity_category: config
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    turn_on_action:
+      - lambda: id(spi_display).set_rotation(display::DISPLAY_ROTATION_180_DEGREES);
+      - component.update: spi_display
+    turn_off_action:
+      - lambda: id(spi_display).set_rotation(display::DISPLAY_ROTATION_0_DEGREES);
+      - component.update: spi_display
+
 time:
   - platform: homeassistant
     id: sntp_time
