@@ -164,14 +164,3 @@ packages:
       - firmware/esphome/packages/media-player-addon-voice-assist.yaml
       - firmware/esphome/packages/voice-assist.yaml
       # - firmware/esphome/packages/voice-assist-addon-dac-enable.yaml
-
-  # # Debug/local development fallback:
-  # microphone: !include packages/microphone.yaml
-  # audio: !include packages/audio-voice-assist.yaml
-  # audio_external_dac: !include packages/audio-addon-external-dac.yaml
-
-  # media_player: !include packages/media-player-voice-assist.yaml
-  # media_player_tas58xx: !include packages/media-player-addon-tas58xx.yaml
-  # media_player_dac_enable: !include packages/media-player-addon-dac-enable.yaml
-  # voice_assist: !include packages/voice-assist.yaml
-  # # ethernet: !include packages/ethernet-w5500.yaml

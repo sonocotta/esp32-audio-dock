@@ -123,7 +123,7 @@ packages:
       - firmware/esphome/packages/sendspin-audio-addon-external-dac.yaml
       - firmware/esphome/packages/sendspin-addon-dac-enable.yaml
       - firmware/esphome/packages/sendspin-addon-tas58xx.yaml
-      - firmware/esphome/packages/sendspin-addon-tft.yaml
+      # - firmware/esphome/packages/sendspin-addon-tft.yaml
 
       - firmware/esphome/packages/fan.yaml
       - firmware/esphome/packages/light.yaml
