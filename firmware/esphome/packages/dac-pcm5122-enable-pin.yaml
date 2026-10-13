@@ -1,0 +1,29 @@
+# ============================================================
+# PCM5122 DAC - hardware enable (XSMT) pin
+# ============================================================
+# Some boards (HiFi-ESP32-Plus, HiFi-ESP32-S3-Plus) route the DAC XSMT
+# pin to a GPIO, where it has to be held high for the DAC to play. The
+# upstream pcm5122 component does not touch that pin, so it is driven
+# from here instead.
+# Muting is done over I2C by the DAC component itself (see
+# dac-pcm5122.yaml), so this pin is simply kept asserted and does not
+# take part in playback events.
+# Requires substitutions:
+#   - pcm5122_enable_pin
+# Optional substitutions:
+#   - pcm5122_enable_pin_restore_mode (e.g., ALWAYS_ON, ALWAYS_OFF,
+#     RESTORE_DEFAULT_ON, RESTORE_DEFAULT_OFF), defaults to ALWAYS_ON
+# ============================================================
+
+substitutions:
+  pcm5122_enable_pin_restore_mode: ALWAYS_ON
+
+switch:
+  - platform: gpio
+    icon: "mdi:speaker"
+    name: Enable DAC Output
+    id: pcm5122_enable
+    entity_category: config
+    pin:
+      number: ${pcm5122_enable_pin}
+    restore_mode: ${pcm5122_enable_pin_restore_mode}
