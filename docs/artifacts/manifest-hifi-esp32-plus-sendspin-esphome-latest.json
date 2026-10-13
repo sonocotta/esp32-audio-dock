@@ -1,6 +1,6 @@
 {
   "name": "hifi-esp32-plus-sendspin",
-  "version": "2026.10.12-722e57c0",
+  "version": "2026.10.13-bac8569c",
   "home_assistant_domain": "esphome",
   "funding_url": "https://esphome.io/guides/supporters.html",
   "new_install_prompt_erase": true,

@@ -1,14 +1,14 @@
 {
   "name": "hifi-esp32s3-sendspin",
-  "version": "2026.10.12-722e57c0",
+  "version": "2026.10.13-bac8569c",
   "builds": [
     {
       "chipFamily": "ESP32-S3",
       "ota": {
-        "md5": "fb2fba923aaaa80db5d615b6f2dad2a6",
+        "md5": "2653e3211f118847563cd3b7f5bf6616",
         "path": "https://sonocotta.github.io/esp32-audio-dock/artifacts/binaries/esphome/hifi-esp32s3-sendspin/firmware.ota.bin",
-        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/722e57c0",
-        "summary": "HiFi-ESP32-S3 Sendspin firmware 2026.10.12-722e57c0"
+        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/bac8569c",
+        "summary": "HiFi-ESP32-S3 Sendspin firmware 2026.10.13-bac8569c"
       }
     }
   ],
