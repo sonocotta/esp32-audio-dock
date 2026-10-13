@@ -18,7 +18,6 @@ substitutions:
   i2c_sda_pin: GPIO18
   i2c_scl_pin: GPIO8
   pcm5122_i2c_address: 0x4D
-  pcm5122_enable_pin: GPIO4         # optional, to enable/disable the DAC (XSMT physical pin)
   
   # I2S audio pins
   i2s_lrclk_pin: GPIO15

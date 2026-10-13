@@ -23,7 +23,6 @@ substitutions:
   i2c_sda_pin: GPIO21               # I2C pins are swapped on the rev J. 
   i2c_scl_pin: GPIO27               # These are correct for Rev J1 and later
   pcm5122_i2c_address: 0x4D         
-  pcm5122_enable_pin: GPIO33         # not used really, need to make it optional in package
   
   # Amp UNMUTE pin
   amp_enable_pin: GPIO13

@@ -28,7 +28,7 @@ substitutions:
   i2c_sda_pin: GPIO42               # I2C pins are swapped on the rev H  
   i2c_scl_pin: GPIO41               # These are correct for Rev H1 and later
   pcm5122_i2c_address: 0x4D         # I2C address of the DAC, it is 0x4C n the HiFi-ESP32 Rev H, and 0x4D on the rev H1+ and later
-  pcm5122_enable_pin: GPIO4         # optional, to enable/disable the DAC (XSMT physical pin)
+  pcm5122_enable_pin: GPIO4         # DAC XSMT pin, held high by dac-pcm5122-enable-pin.yaml
 
   # RGB LED
   rgb_led_pin: GPIO09
@@ -113,6 +113,7 @@ packages:
     files:
       - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/dac-pcm5122.yaml
+      - firmware/esphome/packages/dac-pcm5122-enable-pin.yaml
       - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml

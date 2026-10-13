@@ -32,7 +32,7 @@ substitutions:
   i2c_sda_pin: GPIO21               # I2C pins are swapped on the rev J.
   i2c_scl_pin: GPIO27               # These are correct for Rev J1 and later
   pcm5122_i2c_address: 0x4D
-  pcm5122_enable_pin: GPIO13        # optional, to enable/disable the DAC (XSMT physical pin)
+  pcm5122_enable_pin: GPIO13        # DAC XSMT pin, held high by dac-pcm5122-enable-pin.yaml
 
   # RGB LED
   rgb_led_pin: GPIO12
@@ -111,6 +111,7 @@ packages:
     ref: main
     files:
       - firmware/esphome/packages/dac-pcm5122.yaml
+      - firmware/esphome/packages/dac-pcm5122-enable-pin.yaml
       - firmware/esphome/packages/audio.yaml
       - firmware/esphome/packages/sendspin.yaml
 
