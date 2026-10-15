@@ -145,6 +145,11 @@ The **HiFi-ESP32 Plus** represents the next evolution of the board, featuring th
 - Advanced audio processing features (DRC)
 - Same form factor and connectivity as HiFi-ESP32
 
+**Where to buy:**
+
+- HiFi-ESP32 at [Lectronz](https://lectronz.com/products/hifi-esp32), [Elecrow](https://www.elecrow.com/hifi-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32/)
+- HiFi-ESP32-Plus at [Lectronz](https://lectronz.com/products/hifi-esp32-plus), [Elecrow](https://www.elecrow.com/hifi-esp32-plus.html), and [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32-plus/)
+
 ## Loud-ESP32 and Loud-ESP32-Plus
 
 The **Loud-ESP32** uses a dual MAX98357 HiFi DAC with a built-in highly efficient D-class amp to deliver 3 to 5W of music power directly to your speakers. It is not too loud, but also very simple to use and fun to play with. When DAC is not in use, it goes into shutdown mode, making sure no hissing will keep you up at night. It powers from a standard USB-C power source, like a phone charger, etc.
@@ -154,6 +159,11 @@ The **Loud-ESP32** uses a dual MAX98357 HiFi DAC with a built-in highly efficien
 | <img width="1443" height="1010" alt="image" src="https://github.com/user-attachments/assets/b6f2c2b7-c261-475a-8f22-c3fec4cec834" /> | <img width="1558" height="1154" alt="image" src="https://github.com/user-attachments/assets/4db9c620-bad8-4b72-b07a-69f18b183cc1" />
 
 The **Loud-ESP32-Plus** model hires a much more powerful [Infineon MA12070P](https://www.infineon.com/part/MA12070P) DAC with up to 60W per channel. Due to the D-class amp, they are highly efficient yet high-quality audio streamers. It lacks DSP features, but has the most raw horsepower across the line. It is in beta testing, and I'm still trying to fix minor issues with the DAC driver.
+
+**Where to buy:**
+
+- Loud-ESP32 at [Lectronz](https://lectronz.com/products/loud-esp32), [Elecrow](https://www.elecrow.com/loud-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/loud-esp32/)
+- Loud-ESP32-Plus at [Lectronz](https://lectronz.com/products/loud-esp32-plus), Elecrow (coming soon), and [Tindie](https://www.tindie.com/products/sonocotta/loud-esp32-plus/)
 
 ## Louder-ESP32 and Louder-ESP32 Plus
 
@@ -171,6 +181,11 @@ The **Louder-ESP32-Plus** upgrades the DAC to the TAS5825M model, which is more 
 - Parametric EQ (15xBQ), 128-tap FIR, 3-band DRC, AGL
 - Advanced DSP: Smart Excursion, Smart Thermal, Smart Bass, SmartEQ
 
+**Where to buy:**
+
+- Louder-ESP32 at [Lectronz](https://lectronz.com/products/louder-esp32), [Elecrow](https://www.elecrow.com/louder-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32/)
+- Louder-ESP32-Plus at [Lectronz](https://lectronz.com/products/louder-esp32-plus), [Elecrow](https://www.elecrow.com/louder-esp32-plus.html), and [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32-plus/)
+
 ## Louder-ESP32 Mini
 
 **Louder-ESP32-mini** is a compact and stripped-down version of the Louder-ESP32, which would replace the standard speaker terminal on your old speakers, turning them into a Hi-Fi audio solution for your smart home.
@@ -185,6 +200,10 @@ It is designed to be as affordable as it can be, so more speakers can avoid land
 |---|---|
 | <img width="1202" height="880" alt="image" src="https://github.com/user-attachments/assets/e8b126eb-b302-4bbc-b08b-134d6727ec22" /> | <img width="1155" height="920" alt="image" src="https://github.com/user-attachments/assets/34120e2b-6f47-4bf4-aa47-cffb0ad6e706" />
 
+**Where to buy:**
+
+- Louder-ESP32-Mini at [Lectronz](https://lectronz.com/products/louder-esp32-mini), [Elecrow](https://www.elecrow.com/louder-esp32-mini.html), and [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32-mini/)
+
 ## Louder-ESP32 Pro
 
 On the other side of the scale, Louder-ESP32-Pro is a feature-packed version of the Louder-ESP32-Plus, which hosts most of the optional extras as standard, adds support for color TFT screens, and, perhaps most importantly, adds an industrial-grade heat release solution for reliable heavy-duty operation.
@@ -194,6 +213,10 @@ It comes in Raspberry Pi 5 shape with the most important component placed to fol
 Louder-ESP32-Pro is equipped with a high-quality TAS5825M DAC with powerful DSP features, allowing audio tuning to turn your speakers into high-quality audio streamers, big or small likewise. Onboard ESP32-S3 with 8MB PSRAM is there to ensure enough horsepower for solid streaming capabilities.
 
 <img width="1316" height="1171" alt="image" src="https://github.com/user-attachments/assets/e610f382-cf8a-4cfd-a7d8-97774dcc7654" />
+
+**Where to buy:**
+
+- Louder-ESP32-Pro at [Lectronz](https://lectronz.com/products/louder-esp32-pro), [Elecrow](https://www.elecrow.com/louder-esp32-pro.html), and [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32-pro/)
 
 ### Recommended power adapter
 
@@ -221,6 +244,11 @@ Building upon the success of the Amped-ESP32, the **Amped-ESP32 Plus** combines 
 - [PCM5122](https://www.ti.com/lit/ds/symlink/pcm5122.pdf) DAC with integrated DSP + TPA3110/TPA3118 D-class amplifier
 - Digital EQ and dynamic range processing
 - Same power output as Amped-ESP32 with enhanced audio quality
+
+**Where to buy:**
+
+- Amped-ESP32 at [Lectronz](https://lectronz.com/products/amped-esp32), [Elecrow](https://www.elecrow.com/amped-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32/)
+- Amped-ESP32-Plus at [Lectronz](https://lectronz.com/products/amped-esp32-plus), [Elecrow](https://www.elecrow.com/amped-esp32-plus.html), and [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32-plus/)
 
 ### TPA3110 vs TAP3118 designs
 
@@ -1299,7 +1327,7 @@ You may support my work by ordering these products at Lectronz, Elecrow, and Tin
 - Louder-ESP32 at [Lectronz](https://lectronz.com/products/louder-esp32), [Elecrow](https://www.elecrow.com/louder-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32/)
 - Louder-ESP32-Mini at [Lectronz](https://lectronz.com/products/louder-esp32-mini), [Elecrow](https://www.elecrow.com/louder-esp32-mini.html), and [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32-mini/)
 - Louder-ESP32-Plus at [Lectronz](https://lectronz.com/products/louder-esp32-plus), [Elecrow](https://www.elecrow.com/louder-esp32-plus.html), and [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32-plus/)
-- Louder-ESP32-Pro at [Lectronz](https://lectronz.com/products/louder-esp32-pro) and [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32-pro/) (Elecrow coming soon as well!)
+- Louder-ESP32-Pro at [Lectronz](https://lectronz.com/products/louder-esp32-pro), [Elecrow](https://www.elecrow.com/louder-esp32-pro.html), and [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32-pro/)
 - Amped-ESP32 at [Lectronz](https://lectronz.com/products/amped-esp32), [Elecrow](https://www.elecrow.com/amped-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32/)
 - Amped-ESP32-Plus at [Lectronz](https://lectronz.com/products/amped-esp32-plus), [Elecrow](https://www.elecrow.com/amped-esp32-plus.html), and [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32-plus/)
 
