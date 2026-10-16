@@ -1,6 +1,6 @@
 {
   "name": "amped-esp32-sendspin-oled",
-  "version": "2026.10.13-0b129ca8",
+  "version": "2026.10.16-3fa8c405",
   "home_assistant_domain": "esphome",
   "funding_url": "https://esphome.io/guides/supporters.html",
   "new_install_prompt_erase": true,

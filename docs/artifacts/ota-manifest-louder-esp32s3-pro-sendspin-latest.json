@@ -1,14 +1,14 @@
 {
   "name": "louder-esp32s3-pro-sendspin",
-  "version": "2026.10.13-0b129ca8",
+  "version": "2026.10.16-3fa8c405",
   "builds": [
     {
       "chipFamily": "ESP32-S3",
       "ota": {
-        "md5": "5fb0b69bac2cc02a8a4fdf28b4a03882",
+        "md5": "51f6d067db9e7aebc757c4de2ff6e0a4",
         "path": "https://sonocotta.github.io/esp32-audio-dock/artifacts/binaries/esphome/louder-esp32s3-pro-sendspin/firmware.ota.bin",
-        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/0b129ca8",
-        "summary": "Louder-ESP32-Pro Sendspin firmware 2026.10.13-0b129ca8"
+        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/3fa8c405",
+        "summary": "Louder-ESP32-Pro Sendspin firmware 2026.10.16-3fa8c405"
       }
     }
   ],

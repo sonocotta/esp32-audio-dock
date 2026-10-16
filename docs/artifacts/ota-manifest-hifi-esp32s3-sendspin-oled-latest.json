@@ -1,14 +1,14 @@
 {
   "name": "hifi-esp32s3-sendspin-oled",
-  "version": "2026.10.13-0b129ca8",
+  "version": "2026.10.16-3fa8c405",
   "builds": [
     {
       "chipFamily": "ESP32-S3",
       "ota": {
-        "md5": "2cbddaeaab1d27224df86dfc5d0244eb",
+        "md5": "45510ffc429df6048290ca70a6707ac0",
         "path": "https://sonocotta.github.io/esp32-audio-dock/artifacts/binaries/esphome/hifi-esp32s3-sendspin-oled/firmware.ota.bin",
-        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/0b129ca8",
-        "summary": "HiFi-ESP32-S3 Sendspin firmware (OLED screen) 2026.10.13-0b129ca8"
+        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/3fa8c405",
+        "summary": "HiFi-ESP32-S3 Sendspin firmware (OLED screen) 2026.10.16-3fa8c405"
       }
     }
   ],
