@@ -17,6 +17,13 @@ substitutions:
 
 packages:
   loud-esp32-s3-idf-sendspin: !include loud-esp32-s3-idf-sendspin.yaml
+  # Moved here from loud-esp32-s3-idf-sendspin.yaml so the
+  # Ethernet sibling can omit it; this image is otherwise unchanged.
+  monitoring_wifi_remote:
+    url: https://github.com/sonocotta/esp32-audio-dock
+    ref: main
+    files:
+      - firmware/esphome/packages/monitoring-wifi.yaml
 
 esphome:
   name_add_mac_suffix: true

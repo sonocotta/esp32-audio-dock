@@ -52,7 +52,7 @@ substitutions:
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
-  min_version: 2025.12.2
+  min_version: 2026.8.1
   platformio_options:
     board_build.flash_mode: dio
 
@@ -95,6 +95,14 @@ psram:
 
 network:
   enable_ipv6: true
+  # Both `wifi:` and `ethernet:` are configured in this file. On the ESP32 family the two
+  # stacks can run side by side, but then the priority list is mandatory (ESPHome 2026.8.1+).
+  # It decides which interface is brought up first, whose IP is reported, and which one
+  # carries the default route. Failover is automatic: unplug the cable and traffic moves
+  # to Wi-Fi, plug it back in and Ethernet takes over again.
+  priority:
+    - ethernet
+    - wifi
 
 # ===== Packages =====
 packages:
@@ -106,6 +114,7 @@ packages:
       - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
+      - firmware/esphome/packages/monitoring-eth.yaml
       # Optional OLED display (uncomment to enable, requires SPI bus)
       # - firmware/esphome/packages/oled.yaml
       
@@ -115,5 +124,6 @@ packages:
       # Option B: @farmed-switch fork of the c-MM snapclient with added DSP controls
       # Implements software BQ-filters for basic DACs and controls hardware DSP for DSP-enabled DACs like TAS5805M
       # - firmware/esphome/packages/snapclient-with-dsp.yaml
-      # Optional ethernet (replace wifi config if you use this, you need to exclude OLED package if you do this to free up SPI bus)
-      # - firmware/esphome/packages/ethernet-w5500.yaml
+      # Ethernet (W5500), running alongside `wifi:` via the network priority list above.
+      # Shares the SPI pins with the display, so the display package must stay excluded.
+      - firmware/esphome/packages/ethernet-w5500.yaml
