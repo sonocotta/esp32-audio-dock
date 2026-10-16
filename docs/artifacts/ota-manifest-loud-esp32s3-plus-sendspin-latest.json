@@ -1,14 +1,14 @@
 {
   "name": "loud-esp32s3-plus-sendspin",
-  "version": "2026.10.16-3fa8c405",
+  "version": "2026.10.16-1441791a",
   "builds": [
     {
       "chipFamily": "ESP32-S3",
       "ota": {
-        "md5": "6e44ece5fdbf39ec06aaf087cb585977",
+        "md5": "b60b175b05c2cb5464b00607a756da9b",
         "path": "https://sonocotta.github.io/esp32-audio-dock/artifacts/binaries/esphome/loud-esp32s3-plus-sendspin/firmware.ota.bin",
-        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/3fa8c405",
-        "summary": "Loud-ESP32-S3-Plus Sendspin firmware 2026.10.16-3fa8c405"
+        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/1441791a",
+        "summary": "Loud-ESP32-S3-Plus Sendspin firmware 2026.10.16-1441791a"
       }
     }
   ],

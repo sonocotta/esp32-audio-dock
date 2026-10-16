@@ -1,14 +1,14 @@
 {
   "name": "amped-esp32s3-sendspin-oled",
-  "version": "2026.10.16-3fa8c405",
+  "version": "2026.10.16-1441791a",
   "builds": [
     {
       "chipFamily": "ESP32-S3",
       "ota": {
-        "md5": "31479404107a789966f06b8fcc5d43c5",
+        "md5": "6d3792874d14221d92beb1f0ae355e98",
         "path": "https://sonocotta.github.io/esp32-audio-dock/artifacts/binaries/esphome/amped-esp32s3-sendspin-oled/firmware.ota.bin",
-        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/3fa8c405",
-        "summary": "Amped-ESP32-S3 Sendspin firmware (OLED screen) 2026.10.16-3fa8c405"
+        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/1441791a",
+        "summary": "Amped-ESP32-S3 Sendspin firmware (OLED screen) 2026.10.16-1441791a"
       }
     }
   ],

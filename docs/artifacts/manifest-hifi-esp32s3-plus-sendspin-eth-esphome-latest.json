@@ -1,0 +1,19 @@
+{
+  "name": "hifi-esp32s3-plus-sendspin-eth",
+  "version": "2026.10.16-1441791a",
+  "home_assistant_domain": "esphome",
+  "funding_url": "https://esphome.io/guides/supporters.html",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32-S3",
+      "parts": [
+        {
+          "path": "binaries/esphome/hifi-esp32s3-plus-sendspin-eth/firmware.factory.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ],
+  "manifest_name": "manifest-hifi-esp32s3-plus-sendspin-eth-esphome-latest.json"
+}
