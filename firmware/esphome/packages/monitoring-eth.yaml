@@ -1,0 +1,23 @@
+# ============================================================
+# Monitoring - Ethernet Metrics (Optional)
+# ============================================================
+# Ethernet-specific sensors, the counterpart to monitoring-wifi.yaml.
+#
+# The shipped *-sendspin-eth.factory.yaml images include this one
+# INSTEAD of monitoring-wifi.yaml (they carry no Wi-Fi stack at all),
+# while the dev configs include BOTH, because they run Ethernet and
+# Wi-Fi side by side via `network: priority:`. That is why these
+# entities are named "Ethernet IP"/"Ethernet MAC" rather than reusing
+# monitoring-wifi.yaml's "IP"/"MAC" - in the dual-stack dev configs
+# the two packages would otherwise collide on the same entity names.
+#
+# Requires substitutions:
+#   - friendly_name
+# ============================================================
+
+text_sensor:
+  - platform: ethernet_info
+    ip_address:
+      name: "${friendly_name} Ethernet IP"
+    mac_address:
+      name: "${friendly_name} Ethernet MAC"
