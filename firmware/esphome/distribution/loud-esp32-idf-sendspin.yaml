@@ -117,4 +117,9 @@ packages:
       - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
-      - firmware/esphome/packages/monitoring-wifi.yaml
+      # Per-interface monitoring is added by the factory overlay that knows which
+      # interface this image actually ships with: monitoring-wifi.yaml in
+      # loud-esp32-idf-sendspin.factory.yaml, monitoring-eth.yaml in
+      # loud-esp32-idf-sendspin-eth.factory.yaml.
+      # Keeping it out of here is what lets the Ethernet image `wifi: !remove`
+      # without stranding a wifi_signal sensor that then fails validation.

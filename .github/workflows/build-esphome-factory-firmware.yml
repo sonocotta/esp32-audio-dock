@@ -75,54 +75,80 @@ jobs:
             config_file: hifi-esp32-idf-sendspin.factory.yaml
           - slug: hifi-esp32-sendspin-oled
             config_file: hifi-esp32-idf-sendspin-oled.factory.yaml
+          - slug: hifi-esp32-sendspin-eth
+            config_file: hifi-esp32-idf-sendspin-eth.factory.yaml
           - slug: hifi-esp32-plus-sendspin
             config_file: hifi-esp32-plus-idf-sendspin.factory.yaml
           - slug: hifi-esp32-plus-sendspin-oled
             config_file: hifi-esp32-plus-idf-sendspin-oled.factory.yaml
+          - slug: hifi-esp32-plus-sendspin-eth
+            config_file: hifi-esp32-plus-idf-sendspin-eth.factory.yaml
           - slug: hifi-esp32s3-sendspin
             config_file: hifi-esp32-s3-idf-sendspin.factory.yaml
           - slug: hifi-esp32s3-sendspin-oled
             config_file: hifi-esp32-s3-idf-sendspin-oled.factory.yaml
+          - slug: hifi-esp32s3-sendspin-eth
+            config_file: hifi-esp32-s3-idf-sendspin-eth.factory.yaml
           - slug: hifi-esp32s3-plus-sendspin
             config_file: hifi-esp32-s3-plus-idf-sendspin.factory.yaml
           - slug: hifi-esp32s3-plus-sendspin-oled
             config_file: hifi-esp32-s3-plus-idf-sendspin-oled.factory.yaml
+          - slug: hifi-esp32s3-plus-sendspin-eth
+            config_file: hifi-esp32-s3-plus-idf-sendspin-eth.factory.yaml
           - slug: loud-esp32-sendspin
             config_file: loud-esp32-idf-sendspin.factory.yaml
           - slug: loud-esp32-sendspin-oled
             config_file: loud-esp32-idf-sendspin-oled.factory.yaml
+          - slug: loud-esp32-sendspin-eth
+            config_file: loud-esp32-idf-sendspin-eth.factory.yaml
           - slug: loud-esp32-plus-sendspin
             config_file: loud-esp32-plus-idf-sendspin.factory.yaml
           - slug: loud-esp32-plus-sendspin-oled
             config_file: loud-esp32-plus-idf-sendspin-oled.factory.yaml
+          - slug: loud-esp32-plus-sendspin-eth
+            config_file: loud-esp32-plus-idf-sendspin-eth.factory.yaml
           - slug: loud-esp32s3-sendspin
             config_file: loud-esp32-s3-idf-sendspin.factory.yaml
           - slug: loud-esp32s3-sendspin-oled
             config_file: loud-esp32-s3-idf-sendspin-oled.factory.yaml
+          - slug: loud-esp32s3-sendspin-eth
+            config_file: loud-esp32-s3-idf-sendspin-eth.factory.yaml
           - slug: loud-esp32s3-g-sendspin
             config_file: loud-esp32-s3-g-idf-sendspin.factory.yaml
           - slug: loud-esp32s3-g-sendspin-oled
             config_file: loud-esp32-s3-g-idf-sendspin-oled.factory.yaml
+          - slug: loud-esp32s3-g-sendspin-eth
+            config_file: loud-esp32-s3-g-idf-sendspin-eth.factory.yaml
           - slug: loud-esp32s3-plus-sendspin
             config_file: loud-esp32-s3-plus-idf-sendspin.factory.yaml
           - slug: loud-esp32s3-plus-sendspin-oled
             config_file: loud-esp32-s3-plus-idf-sendspin-oled.factory.yaml
+          - slug: loud-esp32s3-plus-sendspin-eth
+            config_file: loud-esp32-s3-plus-idf-sendspin-eth.factory.yaml
           - slug: louder-esp32-sendspin
             config_file: louder-esp32-idf-sendspin.factory.yaml
           - slug: louder-esp32-sendspin-oled
             config_file: louder-esp32-idf-sendspin-oled.factory.yaml
+          - slug: louder-esp32-sendspin-eth
+            config_file: louder-esp32-idf-sendspin-eth.factory.yaml
           - slug: louder-esp32-plus-sendspin
             config_file: louder-esp32-plus-idf-sendspin.factory.yaml
           - slug: louder-esp32-plus-sendspin-oled
             config_file: louder-esp32-plus-idf-sendspin-oled.factory.yaml
+          - slug: louder-esp32-plus-sendspin-eth
+            config_file: louder-esp32-plus-idf-sendspin-eth.factory.yaml
           - slug: louder-esp32s3-sendspin
             config_file: louder-esp32-s3-idf-sendspin.factory.yaml
           - slug: louder-esp32s3-sendspin-oled
             config_file: louder-esp32-s3-idf-sendspin-oled.factory.yaml
+          - slug: louder-esp32s3-sendspin-eth
+            config_file: louder-esp32-s3-idf-sendspin-eth.factory.yaml
           - slug: louder-esp32s3-plus-sendspin
             config_file: louder-esp32-s3-plus-idf-sendspin.factory.yaml
           - slug: louder-esp32s3-plus-sendspin-oled
             config_file: louder-esp32-s3-plus-idf-sendspin-oled.factory.yaml
+          - slug: louder-esp32s3-plus-sendspin-eth
+            config_file: louder-esp32-s3-plus-idf-sendspin-eth.factory.yaml
           - slug: louder-esp32s3-mini-42-sendspin
             config_file: louder-esp32-s3-mini-42-sendspin.factory.yaml
           - slug: louder-esp32s3-mini-55-sendspin
@@ -131,22 +157,32 @@ jobs:
             config_file: louder-esp32-s3-pro-idf-sendspin.factory.yaml
           - slug: louder-esp32s3-pro-sendspin-tft
             config_file: louder-esp32-s3-pro-idf-sendspin-tft.factory.yaml
+          - slug: louder-esp32s3-pro-sendspin-eth
+            config_file: louder-esp32-s3-pro-idf-sendspin-eth.factory.yaml
           - slug: amped-esp32-sendspin
             config_file: amped-esp32-idf-sendspin.factory.yaml
           - slug: amped-esp32-sendspin-oled
             config_file: amped-esp32-idf-sendspin-oled.factory.yaml
+          - slug: amped-esp32-sendspin-eth
+            config_file: amped-esp32-idf-sendspin-eth.factory.yaml
           - slug: amped-esp32-plus-sendspin
             config_file: amped-esp32-plus-idf-sendspin.factory.yaml
           - slug: amped-esp32-plus-sendspin-oled
             config_file: amped-esp32-plus-idf-sendspin-oled.factory.yaml
+          - slug: amped-esp32-plus-sendspin-eth
+            config_file: amped-esp32-plus-idf-sendspin-eth.factory.yaml
           - slug: amped-esp32s3-sendspin
             config_file: amped-esp32-s3-idf-sendspin.factory.yaml
           - slug: amped-esp32s3-sendspin-oled
             config_file: amped-esp32-s3-idf-sendspin-oled.factory.yaml
+          - slug: amped-esp32s3-sendspin-eth
+            config_file: amped-esp32-s3-idf-sendspin-eth.factory.yaml
           - slug: amped-esp32s3-plus-sendspin
             config_file: amped-esp32-s3-plus-idf-sendspin.factory.yaml
           - slug: amped-esp32s3-plus-sendspin-oled
             config_file: amped-esp32-s3-plus-idf-sendspin-oled.factory.yaml
+          - slug: amped-esp32s3-plus-sendspin-eth
+            config_file: amped-esp32-s3-plus-idf-sendspin-eth.factory.yaml
     env:
       DEVICE_SLUG: ${{ matrix.device.slug }}
       CONFIG_DIR: firmware/esphome/distribution

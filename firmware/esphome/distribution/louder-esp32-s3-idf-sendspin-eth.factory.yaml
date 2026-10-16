@@ -1,0 +1,77 @@
+# ============================================================
+# Louder-ESP32-S3 (Sendspin) - Factory / shippable firmware, Ethernet
+# ============================================================
+# Ethernet (W5500) sibling of louder-esp32-s3-idf-sendspin.factory.yaml.
+#
+# Deliberately a PEER of the Wi-Fi factory config rather than an
+# overlay on top of it: this image ships with no Wi-Fi at all, and
+# ESPHome's package merge appends lists instead of replacing them
+# (merge_config in esphome/config_helpers.py), so including the
+# Wi-Fi factory config would drag in an Improv/BLE onboarding layer
+# and a `control_leds` script keyed on `wifi.connected` that an
+# overlay has no way to remove. Both images compose the same shared
+# board config and add their own interface layer, which is also why
+# the Wi-Fi image itself is left untouched apart from picking up
+# monitoring-wifi.yaml.
+#
+# Why a separate image instead of one dual-stack build: Sendspin over
+# a combined Wi-Fi + Ethernet stack proved unreliable (Ethernet
+# hiccups under load), so each shipped image carries exactly one
+# interface. The dev configs keep both enabled for debugging.
+#
+# No onboarding flow is needed or included: the unit comes up on
+# DHCP as soon as it has a link. Note the flip side - a unit with no
+# cable or no DHCP lease has no wireless fallback and can only be
+# recovered by reflashing over USB.
+#
+# Ethernet and the OLED share this board's SPI pins (the W5500
+# declares its own clk/mosi/miso, so it takes a second SPI host),
+# which is why there is no -eth-oled variant.
+#
+# `version` is substituted by CI at build time (see
+# .github/workflows/build-esphome-factory-firmware.yml); "dev" is
+# only used for local/manual compiles.
+# ============================================================
+
+substitutions:
+  version: dev
+
+packages:
+  louder-esp32-s3-idf-sendspin: !include louder-esp32-s3-idf-sendspin.yaml
+  ethernet_remote:
+    url: https://github.com/sonocotta/esp32-audio-dock
+    ref: main
+    files:
+      - firmware/esphome/packages/ethernet-w5500.yaml
+      - firmware/esphome/packages/monitoring-eth.yaml
+
+esphome:
+  name_add_mac_suffix: true
+  project:
+    name: sonocotta.louder-esp32s3-sendspin-eth
+    version: "${version}"
+
+# The shared board config declares `wifi:` (for the Wi-Fi image to build on).
+# Drop it here so this build contains no Wi-Fi stack at all - that also frees
+# the internal heap the W5500 driver needs for its DMA-capable rx buffers.
+wifi: !remove
+
+http_request:
+
+ota:
+  - platform: http_request
+    id: ota_http_request
+
+update:
+  - platform: http_request
+    name: Firmware Update
+    id: update_http_request
+    source: https://sonocotta.github.io/esp32-audio-dock/artifacts/ota-manifest-louder-esp32s3-sendspin-eth-latest.json
+    update_interval: 6h
+
+# Lets anyone running their own ESPHome Dashboard "adopt" this device.
+# Points at the dev config, which runs Ethernet and Wi-Fi together - adopting
+# therefore gives you the dual-stack debug shape, not this single-interface one.
+dashboard_import:
+  package_import_url: github://sonocotta/esp32-audio-dock/firmware/esphome/3-louder-esp32/louder-esp32-s3-idf-sendspin.yaml@main
+  import_full_config: false
