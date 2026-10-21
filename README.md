@@ -1266,7 +1266,12 @@ To export a part, open the file in OpenSCAD, set the `part` variable at the top 
 
 Louder-ESP32-Pro boards are mechanically compatible with aluminum cases for Raspberry Pi 5. The most important components that release heat under heavy operation would be covered by the case heat release pads. On top of that, the board allows connecting a 4-pin fan with speed control and RPM readout, so it can be engaged only when needed.
 
-<img width="1536" height="1078" alt="image" src="https://github.com/user-attachments/assets/4a0fd32e-17af-47b9-80d8-220d21d62b77" />
+Due to the Raspberry Pi and the LoRa ESP32-Pro chip size difference, while assembling the case you need to apply 2 changes, compared to the Raspberry Pi case assembly, namely (1) do not apply a heat pad on the ESP32 module itself - it is higher than the original Broadcom CPU; and (2) you need a thicker heat pad on the TAS5825 DAC chip - I use 1mm thick heat pads to get a good thermal contact
+
+|  Model | Image |
+|---|---|
+| [Raspberry Pi 5 Aluminium Alloy Case](https://pl.aliexpress.com/item/1005006310608527.html) | <img width="1536" height="1078" alt="image" src="https://github.com/user-attachments/assets/4a0fd32e-17af-47b9-80d8-220d21d62b77" /> |
+
 
 ### Louder-ESP32 Mini shell
 
