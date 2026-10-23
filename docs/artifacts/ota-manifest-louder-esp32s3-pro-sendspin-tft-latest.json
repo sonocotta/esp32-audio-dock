@@ -1,14 +1,14 @@
 {
   "name": "louder-esp32s3-pro-sendspin-tft",
-  "version": "2026.10.16-1441791a",
+  "version": "2026.10.23-92ed77bf",
   "builds": [
     {
       "chipFamily": "ESP32-S3",
       "ota": {
-        "md5": "bdc85f203bdd99a8846e472aff8356b5",
+        "md5": "dff1b66bbaa7ecf4435f943e60e5bc07",
         "path": "https://sonocotta.github.io/esp32-audio-dock/artifacts/binaries/esphome/louder-esp32s3-pro-sendspin-tft/firmware.ota.bin",
-        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/1441791a",
-        "summary": "Louder-ESP32-Pro Sendspin firmware (TFT screen) 2026.10.16-1441791a"
+        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/92ed77bf",
+        "summary": "Louder-ESP32-Pro Sendspin firmware (TFT screen) 2026.10.23-92ed77bf"
       }
     }
   ],

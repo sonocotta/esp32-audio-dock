@@ -1,14 +1,14 @@
 {
   "name": "amped-esp32s3-plus-sendspin",
-  "version": "2026.10.16-1441791a",
+  "version": "2026.10.23-92ed77bf",
   "builds": [
     {
       "chipFamily": "ESP32-S3",
       "ota": {
-        "md5": "1aed0170628f75b9af3eb684f67401ae",
+        "md5": "f974a65d8504a528d40e582528af2e93",
         "path": "https://sonocotta.github.io/esp32-audio-dock/artifacts/binaries/esphome/amped-esp32s3-plus-sendspin/firmware.ota.bin",
-        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/1441791a",
-        "summary": "Amped-ESP32-S3-Plus Sendspin firmware 2026.10.16-1441791a"
+        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/92ed77bf",
+        "summary": "Amped-ESP32-S3-Plus Sendspin firmware 2026.10.23-92ed77bf"
       }
     }
   ],
