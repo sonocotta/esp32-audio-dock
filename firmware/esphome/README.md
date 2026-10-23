@@ -128,6 +128,8 @@ Each hardware variant has 3-4 firmware options depending on your use case.
 - `loud-esp32-idf.yaml` / `loud-esp32-s3-idf.yaml` - Standard media player with mixer/resampler
 - `loud-esp32-idf-snapclient.yaml` / `loud-esp32-s3-idf-snapclient.yaml` - Snapcast client with software DSP controls
 - `loud-esp32-idf-sendspin.yaml` / `loud-esp32-s3-idf-sendspin.yaml` - Sendspin synchronized playback, very much experimental but working quite impressively well
+- `loud-esp32-s3-idf-voice-assist.yaml` - Voice assistant with wake word detection (S3 only)
+- `loud-esp32-s3-idf-voice-assist-sendspin.yaml` - Voice assistant with Sendspin synchronized playback (S3 only)
 
 **Packages used**: `audio.yaml`, `media-player.yaml`, `dac-switch.yaml`, `media-player-addon-dac-enable.yaml`, `light.yaml`, `ir-receiver.yaml`, `monitoring.yaml`, `oled.yaml`  
 **Optional**: `ethernet-w5500.yaml`
@@ -149,6 +151,8 @@ Each hardware variant has 3-4 firmware options depending on your use case.
 - `louder-esp32-idf.yaml` / `louder-esp32-s3-idf.yaml` - Standard media player with TAS5805M DSP
 - `louder-esp32-idf-snapclient.yaml` / `louder-esp32-s3-idf-snapclient.yaml` - Snapcast client with DSP controls, software DSP makes less sense since hardware DSP is much more efficient here
 - `louder-esp32-idf-sendspin.yaml` / `louder-esp32-s3-idf-sendspin.yaml` - Sendspin synchronized playback, very much experimental but working quite impressively well, especially in combination with built-in DSP
+- `louder-esp32-s3-idf-voice-assist.yaml` - Voice assistant with wake word detection (S3 only)
+- `louder-esp32-s3-idf-voice-assist-sendspin.yaml` - Voice assistant with Sendspin synchronized playback (S3 only)
 
 **Packages used**: `dac-tas58xx.yaml`, `audio.yaml`, `audio-addon-external-dac.yaml`, `media-player.yaml`, `media-player-addon-dac-enable.yaml`, `media-player-addon-tas58xx.yaml`, `light.yaml`, `ir-receiver.yaml`, `monitoring.yaml`, `oled.yaml`  
 **Optional**: `ethernet-w5500.yaml`
@@ -170,6 +174,8 @@ Each hardware variant has 3-4 firmware options depending on your use case.
 - `amped-esp32-idf.yaml` / `amped-esp32-s3-idf.yaml` - Standard media player with amplifier
 - `amped-esp32-idf-snapclient.yaml` / `amped-esp32-s3-idf-snapclient.yaml` - Snapcast client with software DSP controls
 - `amped-esp32-idf-sendspin.yaml` / `amped-esp32-s3-idf-sendspin.yaml` - Sendspin synchronized playback
+- `amped-esp32-s3-idf-voice-assist.yaml` - Voice assistant with wake word detection (S3 only)
+- `amped-esp32-s3-idf-voice-assist-sendspin.yaml` - Voice assistant with Sendspin synchronized playback (S3 only)
 
 **Packages used**: `audio.yaml`, `media-player.yaml`, `amp-unmute.yaml`, `media-player-addon-amp-unmute.yaml`, `light.yaml`, `ir-receiver.yaml`, `monitoring.yaml`, `oled.yaml`  
 **Optional**: `ethernet-w5500.yaml`
@@ -191,6 +197,8 @@ Each hardware variant has 3-4 firmware options depending on your use case.
 - `hifi-esp32-plus-idf.yaml` / `hifi-esp32-s3-plus-idf.yaml` - Standard media player
 - `hifi-esp32-plus-idf-snapclient.yaml` / `hifi-esp32-s3-plus-idf-snapclient.yaml` - Snapcast client with software DSP controls
 - `hifi-esp32-plus-idf-sendspin.yaml` / `hifi-esp32-s3-plus-idf-sendspin.yaml` - Sendspin synchronized playback
+- `hifi-esp32-s3-plus-idf-voice-assist.yaml` - Voice assistant with wake word detection (S3 only)
+- `hifi-esp32-s3-plus-idf-voice-assist-sendspin.yaml` - Voice assistant with Sendspin synchronized playback (S3 only)
 
 **Packages used**: `dac-pcm5122.yaml`, `audio.yaml`, `audio-addon-external-dac.yaml`, `media-player.yaml`, `media-player-addon-dac-enable.yaml`, `light.yaml`, `ir-receiver.yaml`, `monitoring.yaml`, `oled.yaml`  
 **Optional**: `ethernet-w5500.yaml`
@@ -210,6 +218,8 @@ Each hardware variant has 3-4 firmware options depending on your use case.
 - `loud-esp32-plus-idf.yaml` / `loud-esp32-s3-plus-idf.yaml` - Standard media player with MA12070P DSP
 - `loud-esp32-plus-idf-sendspin.yaml` / `loud-esp32-s3-plus-idf-sendspin.yaml` - Sendspin synchronized playback
 - `loud-esp32-s3-plus-idf-snapclient.yaml` - Snapcast client (S3 only, 32-bit I2S required)
+- `loud-esp32-s3-plus-idf-voice-assist.yaml` - Voice assistant with wake word detection (S3 only)
+- `loud-esp32-s3-plus-idf-voice-assist-sendspin.yaml` - Voice assistant with Sendspin synchronized playback (S3 only)
 
 The MA12070P is a high-efficiency Class-D audio amplifier with I2C digital volume control and built-in DSP. It provides software-configurable volume, mute, and enable control via I2C.
 
@@ -234,6 +244,7 @@ The MA12070P is a high-efficiency Class-D audio amplifier with I2C digital volum
 - `louder-esp32-plus-idf-snapclient.yaml` / `louder-esp32-s3-plus-idf-snapclient.yaml` - Snapcast client
 - `louder-esp32-plus-idf-sendspin.yaml` / `louder-esp32-s3-plus-idf-sendspin.yaml` - Sendspin synchronized playback with OLED display
 - `louder-esp32-s3-plus-idf-voice-assist.yaml` - Voice assistant with wake word detection (S3 only)
+- `louder-esp32-s3-plus-idf-voice-assist-sendspin.yaml` - Voice assistant with Sendspin synchronized playback (S3 only)
 
 The TAS5825M DSP allows 3 distinct EQ modes:
 
@@ -269,6 +280,7 @@ The DSP also allows adjusting the gain per channel, which is essentially a balan
 - `amped-esp32-plus-idf-snapclient.yaml` / `amped-esp32-s3-plus-idf-snapclient.yaml` - Snapcast client
 - `amped-esp32-plus-idf-sendspin.yaml` / `amped-esp32-s3-plus-idf-sendspin.yaml` - Sendspin synchronized playback
 - `amped-esp32-s3-plus-idf-voice-assist.yaml` - Voice assistant with wake word detection (S3 only)
+- `amped-esp32-s3-plus-idf-voice-assist-sendspin.yaml` - Voice assistant with Sendspin synchronized playback (S3 only)
 
 ---
 
@@ -311,6 +323,7 @@ The Mini boards are designed for compact installations where a full-sized board 
 - `louder-esp32-s3-pro-idf-sendspin.yaml` - Sendspin synchronized playback with TFT display
 - `louder-esp32-s3-pro-idf-snapclient.yaml` - Snapcast client with OLED display
 - `louder-esp32-s3-pro-idf-voice-assist.yaml` - Voice assistant with wake word detection
+- `louder-esp32-s3-pro-idf-voice-assist-sendspin.yaml` - Voice assistant with Sendspin synchronized playback
 
 The Pro board is a feature-rich platform with:
 - **TFT SPI display** (ST7789 or ILI9341) for track info, album art, and clock
@@ -405,11 +418,24 @@ Full-featured voice assistant with wake word detection:
 - Visual feedback via RGB LED phases (idle / listening / thinking / replying / error / muted)
 - Also available with Sendspin synchronized playback (`*-voice-assist-sendspin.yaml`)
 
-**Available on**:
-- HiFi-ESP32 S3 (`1-hifi-esp32/`) — S3 only
-- Louder-ESP32-Plus (`7-louder-esp32-plus/`) — S3 only
-- Amped-ESP32-Plus (`8-amped-esp32-plus/`) — S3 only
-- Louder-ESP32-Pro (`10-louder-esp32-pro/`) — S3 only
+**Available on** every S3 board, in both flavours (`*-voice-assist.yaml` and
+`*-voice-assist-sendspin.yaml`):
+
+- HiFi-ESP32 S3 (`1-hifi-esp32/`)
+- Loud-ESP32 S3 (`2-loud-esp32/`)
+- Louder-ESP32 S3 (`3-louder-esp32/`)
+- Amped-ESP32 S3 (`4-amped-esp32/`)
+- HiFi-ESP32-S3-Plus (`5-hifi-esp32-plus/`)
+- Loud-ESP32-S3-Plus (`6-loud-esp32-plus/`)
+- Louder-ESP32-S3-Plus (`7-louder-esp32-plus/`)
+- Amped-ESP32-S3-Plus (`8-amped-esp32-plus/`)
+- Louder-ESP32-Pro (`10-louder-esp32-pro/`)
+
+**Not available on** Louder-ESP32-Mini (`9-louder-esp32-mini/`): the board has no
+microphone header and no RGB LED, both of which the voice-assist packages require.
+
+The ESP32 (non-S3) variants are excluded throughout — the mic needs a second I2S
+bus, which only the S3 has to spare.
 
 **Requirements**: Home Assistant with voice assistant configured, ESPHome firmware 2026.1.4+, esparagus-echo microphone packages (included via remote import)
 
@@ -438,8 +464,8 @@ Full-featured voice assistant with wake word detection:
    - Standard: `*-idf.yaml`
    - Snapclient: `*-snapclient.yaml`
    - Sendspin: `*-sendspin.yaml`
-   - Voice Assistant: `*-voice-assist.yaml` (selected boards, S3 only)
-   - Voice Assistant + Sendspin: `*-voice-assist-sendspin.yaml` (HiFi-ESP32 S3 only)
+   - Voice Assistant: `*-voice-assist.yaml` (S3 boards, except Louder-ESP32-Mini)
+   - Voice Assistant + Sendspin: `*-voice-assist-sendspin.yaml` (S3 boards, except Louder-ESP32-Mini)
 
 4. **Configure secrets** (see [Secrets Management](#secrets-management))
 

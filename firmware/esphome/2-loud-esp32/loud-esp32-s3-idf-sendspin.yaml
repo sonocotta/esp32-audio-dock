@@ -35,9 +35,9 @@ substitutions:
   ir_rx_pin: GPIO07
 
   # Display control pins
-  display_cs_pin: GPIO39
-  display_dc_pin: GPIO40
-  display_reset_pin: GPIO38
+  display_cs_pin: GPIO47
+  display_dc_pin: GPIO38
+  display_reset_pin: GPIO48
 
   # Ethernet pins (if using ethernet instead of wifi)
   eth_cs_pin: GPIO10
