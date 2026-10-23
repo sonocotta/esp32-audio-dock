@@ -128,6 +128,7 @@ Each hardware variant has 3-4 firmware options depending on your use case.
 - `loud-esp32-idf.yaml` / `loud-esp32-s3-idf.yaml` - Standard media player with mixer/resampler
 - `loud-esp32-idf-snapclient.yaml` / `loud-esp32-s3-idf-snapclient.yaml` - Snapcast client with software DSP controls
 - `loud-esp32-idf-sendspin.yaml` / `loud-esp32-s3-idf-sendspin.yaml` - Sendspin synchronized playback, very much experimental but working quite impressively well
+- `loud-esp32-s3-idf-voice-assist.yaml` - Voice assistant with wake word detection (S3 only)
 
 **Packages used**: `audio.yaml`, `media-player.yaml`, `dac-switch.yaml`, `media-player-addon-dac-enable.yaml`, `light.yaml`, `ir-receiver.yaml`, `monitoring.yaml`, `oled.yaml`  
 **Optional**: `ethernet-w5500.yaml`
@@ -407,6 +408,8 @@ Full-featured voice assistant with wake word detection:
 
 **Available on**:
 - HiFi-ESP32 S3 (`1-hifi-esp32/`) — S3 only
+- Loud-ESP32 S3 (`2-loud-esp32/`) — S3 only
+- Louder-ESP32 S3 (`3-louder-esp32/`) — S3 only
 - Louder-ESP32-Plus (`7-louder-esp32-plus/`) — S3 only
 - Amped-ESP32-Plus (`8-amped-esp32-plus/`) — S3 only
 - Louder-ESP32-Pro (`10-louder-esp32-pro/`) — S3 only

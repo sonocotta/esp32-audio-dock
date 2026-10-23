@@ -560,7 +560,7 @@ All configs use the ESP-IDF framework (preferred for audio — lighter, faster, 
 | Standard media player | `*-idf.yaml` | Native HA media player with mixer, resampler, TTS and announcement ducking |
 | Snapclient | `*-snapclient.yaml` | Snapcast multi-room client with 18-band software EQ (experimental) |
 | Sendspin | `*-sendspin.yaml` | ESPHome-native multi-room playback via [Sendspin protocol](https://www.music-assistant.io/player-support/sendspin/) (experimental, 2026.2.0+) |
-| Voice Assistant | `*-voice-assist.yaml` | Wake-word voice assistant with HA Voice integration (Plus boards only) |
+| Voice Assistant | `*-voice-assist.yaml` | Wake-word voice assistant with HA Voice integration (S3 boards only) |
 
 Both ESP32 and ESP32-S3 variants are covered for each board. S3 variants carry `-s3-` in the filename.
 
