@@ -3,11 +3,11 @@
 # ============================================================
 # ESP32 audio board dual MAX98357A DACs (I2S)
 # Full-featured voice assistant with wake word detection
-# Features: Microphone input (I2S), speaker output (dual MAX98357A),
-#           wake word detection, Home Assistant integration,
-#           announcements with ducking, RGB LED
+# Features: Microphone input (I2S), wake word detection, Home Assistant
+#           integration, announcements with ducking, RGB LED
 # Requires: Home Assistant with voice assistant setup
 # Board-specific pinouts are defined in substitutions section
+# Functional blocks imported from /packages
 # ============================================================
 
 substitutions:
@@ -16,7 +16,7 @@ substitutions:
   task_stack_in_psram: "true"
 
   # ===== Board-Specific Pinouts =====
-  # I2S audio pins (dual MAX98357A DACs)
+  # I2S audio pins
   i2s_lrclk_pin: GPIO15
   i2s_bclk_pin: GPIO14
   i2s_dout_pin: GPIO16
@@ -29,7 +29,7 @@ substitutions:
 
   # DAC enable pin (actually amp UNMUTE)
   dac_enable_pin: GPIO17              # It is 17 on rev G an later. rev F uses GPIO08
-  dac_enable_restore_mode: ALWAYS_OFF
+  dac_enable_restore_mode: ALWAYS_ON
 
   # RGB LED
   rgb_led_pin: GPIO09
@@ -55,7 +55,7 @@ substitutions:
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
-  min_version: 2026.2.1
+  min_version: 2026.5.0
   name_add_mac_suffix: false
   platformio_options:
     board_build.flash_mode: dio
@@ -79,7 +79,7 @@ esp32:
       CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: "y"
       CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
       CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
-      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"
+      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y" 
 
       CONFIG_ESP32_S3_BOX_BOARD: "y"
       # OPTIMIZED WiFi buffers for streaming
@@ -121,13 +121,17 @@ packages:
     ref: main
     files:
       - firmware/esphome/packages/dac-switch.yaml
+      - firmware/esphome/packages/audio.yaml
+      - firmware/esphome/packages/media-player.yaml
+      # The play/idle DAC hook that the media-player and sendspin builds use is
+      # left out on purpose: its on_idle would cut the DAC between TTS chunks and
+      # between timer repeats. The DAC is held on for the session instead
+      # (restore_mode above), matching the other voice-assist configs.
+      # - firmware/esphome/packages/media-player-addon-dac-enable.yaml
 
       - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
-
-      # Optional OLED display (uncomment to enable, requires SPI bus)
-      # - firmware/esphome/packages/oled.yaml
       # Optional ethernet (replace wifi config if you use this, you need to exclude OLED package if you do this to free up SPI bus)
       # - firmware/esphome/packages/ethernet-w5500.yaml
 
@@ -138,10 +142,9 @@ packages:
       - firmware/esphome/packages/microphone-i2s.yaml
       - firmware/esphome/packages/microphone.yaml
 
-      - firmware/esphome/packages/audio.yaml
-      - firmware/esphome/packages/media-player.yaml
       - firmware/esphome/packages/media-player-addon-voice-assist.yaml
       - firmware/esphome/packages/voice-assist.yaml
-      # Replaces media-player-addon-dac-enable.yaml: same amp UNMUTE
-      # handling, but keeps it on mid-conversation and while a timer rings
-      - firmware/esphome/packages/voice-assist-addon-dac-enable.yaml
+      # Guarded replacement for the play/idle DAC hook above - keeps the DAC on
+      # mid-conversation and while a timer rings. Untested here; the DAC is held
+      # on via its restore_mode instead.
+      # - firmware/esphome/packages/voice-assist-addon-dac-enable.yaml

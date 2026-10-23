@@ -1,0 +1,185 @@
+# ============================================================
+# Louder-ESP32-S3-Plus - Voice Assistant + Sendspin Configuration
+# ============================================================
+# ESP32 audio board with TAS5825M DAC (I2C+I2S) with built-in DSP
+# Voice assistant with wake word detection, layered on Sendspin
+# synchronized multi-room playback
+# Features: Microphone input (I2S), wake word detection, Home Assistant
+#           integration, announcements with ducking, RGB LED
+# Requires: Home Assistant with voice assistant setup
+# Board-specific pinouts are defined in substitutions section
+# Functional blocks imported from /packages
+# ============================================================
+
+substitutions:
+  name: esphome-web-c94a05
+  friendly_name: Louder-ESP32-S3-Plus
+  task_stack_in_psram: "true"
+
+  # ===== Board-Specific Pinouts =====
+  # I2S audio pins
+  i2s_lrclk_pin: GPIO15
+  i2s_bclk_pin: GPIO14
+  i2s_dout_pin: GPIO16
+
+  # I2S audio input pins (microphone)
+  i2s_mic_lrclk_pin: GPIO40
+  i2s_mic_bclk_pin: GPIO41
+  i2s_mic_din_pin: GPIO39
+  i2s_mic_channel: left # or right?
+
+  # TAS5825M
+  tas58xx_variant: TAS5825M
+  tas58xx_enable_pin: GPIO17
+  i2c_sda_pin: GPIO8
+  i2c_scl_pin: GPIO9
+
+  # ===== DAC Overrides (optional) =====
+  # tas58xx_dac_mode: PBTL 
+  # tas58xx_mixer_mode: MONO
+  # tas58xx_analog_gain: 0db
+  # tas58xx_volume_max: 0dB
+  # tas58xx_volume_min: -60dB
+  # tas58xx_refresh_eq: AUTO
+  tas58xx_dac_restore_mode: ALWAYS_ON
+
+  # RGB LED
+  rgb_led_pin: GPIO21
+
+  # IR Receiver
+  ir_rx_pin: GPIO07
+
+  # SPI pins (for display)
+  spi_clk_pin: GPIO12
+  spi_mosi_pin: GPIO11
+  spi_miso_pin: GPIO13
+
+  # Display control pins
+  display_cs_pin: GPIO47
+  display_dc_pin: GPIO38
+  display_reset_pin: GPIO48
+
+  # Ethernet pins (if using ethernet instead of wifi)
+  eth_cs_pin: GPIO10
+  eth_interrupt_pin: GPIO6
+  eth_reset_pin: GPIO5
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  min_version: 2026.8.1
+  name_add_mac_suffix: false
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  variant: ESP32S3
+  flash_size: 8MB
+  cpu_frequency: 240MHz
+  framework:
+    type: esp-idf
+    version: recommended
+    sdkconfig_options:
+      CONFIG_ESP32S3_DATA_CACHE_64KB: "y"
+      CONFIG_ESP32S3_DATA_CACHE_LINE_64B: "y"
+      CONFIG_ESP32S3_INSTRUCTION_CACHE_32KB: "y"
+      # Moves instructions and read only data from flash into PSRAM on boot.
+      # Both enabled allows instructions to execute while a flash operation is in progress without needing to be placed in IRAM.
+      # Considerably speeds up mWW at the cost of using more PSRAM.
+      CONFIG_SPIRAM_RODATA: "y"
+      CONFIG_SPIRAM_FETCH_INSTRUCTIONS: "y"
+      CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: "y"
+      CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
+      CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
+      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y" 
+
+      CONFIG_ESP32_S3_BOX_BOARD: "y"
+      # OPTIMIZED WiFi buffers for streaming
+      CONFIG_ESP32_WIFI_STATIC_RX_BUFFER_NUM: "16"
+      CONFIG_ESP32_WIFI_DYNAMIC_RX_BUFFER_NUM: "32"
+      CONFIG_TCPIP_RECVMBOX_SIZE: "512"
+      CONFIG_TCP_SND_BUF_DEFAULT: "65535"
+      CONFIG_TCP_WND_DEFAULT: "512000"
+      CONFIG_TCP_RECVMBOX_SIZE: "512"
+      # Audio priority
+      CONFIG_FREERTOS_UNICORE: "n"
+      CONFIG_ESP_TASK_WDT_TIMEOUT_S: "10"
+
+logger:
+  level: INFO  # Changed from DEBUG to reduce overhead
+
+api:
+
+ota:
+  platform: esphome
+  password: !secret esphome_ota_password
+
+wifi:
+  ssid: !secret esphome_wifi_ssid
+  password: !secret esphome_wifi_password
+
+psram:
+  mode: octal
+  speed: 80MHz
+  ignore_not_found: false
+
+network:
+  enable_ipv6: true
+  # Both `wifi:` and `ethernet:` are configured in this file. On the ESP32 family the two
+  # stacks can run side by side, but then the priority list is mandatory (ESPHome 2026.8.1+).
+  # It decides which interface is brought up first, whose IP is reported, and which one
+  # carries the default route. Failover is automatic: unplug the cable and traffic moves
+  # to Wi-Fi, plug it back in and Ethernet takes over again.
+  priority:
+    - ethernet
+    - wifi
+
+# ===== Packages =====
+packages:
+  esparagus_remote:
+    url: https://github.com/sonocotta/esp32-audio-dock
+    ref: main
+    files:
+      # Option A: TAS58xx configured with ganged 15-band EQ
+      - firmware/esphome/packages/dac-tas58xx.yaml
+      # Option B: TAS58xx configured with individual 15-band EQ per channel
+      # - firmware/esphome/packages/dac-tas58xx-biamp.yaml
+      # Option C: TAS58xx configured with bi-amp mode, with filters applied to both channels (HF or LF)
+      # - firmware/esphome/packages/dac-tas58xx-presets.yaml
+
+      - firmware/esphome/packages/audio.yaml
+      - firmware/esphome/packages/sendspin.yaml
+      - firmware/esphome/packages/sendspin-audio-addon-external-dac.yaml
+      # The play/idle DAC hook that the media-player and sendspin builds use is
+      # left out on purpose: its on_idle would cut the DAC between TTS chunks and
+      # between timer repeats. The DAC is held on for the session instead
+      # (restore_mode above), matching the other voice-assist configs.
+      # - firmware/esphome/packages/sendspin-addon-dac-enable.yaml
+      # Voice-assist flavour of sendspin-addon-tas58xx.yaml: same boot-time clock
+      # sync, without the audio_file media source that
+      # sendspin-addon-voice-assist.yaml already provides.
+      - firmware/esphome/packages/sendspin-addon-voice-assist-tas58xx.yaml
+      # Optional: OLED displays clock when idling, and track/artist info when playing
+      # - firmware/esphome/packages/sendspin-addon-oled.yaml
+
+      - firmware/esphome/packages/light.yaml
+      - firmware/esphome/packages/monitoring.yaml
+      - firmware/esphome/packages/monitoring-wifi.yaml
+      - firmware/esphome/packages/monitoring-eth.yaml
+      # Ethernet (W5500), running alongside `wifi:` via the network priority list above.
+      # Shares the SPI pins with the display, so the display package must stay excluded.
+      - firmware/esphome/packages/ethernet-w5500.yaml
+
+  esparagus_echo:
+    url: https://github.com/sonocotta/esparagus-echo
+    ref: main
+    files:
+      - firmware/esphome/packages/microphone-i2s.yaml
+      - firmware/esphome/packages/microphone.yaml
+
+      - firmware/esphome/packages/sendspin-addon-voice-assist.yaml
+      - firmware/esphome/packages/voice-assist-sendspin.yaml
+      # Guarded replacement for the play/idle DAC hook above - keeps the DAC on
+      # mid-conversation and while a timer rings. Untested here; the DAC is held
+      # on via its restore_mode instead.
+      # - firmware/esphome/packages/voice-assist-addon-dac-enable.yaml
