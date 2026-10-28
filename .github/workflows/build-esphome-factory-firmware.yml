@@ -232,9 +232,21 @@ jobs:
             "\\|url: https://github.com/${THIS_REPO}\$|{n;s|^\\([[:space:]]*\\)ref: main\$|\\1ref: ${BRANCH}|;}"
 
           echo "--- package refs now resolving to ---"
-          grep -rh -A1 "url: https://github.com/${THIS_REPO}\$" \
+          REFS=$(grep -rh -A1 "url: https://github.com/${THIS_REPO}\$" \
             firmware/esphome --include='*.yaml' --exclude-dir='.*' |
-            grep -o "ref: .*" | sort | uniq -c || true
+            grep -o "ref: .*" || true)
+          printf '%s\n' "$REFS" | sort | uniq -c
+
+          # A rename of this repo would leave the package URLs above pointing at
+          # its old name, the rewrite would match nothing, and the build would
+          # quietly fall back to main's packages - a green run that tested
+          # something other than this branch. Say so instead.
+          if ! printf '%s\n' "$REFS" | grep -q "ref: ${BRANCH}\$"; then
+            echo "::warning::No package ref was repointed to ${BRANCH}. These" \
+                 "configs fetch packages from a URL that does not match" \
+                 "${THIS_REPO}, so this build resolves them from main and is" \
+                 "NOT testing this branch's packages."
+          fi
 
       - name: Compute version
         id: version
