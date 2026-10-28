@@ -18,6 +18,7 @@
 
 substitutions:
   version: dev
+  sendspin_firmware_version: "${version}"
 
 packages:
   loud-esp32-s3-plus-idf-sendspin-factory: !include loud-esp32-s3-plus-idf-sendspin.factory.yaml

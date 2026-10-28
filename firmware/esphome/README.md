@@ -399,7 +399,7 @@ Sendspin synchronized audio playback:
 
 **Best for**: Multi-room audio without external server infrastructure
 
-**Note**: Experimental feature, firmware version 2026.5.0+ required for latest sendspin features
+**Note**: Experimental feature, firmware version 2026.10.0+ required for latest sendspin features
 
 <img width="846" height="1198" alt="image" src="https://github.com/user-attachments/assets/54a9b535-8296-4267-bf6b-4abd00b070f8" />
 
@@ -437,7 +437,7 @@ microphone header and no RGB LED, both of which the voice-assist packages requir
 The ESP32 (non-S3) variants are excluded throughout — the mic needs a second I2S
 bus, which only the S3 has to spare.
 
-**Requirements**: Home Assistant with voice assistant configured, ESPHome firmware 2026.1.4+, esparagus-echo microphone packages (included via remote import)
+**Requirements**: Home Assistant with voice assistant configured, ESPHome firmware 2026.10.0+, esparagus-echo microphone packages (included via remote import)
 
 ---
 

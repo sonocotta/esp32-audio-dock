@@ -210,7 +210,7 @@ jobs:
         run: |
           docker run --rm \
             -v "${{ github.workspace }}/$CONFIG_DIR:/config" \
-            ghcr.io/esphome/esphome:2026.8.1 \
+            ghcr.io/esphome/esphome:2026.10.0 \
             compile "/config/$CONFIG_FILE"
 
       - name: Collect build artifacts
