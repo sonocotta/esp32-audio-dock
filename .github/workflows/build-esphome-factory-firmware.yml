@@ -191,6 +191,51 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Point this repo's packages at the branch under test
+        # The board/factory configs pull firmware/esphome/packages/** back out of
+        # this repo over the network (`url:` + `ref: main`), so by default a PR
+        # compiles its new configs against the *released* packages on main, and a
+        # package change goes untested until after it has merged. Repointing those
+        # refs at the branch under test closes that gap. On a push to main BRANCH
+        # is "main", so this is a no-op and the shippable image is built from
+        # exactly the same inputs as before.
+        env:
+          BRANCH: ${{ github.head_ref || github.ref_name }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          THIS_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          if [ "$BRANCH" = "main" ]; then
+            echo "Building main - packages already resolve to main, nothing to do."
+            exit 0
+          fi
+          if [ "$HEAD_REPO" != "$THIS_REPO" ]; then
+            echo "::notice::PR from fork $HEAD_REPO - leaving packages on main," \
+                 "its branch is not fetchable from origin."
+            exit 0
+          fi
+
+          # Rewrite only the `ref:` that belongs to a package pulled from THIS
+          # repo: `n` steps onto the line after a matching `url:`, which is always
+          # that package's `ref:`. Deliberately left alone - packages pulled from
+          # sibling repos such as sonocotta/esparagus-echo (this branch does not
+          # exist there), commented-out package blocks, and the `dashboard_import`
+          # package_import_url `...@main` values, which are compiled into the
+          # shipped image and must keep pointing at main. `-type f` skips the
+          # secrets.yaml symlinks, which `sed -i` would replace with real files,
+          # and `-not -path '*/.*'` keeps a local .esphome build cache (cloned
+          # copies of these very packages) out of it, so the step behaves the
+          # same on a developer's tree as on a clean CI checkout.
+          find firmware/esphome -name '*.yaml' -type f -not -path '*/.*' -print0 |
+            xargs -0r sed -i \
+            "\\|url: https://github.com/${THIS_REPO}\$|{n;s|^\\([[:space:]]*\\)ref: main\$|\\1ref: ${BRANCH}|;}"
+
+          echo "--- package refs now resolving to ---"
+          grep -rh -A1 "url: https://github.com/${THIS_REPO}\$" \
+            firmware/esphome --include='*.yaml' --exclude-dir='.*' |
+            grep -o "ref: .*" | sort | uniq -c || true
+
       - name: Compute version
         id: version
         run: |

@@ -26,11 +26,6 @@ substitutions:
   # Time to wait before verifying optimistic state changes match actual state
   optimistic_state_correction_delay: 1000ms
 
-external_components:
-  - source: github://pr#16057
-    components: [ generic_image, sendspin ]
-    refresh: 0s
-
 media_player:
   - id: !extend sendspin_group_media_player
 
@@ -263,25 +258,32 @@ spi:
   miso_pin: ${spi_miso_pin}
   id: spi_bus_display
 
-generic_image:
+image:
+  # Cover art and artist picture come from ESPHome's built-in Sendspin artwork
+  # (2026.9.0+). Each entry is an artwork *slot*: the slot carries the format and
+  # size requested from the server, and `current_image` names the image the LVGL
+  # widgets below draw.
   - platform: sendspin
-    id: sendspin_cover_art
+    id: cover_art_slot
     format: JPEG
-    type: rgb565
+    type: RGB565
     resize: 200x200
     source: ALBUM
+    current_image:
+      id: sendspin_cover_art
     on_image_display:
+      # A view does not invalidate the widget that draws it, so the source has to
+      # be set again on every display rather than left to the widget's initial src.
+      - lvgl.image.update:
+          id: album_art_widget
+          src: sendspin_cover_art
       - if:
           condition:
             lvgl.page.is_showing: sendspin_page
           then:
             # Built-in lvgl.image.update action doesn't support fading
-            # Update image and fade in after decoding
             - lambda: |-
                 lv_obj_t* img = id(album_art_widget);
-                // Update image source
-                lv_img_set_src(img, id(sendspin_cover_art));
-                lv_img_set_zoom(img, LV_ZOOM_NONE);
                 // Fade in new image
                 static lv_anim_t fade_in;
                 lv_anim_init(&fade_in);
@@ -292,20 +294,17 @@ generic_image:
                     lv_obj_set_style_img_opa((lv_obj_t*)obj, v, 0);
                 });
                 lv_anim_start(&fade_in);
-          else:
-            # Page isn't currently open, don't bother fading
-            - lvgl.image.update: 
-                id: album_art_widget
-                src: sendspin_cover_art
     on_image_error:
       - logger.log: "Failed to decode cover art image"
 
   - platform: sendspin
-    id: sendspin_artist_picture
+    id: artist_picture_slot
     format: JPEG
-    type: rgb565
+    type: RGB565
     resize: 200x200
     source: ARTIST
+    current_image:
+      id: sendspin_artist_picture
     on_image_display:
       - lvgl.image.update: 
           id: artist_picture_widget
