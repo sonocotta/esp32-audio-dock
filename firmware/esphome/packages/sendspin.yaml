@@ -9,14 +9,25 @@
 #   - media_player_led_control: "true" (default) — set to "false"
 #     when voice-assist.yaml is also included, to avoid conflicts
 #     with voice-assist LED state management.
+#   - sendspin_manufacturer / sendspin_model / sendspin_firmware_version -
+#     device information this client reports to the Sendspin server;
+#     defaults to Sonocotta / ${friendly_name} / dev. The factory images
+#     feed the CI-stamped release into sendspin_firmware_version.
 # Requires i2s_audio to be configured in main config
-# !! Requires ESPHome 2026.5.0 or later for latest sendspin features and optimizations !!
-# !! at the moment this would only build with ESPHome (Dev) but should be available in ESPHome (main) by the mid-May !!
+# !! Requires ESPHome 2026.10.0 or later for latest sendspin features and optimizations !!
 # ============================================================
 
 substitutions:
   media_player_led_control: "true"
   media_source_buffer_size: 200000
+
+  # Device information reported to the Sendspin server in the client/hello
+  # message. Left unset the component falls back to the `esphome: project:`
+  # entry and then to its own defaults, which show "ESPHome" and the node
+  # name rather than the product.
+  sendspin_manufacturer: Sonocotta
+  sendspin_model: ${friendly_name}
+  sendspin_firmware_version: dev
 
 globals:
   - id: current_volume
@@ -42,6 +53,9 @@ text_sensor:
 sendspin:
   id: sendspin_hub
   task_stack_in_psram: ${task_stack_in_psram}
+  manufacturer: ${sendspin_manufacturer}
+  model: ${sendspin_model}
+  firmware_version: ${sendspin_firmware_version}
 
 media_source:
   - platform: sendspin

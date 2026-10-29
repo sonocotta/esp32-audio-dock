@@ -18,6 +18,7 @@
 
 substitutions:
   version: dev
+  sendspin_firmware_version: "${version}"
 
 packages:
   hifi-esp32-s3-idf-sendspin-factory: !include hifi-esp32-s3-idf-sendspin.factory.yaml

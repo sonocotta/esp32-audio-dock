@@ -22,6 +22,7 @@
 
 substitutions:
   version: dev
+  sendspin_firmware_version: "${version}"
 
 packages:
   louder-esp32-s3-mini-55-sendspin: !include louder-esp32-s3-mini-55-sendspin.yaml
