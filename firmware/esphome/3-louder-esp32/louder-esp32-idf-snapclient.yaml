@@ -45,6 +45,9 @@ substitutions:
   # IR Receiver
   ir_rx_pin: GPIO39
 
+  # Supply voltage sense (10:1 divider, ADC1_CH0)
+  power_adc_pin: GPIO36
+
   # SPI pins (for display)
   spi_clk_pin: GPIO18
   spi_mosi_pin: GPIO23
@@ -136,6 +139,7 @@ packages:
       - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
+      - firmware/esphome/packages/monitoring-power.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
       - firmware/esphome/packages/monitoring-eth.yaml
       # Optional OLED display (uncomment to enable, requires SPI bus)
