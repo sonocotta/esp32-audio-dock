@@ -1,0 +1,48 @@
+# ============================================================
+# Monitoring - Supply Voltage (Optional)
+# ============================================================
+# Reads the board supply voltage (VCC) through the on-board
+# resistive divider wired to an ADC1 pin.
+#
+# The divider is 10:1, so the ADC never sees more than
+# VCC / 10 (2.6 V at the 26 V maximum input). 12db attenuation
+# gives the ~0..3.1 V input range needed to cover that span;
+# lower attenuation would clip well below the rated maximum.
+#
+# Only ADC1 pins can be used — ADC2 is unavailable while Wi-Fi
+# is active.
+#
+# Requires substitutions:
+#   - friendly_name
+#   - power_adc_pin   ADC1 pin wired to the divider
+#                     (GPIO36 on ESP32, GPIO4 on ESP32-S3)
+#
+# Optional substitutions (override in main config to change defaults):
+#   - power_divider_ratio:    10.0 (default) divider ratio
+#   - power_adc_attenuation:  12db (default)
+#   - power_update_interval:  60s (default)
+# ============================================================
+
+substitutions:
+  power_divider_ratio: "10.0"   # 10:1 divider, ADC reading is scaled back up by this
+  power_adc_attenuation: 12db   # 0..3.1V ADC range, fits VCC/10 for the full 5..26V input
+  power_update_interval: 60s
+
+sensor:
+  - platform: adc
+    id: supply_voltage
+    name: "${friendly_name} Supply Voltage"
+    pin: ${power_adc_pin}
+    attenuation: ${power_adc_attenuation}
+    update_interval: ${power_update_interval}
+    samples: 16
+    sampling_mode: avg
+    accuracy_decimals: 2
+    filters:
+      - multiply: ${power_divider_ratio}
+      # Sliding median over the last 5 readings, rejects current-spike
+      # dips without slowing the publish rate below power_update_interval
+      - median:
+          window_size: 5
+          send_every: 1
+          send_first_at: 1
