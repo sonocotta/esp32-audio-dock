@@ -1,6 +1,6 @@
 {
   "name": "louder-esp32s3-sendspin-eth",
-  "version": "2026.10.29-351ff08d",
+  "version": "2026.10.30-48c6d531",
   "home_assistant_domain": "esphome",
   "funding_url": "https://esphome.io/guides/supporters.html",
   "new_install_prompt_erase": true,
