@@ -12,6 +12,16 @@
 # Only ADC1 pins can be used — ADC2 is unavailable while Wi-Fi
 # is active.
 #
+# BOARD REVISION: the divider is populated from rev H9 (ESP32) and
+# rev K2 (ESP32-S3) onward. Do not enable this on earlier revisions.
+# The ADC pin floats there, and nothing defines its level: the reading
+# is set by ESD-diode leakage and stray pickup, drifts over time, and
+# differs between boards. Multiplied by the divider ratio it lands
+# anywhere in 0..31V, and the averaging and median filters below smooth
+# it into a steady, plausible-looking, entirely fake supply voltage.
+# GPIO34-39 on the classic ESP32 are input-only pads with no internal
+# pull-up or pull-down, so this cannot be pinned down in software.
+#
 # Requires substitutions:
 #   - friendly_name
 #   - power_adc_pin   ADC1 pin wired to the divider
