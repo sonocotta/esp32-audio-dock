@@ -39,6 +39,9 @@ substitutions:
   # IR Receiver
   ir_rx_pin: GPIO39
 
+  # Supply voltage sense (10:1 divider, ADC1_CH0), populated from rev H9
+  power_adc_pin: GPIO36
+
   # SPI pins (for display)
   spi_clk_pin: GPIO18
   spi_mosi_pin: GPIO23
@@ -138,6 +141,9 @@ packages:
       - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/ir-receiver.yaml
       - firmware/esphome/packages/monitoring.yaml
+      # Optional supply voltage sense (uncomment to enable, requires rev H9 or newer;
+      # earlier revisions leave the divider unpopulated and the ADC pin floating)
+      # - firmware/esphome/packages/monitoring-power.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
       - firmware/esphome/packages/monitoring-eth.yaml
       # Ethernet (W5500), running alongside `wifi:` via the network priority list above.
