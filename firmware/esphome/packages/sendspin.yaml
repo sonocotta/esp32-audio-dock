@@ -61,6 +61,14 @@ media_source:
   - platform: sendspin
     id: sendspin_source
     decode_memory: internal
+    # Codecs this client advertises to the Sendspin server. Opus is left out on
+    # purpose: we'd rather not ship a codec with unresolved patent-licensing
+    # claims in prebuilt images. FLAC is lossless and the extra bandwidth is
+    # irrelevant on a LAN. To enable Opus, swap the two lines below - it needs
+    # `sample_rate: 48000` (the default), and on non-S3 boards also the `opus:`
+    # block in `sendspin-addon-esp32.yaml`.
+    codecs: [flac, pcm]
+    # codecs: [flac, opus, pcm]
 
   - platform: audio_http
     id: http_media_source

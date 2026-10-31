@@ -32,14 +32,14 @@ api:
 # Allow Over-The-Air updates
 ota:
   platform: esphome
-  password: !secret esphome_ota_password
+  password: !secret ota_password
 
 wifi:
-  ssid: !secret esphome_wifi_ssid
-  password: !secret esphome_wifi_password
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
   ap:
     ssid: "$name Hotspot"
-    password: !secret esphome_ap_password
+    password: !secret ap_password
 
 captive_portal:
 
