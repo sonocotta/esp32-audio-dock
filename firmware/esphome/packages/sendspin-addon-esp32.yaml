@@ -18,8 +18,11 @@ audio:
   codecs:
     flac:
       buffer_memory: internal  # Unnecessary on an ESP32-S3; uses more internal memory
-    opus:
-      state_memory: internal  # Unnecessary on an ESP32-S3; uses more internal memory
-      pseudostack:
-        threadsafe: false  # Unnecessary on an ESP32-S3; prevents decoding two Opus streams simultaneously
+    # Opus is disabled by default - see the `codecs:` note in sendspin.yaml.
+    # Listing it here compiles the Opus decoder into the image, so uncomment
+    # this together with `opus` in the sendspin media_source codec list.
+    # opus:
+    #   state_memory: internal  # Unnecessary on an ESP32-S3; uses more internal memory
+    #   pseudostack:
+    #     threadsafe: false  # Unnecessary on an ESP32-S3; prevents decoding two Opus streams simultaneously
 
