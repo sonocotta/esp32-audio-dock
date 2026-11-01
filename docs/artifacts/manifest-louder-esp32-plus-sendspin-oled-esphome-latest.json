@@ -1,6 +1,6 @@
 {
   "name": "louder-esp32-plus-sendspin-oled",
-  "version": "2026.10.30-2318b4c7",
+  "version": "2026.11.01-9ece2455",
   "home_assistant_domain": "esphome",
   "funding_url": "https://esphome.io/guides/supporters.html",
   "new_install_prompt_erase": true,

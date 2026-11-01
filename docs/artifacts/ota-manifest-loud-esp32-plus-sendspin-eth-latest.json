@@ -1,14 +1,14 @@
 {
   "name": "loud-esp32-plus-sendspin-eth",
-  "version": "2026.10.30-2318b4c7",
+  "version": "2026.11.01-9ece2455",
   "builds": [
     {
       "chipFamily": "ESP32",
       "ota": {
-        "md5": "5fadccb9cf093350b1e524901fd51d30",
+        "md5": "6818991ebfad51f39773386b8b7d1ddf",
         "path": "https://sonocotta.github.io/esp32-audio-dock/artifacts/binaries/esphome/loud-esp32-plus-sendspin-eth/firmware.ota.bin",
-        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/2318b4c7",
-        "summary": "Loud-ESP32-Plus Sendspin Ethernet firmware 2026.10.30-2318b4c7"
+        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/9ece2455",
+        "summary": "Loud-ESP32-Plus Sendspin Ethernet firmware 2026.11.01-9ece2455"
       }
     }
   ],
