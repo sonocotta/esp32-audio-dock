@@ -245,6 +245,8 @@ Building upon the success of the Amped-ESP32, the **Amped-ESP32 Plus** combines 
 - Digital EQ and dynamic range processing
 - Same power output as Amped-ESP32 with enhanced audio quality
 
+⚠️ A batch of rev D0/E0 boards with the TPA3118 amp, shipped in Oct 2026, was assembled with the wrong DAC output filter capacitors, which causes muffled sound. See [errata: Amped-ESP32-Plus muffled sound caused by wrong DAC output filter capacitors](/errata/amped-esp32-plus-dac-filter-caps.md) for how to check your board and fix it.
+
 **Where to buy:**
 
 - Amped-ESP32 at [Lectronz](https://lectronz.com/products/amped-esp32), [Elecrow](https://www.elecrow.com/amped-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32/)
@@ -1339,3 +1341,4 @@ You may support my work by ordering these products at Lectronz, Elecrow, and Tin
 ## Errata
 
 - [TPA3128 1SPW modulation pop and static noise issue](/errata/tpa3128-1spw-pop-noise.md)
+- [Amped-ESP32-Plus muffled sound caused by wrong DAC output filter capacitors](/errata/amped-esp32-plus-dac-filter-caps.md)
