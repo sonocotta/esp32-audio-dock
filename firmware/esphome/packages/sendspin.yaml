@@ -61,6 +61,7 @@ media_source:
   - platform: sendspin
     id: sendspin_source
     decode_memory: internal
+    static_delay_adjustable: true
     # Codecs this client advertises to the Sendspin server. Opus is left out on
     # purpose: we'd rather not ship a codec with unresolved patent-licensing
     # claims in prebuilt images. FLAC is lossless and the extra bandwidth is
