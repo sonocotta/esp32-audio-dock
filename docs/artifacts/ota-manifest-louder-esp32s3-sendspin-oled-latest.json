@@ -1,14 +1,14 @@
 {
   "name": "louder-esp32s3-sendspin-oled",
-  "version": "2026.11.01-9ece2455",
+  "version": "2026.11.04-1ab92ea9",
   "builds": [
     {
       "chipFamily": "ESP32-S3",
       "ota": {
-        "md5": "a91c69b6fed8988257c0d91ab31f1783",
+        "md5": "d6920bfb9959d14bed5b613937ba17c8",
         "path": "https://sonocotta.github.io/esp32-audio-dock/artifacts/binaries/esphome/louder-esp32s3-sendspin-oled/firmware.ota.bin",
-        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/9ece2455",
-        "summary": "Louder-ESP32-S3 Sendspin firmware (OLED screen) 2026.11.01-9ece2455"
+        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/1ab92ea9",
+        "summary": "Louder-ESP32-S3 Sendspin firmware (OLED screen) 2026.11.04-1ab92ea9"
       }
     }
   ],
