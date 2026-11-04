@@ -8,7 +8,7 @@
 # ============================================================
 
 substitutions:
-  name: esphome-web-57743c
+  name: louder-esp32s3-mini-42
   friendly_name: Louder-ESP32-M2-Mini
   # name: esphome-web-c94a08
   # friendly_name: Louder-ESP32-M1-Mini

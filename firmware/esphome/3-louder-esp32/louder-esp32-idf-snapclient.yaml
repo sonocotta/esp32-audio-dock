@@ -14,7 +14,7 @@
 # ============================================================
 
 substitutions:
-  name: esphome-web-eb21c4
+  name: louder-esp32
   friendly_name: Louder-ESP32
   task_stack_in_psram: "false" 
 

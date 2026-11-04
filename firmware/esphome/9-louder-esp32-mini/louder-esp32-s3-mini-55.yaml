@@ -9,7 +9,7 @@
 # ============================================================
 
 substitutions:
-  name: esphome-web-83d108
+  name: louder-esp32s3-mini-55
   friendly_name: Louder-ESP32-Mini-55
   task_stack_in_psram: "true"
 

@@ -596,9 +596,13 @@ Each configuration file has substitutions at the top:
 
 ```yaml
 substitutions:
-  name: esphome-web-dc95a8  # Change this to your device name
+  name: hifi-esp32  # Change this to your device name
   friendly_name: HiFi-ESP32  # Change this to friendly name
 ```
+
+The name must be unique on your network, so change it if you build the same config for more than one board.
+
+If a device already runs a config with a different name (for example `esphome-web-xxxxxx`), it can't be found under the new name until the update is installed. Do that first OTA using its current address, either with `esphome run <config>.yaml --device <ip-address>` or by temporarily setting `wifi: use_address: <ip-address>`.
 
 ### Customizing Pinout
 
