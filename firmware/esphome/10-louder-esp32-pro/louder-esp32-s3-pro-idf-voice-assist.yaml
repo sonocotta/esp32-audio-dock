@@ -10,7 +10,7 @@
 # ============================================================
 
 substitutions:
-  name: esphome-web-c94a05
+  name: louder-esp32s3-pro
   friendly_name: Louder-ESP32-Pro
   task_stack_in_psram: "true"
 

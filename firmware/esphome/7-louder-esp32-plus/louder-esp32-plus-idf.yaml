@@ -9,7 +9,7 @@
 # ============================================================
 
 substitutions:
-  name: esphome-web-8a2d98
+  name: louder-esp32-plus
   friendly_name: Louder-ESP32-Plus
   task_stack_in_psram: "false" 
 

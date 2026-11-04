@@ -14,7 +14,7 @@
 # ============================================================
 
 substitutions:
-  name: esphome-web-02b6ac
+  name: hifi-esp32-plus
   friendly_name: HIFI-ESP32-Plus
   task_stack_in_psram: "false"
 

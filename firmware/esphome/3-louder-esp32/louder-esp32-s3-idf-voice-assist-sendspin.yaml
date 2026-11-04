@@ -12,7 +12,7 @@
 # ============================================================
 
 substitutions:
-  name: esphome-web-f63c10
+  name: louder-esp32s3
   friendly_name: Louder-ESP32-S3
   task_stack_in_psram: "true"
 

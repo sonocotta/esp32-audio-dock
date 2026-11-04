@@ -12,7 +12,7 @@
 # ============================================================
 
 substitutions:
-  name: esphome-web-ebb758
+  name: amped-esp32s3-plus
   friendly_name: Amped-ESP32-S3-Plus
   task_stack_in_psram: "true"
 

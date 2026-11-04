@@ -9,10 +9,8 @@
 # ============================================================
 
 substitutions:
-  name: esphome-web-57743c
-  friendly_name: Louder-ESP32-M2-Mini
-  # name: esphome-web-c94a08
-  # friendly_name: Louder-ESP32-M1-Mini
+  name: louder-esp32s3-mini-42
+  friendly_name: Louder-ESP32-Mini
   task_stack_in_psram: "true" 
 
   # ===== Board-Specific Pinouts =====
