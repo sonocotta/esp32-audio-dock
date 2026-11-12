@@ -1,12 +1,14 @@
 name: Build Examples
 
-on:   
-  push: 
-    paths: 
-    - ./firmware
+on:
+  push:
+    paths:
+    - 'firmware/**'
+    - '.github/workflows/build-platformio-samples.yml'
   pull_request:
     paths:
-    - ./firmware
+    - 'firmware/**'
+    - '.github/workflows/build-platformio-samples.yml'
 
 jobs:
   build:
