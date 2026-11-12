@@ -2,6 +2,11 @@
 
 #include <Arduino.h>
 #include <I2S.h>
+
+#ifndef I2S_SAMPLE_RATE
+#define I2S_SAMPLE_RATE 44100
+#endif
+
 #include <vector>
 #include <cmath>
 
@@ -14,8 +19,12 @@ protected:
 
     // I2SClass i2s;
 
-    const int sampleRate        = 16000; // sample rate in Hz
-    const int maxFreq           = 8000; // maximum frequency in Hz
+    // The external DAC derives its system clock from BCK, so the I2S rate is not
+    // free: BCK = sampleRate * bps * 2 must stay inside the DAC PLL input range
+    // (1 MHz .. 50 MHz for PCM512x). 16 kHz / 16 bit gives 512 kHz BCK, which is
+    // below that minimum - the PLL then only locks on some parts. Keep >= 32 kHz.
+    const int sampleRate        = I2S_SAMPLE_RATE; // sample rate in Hz
+    const int maxFreq           = I2S_SAMPLE_RATE / 2; // Nyquist limit in Hz
     //i2s_data_bit_width_t bps    = I2S_DATA_BIT_WIDTH_16BIT;
     const int bps               = 16;
     i2s_mode_t mode             = I2S_PHILIPS_MODE;
