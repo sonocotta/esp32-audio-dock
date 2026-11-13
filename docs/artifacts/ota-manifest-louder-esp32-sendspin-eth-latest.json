@@ -1,14 +1,14 @@
 {
   "name": "louder-esp32-sendspin-eth",
-  "version": "2026.11.13-4d21c413",
+  "version": "2026.11.13-98d19a08",
   "builds": [
     {
       "chipFamily": "ESP32",
       "ota": {
-        "md5": "b638ced62965cb44a90cf52d7978c62c",
+        "md5": "1fb00d4bb92ec54b17bbc24d3992071c",
         "path": "https://sonocotta.github.io/esp32-audio-dock/artifacts/binaries/esphome/louder-esp32-sendspin-eth/firmware.ota.bin",
-        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/4d21c413",
-        "summary": "Louder-ESP32 Sendspin Ethernet firmware 2026.11.13-4d21c413"
+        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/98d19a08",
+        "summary": "Louder-ESP32 Sendspin Ethernet firmware 2026.11.13-98d19a08"
       }
     }
   ],
