@@ -53,9 +53,15 @@ esp32:
       CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y" 
   
 logger:
+  # Compiled with DEBUG so the "Log Level" select can raise it at runtime;
+  # starts at INFO on every boot.
   level: DEBUG
+  initial_level: INFO
 
 api:
+  # Don't reboot when no Home Assistant client is connected: players used
+  # only with Music Assistant (Sendspin) never have one.
+  reboot_timeout: 0s
 
 ota:
   platform: esphome

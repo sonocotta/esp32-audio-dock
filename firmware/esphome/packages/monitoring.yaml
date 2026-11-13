@@ -1,51 +1,95 @@
 # ============================================================
 # Monitoring - System Metrics and Diagnostics
 # ============================================================
-# Monitors uptime, temperature, and memory usage
+# Uptime, temperature, memory and log-level diagnostics.
 # WiFi-specific sensors (wifi_signal, wifi_info) are in
 # monitoring-wifi.yaml — include that package when using WiFi.
+#
+# Most of these entities only matter while debugging, so they
+# are compiled in but `disabled_by_default`: Home Assistant adds
+# them disabled and records nothing for them. To debug, enable
+# the ones you need on the device page in Home Assistant
+# (Settings → Devices → <device> → Diagnostic), and raise
+# "Log Level" to DEBUG there. No rebuild is needed, so this works
+# on the factory firmware too. Log Level returns to the
+# `initial_level` set in the device config (INFO) on every boot.
+#
+# The log level can only be raised as far as the level the
+# firmware was compiled with (`logger: level:`), which is why the
+# device configs compile with DEBUG and start at INFO.
+#
 # Requires substitutions:
 #   - friendly_name
 # ============================================================
 
 debug:
-  update_interval: 10s
+  update_interval: 30s
+
+# Time source for the Uptime timestamp below. Home Assistant is
+# the only consumer of that sensor, so its clock is enough.
+time:
+  - platform: homeassistant
+    id: monitoring_time
+
+select:
+  # Runtime log level. Options go up to the compiled `logger: level:`.
+  - platform: logger
+    name: "Log Level"
 
 sensor:
+  # Boot time as a timestamp: published once after boot (and when
+  # the clock syncs), instead of a new value every minute.
   - platform: uptime
+    type: timestamp
+    time_id: monitoring_time
     name: "${friendly_name} Uptime"
-    update_interval: 60s
-    
+
   - platform: internal_temperature
     name: "${friendly_name} CPU Temperature"
     update_interval: 60s
-    
+    entity_category: diagnostic
+    disabled_by_default: true
+
   - platform: debug
-    # free:
-    #   name: "Heap Free"
-    # block:
-    #   name: "Heap Max Block"
-    # min_free:
-    #   name: "Heap Min Free"
-    # fragmentation:
-    #   name: "Heap Fragmentation"
+    # Internal (non-PSRAM) heap. "Free PSRAM" below does not cover it, and this is the
+    # heap the Wi-Fi and Ethernet drivers must take their DMA-capable buffers from, so
+    # it is what explains "no mem for receive buffer" style failures — especially on
+    # plain ESP32 boards running both network stacks at once (see network: priority:).
+    free:
+      name: "Heap Free"
+      disabled_by_default: true
+    min_free:
+      name: "Heap Min Free"
+      disabled_by_default: true
+    fragmentation:
+      name: "Heap Fragmentation"
+      disabled_by_default: true
+    # Largest single free block. Worth enabling when a buffer allocation fails while
+    # "Heap Free" still looks healthy — that gap is fragmentation.
+    block:
+      name: "Heap Max Block"
+      disabled_by_default: true
     loop_time:
       name: "Loop Time"
+      disabled_by_default: true
     psram:
       name: "Free PSRAM"
+      disabled_by_default: true
     cpu_frequency:
       name: "CPU Frequency"
+      disabled_by_default: true
 
 text_sensor:
   - platform: debug
-    # device:
-    #   name: "Device Info"
+    device:
+      name: "Device Info"
+      disabled_by_default: true
+    # Set once per boot; useful when reporting an issue, so kept enabled.
     reset_reason:
       name: "Reset Reason"
 
-binary_sensor:
-  - platform: status
-    name: "${friendly_name} Status"
+# No "Status" binary sensor: over the native API Home Assistant
+# already marks the device unavailable when it disconnects.
 
 button:
   - platform: restart

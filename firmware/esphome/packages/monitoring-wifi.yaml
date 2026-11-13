@@ -4,6 +4,10 @@
 # WiFi-specific sensors split from monitoring.yaml so they can
 # be conditionally included. Omit this package when using
 # Ethernet (e.g. W5500) instead of WiFi.
+#
+# WiFi Signal changes all the time, so it is disabled by default
+# (enable it in Home Assistant when debugging the connection).
+# IP and MAC only change on reconnect and stay enabled.
 # Requires substitutions:
 #   - friendly_name
 # ============================================================
@@ -12,6 +16,7 @@ sensor:
   - platform: wifi_signal
     name: "${friendly_name} WiFi Signal"
     update_interval: 60s
+    disabled_by_default: true
 
 text_sensor:
   - platform: wifi_info

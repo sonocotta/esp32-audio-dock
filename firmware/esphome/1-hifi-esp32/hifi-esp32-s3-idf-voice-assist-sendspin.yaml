@@ -88,7 +88,10 @@ esp32:
       CONFIG_ESP_TASK_WDT_TIMEOUT_S: "10"
 
 logger:
-  level: INFO  # Changed from DEBUG to reduce overhead
+  # Compiled with DEBUG so the "Log Level" select can raise it at runtime;
+  # starts at INFO on every boot.
+  level: DEBUG
+  initial_level: INFO
 
 ota:
   platform: esphome
@@ -99,6 +102,9 @@ wifi:
   password: !secret wifi_password
 
 api:
+  # Don't reboot when no Home Assistant client is connected: players used
+  # only with Music Assistant (Sendspin) never have one.
+  reboot_timeout: 0s
 
 psram:
   mode: octal
