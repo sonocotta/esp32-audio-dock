@@ -9,10 +9,16 @@
 # are compiled in but `disabled_by_default`: Home Assistant adds
 # them disabled and records nothing for them. To debug, enable
 # the ones you need on the device page in Home Assistant
-# (Settings → Devices → <device> → Diagnostic), and raise
-# "Log Level" to DEBUG there. No rebuild is needed, so this works
-# on the factory firmware too. Log Level returns to the
-# `initial_level` set in the device config (INFO) on every boot.
+# (Settings → Devices → <device> → Diagnostic). No rebuild is
+# needed, so this works on the factory firmware too.
+#
+# Two ways to get DEBUG logs from Home Assistant:
+#   - "Log Level" select: changes the level right away, until the
+#     next reboot (then back to the device config's `initial_level`,
+#     INFO).
+#   - "Debug Logging" switch: DEBUG right away AND from early in
+#     every boot, until it is turned off again. Use this when the
+#     problem shows up during startup.
 #
 # The log level can only be raised as far as the level the
 # firmware was compiled with (`logger: level:`), which is why the
@@ -35,6 +41,30 @@ select:
   # Runtime log level. Options go up to the compiled `logger: level:`.
   - platform: logger
     name: "Log Level"
+
+switch:
+  # Persistent DEBUG logging. The state is stored on the device; a template
+  # switch restores at setup priority HARDWARE-2 and runs its turn_on_action
+  # when it restores ON, so DEBUG is set before Wi-Fi, audio and Sendspin
+  # start, without needing `esphome: on_boot` (which the factory configs
+  # already define as a mapping). Turning it off returns to INFO.
+  - platform: template
+    id: debug_logging
+    name: "Debug Logging"
+    icon: mdi:bug
+    entity_category: config
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    turn_on_action:
+      - logger.set_level: DEBUG
+    turn_off_action:
+      - logger.set_level: INFO
+    # Write the new state to flash now rather than within the next
+    # minute, so it survives a power cut right after switching.
+    on_turn_on:
+      - lambda: global_preferences->sync();
+    on_turn_off:
+      - lambda: global_preferences->sync();
 
 sensor:
   # Boot time as a timestamp: published once after boot (and when
