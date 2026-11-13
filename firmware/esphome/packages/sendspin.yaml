@@ -50,6 +50,16 @@ text_sensor:
     type: album
     name: Album
 
+  # Shows the 6-digit code to enter when Music Assistant asks for a pairing
+  # code for this player. Having this sensor is what makes the
+  # device offer dynamic pairing; it is empty while no pairing is in progress.
+  # Unpaired (guest) access stays on, so pairing is optional.
+  - platform: sendspin
+    id: sendspin_pairing_code
+    type: pairing_code
+    name: Sendspin Pairing Code
+    icon: mdi:link-variant
+
 sendspin:
   id: sendspin_hub
   task_stack_in_psram: ${task_stack_in_psram}
