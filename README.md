@@ -572,6 +572,8 @@ Sendspin references:
 - [XDA Developers post](https://www.xda-developers.com/sendspin-esphome-multi-room-audio/)
 - [ESPHome PR](https://github.com/esphome/esphome/pull/12284)
 
+**Pairing with Music Assistant:** Music Assistant 2.11 and newer can pair with a Sendspin player and may ask for a pairing code. The code appears in Home Assistant as the device's **Sendspin Pairing Code** sensor. Pairing is optional: unpaired (guest) playback keeps working as before. See [Pairing with Music Assistant](/firmware/esphome/README.md#pairing-with-music-assistant) for the steps.
+
 #### Install steps
 
 <details>

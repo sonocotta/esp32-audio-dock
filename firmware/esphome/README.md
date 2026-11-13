@@ -403,6 +403,22 @@ Sendspin synchronized audio playback:
 
 <img width="846" height="1198" alt="image" src="https://github.com/user-attachments/assets/54a9b535-8296-4267-bf6b-4abd00b070f8" />
 
+#### Pairing with Music Assistant
+
+Music Assistant 2.11 and newer can *pair* with a Sendspin player, so the player trusts that server from then on. The Sendspin configs support this with a 6-digit pairing code that the device shows in Home Assistant.
+
+**Pairing is optional.** The configs keep unpaired (guest) access on, so Music Assistant can still play on the device without pairing, just as before. You only need the code if you want to pair the player instead of using it as a guest.
+
+To pair a player:
+
+1. Install the current config on the device again, so it gets the new **Sendspin Pairing Code** sensor. The configs pull their packages from GitHub, and ESPHome caches them for up to a day, so on an existing install the sensor can take that long to appear.
+2. Start pairing the player in Music Assistant. When it asks for a pairing code, open the device in Home Assistant (Settings → Devices & services → ESPHome) and read the **Sendspin Pairing Code** sensor.
+3. Enter the 6-digit code in Music Assistant. The sensor clears once pairing is done.
+
+The sensor is empty whenever no pairing is in progress. After 20 wrong codes in a row the device stops accepting new attempts; restart it to try again.
+
+Without Home Assistant there is currently no way to read the code: it isn't logged, and these configs don't show it on a display yet. In that case keep using the player unpaired.
+
 ---
 
 ### Voice Assistant
