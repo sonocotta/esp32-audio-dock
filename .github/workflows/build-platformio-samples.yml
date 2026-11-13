@@ -3,15 +3,11 @@ name: Build Examples
 on:
   push:
     paths:
-    - 'firmware/esp32-i2s-bare/**'
-    - 'firmware/esp32-i2s-esp8266audio/**'
-    - 'firmware/esp32-i2s-web-radio/**'
+    - 'firmware/**'
     - '.github/workflows/build-platformio-samples.yml'
   pull_request:
     paths:
-    - 'firmware/esp32-i2s-bare/**'
-    - 'firmware/esp32-i2s-esp8266audio/**'
-    - 'firmware/esp32-i2s-web-radio/**'
+    - 'firmware/**'
     - '.github/workflows/build-platformio-samples.yml'
 
 jobs:
