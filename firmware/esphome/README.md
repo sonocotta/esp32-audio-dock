@@ -19,10 +19,12 @@ This directory contains ESPHome firmware configurations for all ESP32 Audio Dock
     - [8. Amped-ESP32-Plus](#8-amped-esp32-plus)
     - [9. Louder-ESP32-Mini](#9-louder-esp32-mini)
     - [10. Louder-ESP32-Pro](#10-louder-esp32-pro)
+    - [11. HiFi-ESP32-Input](#11-hifi-esp32-input)
   - [Configuration Variants](#configuration-variants)
     - [Standard Media Player](#standard-media-player)
     - [Snapclient](#snapclient)
     - [Sendspin](#sendspin)
+    - [Sendspin Source (line input)](#sendspin-source-line-input)
     - [Voice Assistant](#voice-assistant)
   - [Quick Start](#quick-start)
   - [Building and Flashing](#building-and-flashing)
@@ -44,6 +46,7 @@ This directory contains ESPHome firmware configurations for all ESP32 Audio Dock
   - [Package System](#package-system)
     - [Core Packages](#core-packages)
     - [DAC Packages](#dac-packages)
+    - [ADC Packages](#adc-packages)
     - [Audio Addon Packages](#audio-addon-packages)
     - [Media Player Addon Packages](#media-player-addon-packages)
     - [Sendspin Addon Packages](#sendspin-addon-packages)
@@ -333,6 +336,42 @@ The Pro board is a feature-rich platform with:
 
 ---
 
+### 11. HiFi-ESP32-Input
+
+> ⚠️ **First prototype.** This board is experimental; expect rough edges and
+> changes to pinout, packages and config names.
+
+**ADC**: PCM1863 (I2C + I2S) stereo capture  
+**MCU**: ESP32-S3  
+**Target**: Feeding an analog source (turntable, CD player, TV) into Music Assistant  
+**Features**: 3.5 mm minijack and two analog coax inputs with a runtime input selector, RGB LED, IR receiver
+
+The capture counterpart of HiFi-ESP32-Plus: the PCM5122 DAC is replaced by a
+PCM1863 ADC, so the I2S data line runs the other way and the board is a *source*
+rather than a player. The wiring is otherwise the same, including the I2C pins
+and the 0x4A/0x4D address split between ADC and DAC.
+
+**Directory**: `11-hifi-esp32-input/`
+
+**Configurations:**
+- `hifi-esp32-s3-input-idf-sendspin.yaml` - Streams the line input to Music Assistant as a Sendspin source
+
+**Packages used**: `adc-pcm1863.yaml`, `audio-input.yaml`, `sendspin-source.yaml`, `light.yaml`, `ir-receiver.yaml`, `monitoring.yaml`, `monitoring-wifi.yaml`  
+**Optional**: `ethernet-w5500.yaml`
+
+**Picking the input**: the **Line Input** select on the device page switches the
+PCM1863's analog mux while the board is running, so one image covers every
+socket. `VIN2` is the minijack, `VIN1` is the coax pair, and `NONE` disconnects
+the mux, which is the quietest way to mute the capture side. The remaining
+options the dropdown offers (`VIN3`, `VIN4`, `DIFF_1`, `DIFF_2`) are inputs the
+chip supports but this board does not wire.
+
+**Requires ESPHome 2026.11.0 or later** - the Sendspin source role is not in
+earlier releases. The `pcm1863` ADC driver is not in ESPHome yet either and is
+pulled in as an external component; see `packages/adc-pcm1863.yaml`.
+
+---
+
 ## Configuration Variants
 
 ### Standard Media Player
@@ -418,6 +457,34 @@ To pair a player:
 The sensor is empty whenever no pairing is in progress. After 20 wrong codes in a row the device stops accepting new attempts; restart it to try again.
 
 Without Home Assistant there is currently no way to read the code: it isn't logged, and these configs don't show it on a display yet. In that case keep using the player unpaired.
+
+---
+
+### Sendspin Source (line input)
+
+**Files**: `*-input-idf-sendspin.yaml`
+
+The mirror image of the Sendspin player. Instead of playing what the server
+sends, the board captures its analog line input and offers it to Music
+Assistant as a *source*, which can then be routed to any player or group on the
+network. This is how a turntable, CD player or TV ends up on the same
+multi-room system as everything else.
+
+Only HiFi-ESP32-Input has the ADC this needs.
+
+- One source per board, stereo, 48 kHz
+- Sent as 16-bit to keep LAN traffic down, regardless of the ADC's own width
+- **Line Input** select switches the analog socket at runtime
+- **Line In Signal** switch tells the server whether anything is plugged in.
+  Nothing on the board measures the analog level, so it is a manual or
+  automation-driven hint rather than a detector.
+- Pairing works exactly as it does for players, through the **Sendspin Pairing
+  Code** sensor described above
+
+**Best for**: Bringing an analog source into a Sendspin/Music Assistant setup
+
+**Note**: Requires ESPHome 2026.11.0 or later - the source role is not in
+earlier releases.
 
 ---
 
@@ -681,6 +748,8 @@ The package system promotes code reusability across different hardware variants.
 - **`media-player-no-light.yaml`**: Media player without RGB LED control — for boards without LEDs (e.g., Louder-ESP32-Mini)
 - **`sendspin.yaml`**: Sendspin multi-room player — defines `sendspin_group_media_player`, `external_media_player`, and audio sources
 - **`sendspin-no-light.yaml`**: Sendspin without RGB LED control — for boards without LEDs
+- **`sendspin-source.yaml`**: Sendspin *source* — streams a microphone into Music Assistant as an input rather than playing from it (HiFi-ESP32-Input)
+- **`audio-input.yaml`**: Base I2S capture configuration — the counterpart of `audio.yaml`, defines the `line_in_mic` microphone
 - **`snapclient-new.yaml`**: Snapcast client (@c-MM original port, basic implementation)
 - **`snapclient-with-dsp.yaml`**: Snapcast client with 18-band software EQ (@farmed-switch fork)
 - **`light.yaml`**: RGB LED support (WS2812)
@@ -699,6 +768,10 @@ The package system promotes code reusability across different hardware variants.
 - **`dac-tas58xx.yaml`**: TAS5805M/TAS5825M DAC using the unified `tas58xx` driver — 15-band EQ, mixer, gain control (Louder-ESP32, Louder-ESP32-Plus, Louder-ESP32-Mini, Louder-ESP32-Pro)
 - **`dac-tas58xx-biamp.yaml`**: TAS58xx in bi-amp mode with per-channel EQ
 - **`dac-tas58xx-presets.yaml`**: TAS58xx with high/low frequency filter presets for subwoofer/satellite setups
+
+### ADC Packages
+
+- **`adc-pcm1863.yaml`**: PCM1863 stereo ADC via I2C — input mux select and PGA gain (HiFi-ESP32-Input). Pulls the `pcm1863` driver in as an external component until it is merged into ESPHome.
 
 ### Audio Addon Packages
 

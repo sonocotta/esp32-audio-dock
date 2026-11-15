@@ -24,6 +24,8 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
 | <img width="1422" height="998" alt="image" src="https://github.com/user-attachments/assets/bf0bdc60-7698-44f8-8f30-2a007b1d85d6" /> | <img width="1629" height="1049" alt="image" src="https://github.com/user-attachments/assets/7366dac2-5ac5-4e68-a655-c06f550b26c5" /> |
 | **Amped-ESP32** | **Amped-ESP32-Plus** | 
 | <img width="1300" height="903" alt="image" src="https://github.com/user-attachments/assets/625801a1-a66e-4ef8-ab90-5508d6f662cd" /> | <img width="1097" height="794" alt="image" src="https://github.com/user-attachments/assets/2c334973-66e3-47f7-860d-f835607408c0" />
+| **HiFi-ESP32-Input** (prototype) | |
+| _Photo to follow_ | |
 
 ⚠️ _Looking for Esparagus boards? Check out sister repository: [Esapragus Media Center](https://github.com/sonocotta/esparagus-media-center/)_
 
@@ -33,6 +35,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
   - [Table of Contents](#table-of-contents)
   - [Motivation](#motivation)
   - [HiFi-ESP32 and Hifi-ESP32-Plus](#hifi-esp32-and-hifi-esp32-plus)
+  - [HiFi-ESP32-Input](#hifi-esp32-input)
   - [Loud-ESP32 and Loud-ESP32-Plus](#loud-esp32-and-loud-esp32-plus)
   - [Louder-ESP32 and Louder-ESP32 Plus](#louder-esp32-and-louder-esp32-plus)
   - [Louder-ESP32 Mini](#louder-esp32-mini)
@@ -48,6 +51,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [HiFi-ESP32 and Amped-ESP32](#hifi-esp32-and-amped-esp32)
     - [Amped-ESP32-Plus](#amped-esp32-plus)
     - [HiFi-ESP32 Plus and Amped-ESP32 Plus](#hifi-esp32-plus-and-amped-esp32-plus)
+    - [HiFi-ESP32-Input](#hifi-esp32-input-1)
     - [Loud-ESP32](#loud-esp32)
     - [Loud-ESP32-Plus](#loud-esp32-plus)
     - [Louder-ESP32 and Louder-ESP32-Plus](#louder-esp32-and-louder-esp32-plus-1)
@@ -90,6 +94,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [HiFi-ESP](#hifi-esp)
     - [Louder ESP](#louder-esp)
     - [HiFi-ESP32](#hifi-esp32)
+    - [HiFi-ESP32-Input](#hifi-esp32-input-2)
     - [Loud-ESP32](#loud-esp32-1)
     - [Amped-ESP32](#amped-esp32)
     - [Amped-ESP32 with TPA3118/TPA3128 amp](#amped-esp32-with-tpa3118tpa3128-amp)
@@ -149,6 +154,57 @@ The **HiFi-ESP32 Plus** represents the next evolution of the board, featuring th
 
 - HiFi-ESP32 at [Lectronz](https://lectronz.com/products/hifi-esp32), [Elecrow](https://www.elecrow.com/hifi-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32/)
 - HiFi-ESP32-Plus at [Lectronz](https://lectronz.com/products/hifi-esp32-plus), [Elecrow](https://www.elecrow.com/hifi-esp32-plus.html), and [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32-plus/)
+
+## HiFi-ESP32-Input
+
+> ⚠️ **First prototype.** This board is experimental. It has been bench-tested
+> end to end, but expect rough edges: the pinout, the firmware packages and the
+> name itself may still change, and it is not for sale yet.
+
+Every other board in this range turns a network stream into sound. **HiFi-ESP32-Input**
+goes the other way: it turns sound into a network stream. It is the HiFi-ESP32-Plus
+design with the [PCM5122](https://www.ti.com/product/PCM5122) DAC swapped for a
+[PCM1863](https://www.ti.com/product/PCM1863) stereo ADC, so instead of feeding an
+amplifier it feeds Music Assistant.
+
+That makes the analog things you already own — a turntable, a CD player, a tape deck,
+the headphone jack on a TV — into sources the rest of your multi-room system can play.
+The board shows up in Music Assistant as an input, and you route it to whichever player
+or group should play it.
+
+| **HiFi-ESP32-Input** |
+|---|
+| _Photo to follow_ |
+
+**What is different from HiFi-ESP32-Plus:**
+
+- [PCM1863](https://www.ti.com/product/PCM1863) stereo ADC in place of the PCM5122 DAC —
+  the I2C and I2S wiring is the same, but the data line runs the other way
+- Two coax sockets (left and right) carrying one analog stereo pair, alongside the
+  3.5 mm minijack. These are line-level analog inputs, not S/PDIF. Either pair can be
+  selected while the board is running.
+- ESP32-S3 only (no classic ESP32 variant)
+
+**Key Features:**
+
+- 110 dB SNR (A-weighted, differential), the higher-performance half of the PCM186x family
+- 2.1 V RMS full scale on the single-ended inputs this board uses
+- 24-bit stereo capture; the firmware runs it at 48 kHz in 32-bit I2S slots
+- Analog input mux switched from the device page — no reflash to change socket
+- Programmable gain amplifier, −12 dB to +40 dB in 0.5 dB steps
+- Same form factor, RGB LED and IR receiver as the rest of the HiFi-ESP32 line
+- Ships as a [Sendspin](#sendspin) *source*, so it appears in Music Assistant next to
+  the players
+
+**Firmware:** [`firmware/esphome/11-hifi-esp32-input/`](/firmware/esphome/11-hifi-esp32-input/),
+or flash it from the browser on the [web installer](https://sonocotta.github.io/esp32-audio-dock/).
+Needs ESPHome 2026.11.0 or later; the `pcm1863` driver is not in ESPHome yet and is
+pulled in as an external component.
+
+**Hardware:** [`hardware/11-hifi-esp32-input/`](/hardware/11-hifi-esp32-input/) — rev A
+schematic, PCB, BOM, gerbers and 3D model.
+
+**Where to buy:** not yet — this is a prototype.
 
 ## Loud-ESP32 and Loud-ESP32-Plus
 
@@ -313,6 +369,10 @@ Recently, all Amped boards were migrated to use the new [TPA3118](https://www.ti
 
 ****** See [AirPlay 1 & 2](#airplay-1--2) below. Every board except Loud-ESP32-Plus has a ready-to-flash image in the [web-installer](https://rbouteiller.github.io/airplay-esp32/getting-started/flashing/). The Plus builds target the current board revisions only (rev J1+ on ESP32, rev H1+ on ESP32-S3). Loud-ESP32-Plus (MA12070P) is not supported: the project has no driver for this DAC.
 
+[HiFi-ESP32-Input](#hifi-esp32-input) is deliberately left out of the table above: it is a
+capture board rather than a player, so most of these rows do not apply to it. See its own
+section for what it does and does not share with the rest of the range.
+
 ### Onboard PSRAM
 
 Audio streaming requires proper buffering to work; even with the ESP32's 500K of RAM, it is a challenging task. For that reason, most of the projects will require WROVER modules that have onboard PSRAM chips.  All ESP32 Audio boards have an 8MB PSRAM chip onboard, connected via a high-speed interface. Any code using PSRAM just works out of the box.
@@ -397,6 +457,20 @@ Note that **Louder-ESP32-mini** and **Louder-ESP32-Pro** are ESP32-S3-only desig
 | ESP32-S3 (H)  | 14      | 16       | 15     | 0                   | 35, 36, 37     | 4          |  41     |    42    |
 | ESP32 (J1+)   | 26      | 22       | 25     | 0                   | 16, 17         | 13         |  21     |    27    |
 | ESP32-S3 (H1+)| 14      | 16       | 15     | 0                   | 35, 36, 37     | 4          |  42     |    41    |
+
+### HiFi-ESP32-Input
+
+Same pins as HiFi-ESP32-S3-Plus, with one difference that matters: the I2S data
+line is an **input** here. The ESP32 listens on it while the PCM1863 drives it.
+
+|               | I2S CLK | I2S DATA (in) | I2S WS | PSRAM RESERVED | I2C SDA | I2C CLK |
+|---------------|---------|---------------|--------|----------------|---------|---------|
+| ESP32-S3      | 14      | 16            | 15     | 35, 36, 37     |  42     |    41   |
+
+The PCM1863 answers at I2C address **0x4A** (the PCM5122 on the Plus boards sits at
+0x4D). Analog inputs: `VIN2` is the minijack, `VIN1` is the coax pair. Both are
+single-ended line-level inputs; the chip's differential and `VIN3`/`VIN4` modes are not
+wired on this board.
 
 ### Loud-ESP32
 
@@ -915,6 +989,12 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 | ESP32  | ESP32-S3
 |---|---|
 | ![image](https://github.com/user-attachments/assets/6cb02a5b-a0ef-4dce-b101-1cd92f6addc8)  | ![image](https://github.com/user-attachments/assets/17c488ec-65b1-46df-a6f6-c0abaa99830c)  |
+
+### HiFi-ESP32-Input
+
+| ESP32-S3 |
+|---|
+| _Photo to follow_ |
 
 ### Loud-ESP32
 

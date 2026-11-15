@@ -183,6 +183,12 @@ jobs:
             config_file: amped-esp32-s3-plus-idf-sendspin-oled.factory.yaml
           - slug: amped-esp32s3-plus-sendspin-eth
             config_file: amped-esp32-s3-plus-idf-sendspin-eth.factory.yaml
+          # Capture board, not a player: streams its line input into Music
+          # Assistant. Needs a newer ESPHome than the rest - the Sendspin
+          # source role landed in 2026.11.0.
+          - slug: hifi-esp32s3-input-sendspin
+            config_file: hifi-esp32-s3-input-idf-sendspin.factory.yaml
+            esphome_version: 2026.11.0
     env:
       DEVICE_SLUG: ${{ matrix.device.slug }}
       CONFIG_DIR: firmware/esphome/distribution
@@ -267,7 +273,7 @@ jobs:
         run: |
           docker run --rm \
             -v "${{ github.workspace }}/$CONFIG_DIR:/config" \
-            ghcr.io/esphome/esphome:2026.10.0 \
+            ghcr.io/esphome/esphome:${{ matrix.device.esphome_version || '2026.10.0' }} \
             compile "/config/$CONFIG_FILE"
 
       - name: Collect build artifacts

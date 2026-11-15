@@ -1,0 +1,119 @@
+# ============================================================
+# HiFi-ESP32-Input - Sendspin Source Configuration
+# ============================================================
+# ESP32-S3 audio board with a PCM1863 stereo ADC: a line *input* for
+# Music Assistant rather than a player. Whatever you plug into the
+# minijack or one of the two coax sockets becomes a source that can be
+# routed to any player or group on the Sendspin network.
+#
+# Switch between the sockets at runtime with the "Line Input" select on
+# the device page - no reflash needed.
+#
+# Board-specific pinouts defined in substitutions
+# Functional blocks imported from /packages
+#
+# !! This board is a first prototype. Expect rough edges. !!
+# ============================================================
+
+substitutions:
+  name: hifi-esp32s3-input
+  friendly_name: HiFi-ESP32-S3-Input
+  task_stack_in_psram: "true"
+
+  # ===== Board-Specific Pinouts =====
+  # I2S audio pins. Same three pins as HiFi-ESP32-S3-Plus, except the data
+  # line runs the other way: the ADC drives it and the ESP32 listens.
+  i2s_lrclk_pin: GPIO15
+  i2s_bclk_pin: GPIO14
+  i2s_din_pin: GPIO16
+
+  # I2C pins for ADC control
+  i2c_sda_pin: GPIO42
+  i2c_scl_pin: GPIO41
+  pcm1863_i2c_address: "0x4A"
+
+  # Boot default for the analog input mux:
+  #   VIN2 = minijack, VIN1 = coax pair
+  pcm1863_input: VIN2
+  pcm1863_mic_gain: 0db
+
+  # RGB LED
+  rgb_led_pin: GPIO09
+
+  # IR Receiver
+  ir_rx_pin: GPIO07
+
+  # Ethernet pins (if using ethernet instead of wifi)
+  eth_cs_pin: GPIO10
+  eth_interrupt_pin: GPIO6
+  eth_reset_pin: GPIO5
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  min_version: 2026.11.0
+  name_add_mac_suffix: false
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  variant: ESP32S3
+  flash_size: 8MB
+  cpu_frequency: 240MHz
+  framework:
+    type: esp-idf
+    version: recommended
+    sdkconfig_options:
+      CONFIG_ESP32S3_DATA_CACHE_64KB: "y"
+      CONFIG_ESP32S3_DATA_CACHE_LINE_64B: "y"
+      CONFIG_ESP32S3_INSTRUCTION_CACHE_32KB: "y"
+      CONFIG_SPIRAM_RODATA: "y"
+      CONFIG_SPIRAM_FETCH_INSTRUCTIONS: "y"
+      CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
+      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"
+
+logger:
+  # Compiled with DEBUG so the "Log Level" select can raise it at runtime;
+  # starts at INFO on every boot.
+  level: DEBUG
+  initial_level: INFO
+
+api:
+  # Don't reboot when no Home Assistant client is connected: a source used
+  # only with Music Assistant (Sendspin) never has one.
+  reboot_timeout: 0s
+
+ota:
+  platform: esphome
+  password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+psram:
+  mode: octal
+  speed: 80MHz
+  ignore_not_found: false
+
+network:
+  enable_ipv6: true
+
+# ===== Packages =====
+packages:
+  esparagus_remote:
+    url: https://github.com/sonocotta/esp32-audio-dock
+    ref: main
+    files:
+      - firmware/esphome/packages/adc-pcm1863.yaml
+      - firmware/esphome/packages/audio-input.yaml
+      - firmware/esphome/packages/sendspin-source.yaml
+
+      - firmware/esphome/packages/light.yaml
+      - firmware/esphome/packages/ir-receiver.yaml
+      - firmware/esphome/packages/monitoring.yaml
+      - firmware/esphome/packages/monitoring-wifi.yaml
+      # Wired Ethernet (W5500), as an alternative to Wi-Fi. Needs the
+      # `network: priority:` list when both are configured - see the
+      # HiFi-ESP32-S3-Plus config for the full example.
+      # - firmware/esphome/packages/ethernet-w5500.yaml
