@@ -1,0 +1,82 @@
+# ============================================================
+# Sendspin Source - Stream a Line Input into Music Assistant
+# ============================================================
+# The mirror image of sendspin.yaml: instead of playing audio the server
+# sends, this device *is* a source. Music Assistant sees it as an input it
+# can route to any player or group, which is how an analog turntable, CD
+# player or TV ends up on the same multi-room system as everything else.
+#
+# Requires substitutions:
+#   - friendly_name
+#   - task_stack_in_psram
+# Requires a `microphone:` with a fixed sample rate (audio-input.yaml).
+# Optional substitutions:
+#   - sendspin_manufacturer / sendspin_model / sendspin_firmware_version -
+#     device information reported to the server; the factory images feed
+#     the CI-stamped release into sendspin_firmware_version.
+#   - source_bits_per_sample - what goes on the wire. 16-bit keeps the LAN
+#     traffic down; the ADC still captures at its own width and the source
+#     converts.
+#   - source_gain_factor - integer multiplier applied before sending, for
+#     a source that is quieter than the rest of the system.
+# !! Requires ESPHome 2026.11.0 or later for the sendspin source role !!
+# ============================================================
+
+substitutions:
+  sendspin_manufacturer: Sonocotta
+  sendspin_model: ${friendly_name}
+  sendspin_firmware_version: dev
+  source_bits_per_sample: "16"
+  source_gain_factor: "1"
+
+sendspin:
+  id: sendspin_hub
+  task_stack_in_psram: ${task_stack_in_psram}
+  manufacturer: ${sendspin_manufacturer}
+  model: ${sendspin_model}
+  firmware_version: ${sendspin_firmware_version}
+  source:
+    microphone:
+      microphone: line_in_mic
+      # Both ADC channels. Not a substitution: ESPHome substitutes text, so
+      # the list has to be written out to stay a list.
+      channels: [0, 1]
+      bits_per_sample: ${source_bits_per_sample}
+      gain_factor: ${source_gain_factor}
+    task_stack_in_psram: ${task_stack_in_psram}
+
+text_sensor:
+  # Shows the code to enter when Music Assistant asks this source to pair.
+  # Having this sensor is what makes the device offer dynamic pairing; it is
+  # empty while no pairing is in progress.
+  - platform: sendspin
+    id: sendspin_pairing_code
+    type: pairing_code
+    name: Sendspin Pairing Code
+    icon: mdi:link-variant
+
+switch:
+  # Lets a server connect without pairing at all. On by default so a fresh
+  # board shows up in Music Assistant without any ceremony; turn it off once
+  # the server you want has paired.
+  - platform: sendspin
+    type: unpaired_access
+    name: Unpaired Access
+    icon: mdi:account-key
+    restore_mode: RESTORE_DEFAULT_ON
+
+  # Tells the server whether anything is actually plugged in and playing.
+  # Left optimistic: nothing on this board measures the analog level, so it
+  # is a manual (or automation-driven) hint rather than a detector.
+  - platform: template
+    name: Line In Signal
+    id: line_in_signal
+    icon: mdi:waveform
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
+    turn_on_action:
+      - sendspin.source.set_signal:
+          present: true
+    turn_off_action:
+      - sendspin.source.set_signal:
+          present: false

@@ -1,0 +1,37 @@
+# ============================================================
+# Audio Input - I2S Capture from an External ADC
+# ============================================================
+# Capture counterpart of audio.yaml: brings up an I2S bus in receive mode
+# and exposes it as a microphone, which the sendspin source role (or a
+# voice assistant) can stream from.
+#
+# Requires substitutions:
+#   - i2s_bclk_pin
+#   - i2s_lrclk_pin
+#   - i2s_din_pin
+# Optional substitutions:
+#   - input_sample_rate     - fixed; the sendspin source cannot resample
+#   - input_bits_per_sample - I2S slot width, must match the ADC's setting
+#   - input_channel         - stereo, left, right or mono
+# ============================================================
+
+substitutions:
+  input_sample_rate: "48000"
+  input_bits_per_sample: "32"
+  input_channel: stereo
+
+i2s_audio:
+  - id: i2s_in
+    i2s_bclk_pin: ${i2s_bclk_pin}
+    i2s_lrclk_pin: ${i2s_lrclk_pin}
+
+microphone:
+  - platform: i2s_audio
+    id: line_in_mic
+    i2s_audio_id: i2s_in
+    i2s_din_pin: ${i2s_din_pin}
+    adc_type: external
+    channel: ${input_channel}
+    # A single sample rate (min == max) is required by the sendspin source
+    sample_rate: ${input_sample_rate}
+    bits_per_sample: ${input_bits_per_sample}bit

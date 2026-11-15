@@ -1,0 +1,67 @@
+# ============================================================
+# PCM1863 ADC - I2C Control, Input Mux and PGA Gain
+# ============================================================
+# Line/microphone input side of the HiFi-ESP32-Input board. The PCM1863 is
+# the capture counterpart of the PCM5122: same I2C + I2S wiring, same clock
+# arrangement, but it turns analog audio into an I2S stream instead of the
+# other way round.
+#
+# Requires substitutions:
+#   - i2c_sda_pin
+#   - i2c_scl_pin
+# Optional substitutions:
+#   - pcm1863_i2c_address   - 0x4A on HiFi-ESP32-Input
+#   - pcm1863_input         - boot input: NONE, VIN1..VIN4, DIFF_1, DIFF_2
+#   - pcm1863_mic_gain      - PGA gain, -12dB..40dB in 0.5 dB steps
+#   - pcm1863_bits_per_sample - must match the microphone's bits_per_sample
+#
+# The "Line Input" select switches the analog mux at runtime, so a single
+# image works for whichever socket is actually patched in.
+# ============================================================
+
+substitutions:
+  pcm1863_i2c_address: "0x4A"
+  # VIN2 is the minijack on HiFi-ESP32-Input; VIN1 is the coax pair
+  pcm1863_input: VIN2
+  pcm1863_mic_gain: 0db
+  # 32-bit slots give BCK = 64 x fs, the ratio the PCM1863's clock detector
+  # reports cleanly on this board
+  pcm1863_bits_per_sample: "32"
+
+# TODO: drop this once the pcm1863 component is merged into ESPHome
+# (https://github.com/esphome/esphome - PR pending). Until then the driver
+# comes from the development branch it was written on.
+external_components:
+  - source:
+      type: git
+      url: https://github.com/anabolyc/esphome
+      ref: features/pcm1863-adc-driver
+      path: esphome/components
+    components: [pcm1863]
+    refresh: 24h
+
+i2c:
+  sda: ${i2c_sda_pin}
+  scl: ${i2c_scl_pin}
+  frequency: 400kHz
+  scan: true
+
+audio_adc:
+  - platform: pcm1863
+    id: external_adc
+    address: ${pcm1863_i2c_address}
+    bits_per_sample: ${pcm1863_bits_per_sample}bit
+    input: ${pcm1863_input}
+    mic_gain: ${pcm1863_mic_gain}
+
+select:
+  # Switches the analog input mux from the device page. On HiFi-ESP32-Input:
+  #   VIN2   - 3.5 mm minijack
+  #   VIN1   - coax pair
+  #   NONE   - no input selected, the quietest way to mute the capture side
+  # VIN3, VIN4, DIFF_1 and DIFF_2 are not wired on this board.
+  - platform: pcm1863
+    pcm1863_id: external_adc
+    name: Line Input
+    id: line_input_select
+    icon: mdi:audio-input-stereo-minijack
