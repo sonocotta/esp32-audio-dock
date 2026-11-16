@@ -73,6 +73,8 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
       - [Install steps](#install-steps)
     - [PCM5122 DSP capabilities (HiFi-ESP32 Plus \& Amped-ESP32 Plus)](#pcm5122-dsp-capabilities-hifi-esp32-plus--amped-esp32-plus)
     - [Home Assistant: Snapcast](#home-assistant-snapcast)
+    - [Home Assistant: HiFi-ESP32-Input as a Sendspin source](#home-assistant-hifi-esp32-input-as-a-sendspin-source)
+      - [Setup](#setup)
   - [Squeezelite-ESP32](#squeezelite-esp32)
     - [How to flash and configure](#how-to-flash-and-configure)
     - [Ethernet configuration](#ethernet-configuration)
@@ -742,6 +744,70 @@ Snapcast is a multi-room audio player that synchronizes playback across multiple
 As of mid-2025 work is ongoing ([1](https://github.com/c-MM/esphome-snapclient/), [2](https://github.com/esphome/esphome/pull/8350)) to add snapcast component to ESPHome. This is based on the [original implementation](https://github.com/CarlosDerSeher/snapclient) done by CarlosDerSeher. This has the benefit of enabling all the DAC features implemented by the ESPHome driver. At the moment of writing, there are quite a few issues to be solved in the code before it can be merged, but having tested this myself on a few S3-based boards as long as Louder-Esparagus and Louder-ESP32 boards, I can say it is stable and works really well. Also
 - This is the only implementation that works with ESP32-S3 (exciting!)
 - This implementation allows using advanced TAS5805M DAC features available in the Esphome driver, like bridge mode and 15-band EQ. If you have Home Assistant already, that's no brainer
+
+### Home Assistant: HiFi-ESP32-Input as a Sendspin source
+
+Everything above turns a Home Assistant stream into sound. [HiFi-ESP32-Input](#hifi-esp32-input) does the
+opposite: it hands Music Assistant a line input, so the analog gear you already own becomes something the rest
+of your multi-room system can play.
+
+The firmware uses Sendspin's **source** role, the mirror image of the Sendspin player role the other boards use.
+Instead of receiving audio and playing it, the board captures its analog input and offers that stream to the
+server. Music Assistant then treats it as a source you can route to any player or group — the same place you
+would pick a radio station or a playlist.
+
+Typical reasons to want this:
+
+- A turntable, CD player or tape deck that should be audible on speakers in other rooms
+- A TV's headphone output, so the living room sound follows you around the house
+- Any line-level source you would rather not re-cable every time you move it
+
+What makes this board different from a plain capture dongle is the input multiplexer. The minijack and the two
+coax sockets are all wired to the ADC at once, and the **Line Input** select switches between them while the
+device is running. One board, three sources, no reflash and no re-cabling.
+
+#### Setup
+
+The device onboards exactly like any other ESPHome board here — see
+[Home Assistant: ESPHome way](#home-assistant-esphome-way) for the ESPHome addon and integration steps. Flash it
+from the [web installer](https://sonocotta.github.io/esp32-audio-dock/), let the ESPHome integration discover it,
+and the entities below appear on its device page.
+
+| Entity | What it does |
+|---|---|
+| **Line Input** (select) | Picks the analog socket: `VIN2` is the minijack, `VIN1` the coax pair, `NONE` disconnects the mux. The remaining options are inputs the chip supports but this board does not wire. |
+| **Line In Signal** (switch) | Tells the server whether anything is plugged in and playing. Nothing on the board measures the analog level, so this is a manual hint — or one you drive from an automation. |
+| **Sendspin Pairing Code** (sensor) | Shows the code when Music Assistant asks this source to pair. Empty the rest of the time. |
+| **Unpaired Access** (switch) | On by default, so a fresh board shows up without any ceremony. Turn it off once the server you want has paired. |
+
+| Home Assistant device page |
+|---|
+| _Screenshot to follow_ |
+
+On the Music Assistant side the board appears once it has connected, and pairing works exactly as it does for a
+player: if asked for a code, read the **Sendspin Pairing Code** sensor on the device page and type it in. See
+[Pairing with Music Assistant](/firmware/esphome/README.md#pairing-with-music-assistant) for the full flow.
+Then pick the input as the source on whichever player or group should play it.
+
+| Playing the input from Music Assistant |
+|---|
+| _Screenshot to follow_ |
+
+> [!NOTE]
+> This needs ESPHome 2026.11.0 or later — the Sendspin source role does not exist in earlier releases — and a
+> Music Assistant build whose Sendspin support covers sources as well as players. Both the board and the source
+> role are new, so treat the combination as experimental.
+
+A few things worth knowing before you wire it up:
+
+- **The stream takes the ADC's sample rate.** The source cannot resample, so the microphone's rate is what goes
+  on the wire. The shipped config captures at 48 kHz and sends 16-bit, which keeps LAN traffic modest without
+  anyone hearing the difference.
+- **Levels are set in the analog domain.** The PCM1863's gain runs from −12 dB to +40 dB in 0.5 dB steps. A
+  turntable through a phono preamp and a TV headphone output sit at very different levels, so expect to set this
+  per source rather than once.
+- **There is no silence detection.** The board streams whatever the selected input carries, including the noise
+  floor of an unplugged socket. `NONE` is the quietest way to mute the capture side.
 
 ## Squeezelite-ESP32
 
