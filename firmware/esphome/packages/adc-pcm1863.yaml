@@ -28,17 +28,15 @@ substitutions:
   # reports cleanly on this board
   pcm1863_bits_per_sample: "32"
 
-# TODO: drop this once the pcm1863 component is merged into ESPHome
-# (https://github.com/esphome/esphome - PR pending). Until then the driver
-# comes from the development branch it was written on.
+# The pcm1863 driver is not in an ESPHome release yet, so it comes from the open
+# pull request: esphome/esphome#22794. `github://pr#NNNN` is ESPHome's own
+# shorthand for a PR, and resolves to pull/22794/head on esphome/esphome.
+# Refreshed hourly rather than daily because the PR head moves while it is in
+# review. Drop this block once the PR is merged and released.
 external_components:
-  - source:
-      type: git
-      url: https://github.com/anabolyc/esphome
-      ref: features/pcm1863-adc-driver
-      path: esphome/components
+  - source: github://pr#22794
     components: [pcm1863]
-    refresh: 24h
+    refresh: 1h
 
 i2c:
   sda: ${i2c_sda_pin}
