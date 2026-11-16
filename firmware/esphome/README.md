@@ -801,6 +801,24 @@ ota_password: "YourOTAPassword"
 # Password for the fallback access point (legacy boards only)
 ap_password: "YourAPPassword"
 ```
+
+### Encrypted OTA
+
+OTA updates use `ota_password` by default. To use an encryption key instead,
+extend the `ota_esphome` platform from your own device config, alongside the
+package that pulls in the board config:
+
+```yaml
+ota:
+  - id: !extend ota_esphome
+    password: !remove
+    encryption:
+      key: !secret ota_encryption_key
+```
+
+Then add `ota_encryption_key` to `secrets.yaml`, a base64-encoded 32-byte key
+(generate one with `openssl rand -base64 32`).
+
 ---
 
 ## Package System
