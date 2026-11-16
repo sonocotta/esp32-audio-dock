@@ -205,7 +205,18 @@ the firmware pulls it straight from that pull request until it ships.
 **Hardware:** [`hardware/11-hifi-esp32-input/`](/hardware/11-hifi-esp32-input/) — rev A
 schematic, PCB, BOM, gerbers and 3D model.
 
-**Where to buy:** not yet — this is a prototype.
+**Planned next (subject to change):** a digital input — S/PDIF over coaxial. Note that the two coax
+sockets on the board today are *analog* line inputs; a digital one is a different thing entirely and
+needs its own receiver front end rather than the PCM1863's analog mux, so it may well end up as a
+separate board instead of a revision of this one.
+
+> 💬 **Would you use a digital-input variant?** That decision is still open, and feedback is what will
+> settle it. Tell me what you would plug into it — a CD transport, a TV, a streamer — and whether
+> coaxial alone is enough or optical matters too. Open an [issue](https://github.com/sonocotta/esp32-audio-dock/issues)
+> or say so on [Discord](https://discord.gg/PtnaAaQMpS).
+
+**Availability:** not on sale yet. The first boards are going out to beta testers to gather feedback
+before the next batch is made, so the design can still change in response to what comes back.
 
 ## Loud-ESP32 and Loud-ESP32-Plus
 
@@ -1434,6 +1445,9 @@ You may support my work by ordering these products at Lectronz, Elecrow, and Tin
 - Louder-ESP32-Pro at [Lectronz](https://lectronz.com/products/louder-esp32-pro), [Elecrow](https://www.elecrow.com/louder-esp32-pro.html), and [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32-pro/)
 - Amped-ESP32 at [Lectronz](https://lectronz.com/products/amped-esp32), [Elecrow](https://www.elecrow.com/amped-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32/)
 - Amped-ESP32-Plus at [Lectronz](https://lectronz.com/products/amped-esp32-plus), [Elecrow](https://www.elecrow.com/amped-esp32-plus.html), and [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32-plus/)
+
+[HiFi-ESP32-Input](#hifi-esp32-input) is not on this list yet — the first boards are going to beta
+testers before a batch is made.
 
 ## Errata
 
