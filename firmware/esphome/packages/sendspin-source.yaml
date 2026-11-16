@@ -19,7 +19,8 @@
 #     converts.
 #   - source_gain_factor - integer multiplier applied before sending, for
 #     a source that is quieter than the rest of the system.
-# !! Requires ESPHome 2026.11.0 or later for the sendspin source role !!
+# !! Requires ESPHome 2026.11.0 or later for the sendspin source role. That release
+#    is still in beta, so build against the ESPHome `beta` channel until it ships. !!
 # ============================================================
 
 substitutions:
