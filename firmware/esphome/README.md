@@ -366,9 +366,11 @@ the mux, which is the quietest way to mute the capture side. The remaining
 options the dropdown offers (`VIN3`, `VIN4`, `DIFF_1`, `DIFF_2`) are inputs the
 chip supports but this board does not wire.
 
-**Requires ESPHome 2026.11.0 or later** - the Sendspin source role is not in
-earlier releases. The `pcm1863` ADC driver is not in an ESPHome release yet
-either; it is under review as
+**Requires ESPHome 2026.11.0 or later**, which carries the Sendspin source
+role. That release is not out yet - 2026.10.2 is current - so this config only
+builds against the ESPHome **beta** channel today, and CI builds it with the
+`beta` image. The `pcm1863` ADC driver is not in a release either; it is under
+review as
 [esphome/esphome#22794](https://github.com/esphome/esphome/pull/22794), with
 documentation in
 [esphome/esphome.io#8145](https://github.com/esphome/esphome.io/pull/8145), and
@@ -487,8 +489,8 @@ Only HiFi-ESP32-Input has the ADC this needs.
 
 **Best for**: Bringing an analog source into a Sendspin/Music Assistant setup
 
-**Note**: Requires ESPHome 2026.11.0 or later - the source role is not in
-earlier releases.
+**Note**: Requires ESPHome 2026.11.0 or later for the source role. That release
+is still in beta, so build against the `beta` channel until it ships.
 
 ---
 

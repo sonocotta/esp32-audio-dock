@@ -199,10 +199,12 @@ or group should play it.
 
 **Firmware:** [`firmware/esphome/11-hifi-esp32-input/`](/firmware/esphome/11-hifi-esp32-input/),
 or flash it from the browser on the [web installer](https://sonocotta.github.io/esp32-audio-dock/).
-Needs ESPHome 2026.11.0 or later. The `pcm1863` driver is not in an ESPHome release yet; it is
-under review as [esphome/esphome#22794](https://github.com/esphome/esphome/pull/22794) (with
-documentation in [esphome/esphome.io#8145](https://github.com/esphome/esphome.io/pull/8145)), and
-the firmware pulls it straight from that pull request until it ships.
+Needs ESPHome 2026.11.0 or later for the Sendspin source role — a release that is still in beta at
+the time of writing, so builds use the ESPHome beta channel. The `pcm1863` driver is not in a release
+either; it is under review as
+[esphome/esphome#22794](https://github.com/esphome/esphome/pull/22794) (with documentation in
+[esphome/esphome.io#8145](https://github.com/esphome/esphome.io/pull/8145)), and the firmware pulls it
+straight from that pull request until it ships.
 
 **Hardware:** [`hardware/11-hifi-esp32-input/`](/hardware/11-hifi-esp32-input/) — rev A
 schematic, PCB, BOM, gerbers and 3D model.
@@ -794,9 +796,10 @@ Then pick the input as the source on whichever player or group should play it.
 | <img width="674" height="863" alt="image" src="https://github.com/user-attachments/assets/61e16510-8248-494e-b78a-f8b023f8263e" /> |
 
 > [!NOTE]
-> This needs ESPHome 2026.11.0 or later — the Sendspin source role does not exist in earlier releases — and a
-> Music Assistant build whose Sendspin support covers sources as well as players. Both the board and the source
-> role are new, so treat the combination as experimental.
+> This needs ESPHome 2026.11.0 or later, which is the release that introduces the Sendspin source role.
+> It has not shipped yet — 2026.10.2 is current — so for now the configs build against the ESPHome beta
+> channel. You also need a Music Assistant build whose Sendspin support covers sources as well as players.
+> Both the board and the source role are new, so treat the combination as experimental.
 
 A few things worth knowing before you wire it up:
 

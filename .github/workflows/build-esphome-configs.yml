@@ -63,6 +63,21 @@ jobs:
           echo "config_file=$config_file" >> $GITHUB_OUTPUT
           echo "Building: $config_file from $config_dir"
 
+      - name: Pick the ESPHome image
+        id: image
+        run: |
+          # Most configs build against the current stable release. A config whose
+          # min_version names an ESPHome that is not out yet has to build against
+          # the beta channel instead, or it fails with "your ESPHome version is
+          # too old". Drop the entry once that release ships.
+          #   11-hifi-esp32-input - sendspin source role, needs 2026.11.0
+          case "${{ matrix.config }}" in
+            firmware/esphome/11-hifi-esp32-input/*) tag=beta ;;
+            *) tag=latest ;;
+          esac
+          echo "tag=$tag" >> $GITHUB_OUTPUT
+          echo "Building with esphome/esphome:$tag"
+
       - name: Cache ESPHome build
         uses: actions/cache@v3
         with:
@@ -84,5 +99,5 @@ jobs:
             -v "${{ github.workspace }}/firmware/esphome/packages:/config/packages" \
             -v "${{ github.workspace }}/.esphome-cache:/cache" \
             -e PLATFORMIO_BUILD_CACHE_DIR=/cache/.pio-cache \
-            esphome/esphome:latest \
+            esphome/esphome:${{ steps.image.outputs.tag }} \
             compile "/config/${{ steps.config-info.outputs.config_file }}"

@@ -185,10 +185,11 @@ jobs:
             config_file: amped-esp32-s3-plus-idf-sendspin-eth.factory.yaml
           # Capture board, not a player: streams its line input into Music
           # Assistant. Needs a newer ESPHome than the rest - the Sendspin
-          # source role landed in 2026.11.0.
+          # source role is not in any stable release yet, so this one tracks
+          # the beta channel. Change to 2026.11.0 once that ships.
           - slug: hifi-esp32s3-input-sendspin
             config_file: hifi-esp32-s3-input-idf-sendspin.factory.yaml
-            esphome_version: 2026.11.0
+            esphome_version: beta
     env:
       DEVICE_SLUG: ${{ matrix.device.slug }}
       CONFIG_DIR: firmware/esphome/distribution
