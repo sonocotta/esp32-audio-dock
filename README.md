@@ -198,8 +198,10 @@ or group should play it.
 
 **Firmware:** [`firmware/esphome/11-hifi-esp32-input/`](/firmware/esphome/11-hifi-esp32-input/),
 or flash it from the browser on the [web installer](https://sonocotta.github.io/esp32-audio-dock/).
-Needs ESPHome 2026.11.0 or later; the `pcm1863` driver is not in ESPHome yet and is
-pulled in as an external component.
+Needs ESPHome 2026.11.0 or later. The `pcm1863` driver is not in an ESPHome release yet: it is
+under review as [esphome/esphome#22794](https://github.com/esphome/esphome/pull/22794) (with
+documentation in [esphome/esphome.io#8145](https://github.com/esphome/esphome.io/pull/8145)), and
+the firmware pulls it straight from that pull request until it ships.
 
 **Hardware:** [`hardware/11-hifi-esp32-input/`](/hardware/11-hifi-esp32-input/) — rev A
 schematic, PCB, BOM, gerbers and 3D model.

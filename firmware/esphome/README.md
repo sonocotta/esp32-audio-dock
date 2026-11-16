@@ -367,8 +367,12 @@ options the dropdown offers (`VIN3`, `VIN4`, `DIFF_1`, `DIFF_2`) are inputs the
 chip supports but this board does not wire.
 
 **Requires ESPHome 2026.11.0 or later** - the Sendspin source role is not in
-earlier releases. The `pcm1863` ADC driver is not in ESPHome yet either and is
-pulled in as an external component; see `packages/adc-pcm1863.yaml`.
+earlier releases. The `pcm1863` ADC driver is not in an ESPHome release yet
+either; it is under review as
+[esphome/esphome#22794](https://github.com/esphome/esphome/pull/22794), with
+documentation in
+[esphome/esphome.io#8145](https://github.com/esphome/esphome.io/pull/8145), and
+`packages/adc-pcm1863.yaml` fetches it from that pull request.
 
 ---
 
@@ -771,7 +775,7 @@ The package system promotes code reusability across different hardware variants.
 
 ### ADC Packages
 
-- **`adc-pcm1863.yaml`**: PCM1863 stereo ADC via I2C — input mux select and PGA gain (HiFi-ESP32-Input). Pulls the `pcm1863` driver in as an external component until it is merged into ESPHome.
+- **`adc-pcm1863.yaml`**: PCM1863 stereo ADC via I2C — input mux select and PGA gain (HiFi-ESP32-Input). Pulls the `pcm1863` driver from [esphome/esphome#22794](https://github.com/esphome/esphome/pull/22794) until that pull request is merged and released.
 
 ### Audio Addon Packages
 
