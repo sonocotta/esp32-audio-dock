@@ -25,7 +25,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
 | **Amped-ESP32** | **Amped-ESP32-Plus** | 
 | <img width="1300" height="903" alt="image" src="https://github.com/user-attachments/assets/625801a1-a66e-4ef8-ab90-5508d6f662cd" /> | <img width="1097" height="794" alt="image" src="https://github.com/user-attachments/assets/2c334973-66e3-47f7-860d-f835607408c0" />
 | **HiFi-ESP32-Input** (prototype) | |
-| _Photo to follow_ | |
+| <img width="1178" height="842" alt="image" src="https://github.com/user-attachments/assets/ef581224-92eb-4534-8835-e34357522360" /> | |
 
 ⚠️ _Looking for Esparagus boards? Check out sister repository: [Esapragus Media Center](https://github.com/sonocotta/esparagus-media-center/)_
 
@@ -94,7 +94,6 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [HiFi-ESP](#hifi-esp)
     - [Louder ESP](#louder-esp)
     - [HiFi-ESP32](#hifi-esp32)
-    - [HiFi-ESP32-Input](#hifi-esp32-input-2)
     - [Loud-ESP32](#loud-esp32-1)
     - [Amped-ESP32](#amped-esp32)
     - [Amped-ESP32 with TPA3118/TPA3128 amp](#amped-esp32-with-tpa3118tpa3128-amp)
@@ -174,7 +173,7 @@ or group should play it.
 
 | **HiFi-ESP32-Input** |
 |---|
-| _Photo to follow_ |
+| <img width="1178" height="842" alt="image" src="https://github.com/user-attachments/assets/b5e91464-fe7e-41a1-b7a0-c67eace2cbea" /> |
 
 **What is different from HiFi-ESP32-Plus:**
 
@@ -198,7 +197,7 @@ or group should play it.
 
 **Firmware:** [`firmware/esphome/11-hifi-esp32-input/`](/firmware/esphome/11-hifi-esp32-input/),
 or flash it from the browser on the [web installer](https://sonocotta.github.io/esp32-audio-dock/).
-Needs ESPHome 2026.11.0 or later. The `pcm1863` driver is not in an ESPHome release yet: it is
+Needs ESPHome 2026.11.0 or later. The `pcm1863` driver is not in an ESPHome release yet; it is
 under review as [esphome/esphome#22794](https://github.com/esphome/esphome/pull/22794) (with
 documentation in [esphome/esphome.io#8145](https://github.com/esphome/esphome.io/pull/8145)), and
 the firmware pulls it straight from that pull request until it ships.
@@ -991,12 +990,6 @@ Please visit the [hardware](/hardware/) section for board schematics and PCB des
 | ESP32  | ESP32-S3
 |---|---|
 | ![image](https://github.com/user-attachments/assets/6cb02a5b-a0ef-4dce-b101-1cd92f6addc8)  | ![image](https://github.com/user-attachments/assets/17c488ec-65b1-46df-a6f6-c0abaa99830c)  |
-
-### HiFi-ESP32-Input
-
-| ESP32-S3 |
-|---|
-| _Photo to follow_ |
 
 ### Loud-ESP32
 
