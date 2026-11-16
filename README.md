@@ -782,7 +782,7 @@ and the entities below appear on its device page.
 
 | Home Assistant device page |
 |---|
-| _Screenshot to follow_ |
+| <img width="2602" height="1742" alt="image" src="https://github.com/user-attachments/assets/287c666f-da47-4e41-b5cf-77cfaf965bb4" /> |
 
 On the Music Assistant side the board appears once it has connected, and pairing works exactly as it does for a
 player: if asked for a code, read the **Sendspin Pairing Code** sensor on the device page and type it in. See
@@ -791,7 +791,7 @@ Then pick the input as the source on whichever player or group should play it.
 
 | Playing the input from Music Assistant |
 |---|
-| _Screenshot to follow_ |
+| <img width="674" height="863" alt="image" src="https://github.com/user-attachments/assets/61e16510-8248-494e-b78a-f8b023f8263e" /> |
 
 > [!NOTE]
 > This needs ESPHome 2026.11.0 or later — the Sendspin source role does not exist in earlier releases — and a
