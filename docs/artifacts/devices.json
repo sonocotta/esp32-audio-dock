@@ -178,6 +178,24 @@
                         ]
                     }
                 ]
+            },
+            {
+                "images": [],
+                "title": "HiFi-ESP32-S3-Input (prototype)",
+                "description": "HiFi-ESP32-S3-Input is the capture counterpart of the HiFi-ESP32-Plus: the PCM5122 DAC is replaced by a <a href=\"https://www.ti.com/product/PCM1863\">PCM1863</a> stereo ADC, and a pair of coax inputs joins the 3.5&nbsp;mm minijack. Instead of playing what Music Assistant sends, it feeds a turntable, CD player or TV <em>into</em> it, as a source any player or group can be switched to. <strong>This is a first prototype &mdash; treat it as experimental and expect rough edges.</strong>",
+                "firmwares": [
+                    {
+                        "id": "esphome",
+                        "label": "Sendspin source",
+                        "note": "Streams the line input into Music Assistant as a Sendspin source. Wi-Fi is set up on-device right after flashing (no editing files), and it updates itself automatically afterwards. Pick the input socket from the \"Line Input\" dropdown on the device page once it is online — the same image serves the minijack and both coax sockets. Experimental: this board is a first prototype and this is its only firmware so far.",
+                        "manifests": [
+                            {
+                                "label": "Install ESPHome (Sendspin source)",
+                                "path": "artifacts/manifest-hifi-esp32s3-input-sendspin-esphome-latest.json"
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     },

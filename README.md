@@ -24,6 +24,8 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
 | <img width="1422" height="998" alt="image" src="https://github.com/user-attachments/assets/bf0bdc60-7698-44f8-8f30-2a007b1d85d6" /> | <img width="1629" height="1049" alt="image" src="https://github.com/user-attachments/assets/7366dac2-5ac5-4e68-a655-c06f550b26c5" /> |
 | **Amped-ESP32** | **Amped-ESP32-Plus** | 
 | <img width="1300" height="903" alt="image" src="https://github.com/user-attachments/assets/625801a1-a66e-4ef8-ab90-5508d6f662cd" /> | <img width="1097" height="794" alt="image" src="https://github.com/user-attachments/assets/2c334973-66e3-47f7-860d-f835607408c0" />
+| **HiFi-ESP32-Input** (prototype) | |
+| <img width="1178" height="842" alt="image" src="https://github.com/user-attachments/assets/ef581224-92eb-4534-8835-e34357522360" /> | |
 
 ⚠️ _Looking for Esparagus boards? Check out sister repository: [Esapragus Media Center](https://github.com/sonocotta/esparagus-media-center/)_
 
@@ -33,6 +35,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
   - [Table of Contents](#table-of-contents)
   - [Motivation](#motivation)
   - [HiFi-ESP32 and Hifi-ESP32-Plus](#hifi-esp32-and-hifi-esp32-plus)
+  - [HiFi-ESP32-Input](#hifi-esp32-input)
   - [Loud-ESP32 and Loud-ESP32-Plus](#loud-esp32-and-loud-esp32-plus)
   - [Louder-ESP32 and Louder-ESP32 Plus](#louder-esp32-and-louder-esp32-plus)
   - [Louder-ESP32 Mini](#louder-esp32-mini)
@@ -48,6 +51,7 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
     - [HiFi-ESP32 and Amped-ESP32](#hifi-esp32-and-amped-esp32)
     - [Amped-ESP32-Plus](#amped-esp32-plus)
     - [HiFi-ESP32 Plus and Amped-ESP32 Plus](#hifi-esp32-plus-and-amped-esp32-plus)
+    - [HiFi-ESP32-Input](#hifi-esp32-input-1)
     - [Loud-ESP32](#loud-esp32)
     - [Loud-ESP32-Plus](#loud-esp32-plus)
     - [Louder-ESP32 and Louder-ESP32-Plus](#louder-esp32-and-louder-esp32-plus-1)
@@ -69,6 +73,8 @@ ESP32 Audio Docks is a range of development boards (earlier docks) that allow yo
       - [Install steps](#install-steps)
     - [PCM5122 DSP capabilities (HiFi-ESP32 Plus \& Amped-ESP32 Plus)](#pcm5122-dsp-capabilities-hifi-esp32-plus--amped-esp32-plus)
     - [Home Assistant: Snapcast](#home-assistant-snapcast)
+    - [Home Assistant: HiFi-ESP32-Input as a Sendspin source](#home-assistant-hifi-esp32-input-as-a-sendspin-source)
+      - [Setup](#setup)
   - [Squeezelite-ESP32](#squeezelite-esp32)
     - [How to flash and configure](#how-to-flash-and-configure)
     - [Ethernet configuration](#ethernet-configuration)
@@ -149,6 +155,79 @@ The **HiFi-ESP32 Plus** represents the next evolution of the board, featuring th
 
 - HiFi-ESP32 at [Lectronz](https://lectronz.com/products/hifi-esp32), [Elecrow](https://www.elecrow.com/hifi-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32/)
 - HiFi-ESP32-Plus at [Lectronz](https://lectronz.com/products/hifi-esp32-plus), [Elecrow](https://www.elecrow.com/hifi-esp32-plus.html), and [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32-plus/)
+
+## HiFi-ESP32-Input
+
+> ⚠️ **First prototype.** This board is experimental. It has been bench-tested
+> end to end, but expect rough edges: the pinout, the firmware packages and the
+> name itself may still change. The first run is listed on
+> [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32-input/) for beta testers, and
+> these boards ship without the IR receiver that production boards carry.
+
+Every other board in this range turns a network stream into sound. **HiFi-ESP32-Input**
+goes the other way: it turns sound into a network stream. It is the HiFi-ESP32-Plus
+design with the [PCM5122](https://www.ti.com/product/PCM5122) DAC swapped for a
+[PCM1863](https://www.ti.com/product/PCM1863) stereo ADC, so instead of feeding an
+amplifier it feeds Music Assistant.
+
+That makes the analog things you already own — a turntable, a CD player, a tape deck,
+the headphone jack on a TV — into sources the rest of your multi-room system can play.
+The board shows up in Music Assistant as an input, and you route it to whichever player
+or group should play it.
+
+| **HiFi-ESP32-Input** |
+|---|
+| <img width="1178" height="842" alt="image" src="https://github.com/user-attachments/assets/b5e91464-fe7e-41a1-b7a0-c67eace2cbea" /> |
+
+**What is different from HiFi-ESP32-Plus:**
+
+- [PCM1863](https://www.ti.com/product/PCM1863) stereo ADC in place of the PCM5122 DAC —
+  the I2C and I2S wiring is the same, but the data line runs the other way
+- Two coax sockets (left and right) carrying one analog stereo pair, alongside the
+  3.5 mm minijack. These are line-level analog inputs, not S/PDIF. Either pair can be
+  selected while the board is running.
+- ESP32-S3 only (no classic ESP32 variant)
+
+**Key Features:**
+
+- 110 dB SNR (A-weighted, differential), the higher-performance half of the PCM186x family
+- 2.1 V RMS full scale on the single-ended inputs this board uses
+- 24-bit stereo capture; the firmware runs it at 48 kHz in 32-bit I2S slots
+- Analog input mux switched from the device page — no reflash to change socket
+- Programmable gain amplifier, −12 dB to +40 dB in 0.5 dB steps
+- Same form factor and the same headers as the rest of the HiFi-ESP32 line: a 30-pin FPC
+  connector for an OLED display, a header for a W5500 Ethernet module, a 3-pin connector for
+  an RGB LED and a footprint for the IR receiver. The RGB LED is a connector only — no LED is
+  fitted on the board — and the IR receiver, standard on production boards, is left off the
+  beta run to keep the prototype batch cheap.
+- Ships as a [Sendspin](#sendspin) *source*, so it appears in Music Assistant next to
+  the players
+
+**Firmware:** [`firmware/esphome/11-hifi-esp32-input/`](/firmware/esphome/11-hifi-esp32-input/),
+or flash it from the browser on the [web installer](https://sonocotta.github.io/esp32-audio-dock/).
+Needs ESPHome 2026.11.0 or later for the Sendspin source role — a release that is still in beta at
+the time of writing, so builds use the ESPHome beta channel. The `pcm1863` driver is not in a release
+either; it is under review as
+[esphome/esphome#22794](https://github.com/esphome/esphome/pull/22794) (with documentation in
+[esphome/esphome.io#8145](https://github.com/esphome/esphome.io/pull/8145)), and the firmware pulls it
+straight from that pull request until it ships.
+
+**Hardware:** [`hardware/11-hifi-esp32-input/`](/hardware/11-hifi-esp32-input/) — rev A
+schematic, PCB, BOM, gerbers and 3D model.
+
+**Planned next (subject to change):** a digital input — S/PDIF over coaxial. Note that the two coax
+sockets on the board today are *analog* line inputs; a digital one is a different thing entirely and
+needs its own receiver front end rather than the PCM1863's analog mux, so it may well end up as a
+separate board instead of a revision of this one.
+
+> 💬 **Would you use a digital-input variant?** That decision is still open, and feedback is what will
+> settle it. Tell me what you would plug into it — a CD transport, a TV, a streamer — and whether
+> coaxial alone is enough or optical matters too. Open an [issue](https://github.com/sonocotta/esp32-audio-dock/issues)
+> or say so on [Discord](https://discord.gg/PtnaAaQMpS).
+
+**Availability:** the first run is on [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32-input/).
+These boards are going to beta testers to gather feedback before the next batch is made, so the
+design can still change in response to what comes back.
 
 ## Loud-ESP32 and Loud-ESP32-Plus
 
@@ -313,6 +392,10 @@ Recently, all Amped boards were migrated to use the new [TPA3118](https://www.ti
 
 ****** See [AirPlay 1 & 2](#airplay-1--2) below. Every board except Loud-ESP32-Plus has a ready-to-flash image in the [web-installer](https://rbouteiller.github.io/airplay-esp32/getting-started/flashing/). The Plus builds target the current board revisions only (rev J1+ on ESP32, rev H1+ on ESP32-S3). Loud-ESP32-Plus (MA12070P) is not supported: the project has no driver for this DAC.
 
+[HiFi-ESP32-Input](#hifi-esp32-input) is deliberately left out of the table above: it is a
+capture board rather than a player, so most of these rows do not apply to it. See its own
+section for what it does and does not share with the rest of the range.
+
 ### Onboard PSRAM
 
 Audio streaming requires proper buffering to work; even with the ESP32's 500K of RAM, it is a challenging task. For that reason, most of the projects will require WROVER modules that have onboard PSRAM chips.  All ESP32 Audio boards have an 8MB PSRAM chip onboard, connected via a high-speed interface. Any code using PSRAM just works out of the box.
@@ -397,6 +480,20 @@ Note that **Louder-ESP32-mini** and **Louder-ESP32-Pro** are ESP32-S3-only desig
 | ESP32-S3 (H)  | 14      | 16       | 15     | 0                   | 35, 36, 37     | 4          |  41     |    42    |
 | ESP32 (J1+)   | 26      | 22       | 25     | 0                   | 16, 17         | 13         |  21     |    27    |
 | ESP32-S3 (H1+)| 14      | 16       | 15     | 0                   | 35, 36, 37     | 4          |  42     |    41    |
+
+### HiFi-ESP32-Input
+
+Same pins as HiFi-ESP32-S3-Plus, with one difference that matters: the I2S data
+line is an **input** here. The ESP32 listens on it while the PCM1863 drives it.
+
+|               | I2S CLK | I2S DATA (in) | I2S WS | PSRAM RESERVED | I2C SDA | I2C CLK |
+|---------------|---------|---------------|--------|----------------|---------|---------|
+| ESP32-S3      | 14      | 16            | 15     | 35, 36, 37     |  42     |    41   |
+
+The PCM1863 answers at I2C address **0x4A** (the PCM5122 on the Plus boards sits at
+0x4D). Analog inputs: `VIN2` is the minijack, `VIN1` is the coax pair. Both are
+single-ended line-level inputs; the chip's differential and `VIN3`/`VIN4` modes are not
+wired on this board.
 
 ### Loud-ESP32
 
@@ -656,6 +753,71 @@ Snapcast is a multi-room audio player that synchronizes playback across multiple
 As of mid-2025 work is ongoing ([1](https://github.com/c-MM/esphome-snapclient/), [2](https://github.com/esphome/esphome/pull/8350)) to add snapcast component to ESPHome. This is based on the [original implementation](https://github.com/CarlosDerSeher/snapclient) done by CarlosDerSeher. This has the benefit of enabling all the DAC features implemented by the ESPHome driver. At the moment of writing, there are quite a few issues to be solved in the code before it can be merged, but having tested this myself on a few S3-based boards as long as Louder-Esparagus and Louder-ESP32 boards, I can say it is stable and works really well. Also
 - This is the only implementation that works with ESP32-S3 (exciting!)
 - This implementation allows using advanced TAS5805M DAC features available in the Esphome driver, like bridge mode and 15-band EQ. If you have Home Assistant already, that's no brainer
+
+### Home Assistant: HiFi-ESP32-Input as a Sendspin source
+
+Everything above turns a Home Assistant stream into sound. [HiFi-ESP32-Input](#hifi-esp32-input) does the
+opposite: it hands Music Assistant a line input, so the analog gear you already own becomes something the rest
+of your multi-room system can play.
+
+The firmware uses Sendspin's **source** role, the mirror image of the Sendspin player role the other boards use.
+Instead of receiving audio and playing it, the board captures its analog input and offers that stream to the
+server. Music Assistant then treats it as a source you can route to any player or group — the same place you
+would pick a radio station or a playlist.
+
+Typical reasons to want this:
+
+- A turntable, CD player or tape deck that should be audible on speakers in other rooms
+- A TV's headphone output, so the living room sound follows you around the house
+- Any line-level source you would rather not re-cable every time you move it
+
+What makes this board different from a plain capture dongle is the input multiplexer. The minijack and the two
+coax sockets are all wired to the ADC at once, and the **Line Input** select switches between them while the
+device is running. One board, three sources, no reflash and no re-cabling.
+
+#### Setup
+
+The device onboards exactly like any other ESPHome board here — see
+[Home Assistant: ESPHome way](#home-assistant-esphome-way) for the ESPHome addon and integration steps. Flash it
+from the [web installer](https://sonocotta.github.io/esp32-audio-dock/), let the ESPHome integration discover it,
+and the entities below appear on its device page.
+
+| Entity | What it does |
+|---|---|
+| **Line Input** (select) | Picks the analog socket: `VIN2` is the minijack, `VIN1` the coax pair, `NONE` disconnects the mux. The remaining options are inputs the chip supports but this board does not wire. |
+| **Line In Signal** (switch) | Tells the server whether anything is plugged in and playing. Nothing on the board measures the analog level, so this is a manual hint — or one you drive from an automation. |
+| **Sendspin Pairing Code** (sensor) | Shows the code when Music Assistant asks this source to pair. Empty the rest of the time. |
+| **Unpaired Access** (switch) | On by default, so a fresh board shows up without any ceremony. Turn it off once the server you want has paired. |
+
+| Home Assistant device page |
+|---|
+| <img width="2602" height="1742" alt="image" src="https://github.com/user-attachments/assets/287c666f-da47-4e41-b5cf-77cfaf965bb4" /> |
+
+On the Music Assistant side the board appears once it has connected, and pairing works exactly as it does for a
+player: if asked for a code, read the **Sendspin Pairing Code** sensor on the device page and type it in. See
+[Pairing with Music Assistant](/firmware/esphome/README.md#pairing-with-music-assistant) for the full flow.
+Then pick the input as the source on whichever player or group should play it.
+
+| Playing the input from Music Assistant |
+|---|
+| <img width="674" height="863" alt="image" src="https://github.com/user-attachments/assets/61e16510-8248-494e-b78a-f8b023f8263e" /> |
+
+> [!NOTE]
+> This needs ESPHome 2026.11.0 or later, which is the release that introduces the Sendspin source role.
+> It has not shipped yet — 2026.10.2 is current — so for now the configs build against the ESPHome beta
+> channel. You also need a Music Assistant build whose Sendspin support covers sources as well as players.
+> Both the board and the source role are new, so treat the combination as experimental.
+
+A few things worth knowing before you wire it up:
+
+- **The stream takes the ADC's sample rate.** The source cannot resample, so the microphone's rate is what goes
+  on the wire. The shipped config captures at 48 kHz and sends 16-bit, which keeps LAN traffic modest without
+  anyone hearing the difference.
+- **Levels are set in the analog domain.** The PCM1863's gain runs from −12 dB to +40 dB in 0.5 dB steps. A
+  turntable through a phono preamp and a TV headphone output sit at very different levels, so expect to set this
+  per source rather than once.
+- **There is no silence detection.** The board streams whatever the selected input carries, including the noise
+  floor of an unplugged socket. `NONE` is the quietest way to mute the capture side.
 
 ## Squeezelite-ESP32
 
@@ -1351,6 +1513,7 @@ If you don't mind showing off your projects, please send me a note or create a P
 You may support my work by ordering these products at Lectronz, Elecrow, and Tindie
 - HiFi-ESP32 at [Lectronz](https://lectronz.com/products/hifi-esp32), [Elecrow](https://www.elecrow.com/hifi-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32/)
 - HiFi-ESP32-Plus at [Lectronz](https://lectronz.com/products/hifi-esp32-plus), [Elecrow](https://www.elecrow.com/hifi-esp32-plus.html), and [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32-plus/)
+- HiFi-ESP32-Input at [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32-input/)
 - Loud-ESP32 at [Lectronz](https://lectronz.com/products/loud-esp32), [Elecrow](https://www.elecrow.com/loud-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/loud-esp32/)
 - Loud-ESP32-Plus at [Lectronz](https://lectronz.com/products/loud-esp32-plus), Elecrow (coming soon), and [Tindie](https://www.tindie.com/products/sonocotta/loud-esp32-plus/)
 - Louder-ESP32 at [Lectronz](https://lectronz.com/products/louder-esp32), [Elecrow](https://www.elecrow.com/louder-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32/)
@@ -1359,6 +1522,9 @@ You may support my work by ordering these products at Lectronz, Elecrow, and Tin
 - Louder-ESP32-Pro at [Lectronz](https://lectronz.com/products/louder-esp32-pro), [Elecrow](https://www.elecrow.com/louder-esp32-pro.html), and [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32-pro/)
 - Amped-ESP32 at [Lectronz](https://lectronz.com/products/amped-esp32), [Elecrow](https://www.elecrow.com/amped-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32/)
 - Amped-ESP32-Plus at [Lectronz](https://lectronz.com/products/amped-esp32-plus), [Elecrow](https://www.elecrow.com/amped-esp32-plus.html), and [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32-plus/)
+
+[HiFi-ESP32-Input](#hifi-esp32-input) is a first run for beta testers, so it is on Tindie only for
+now.
 
 ## Errata
 
