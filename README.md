@@ -160,7 +160,9 @@ The **HiFi-ESP32 Plus** represents the next evolution of the board, featuring th
 
 > ⚠️ **First prototype.** This board is experimental. It has been bench-tested
 > end to end, but expect rough edges: the pinout, the firmware packages and the
-> name itself may still change, and it is not for sale yet.
+> name itself may still change. The first run is listed on
+> [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32-input/) for beta testers, and
+> these boards ship without the IR receiver that production boards carry.
 
 Every other board in this range turns a network stream into sound. **HiFi-ESP32-Input**
 goes the other way: it turns sound into a network stream. It is the HiFi-ESP32-Plus
@@ -193,7 +195,11 @@ or group should play it.
 - 24-bit stereo capture; the firmware runs it at 48 kHz in 32-bit I2S slots
 - Analog input mux switched from the device page — no reflash to change socket
 - Programmable gain amplifier, −12 dB to +40 dB in 0.5 dB steps
-- Same form factor, RGB LED and IR receiver as the rest of the HiFi-ESP32 line
+- Same form factor and the same headers as the rest of the HiFi-ESP32 line: a 30-pin FPC
+  connector for an OLED display, a header for a W5500 Ethernet module, a 3-pin connector for
+  an RGB LED and a footprint for the IR receiver. The RGB LED is a connector only — no LED is
+  fitted on the board — and the IR receiver, standard on production boards, is left off the
+  beta run to keep the prototype batch cheap.
 - Ships as a [Sendspin](#sendspin) *source*, so it appears in Music Assistant next to
   the players
 
@@ -219,8 +225,9 @@ separate board instead of a revision of this one.
 > coaxial alone is enough or optical matters too. Open an [issue](https://github.com/sonocotta/esp32-audio-dock/issues)
 > or say so on [Discord](https://discord.gg/PtnaAaQMpS).
 
-**Availability:** not on sale yet. The first boards are going out to beta testers to gather feedback
-before the next batch is made, so the design can still change in response to what comes back.
+**Availability:** the first run is on [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32-input/).
+These boards are going to beta testers to gather feedback before the next batch is made, so the
+design can still change in response to what comes back.
 
 ## Loud-ESP32 and Loud-ESP32-Plus
 
@@ -1506,6 +1513,7 @@ If you don't mind showing off your projects, please send me a note or create a P
 You may support my work by ordering these products at Lectronz, Elecrow, and Tindie
 - HiFi-ESP32 at [Lectronz](https://lectronz.com/products/hifi-esp32), [Elecrow](https://www.elecrow.com/hifi-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32/)
 - HiFi-ESP32-Plus at [Lectronz](https://lectronz.com/products/hifi-esp32-plus), [Elecrow](https://www.elecrow.com/hifi-esp32-plus.html), and [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32-plus/)
+- HiFi-ESP32-Input at [Tindie](https://www.tindie.com/products/sonocotta/hifi-esp32-input/)
 - Loud-ESP32 at [Lectronz](https://lectronz.com/products/loud-esp32), [Elecrow](https://www.elecrow.com/loud-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/loud-esp32/)
 - Loud-ESP32-Plus at [Lectronz](https://lectronz.com/products/loud-esp32-plus), Elecrow (coming soon), and [Tindie](https://www.tindie.com/products/sonocotta/loud-esp32-plus/)
 - Louder-ESP32 at [Lectronz](https://lectronz.com/products/louder-esp32), [Elecrow](https://www.elecrow.com/louder-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/louder-esp32/)
@@ -1515,8 +1523,8 @@ You may support my work by ordering these products at Lectronz, Elecrow, and Tin
 - Amped-ESP32 at [Lectronz](https://lectronz.com/products/amped-esp32), [Elecrow](https://www.elecrow.com/amped-esp32.html), and [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32/)
 - Amped-ESP32-Plus at [Lectronz](https://lectronz.com/products/amped-esp32-plus), [Elecrow](https://www.elecrow.com/amped-esp32-plus.html), and [Tindie](https://www.tindie.com/products/sonocotta/amped-esp32-plus/)
 
-[HiFi-ESP32-Input](#hifi-esp32-input) is not on this list yet — the first boards are going to beta
-testers before a batch is made.
+[HiFi-ESP32-Input](#hifi-esp32-input) is a first run for beta testers, so it is on Tindie only for
+now.
 
 ## Errata
 
