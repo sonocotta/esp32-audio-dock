@@ -26,7 +26,11 @@ substitutions:
   i2s_mic_lrclk_pin: GPIO40
   i2s_mic_bclk_pin: GPIO41
   i2s_mic_din_pin: GPIO39
-  i2s_mic_channel: left # or right?
+  # The onboard mic is a TDK ICS-43432 (rev-D BOM, U4). Its L/R strap puts
+  # the audio in the right half of the I2S frame; the left half is the
+  # tri-stated one, which reads as static. Confirmed by ear on rev-D via
+  # louder-esp32-s3-pro-idf-sendspin-duplex.yaml.
+  i2s_mic_channel: right
 
   # TAS5825M
   tas58xx_variant: TAS5825M

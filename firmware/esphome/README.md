@@ -19,6 +19,7 @@ This directory contains ESPHome firmware configurations for all ESP32 Audio Dock
     - [8. Amped-ESP32-Plus](#8-amped-esp32-plus)
     - [9. Louder-ESP32-Mini](#9-louder-esp32-mini)
     - [10. Louder-ESP32-Pro](#10-louder-esp32-pro)
+      - [Duplex Experiment: Player and Source on One Board](#duplex-experiment-player-and-source-on-one-board)
     - [11. HiFi-ESP32-Input](#11-hifi-esp32-input)
   - [Configuration Variants](#configuration-variants)
     - [Standard Media Player](#standard-media-player)
@@ -327,12 +328,69 @@ The Mini boards are designed for compact installations where a full-sized board 
 - `louder-esp32-s3-pro-idf-snapclient.yaml` - Snapcast client with OLED display
 - `louder-esp32-s3-pro-idf-voice-assist.yaml` - Voice assistant with wake word detection
 - `louder-esp32-s3-pro-idf-voice-assist-sendspin.yaml` - Voice assistant with Sendspin synchronized playback
+- `louder-esp32-s3-pro-idf-sendspin-duplex.yaml` - ⚠️ **Experimental/debug.** Sendspin player *and* Sendspin source on one hub: normal playback through the TAS5825M, plus the onboard microphone streamed into Music Assistant as an input
 
 The Pro board is a feature-rich platform with:
 - **TFT SPI display** (ST7789 or ILI9341) for track info, album art, and clock
 - **Active fan control** for thermal management during extended high-power operation
 - **I2S microphone** for voice assistant capabilities
 - **TAS5825M DAC** with full 15-band EQ, bi-amp mode, and presets
+
+#### Duplex Experiment: Player and Source on One Board
+
+The Pro is the only board with both a DAC and a microphone on it, which makes it
+the one place to answer two open questions: how the onboard mic sounds as a
+Sendspin *source*, and whether a single ESP32-S3 has the headroom to stream
+audio both ways at once. `louder-esp32-s3-pro-idf-sendspin-duplex.yaml` is that
+test bench, not a product configuration.
+
+It takes the player side unchanged from `louder-esp32-s3-pro-idf-sendspin.yaml`
+(the `audio.yaml` + `sendspin.yaml` + TAS58xx package stack) and adds a second
+I2S bus for the microphone plus a `source:` block on the same `sendspin:` hub -
+the same role `11-hifi-esp32-input` uses for its PCM1863 line input, and the one
+documented under [Sendspin Source (line input)](#sendspin-source-line-input).
+The capture side is inlined in the config rather than packaged, so the
+experiment cannot break the shipping configs. Music Assistant then sees one
+device it can both play to and pull from.
+
+Extra entities beyond the usual Sendspin player set:
+
+| Entity | What it does |
+|---|---|
+| **Mic Source Streaming** (binary sensor) | On while the server is actually pulling audio from the mic. Read from the hub, so it stays right across reconnects. |
+| **Mic Signal** (switch) | The source's "something is playing here" hint to the server. Starts on; turn it off to see how the server handles a source going quiet. |
+| **Mic Mute** (switch) | Mutes the mic in the driver while the stream keeps running - separates a dead capture path from a mic that hears nothing, and breaks a feedback loop without ending the test. |
+
+Notes for whoever runs it:
+
+- **Don't route the mic to this board's own player.** The speakers feed straight
+  back into the mic. Send the mic to a *different* player (or a group that
+  excludes this one) and play music to this board from elsewhere - which is also
+  what makes it a genuine duplex test rather than a loopback.
+- **Node name is `louder-esp32s3-pro-duplex`**, not `louder-esp32s3-pro`, so the
+  experiment can run next to a production board without colliding in mDNS or
+  Home Assistant. The model reported to the server is still `Louder-ESP32-Pro`.
+- **Watch the diagnostics** while both directions run: Loop Time, Heap Free,
+  Heap Max Block, Free PSRAM and CPU Temperature. They ship
+  `disabled_by_default`, so enable them on the device page - no reflash needed.
+- **Knobs in `substitutions:`** if it runs out of road: `source_bits_per_sample`
+  and `source_gain_factor` (a MEMS mic is quiet once converted down to 16 bits;
+  it starts at 8). `mic_sample_rate` is 48000 and should not go to a voice rate
+  to save CPU - the onboard ICS-43432 needs a 64 × fs bit clock and is specified
+  from 23 kHz to 52 kHz, so 32000 is the lowest sane step. The Wi-Fi and TCP
+  buffer sizes in `sdkconfig_options` are the next thing to look at if capture
+  stutters while playback runs.
+- **Static instead of audio** means the wrong half of the I2S frame is being
+  read: the ICS-43432 drives only the half its L/R strap selects and tri-states
+  the data line for the other, so a floating line arrives as noise. Flip
+  `i2s_mic_channel` between `right` (current) and `left`. `Mic Mute` silencing
+  the static is not evidence against this - muting happens in the driver, after
+  the read.
+- **IR, the TFT and Ethernet are left out** to keep the variable count down; the
+  package list at the end of the file says what to copy back from the plain
+  Sendspin config to bring each one back.
+- **Requires ESPHome 2026.11.0 or later** for the source role, so CI builds this
+  config against the `beta` image until that release ships.
 
 ---
 
@@ -476,7 +534,9 @@ Assistant as a *source*, which can then be routed to any player or group on the
 network. This is how a turntable, CD player or TV ends up on the same
 multi-room system as everything else.
 
-Only HiFi-ESP32-Input has the ADC this needs.
+Only HiFi-ESP32-Input has the ADC this needs. Louder-ESP32-Pro can take the role
+from its onboard microphone instead, alongside its player, in the experimental
+[`-sendspin-duplex` config](#duplex-experiment-player-and-source-on-one-board).
 
 - One source per board, stereo, 48 kHz
 - Sent as 16-bit to keep LAN traffic down, regardless of the ADC's own width

@@ -1,0 +1,323 @@
+# ============================================================
+# Louder-ESP32-Pro - Sendspin Player + Source (EXPERIMENTAL)
+# ============================================================
+# Debug build that gives the board *both* Sendspin roles at once:
+#
+#   player  - the usual synchronized playback through the TAS5825M,
+#             exactly as in louder-esp32-s3-pro-idf-sendspin.yaml
+#   source  - the onboard I2S microphone streamed into Music Assistant
+#             as an input, the way HiFi-ESP32-Input streams its line in
+#
+# Both roles live on the same `sendspin:` hub, so Music Assistant sees one
+# device that it can play *to* and pull audio *from*. That is the point of
+# this config: to find out whether an ESP32-S3 has the CPU, the PSRAM and
+# the Wi-Fi headroom to do both at the same time, and how the mic sounds
+# at all. It is not a product configuration - expect rough edges.
+#
+# What to watch while testing (all on the device page, most of the
+# monitoring entities ship `disabled_by_default` - enable the ones you
+# need, no reflash required):
+#   - Loop Time, Heap Free / Heap Max Block, Free PSRAM, CPU Temperature
+#   - "Mic Source Streaming" - on while the server is pulling from the mic
+#   - "Debug Logging" switch, or the "Log Level" select, for DEBUG logs
+#
+# !! Feedback warning !! Do not route this board's own mic source to this
+# board's own player: the speakers feed straight back into the mic. Send
+# the mic to a *different* Sendspin player (or a group that excludes this
+# one), and play music to this board from somewhere else. That split is
+# also what makes it a real duplex test.
+#
+# Board-specific pinouts are defined in the substitutions section.
+# Functional blocks are imported from /packages; the source role and the
+# microphone are inlined here on purpose, so this experiment cannot break
+# the shipping configs that share those packages.
+#
+# !! Requires ESPHome 2026.11.0 or later for the Sendspin source role.
+#    Until that release ships, build against the ESPHome `beta` channel. !!
+# ============================================================
+
+substitutions:
+  # Deliberately not `louder-esp32s3-pro`: the node name differs from the
+  # shipping configs so this experiment can run next to a production board
+  # on the same network without colliding in mDNS or Home Assistant.
+  name: louder-esp32s3-pro-duplex
+  friendly_name: Louder-ESP32-Pro Duplex
+  task_stack_in_psram: "true"
+
+  # Keep the product name in what the Sendspin server is told, so the
+  # device still identifies as the board it is.
+  sendspin_model: Louder-ESP32-Pro
+
+  # ===== Board-Specific Pinouts =====
+  # I2S audio output pins (TAS5825M)
+  i2s_lrclk_pin: GPIO15
+  i2s_bclk_pin: GPIO14
+  i2s_dout_pin: GPIO16
+
+  # I2S audio input pins (onboard microphone). A second I2S bus: the
+  # ESP32-S3 has two peripherals, one drives the DAC, one clocks the mic.
+  i2s_mic_lrclk_pin: GPIO40
+  i2s_mic_bclk_pin: GPIO41
+  i2s_mic_din_pin: GPIO39
+  # The onboard mic is a TDK ICS-43432 (rev-D BOM, U4): a true I2S mic, so
+  # `pdm: false` below. It drives audio into one half of the frame only -
+  # the one its L/R strap pin selects - and tri-states the data line for
+  # the other half. Read the wrong half and every bit comes off a floating
+  # line, which sounds like loud static no matter what the mic hears. If
+  # this value is wrong, that is the symptom; the other one is the fix.
+  i2s_mic_channel: right
+
+  # ===== Microphone / Source Tuning =====
+  # The source role cannot resample, so whatever the mic captures at is
+  # what goes on the wire. 48 kHz matches the playback side and needs no
+  # resampling in the server.
+  # Do not drop this to 16000 to save CPU: the ICS-43432 needs a 64 x fs
+  # bit clock and is specified from 23 kHz to 52 kHz, so a voice-rate
+  # capture runs the mic out of spec. 32000 is the lowest sane step.
+  mic_sample_rate: "48000"
+  # I2S slot width the mic drives. MEMS mics put 24 bits in a 32-bit slot.
+  mic_bits_per_sample: "32"
+  # What the source puts on the wire. 16-bit halves the LAN traffic; the
+  # mic still captures at its own width and the source converts.
+  source_bits_per_sample: "16"
+  # Integer multiplier (1..64) applied before sending. A MEMS mic lands
+  # near the top of a 32-bit word, so after the conversion to 16 bits it
+  # is quiet. 16 is tuned by ear on rev-D hardware; the gain saturates at
+  # full scale rather than wrapping, so overshooting clips loud passages
+  # instead of turning them into noise.
+  source_gain_factor: "16"
+
+  # TAS5825M
+  tas58xx_variant: TAS5825M
+  tas58xx_enable_pin: GPIO17
+  i2c_sda_pin: GPIO8
+  i2c_scl_pin: GPIO9
+
+  # ===== DAC Overrides (optional) =====
+  # tas58xx_dac_mode: PBTL
+  # tas58xx_mixer_mode: MONO
+  # tas58xx_analog_gain: 0db
+  # tas58xx_volume_max: 0dB
+  # tas58xx_volume_min: -60dB
+  # tas58xx_refresh_eq: AUTO
+
+  # RGB LED
+  rgb_led_pin: GPIO21
+
+  # Fan pins
+  fan_input_pin: GPIO1
+  fan_pwn_pin: GPIO2
+
+  # IR receiver, display and Ethernet are left out of this build - see the
+  # commented package list at the end of the file.
+  ir_rx_pin: GPIO07
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  min_version: 2026.11.0
+  name_add_mac_suffix: false
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  variant: ESP32S3
+  flash_size: 8MB
+  cpu_frequency: 240MHz
+  framework:
+    type: esp-idf
+    version: recommended
+    sdkconfig_options:
+      CONFIG_ESP32S3_DATA_CACHE_64KB: "y"
+      CONFIG_ESP32S3_DATA_CACHE_LINE_64B: "y"
+      CONFIG_ESP32S3_INSTRUCTION_CACHE_32KB: "y"
+
+      # Moves instructions and read only data from flash into PSRAM on boot.
+      # Both enabled allows instructions to execute while a flash operation is in progress
+      # without needing to be placed in IRAM.
+      CONFIG_SPIRAM_RODATA: "y"
+      CONFIG_SPIRAM_FETCH_INSTRUCTIONS: "y"
+
+      CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
+      CONFIG_MBEDTLS_SSL_PROTO_TLS1_3: "y"
+
+      # Streaming both ways at once doubles the pressure on the network
+      # stack, so the buffer sizes from the voice-assist config are used
+      # here too. These are the first knobs to look at if the capture
+      # stream stutters while playback is running.
+      CONFIG_ESP32_WIFI_STATIC_RX_BUFFER_NUM: "16"
+      CONFIG_ESP32_WIFI_DYNAMIC_RX_BUFFER_NUM: "32"
+      CONFIG_TCPIP_RECVMBOX_SIZE: "512"
+      CONFIG_TCP_SND_BUF_DEFAULT: "65535"
+      CONFIG_TCP_WND_DEFAULT: "512000"
+      CONFIG_TCP_RECVMBOX_SIZE: "512"
+
+      # Both cores stay available: the player and the source each run their
+      # own task, and a unicore build would serialize them.
+      CONFIG_FREERTOS_UNICORE: "n"
+      # Generous watchdog: a debug build with DEBUG logging enabled can
+      # block the loop long enough to trip the default 5s.
+      CONFIG_ESP_TASK_WDT_TIMEOUT_S: "10"
+
+logger:
+  # Compiled with DEBUG so the "Log Level" select can raise it at runtime;
+  # starts at INFO on every boot.
+  level: DEBUG
+  initial_level: INFO
+
+api:
+  # Don't reboot when no Home Assistant client is connected: players and
+  # sources used only with Music Assistant (Sendspin) never have one.
+  reboot_timeout: 0s
+
+ota:
+  platform: esphome
+  password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+psram:
+  mode: octal
+  speed: 80MHz
+  ignore_not_found: false
+
+network:
+  enable_ipv6: true
+
+# ===== Packages =====
+packages:
+  esparagus_remote:
+    url: https://github.com/sonocotta/esp32-audio-dock
+    ref: main
+    files:
+      # TAS58xx with ganged 15-band EQ
+      - firmware/esphome/packages/dac-tas58xx.yaml
+
+      # Playback side: I2S out, mixer, resampler, and the Sendspin player
+      # role (which also declares the `sendspin:` hub this file extends).
+      - firmware/esphome/packages/audio.yaml
+      - firmware/esphome/packages/sendspin.yaml
+      - firmware/esphome/packages/sendspin-audio-addon-external-dac.yaml
+      - firmware/esphome/packages/sendspin-addon-dac-enable.yaml
+      - firmware/esphome/packages/sendspin-addon-tas58xx.yaml
+
+      - firmware/esphome/packages/fan.yaml
+      - firmware/esphome/packages/light.yaml
+      - firmware/esphome/packages/monitoring.yaml
+      - firmware/esphome/packages/monitoring-wifi.yaml
+
+      # Left out to keep the experiment to as few moving parts as
+      # possible. The TFT and the W5500 share the SPI bus, so bringing
+      # either back needs the `spi_*` / `display_*` or `eth_*` pins in
+      # substitutions, and Ethernet also needs `network: priority:` plus
+      # monitoring-eth.yaml - copy those from
+      # louder-esp32-s3-pro-idf-sendspin.yaml.
+      # - firmware/esphome/packages/ir-receiver.yaml
+      # - firmware/esphome/packages/sendspin-addon-tft.yaml
+      # - firmware/esphome/packages/ethernet-w5500.yaml
+      # - firmware/esphome/packages/monitoring-eth.yaml
+
+# ============================================================
+# Capture side - inlined, not a package
+# ============================================================
+# Second I2S bus for the onboard microphone. `i2s_out` in audio.yaml is
+# the playback bus; ESPHome merges the two list entries, so the S3 ends up
+# with one peripheral per direction.
+i2s_audio:
+  - id: i2s_mic_bus
+    i2s_bclk_pin: ${i2s_mic_bclk_pin}
+    i2s_lrclk_pin: ${i2s_mic_lrclk_pin}
+
+microphone:
+  - platform: i2s_audio
+    id: onboard_mic
+    i2s_audio_id: i2s_mic_bus
+    i2s_din_pin: ${i2s_mic_din_pin}
+    adc_type: external
+    pdm: false
+    # One channel, so the source streams mono. `stereo` would need
+    # `channels: [0, 1]` below and a second mic on the other half of the
+    # frame, which this board does not have.
+    channel: ${i2s_mic_channel}
+    # A single sample rate (min == max) is required by the sendspin source
+    sample_rate: ${mic_sample_rate}
+    bits_per_sample: ${mic_bits_per_sample}bit
+    # The APLL is left alone on purpose: the playback bus runs without it
+    # and there is one APLL to share. Turn it on if the capture clock
+    # turns out to drift enough for the server to complain.
+    # use_apll: true
+
+sendspin:
+  # Merged into the `sendspin:` block from packages/sendspin.yaml - that
+  # package brings the hub and the player role, this adds the source role
+  # to the same hub, so both are advertised to the server.
+  source:
+    microphone:
+      microphone: onboard_mic
+      # Which channels of the mic stream to send. Not a substitution:
+      # ESPHome substitutes text, so the list has to stay a list.
+      channels: [0]
+      bits_per_sample: ${source_bits_per_sample}
+      gain_factor: ${source_gain_factor}
+    task_stack_in_psram: ${task_stack_in_psram}
+    # Logged at INFO so the start and end of a capture session show up
+    # without turning on DEBUG for everything.
+    on_streaming_started:
+      - logger.log:
+          level: INFO
+          format: "Sendspin source: capture started"
+    on_streaming_stopped:
+      - logger.log:
+          level: INFO
+          format: "Sendspin source: capture stopped"
+
+binary_sensor:
+  # On while the server is actually pulling audio from the mic. Read from
+  # the hub each loop rather than latched by the callbacks above, so it is
+  # still right after a reconnect.
+  - platform: template
+    name: Mic Source Streaming
+    id: mic_source_streaming
+    icon: mdi:broadcast
+    lambda: return id(sendspin_hub)->is_source_streaming();
+
+switch:
+  # Tells the server whether the source has anything worth playing. A mic
+  # always does, so this starts on; turn it off to see how the server
+  # reacts to a source going quiet.
+  - platform: template
+    name: Mic Signal
+    id: mic_signal
+    icon: mdi:waveform
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
+    turn_on_action:
+      - sendspin.source.set_signal:
+          present: true
+    turn_off_action:
+      - sendspin.source.set_signal:
+          present: false
+
+  # Mutes the mic in the driver while the stream keeps running, which
+  # separates "the capture path is dead" from "the mic hears nothing" -
+  # and breaks an acoustic feedback loop without stopping the test.
+  - platform: template
+    name: Mic Mute
+    id: mic_mute
+    icon: mdi:microphone-off
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    turn_on_action:
+      - microphone.mute: onboard_mic
+    turn_off_action:
+      - microphone.unmute: onboard_mic
+
+  # Lets a server connect without pairing at all, matching the shipping
+  # configs: a fresh board shows up in Music Assistant with no ceremony.
+  - platform: sendspin
+    type: unpaired_access
+    name: Unpaired Access
+    icon: mdi:account-key
+    restore_mode: RESTORE_DEFAULT_ON
