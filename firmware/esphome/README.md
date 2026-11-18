@@ -935,9 +935,7 @@ Uncomment this block and remove the local `!include` imports to use the latest p
 
 ### Optional Hardware Feature Toggles
 
-> Currently implemented on `2-loud-esp32/loud-esp32-s3-idf-sendspin.yaml` only. See [#222](https://github.com/sonocotta/esp32-audio-dock/issues/222); it will spread to the other configs once it has been proven on real hardware.
-
-A board variant or DIY build may be missing the RGB LED, IR receiver, OLED or W5500 Ethernet module. Rather than copying a config into your own YAML and editing the `packages:` block — which cuts you off from upstream updates — set the feature toggles and keep importing the config as a package:
+A board variant or DIY build may be missing the RGB LED, IR receiver, OLED/TFT display or W5500 Ethernet module. Rather than copying a config into your own YAML and editing the `packages:` block — which cuts you off from upstream updates — set the feature toggles and keep importing the config as a package:
 
 ```yaml
 substitutions:
@@ -955,21 +953,33 @@ packages:
       - firmware/esphome/2-loud-esp32/loud-esp32-s3-idf-sendspin.yaml
 ```
 
-| Toggle | Default | Controls |
+Every board config carries the toggles its board actually supports — check the `# ===== Optional Hardware Feature Toggles =====` block at the top of the file you are importing. Setting a toggle a config does not define is harmless but does nothing.
+
+| Toggle | Usual default | Controls |
 | --- | --- | --- |
-| `enable_led` | `"true"` | WS2812 RGB LED on `rgb_led_pin`, and the Sendspin playback handlers that drive it |
+| `enable_led` | `"true"` | WS2812 RGB LED on `rgb_led_pin`, and the playback handlers that drive it |
 | `enable_ir` | `"true"` | IR receiver on `ir_rx_pin` |
 | `enable_lan` | `"true"` | W5500 Ethernet, its diagnostic sensors, and the `network: priority:` list |
-| `enable_oled` | `"false"` | SH1106 OLED showing a clock when idle and track info when playing |
+| `enable_oled` | `"false"` | SH1106 OLED — clock when idle, track info when playing |
+| `enable_tft` | `"false"` | SPI TFT display (Louder-ESP32-Pro, in place of `enable_oled`) |
 | `sonocotta_ref` | `main` | The git ref the feature packages are pulled from — set it to the same ref you pinned the config at |
+
+A toggle's default always matches what the config did before the toggles existed, so importing a config and setting nothing behaves exactly as it always has. That means a display that used to be a commented-out line defaults to `"false"`, and hardware that was active defaults to `"true"`.
 
 Notes:
 
 - A disabled feature is **not compiled in at all**. ESPHome expands the substitution expressions in the `files:` paths before fetching them, so the "off" branch resolves to `packages/empty.yaml`, which contributes nothing. There is no GPIO claimed, no entity published and no flash spent.
 - Values are accepted quoted or bare (`"false"`, `false`, `no`); anything that is not `true` (case-insensitive) disables the feature.
-- `enable_lan` and `enable_oled` are **mutually exclusive** — the W5500 and the display are wired to the same SPI pins. Setting both aborts the build with a message naming the conflict, instead of failing later on a pin assignment.
-- `enable_led: "false"` swaps `sendspin.yaml` for `sendspin-no-light.yaml`, because the default playback handlers reference the LED by ID and that has to resolve at compile time.
+- `enable_lan` and the display toggle are **mutually exclusive** — the W5500 and the display are wired to the same SPI pins, and the W5500 drives clk/mosi/miso itself rather than sharing the `spi:` component. Setting both aborts the build with a message naming the conflict, instead of failing later on a pin assignment.
+- `enable_led: "false"` also swaps `sendspin.yaml` for `sendspin-no-light.yaml` (or `media-player.yaml` for `media-player-no-light.yaml`), because the default playback handlers reference the LED by ID and that has to resolve at compile time. The snapclient configs need no swap — they never touch the LED.
 - Requires ESPHome 2025.12 or later for conditional package inclusion; these configs already ask for 2026.10.
+
+Where the toggles are **not** offered, and why:
+
+- **The `*-voice-assist*.yaml` configs have no `enable_led`.** `voice-assist.yaml` and `voice-assist-sendspin.yaml` in the [esparagus-echo](https://github.com/sonocotta/esparagus-echo) repository extend `rgb_front_led` with effects and drive it as the assistant's only state feedback, and there is no no-light variant there. The LED is required rather than optional on those builds. Their other toggles work normally.
+- **`9-louder-esp32-mini/*`** has none of this optional hardware in the first place; those configs already use the no-light packages.
+- **`distribution/*.yaml`** is deliberately untouched. Those are the build inputs for the shipped factory images, which each ship one fixed hardware shape; they are not meant to be imported as packages.
+- **Ethernet that is currently a commented-out line stays commented out.** Turning it on also needs a `network: priority:` list that those configs do not have, so it is left as a manual edit rather than a toggle.
 
 ---
 
