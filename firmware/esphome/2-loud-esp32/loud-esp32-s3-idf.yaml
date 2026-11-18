@@ -13,6 +13,20 @@ substitutions:
   friendly_name: Loud-ESP32-S3
   task_stack_in_psram: "true"
 
+  # ===== Optional Hardware Feature Toggles =====
+  # Accepts true/false quoted or bare; anything that is not "true"
+  # (case-insensitive) disables the feature. A disabled feature is not
+  # merged at all, so it claims no GPIO and costs no flash.
+  # See firmware/esphome/README.md for the full notes.
+  enable_led: "true"    # WS2812 RGB LED on rgb_led_pin
+  enable_ir: "true"     # IR receiver on ir_rx_pin
+  enable_oled: "false"  # SH1106 OLED on the SPI pins
+
+  # The git ref the feature packages below are pulled from. Set this to the
+  # same ref you pinned this file at, so a pinned config gets matching
+  # packages instead of whatever happens to be on main.
+  sonocotta_ref: feat/222-hardware-feature-toggles
+
   # ===== Board-Specific Pinouts =====
   # I2S audio pins (dual MAX98357A DACs)
   i2s_lrclk_pin: GPIO15
@@ -104,19 +118,19 @@ network:
 packages:
   esparagus_remote:
     url: https://github.com/sonocotta/esp32-audio-dock
-    ref: main
+    ref: ${sonocotta_ref}
     files:
       - firmware/esphome/packages/dac-switch.yaml
       - firmware/esphome/packages/audio.yaml
-      - firmware/esphome/packages/media-player.yaml
+      - firmware/esphome/packages/${ 'media-player' if enable_led|string|lower == 'true' else 'media-player-no-light' }.yaml
       - firmware/esphome/packages/media-player-addon-dac-enable.yaml
       
-      - firmware/esphome/packages/light.yaml
-      - firmware/esphome/packages/ir-receiver.yaml
+      - firmware/esphome/packages/${ 'light' if enable_led|string|lower == 'true' else 'empty' }.yaml
+      - firmware/esphome/packages/${ 'ir-receiver' if enable_ir|string|lower == 'true' else 'empty' }.yaml
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
 
-      # Optional OLED display (uncomment to enable, requires SPI bus)
-      # - firmware/esphome/packages/oled.yaml
+      # OLED display on the SPI bus - set `enable_oled` above to switch it on
+      - firmware/esphome/packages/${ 'oled' if enable_oled|string|lower == 'true' else 'empty' }.yaml
       # Optional ethernet (replace wifi config if you use this, you need to exclude OLED package if you do this to free up SPI bus)
       # - firmware/esphome/packages/ethernet-w5500.yaml

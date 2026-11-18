@@ -1,0 +1,315 @@
+# =============================================================================
+# Louder-ESP32-S3 Mini 55 PD — UART debug firmware
+#
+# Purpose: reproduce and diagnose sonocotta/esp32-audio-dock#214
+#   "web-installer firmware boot-loops with E BOD: Brownout detector was
+#    triggered (HUSB238A PD Hard Reset at enable)"
+#
+# REQUIRES the UART0 solder mod: U0TXD = GPIO43, U0RXD = GPIO44 on the
+# ESP32-S3-WROOM-1U castellations (both unconnected on the board, so there is
+# nothing to contend with). Wire TX / RX / GND only to a 3.3 V USB-serial
+# converter — never its VCC.
+#
+#   Console:  esphome logs <this file> --device /dev/cu.usbserial-XXXX
+#   Flash:    hold BOOT, tap RESET, release BOOT, then
+#             esphome run <this file> --device /dev/cu.usbserial-XXXX
+#
+# 115200 baud is deliberate: ESPHome does not set CONFIG_ESP_CONSOLE_UART_BAUDRATE,
+# so the ROM bootloader banner and the IDF brownout message are always emitted at
+# 115200. Raising the logger baud would garble exactly the lines we are here for.
+#
+# Differences from the production sendspin config, all intentional:
+#   - no BLE / Improv  -> removes the 227 ms esp32_ble stall seen in the issue log,
+#                         which would otherwise sit on top of the PD probe window
+#   - no audio / TAS5805M / sendspin -> fast boot, fast rebuild, fewer variables
+#   - no safe_mode     -> the boot loop runs freely instead of being cut short
+#                         after 10 attempts
+#   - esp32 block is byte-for-byte the production one, so boot timing stays
+#     comparable to the firmware that actually fails
+# =============================================================================
+
+substitutions:
+  name: louder-mini55-pd-debug
+  friendly_name: Mini55 PD Debug
+
+  i2c_sda_pin: GPIO8
+  i2c_scl_pin: GPIO9
+  pd_int_pin: GPIO48          # HUSB238A INT_N, Mini 55 PD only
+
+  # Which build of the HUSB238A component to compile against. PR #2 comes from a
+  # fork, so the URL switches together with the ref. Flip both lines to move
+  # between the two builds; nothing else in this file changes.
+  #
+  #   stock driver (reproduces the brownout loop):
+  #     husb238a_url: https://github.com/sonocotta/esphome-husb238a
+  #     husb238a_ref: main
+  #
+  #   PR #2 (the fix under test):
+  #     husb238a_url: https://github.com/pReya/esphome-husb238a
+  #     husb238a_ref: fix/pd-hard-reset-brownout
+  #
+  husb238a_url: https://github.com/sonocotta/esphome-husb238a
+  husb238a_ref: main
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  min_version: 2026.10.0
+  name_add_mac_suffix: false
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  variant: ESP32S3
+  flash_size: 8MB
+  cpu_frequency: 240MHz
+  framework:
+    type: esp-idf
+    version: recommended
+    # Belt-and-braces, verified against the linker map rather than assumed.
+    #
+    # PR #2's host detection needs usb_serial_jtag_is_connected() to be backed by
+    # a running SOF tick hook, which lives in usb_serial_jtag_connection_monitor.c.
+    # That object is force-linked by `-u usb_serial_jtag_connection_monitor_include`
+    # only while CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG_ENABLED is set.
+    #
+    # Moving the logger to UART0 does NOT lose it: logger/__init__.py:471 calls
+    # require_usb_serial_jtag_secondary() precisely when the logger is on
+    # something other than USB_SERIAL_JTAG, so the secondary console stays on.
+    # Confirmed in the map file — the object is pulled in either way.
+    #
+    # It IS lost with `logger: baud_rate: 0` (has_serial_logging false), where
+    # nothing requires it and this option's `true` default sets
+    # CONFIG_ESP_CONSOLE_SECONDARY_NONE. Pinning it false here keeps the console
+    # config identical to production no matter how the logger is edited.
+    advanced:
+      disable_usb_serial_jtag_secondary: false
+    sdkconfig_options:
+      CONFIG_ESP32S3_DATA_CACHE_64KB: "y"
+      CONFIG_ESP32S3_DATA_CACHE_LINE_64B: "y"
+      CONFIG_ESP32S3_INSTRUCTION_CACHE_32KB: "y"
+      CONFIG_SPIRAM_RODATA: "y"
+      CONFIG_SPIRAM_FETCH_INSTRUCTIONS: "y"
+      CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC: "y"
+
+psram:
+  mode: octal
+  speed: 80MHz
+  ignore_not_found: false
+
+# -----------------------------------------------------------------------------
+# Logger on UART0 — the whole point of the solder mod. This is what gives us the
+# pre-WiFi window (PD enable at ~1 s, Hard Reset at ~1.5 s) that OTA logging
+# cannot reach.
+# -----------------------------------------------------------------------------
+logger:
+  hardware_uart: UART0
+  baud_rate: 115200
+  level: VERBOSE
+  initial_level: VERBOSE
+  logs:
+    # The i2c component logs every transaction at VERBOSE, and the probe below
+    # does three per 10 ms tick. Measured over the API: ~220 lines/s, about
+    # 13 kB/s. UART0 at 115200 tops out near 11.5 kB/s and ESPHome's UART logger
+    # blocks once its buffer fills — which would stretch the loop and distort the
+    # very timings this firmware exists to measure. Silence i2c; husb238a and
+    # pdprobe keep full detail.
+    i2c: INFO
+    # Same reason: mDNS chatters at VERBOSE once WiFi is up.
+    mdns: INFO
+    # NOT optional. The wifi component prints the WPA passphrase in cleartext at
+    # VERBOSE ("Password: '...'", wifi_component.cpp). These logs get pasted into
+    # issue reports, so VERBOSE must never reach the wifi tag. DEBUG still shows
+    # scan results, the chosen BSSID, retry phases and the IP.
+    wifi: DEBUG
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  # No AP fallback / captive portal: a failed connect should not add a second
+  # radio bring-up on top of the window we are measuring.
+
+api:
+  reboot_timeout: 0s
+
+ota:
+  platform: esphome
+  password: !secret ota_password
+
+# -----------------------------------------------------------------------------
+# HUSB238A
+# -----------------------------------------------------------------------------
+external_components:
+  - source:
+      type: git
+      url: ${husb238a_url}
+      ref: ${husb238a_ref}
+    components: [husb238a]
+    refresh: 0s        # always re-fetch, so switching husb238a_ref takes effect
+
+i2c:
+  id: bus_pd
+  sda: ${i2c_sda_pin}
+  scl: ${i2c_scl_pin}
+  frequency: 400kHz
+  scan: true
+
+husb238a:
+  id: husb_01
+  address: 0x42
+  update_interval: 1s
+  # Only valid on the PR branch — uncomment when husb238a_ref is set to
+  # fix/pd-hard-reset-brownout. Leave it off (default true) for the Mac tests,
+  # turn it false to force PD negotiation with a host attached.
+  # skip_with_usb_host: false
+  # boot_trace: true
+
+binary_sensor:
+  - platform: husb238a
+    attached: "USB-PD Attached"
+
+  # INT_N is wired to GPIO48 on the Mini 55 PD and the driver ignores it
+  # completely. Watching it here shows PD events as the chip sees them, which is
+  # independent of whatever the driver believes is going on.
+  - platform: gpio
+    id: pd_int
+    name: "PD INT_N"
+    pin:
+      number: ${pd_int_pin}
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    on_state:
+      - lambda: |-
+          ESP_LOGI("pdprobe", "[%6u] INT_N -> %s", (unsigned) millis(),
+                   x ? "ASSERTED" : "released");
+
+sensor:
+  - platform: husb238a
+    voltage: "Contracted Voltage"
+    current: "Contracted Current"
+    selected_voltage: "Selected Voltage"
+
+text_sensor:
+  - platform: husb238a
+    status: "Last request status"
+    capabilities: "Capabilities"
+
+select:
+  - platform: husb238a
+    voltage: "Voltage selector"
+
+# -----------------------------------------------------------------------------
+# Raw register probe
+#
+# Replicates the probe firmware from the issue report, but alongside the real
+# driver instead of in place of it. Logs only on change (plus a 2 s heartbeat),
+# so the console stays readable and transition timestamps stay precise.
+#
+# Register map, from the component's own header plus the register names used in
+# the issue's probe trace:
+#   0x02 CONTROL1   bit3 = ENABLE (the whole PD policy engine)
+#   0x63 STATUS     bit0 attach, bit7 ams_process
+#   0x64 STATUS1    bit4 pd_comm, bit2 ams_succ
+#   0x65 TYPE       0x66 DPDM
+#   0x67 CONTRACT0  high nibble = negotiated PDO (5 = 20 V)
+#   0x68 CONTRACT1  operating current
+#   0x69 CAPINF     0x6A..0x6E SRC_PDO 5/9/12/15/20 V, bit7 = offered
+#   0x90 FSM        PD state machine. Confirmed on hardware 2026-11-18 against
+#                   the issue's trace: 0x01 idle / engine off, 0x02 attached and
+#                   waiting for Source_Capabilities, 0x06 explicit contract,
+#                   0x2A HARD RESET  <-- the brownout trigger.
+#   0x91 logged as R91; reads 0x00 in every state observed so far, purpose
+#        unknown, kept in the dump in case it turns out to matter.
+#
+# NOTE: the issue's probe listed these as "VBUS=.. FSM=..", which made 0x91 look
+# like the FSM. It is 0x90. Three independent matches against that trace settle
+# it: 0x01 with the engine off, 0x06 on an explicit contract (alongside
+# CONTRACT0=0x10), and 0x02 -> 0x2A across the Hard Reset.
+# -----------------------------------------------------------------------------
+interval:
+  - interval: 10ms
+    then:
+      - lambda: |-
+          static i2c::I2CDevice dev;
+          static bool inited = false;
+          static uint8_t prev[15] = {0};
+          static uint32_t last_log = 0;
+          if (!inited) {
+            dev.set_i2c_bus(id(bus_pd));
+            dev.set_i2c_address(0x42);
+            inited = true;
+          }
+          uint8_t c1 = 0, blk[12] = {0}, hi[2] = {0};
+          bool ok = dev.read_byte(0x02, &c1);
+          ok = ok && dev.read_bytes(0x63, blk, 12);
+          ok = ok && dev.read_bytes(0x90, hi, 2);
+          if (!ok) {
+            ESP_LOGW("pdprobe", "[%6u] i2c read failed", (unsigned) millis());
+            return;
+          }
+          uint8_t now[15];
+          now[0] = c1;
+          memcpy(now + 1, blk, 12);
+          memcpy(now + 13, hi, 2);
+          bool changed = memcmp(now, prev, sizeof(now)) != 0;
+          uint32_t t = millis();
+          if (!changed && t - last_log < 2000) return;
+          ESP_LOGI("pdprobe",
+                   "[%6u]%s EN=%d C1=%02X FSM=%02X R91=%02X ST=%02X ST1=%02X "
+                   "TY=%02X DP=%02X CT0=%02X CT1=%02X CAP=%02X "
+                   "PDO=%02X/%02X/%02X/%02X/%02X",
+                   (unsigned) t, changed ? "*" : " ", (c1 >> 3) & 1, c1,
+                   hi[0], hi[1], blk[0], blk[1], blk[2], blk[3], blk[4],
+                   blk[5], blk[6], blk[7], blk[8], blk[9], blk[10], blk[11]);
+          memcpy(prev, now, sizeof(now));
+          last_log = t;
+
+# -----------------------------------------------------------------------------
+# Manual control — turns the board into the issue reporter's probe rig.
+# Usable once WiFi/API are up, i.e. in every case except the boot loop itself.
+# -----------------------------------------------------------------------------
+button:
+  - platform: template
+    name: "PD: CONTROL1 ENABLE = 1"
+    entity_category: config
+    on_press:
+      - lambda: |-
+          i2c::I2CDevice dev;
+          dev.set_i2c_bus(id(bus_pd));
+          dev.set_i2c_address(0x42);
+          uint8_t c1 = 0;
+          if (!dev.read_byte(0x02, &c1)) { ESP_LOGE("pdprobe", "read CONTROL1 failed"); return; }
+          ESP_LOGW("pdprobe", "[%6u] MANUAL ENABLE: CONTROL1 %02X -> %02X",
+                   (unsigned) millis(), c1, c1 | 0x08);
+          dev.write_byte(0x02, c1 | 0x08);
+
+  - platform: template
+    name: "PD: CONTROL1 ENABLE = 0"
+    entity_category: config
+    on_press:
+      - lambda: |-
+          i2c::I2CDevice dev;
+          dev.set_i2c_bus(id(bus_pd));
+          dev.set_i2c_address(0x42);
+          uint8_t c1 = 0;
+          if (!dev.read_byte(0x02, &c1)) { ESP_LOGE("pdprobe", "read CONTROL1 failed"); return; }
+          ESP_LOGW("pdprobe", "[%6u] MANUAL DISABLE: CONTROL1 %02X -> %02X",
+                   (unsigned) millis(), c1, c1 & ~0x08);
+          dev.write_byte(0x02, c1 & ~0x08);
+
+  - platform: template
+    name: "PD: GET_SRC_CAP"
+    entity_category: config
+    on_press:
+      - lambda: |-
+          i2c::I2CDevice dev;
+          dev.set_i2c_bus(id(bus_pd));
+          dev.set_i2c_address(0x42);
+          ESP_LOGW("pdprobe", "[%6u] MANUAL GO_COMMAND = GET_SRC_CAP", (unsigned) millis());
+          dev.write_byte(0x18, 0x04);
+
+  - platform: restart
+    name: "Restart (soft)"
+    entity_category: config

@@ -48,6 +48,21 @@ substitutions:
   # device still identifies as the board it is.
   sendspin_model: Louder-ESP32-Pro
 
+  # ===== Optional Hardware Feature Toggles =====
+  # Accepts true/false quoted or bare; anything that is not "true"
+  # (case-insensitive) disables the feature. A disabled feature is not
+  # merged at all, so it claims no GPIO and costs no flash.
+  # See firmware/esphome/README.md for the full notes.
+  enable_led: "true"   # WS2812 RGB LED on rgb_led_pin
+  # No enable_tft / enable_lan / enable_ir here: this experiment config leaves
+  # out the `spi_*`, `display_*` and `eth_*` pin substitutions those packages
+  # need, so they stay manual edits - see the note in `packages:` below.
+
+  # The git ref the feature packages below are pulled from. Set this to the
+  # same ref you pinned this file at, so a pinned config gets matching
+  # packages instead of whatever happens to be on main.
+  sonocotta_ref: feat/222-hardware-feature-toggles
+
   # ===== Board-Specific Pinouts =====
   # I2S audio output pins (TAS5825M)
   i2s_lrclk_pin: GPIO15
@@ -190,7 +205,7 @@ network:
 packages:
   esparagus_remote:
     url: https://github.com/sonocotta/esp32-audio-dock
-    ref: main
+    ref: ${sonocotta_ref}
     files:
       # TAS58xx with ganged 15-band EQ
       - firmware/esphome/packages/dac-tas58xx.yaml
@@ -198,13 +213,13 @@ packages:
       # Playback side: I2S out, mixer, resampler, and the Sendspin player
       # role (which also declares the `sendspin:` hub this file extends).
       - firmware/esphome/packages/audio.yaml
-      - firmware/esphome/packages/sendspin.yaml
+      - firmware/esphome/packages/${ 'sendspin' if enable_led|string|lower == 'true' else 'sendspin-no-light' }.yaml
       - firmware/esphome/packages/sendspin-audio-addon-external-dac.yaml
       - firmware/esphome/packages/sendspin-addon-dac-enable.yaml
       - firmware/esphome/packages/sendspin-addon-tas58xx.yaml
 
       - firmware/esphome/packages/fan.yaml
-      - firmware/esphome/packages/light.yaml
+      - firmware/esphome/packages/${ 'light' if enable_led|string|lower == 'true' else 'empty' }.yaml
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
 

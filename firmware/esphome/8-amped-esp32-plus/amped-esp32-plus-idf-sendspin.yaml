@@ -12,6 +12,21 @@ substitutions:
   friendly_name: Amped-ESP32-Plus
   task_stack_in_psram: "false"
 
+  # ===== Optional Hardware Feature Toggles =====
+  # Accepts true/false quoted or bare; anything that is not "true"
+  # (case-insensitive) disables the feature. A disabled feature is not
+  # merged at all, so it claims no GPIO and costs no flash.
+  # See firmware/esphome/README.md for the full notes.
+  enable_led: "true"    # WS2812 RGB LED on rgb_led_pin
+  enable_ir: "true"     # IR receiver on ir_rx_pin
+  enable_lan: "true"    # W5500 Ethernet module on the SPI pins
+  enable_oled: "false"  # SH1106 OLED on the SPI pins
+
+  # The git ref the feature packages below are pulled from. Set this to the
+  # same ref you pinned this file at, so a pinned config gets matching
+  # packages instead of whatever happens to be on main.
+  sonocotta_ref: feat/222-hardware-feature-toggles
+
   # ===== Board-Specific Pinouts =====
   # I2S Audio (PCM5100 DAC)
   i2s_lrclk_pin: GPIO25
@@ -104,40 +119,41 @@ psram:
 
 network:
   enable_ipv6: true
-  # Both `wifi:` and `ethernet:` are configured in this file. On the ESP32 family the two
+  # With `enable_lan: true` both `wifi:` and `ethernet:` are configured. On the ESP32 family the two
   # stacks can run side by side, but then the priority list is mandatory (ESPHome 2026.8.1+).
   # It decides which interface is brought up first, whose IP is reported, and which one
   # carries the default route. Failover is automatic: unplug the cable and traffic moves
   # to Wi-Fi, plug it back in and Ethernet takes over again.
-  priority:
-    - ethernet
-    - wifi
+  # With Ethernet off there is no `ethernet:` component to name here,
+  # so the list collapses to Wi-Fi only.
+  priority: "${ ['ethernet', 'wifi'] if enable_lan|string|lower == 'true' else ['wifi'] }"
 
 # ===== Packages =====
 packages:
   esparagus_remote:
     url: https://github.com/sonocotta/esp32-audio-dock
-    ref: main
+    ref: ${sonocotta_ref}
     files:
       - firmware/esphome/packages/dac-pcm5122.yaml
       - firmware/esphome/packages/amp-unmute.yaml
       - firmware/esphome/packages/audio.yaml
-      - firmware/esphome/packages/sendspin.yaml
+      - firmware/esphome/packages/${ 'sendspin' if enable_led|string|lower == 'true' else 'sendspin-no-light' }.yaml
       # Optional: OLED displays clock when idling, and track/artist info when playing
-      # - firmware/esphome/packages/sendspin-addon-oled.yaml
+      - firmware/esphome/packages/${ 'sendspin-addon-oled' if enable_oled|string|lower == 'true' else 'empty' }.yaml
 
       - firmware/esphome/packages/sendspin-audio-addon-external-dac.yaml
       - firmware/esphome/packages/sendspin-addon-amp-unmute.yaml
       - firmware/esphome/packages/sendspin-addon-esp32.yaml
       
-      - firmware/esphome/packages/light.yaml
-      - firmware/esphome/packages/ir-receiver.yaml
+      - firmware/esphome/packages/${ 'light' if enable_led|string|lower == 'true' else 'empty' }.yaml
+      - firmware/esphome/packages/${ 'ir-receiver' if enable_ir|string|lower == 'true' else 'empty' }.yaml
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
-      - firmware/esphome/packages/monitoring-eth.yaml
+      - firmware/esphome/packages/${ 'monitoring-eth' if enable_lan|string|lower == 'true' else 'empty' }.yaml
       # Ethernet (W5500), running alongside `wifi:` via the network priority list above.
-      # Shares the SPI pins with the display, so the display package must stay excluded.
-      - firmware/esphome/packages/ethernet-w5500.yaml
+      # Shares the SPI pins with the display, so `enable_lan` and the display
+      # toggle are mutually exclusive - see the guard at the end of this block.
+      - firmware/esphome/packages/${ 'ethernet-w5500' if enable_lan|string|lower == 'true' else 'empty' }.yaml
 
   # # Debug/local development fallback:
   # pcm5122_dac: !include packages/dac-pcm5122.yaml
@@ -151,3 +167,11 @@ packages:
   # monitoring: !include packages/monitoring.yaml
   # monitoring_wifi: !include packages/monitoring-wifi.yaml
   # # ethernet: !include packages/ethernet-w5500.yaml
+  # Guard: the W5500 and the OLED are wired to the same SPI pins on this
+  # board (the W5500 drives clk/mosi/miso itself rather than sharing the
+  # `spi:` component), so these two cannot both be on. Resolves to an empty
+  # mapping unless both are, in which case the undefined variable aborts the
+  # build naming the conflict.
+  toggle_guard:
+    ${ {} if not (enable_lan|string|lower == 'true' and enable_oled|string|lower == 'true')
+          else error_enable_lan_and_enable_oled_both_true_they_share_the_spi_pins }
