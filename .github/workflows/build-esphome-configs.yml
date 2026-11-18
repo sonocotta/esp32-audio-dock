@@ -71,8 +71,10 @@ jobs:
           # the beta channel instead, or it fails with "your ESPHome version is
           # too old". Drop the entry once that release ships.
           #   11-hifi-esp32-input - sendspin source role, needs 2026.11.0
+          #   *-sendspin-duplex   - sendspin source role, needs 2026.11.0
           case "${{ matrix.config }}" in
             firmware/esphome/11-hifi-esp32-input/*) tag=beta ;;
+            *-sendspin-duplex.yaml) tag=beta ;;
             *) tag=latest ;;
           esac
           echo "tag=$tag" >> $GITHUB_OUTPUT
