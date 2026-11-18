@@ -1,0 +1,21 @@
+# ============================================================
+# Empty - no-op package
+# ============================================================
+# Deliberately contributes nothing to the configuration.
+#
+# This is the "off" branch of a conditional package include. ESPHome
+# resolves substitution expressions inside a remote package's `files:`
+# paths BEFORE fetching them, so a feature toggle can pick between a
+# real package and this one:
+#
+#   files:
+#     - firmware/esphome/packages/${ 'light' if enable_led|string|lower == 'true' else 'empty' }.yaml
+#
+# When the toggle is off the component is not merged at all, so it is
+# absent from the compiled binary - not merely disabled at runtime.
+#
+# The `{}` below is required: a YAML file holding only comments parses
+# as null, and ESPHome rejects a package that is not a mapping.
+# ============================================================
+
+{}
