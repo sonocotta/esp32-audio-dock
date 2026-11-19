@@ -31,7 +31,7 @@ substitutions:
   # The git ref the feature packages below are pulled from. Set this to the
   # same ref you pinned this file at, so a pinned config gets matching
   # packages instead of whatever happens to be on main.
-  sonocotta_ref: feat/222-hardware-feature-toggles
+  sonocotta_ref: main
 
   # ===== Board-Specific Pinouts =====
   # I2S Audio (PCM5100 DAC)
