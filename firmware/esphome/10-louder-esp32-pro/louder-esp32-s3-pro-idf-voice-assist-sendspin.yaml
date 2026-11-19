@@ -16,6 +16,22 @@ substitutions:
   friendly_name: Louder-ESP32-Pro
   task_stack_in_psram: "true"
 
+  # ===== Optional Hardware Feature Toggles =====
+  # Accepts true/false quoted or bare; anything that is not "true"
+  # (case-insensitive) disables the feature. A disabled feature is not
+  # merged at all, so it claims no GPIO and costs no flash.
+  # See firmware/esphome/README.md for the full notes.
+  enable_lan: "true"   # W5500 Ethernet module on the SPI pins
+  enable_tft: "false"  # SPI TFT display on the SPI pins
+  # No enable_led here: the voice-assist packages drive rgb_front_led as
+  # the assistant's state UI and extend it with effects, so the LED is
+  # required rather than optional on this config.
+
+  # The git ref the feature packages below are pulled from. Set this to the
+  # same ref you pinned this file at, so a pinned config gets matching
+  # packages instead of whatever happens to be on main.
+  sonocotta_ref: main
+
   # ===== Board-Specific Pinouts =====
   # I2S audio pins
   i2s_lrclk_pin: GPIO15
@@ -141,20 +157,20 @@ psram:
 
 network:
   enable_ipv6: true
-  # Both `wifi:` and `ethernet:` are configured in this file. On the ESP32 family the two
+  # With `enable_lan: true` both `wifi:` and `ethernet:` are configured. On the ESP32 family the two
   # stacks can run side by side, but then the priority list is mandatory (ESPHome 2026.8.1+).
   # It decides which interface is brought up first, whose IP is reported, and which one
   # carries the default route. Failover is automatic: unplug the cable and traffic moves
   # to Wi-Fi, plug it back in and Ethernet takes over again.
-  priority:
-    - ethernet
-    - wifi
+  # With Ethernet off there is no `ethernet:` component to name here,
+  # so the list collapses to Wi-Fi only.
+  priority: "${ ['ethernet', 'wifi'] if enable_lan|string|lower == 'true' else ['wifi'] }"
 
 # ===== Packages =====
 packages:
   esparagus_remote:
     url: https://github.com/sonocotta/esp32-audio-dock
-    ref: main
+    ref: ${sonocotta_ref}
     files:
       # Option A: TAS58xx configured with ganged 15-band EQ
       - firmware/esphome/packages/dac-tas58xx.yaml
@@ -176,16 +192,17 @@ packages:
       # sendspin-addon-voice-assist.yaml already provides.
       - firmware/esphome/packages/sendspin-addon-voice-assist-tas58xx.yaml
       # Optional display configuration for TFT SPI display
-      # - firmware/esphome/packages/sendspin-addon-tft.yaml
+      - firmware/esphome/packages/${ 'sendspin-addon-tft' if enable_tft|string|lower == 'true' else 'empty' }.yaml
 
       - firmware/esphome/packages/fan.yaml
       - firmware/esphome/packages/light.yaml
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
-      - firmware/esphome/packages/monitoring-eth.yaml
+      - firmware/esphome/packages/${ 'monitoring-eth' if enable_lan|string|lower == 'true' else 'empty' }.yaml
       # Ethernet (W5500), running alongside `wifi:` via the network priority list above.
-      # Shares the SPI pins with the display, so the display package must stay excluded.
-      - firmware/esphome/packages/ethernet-w5500.yaml
+      # Shares the SPI pins with the display, so `enable_lan` and the display
+      # toggle are mutually exclusive - see the guard at the end of this block.
+      - firmware/esphome/packages/${ 'ethernet-w5500' if enable_lan|string|lower == 'true' else 'empty' }.yaml
 
   esparagus_echo:
     url: https://github.com/sonocotta/esparagus-echo
@@ -200,3 +217,12 @@ packages:
       # mid-conversation and while a timer rings. Untested here; the DAC is held
       # on via its restore_mode instead.
       # - firmware/esphome/packages/voice-assist-addon-dac-enable.yaml
+
+  # Guard: the W5500 and the TFT are wired to the same SPI pins on this
+  # board (the W5500 drives clk/mosi/miso itself rather than sharing the
+  # `spi:` component), so these two cannot both be on. Resolves to an empty
+  # mapping unless both are, in which case the undefined variable aborts the
+  # build naming the conflict.
+  toggle_guard:
+    ${ {} if not (enable_lan|string|lower == 'true' and enable_tft|string|lower == 'true')
+          else error_enable_lan_and_enable_tft_both_true_they_share_the_spi_pins }

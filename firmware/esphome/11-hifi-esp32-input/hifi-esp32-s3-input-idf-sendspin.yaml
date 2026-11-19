@@ -20,6 +20,19 @@ substitutions:
   friendly_name: HiFi-ESP32-S3-Input
   task_stack_in_psram: "true"
 
+  # ===== Optional Hardware Feature Toggles =====
+  # Accepts true/false quoted or bare; anything that is not "true"
+  # (case-insensitive) disables the feature. A disabled feature is not
+  # merged at all, so it claims no GPIO and costs no flash.
+  # See firmware/esphome/README.md for the full notes.
+  enable_led: "true"   # WS2812 RGB LED on rgb_led_pin
+  enable_ir: "true"    # IR receiver on ir_rx_pin
+
+  # The git ref the feature packages below are pulled from. Set this to the
+  # same ref you pinned this file at, so a pinned config gets matching
+  # packages instead of whatever happens to be on main.
+  sonocotta_ref: main
+
   # ===== Board-Specific Pinouts =====
   # I2S audio pins. Same three pins as HiFi-ESP32-S3-Plus, except the data
   # line runs the other way: the ADC drives it and the ESP32 listens.
@@ -104,14 +117,14 @@ network:
 packages:
   esparagus_remote:
     url: https://github.com/sonocotta/esp32-audio-dock
-    ref: main
+    ref: ${sonocotta_ref}
     files:
       - firmware/esphome/packages/adc-pcm1863.yaml
       - firmware/esphome/packages/audio-input.yaml
       - firmware/esphome/packages/sendspin-source.yaml
 
-      - firmware/esphome/packages/light.yaml
-      - firmware/esphome/packages/ir-receiver.yaml
+      - firmware/esphome/packages/${ 'light' if enable_led|string|lower == 'true' else 'empty' }.yaml
+      - firmware/esphome/packages/${ 'ir-receiver' if enable_ir|string|lower == 'true' else 'empty' }.yaml
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
       # Wired Ethernet (W5500), as an alternative to Wi-Fi. Needs the

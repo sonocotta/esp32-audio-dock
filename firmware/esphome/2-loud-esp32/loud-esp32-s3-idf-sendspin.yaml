@@ -6,12 +6,50 @@
 # Configured with Sendspin for synchronized multi-room audio
 # Board-specific pinouts defined in substitutions
 # Functional blocks imported from /packages
+#
+# Optional hardware is selected by the feature toggles below, so a board
+# variant or DIY build that is missing the RGB LED, IR receiver, OLED or
+# W5500 Ethernet module can use this config as-is instead of unrolling it.
+# Override the toggles from your own YAML and keep tracking this file:
+#
+#   substitutions:
+#     name: my-player
+#     enable_led: "false"
+#     enable_ir: "false"
+#     enable_lan: "false"
+#
+#   packages:
+#     sonocotta_base:
+#       url: https://github.com/sonocotta/esp32-audio-dock
+#       ref: main
+#       files:
+#         - firmware/esphome/2-loud-esp32/loud-esp32-s3-idf-sendspin.yaml
+#
+# A disabled feature is not compiled in at all: ESPHome expands the
+# substitution expressions in the `files:` paths below before fetching
+# them, so the "off" branch resolves to packages/empty.yaml, which
+# contributes nothing. Requires ESPHome 2025.12 or later (this config
+# already asks for 2026.10).
 # ============================================================
 
 substitutions:
   name: loud-esp32s3
   friendly_name: Loud-ESP32-S3
   task_stack_in_psram: "true"
+
+  # ===== Optional Hardware Feature Toggles =====
+  # Accepts true/false either quoted or bare; anything that is not
+  # "true" (case-insensitive) disables the feature.
+  enable_led: "true"      # WS2812 RGB LED on rgb_led_pin
+  enable_ir: "true"       # IR receiver on ir_rx_pin
+  enable_lan: "true"      # W5500 Ethernet module on the SPI pins
+  enable_oled: "false"    # SH1106 OLED on the SPI pins - see the
+                          # mutual-exclusion note at `packages:` below
+
+  # The git ref the feature packages below are pulled from. Set this to the
+  # same ref you pinned this file at, so a pinned config gets matching
+  # packages instead of whatever happens to be on main.
+  sonocotta_ref: main
 
   # ===== Board-Specific Pinouts =====
   # I2S audio pins (dual MAX98357A DACs)
@@ -100,34 +138,62 @@ psram:
 
 network:
   enable_ipv6: true
-  # Both `wifi:` and `ethernet:` are configured in this file. On the ESP32 family the two
-  # stacks can run side by side, but then the priority list is mandatory (ESPHome 2026.8.1+).
-  # It decides which interface is brought up first, whose IP is reported, and which one
-  # carries the default route. Failover is automatic: unplug the cable and traffic moves
-  # to Wi-Fi, plug it back in and Ethernet takes over again.
-  priority:
-    - ethernet
-    - wifi
+  # With `enable_lan: true` both `wifi:` and `ethernet:` are configured. On the ESP32
+  # family the two stacks can run side by side, but then the priority list is mandatory
+  # (ESPHome 2026.8.1+). It decides which interface is brought up first, whose IP is
+  # reported, and which one carries the default route. Failover is automatic: unplug the
+  # cable and traffic moves to Wi-Fi, plug it back in and Ethernet takes over again.
+  # With Ethernet off there is no `ethernet:` component to name here, so the list
+  # collapses to Wi-Fi only.
+  priority: "${ ['ethernet', 'wifi'] if enable_lan|string|lower == 'true' else ['wifi'] }"
 
 # ===== Packages =====
+# Entries whose path contains a `${ ... }` expression are the optional hardware
+# toggled by the substitutions at the top of this file. The expression is resolved
+# before the files are fetched; the "off" branch points at packages/empty.yaml,
+# which contributes nothing, so a disabled feature costs no flash and no GPIO.
+#
+# Mutual exclusion: the W5500 and the OLED are wired to the same SPI pins on this
+# board (the W5500 drives clk/mosi/miso itself rather than sharing the `spi:`
+# component), so `enable_lan` and `enable_oled` cannot both be true. The guard
+# below fails the build with a clear message rather than letting it die on a pin
+# conflict further down.
 packages:
   esparagus_remote:
     url: https://github.com/sonocotta/esp32-audio-dock
-    ref: main
+    ref: ${sonocotta_ref}
     files:
       - firmware/esphome/packages/dac-switch.yaml
       - firmware/esphome/packages/audio.yaml
-      - firmware/esphome/packages/sendspin.yaml
-      - firmware/esphome/packages/sendspin-addon-dac-enable.yaml  
-      # Optional: OLED displays clock when idling, and track/artist info when playing
-      # - firmware/esphome/packages/sendspin-addon-oled.yaml
 
-      - firmware/esphome/packages/light.yaml
-      - firmware/esphome/packages/ir-receiver.yaml
+      # Sendspin itself. The default build drives the RGB LED from the playback
+      # handlers, which needs `light.yaml`'s `rgb_front_led` to exist at compile
+      # time, so a board without the LED takes the no-light twin instead.
+      - firmware/esphome/packages/${ 'sendspin' if enable_led|string|lower == 'true' else 'sendspin-no-light' }.yaml
+
+      - firmware/esphome/packages/sendspin-addon-dac-enable.yaml
+
+      # OLED: clock when idle, track/artist info when playing. Off by default.
+      - firmware/esphome/packages/${ 'sendspin-addon-oled' if enable_oled|string|lower == 'true' else 'empty' }.yaml
+
+      # RGB LED (WS2812 on rgb_led_pin)
+      - firmware/esphome/packages/${ 'light' if enable_led|string|lower == 'true' else 'empty' }.yaml
+
+      # IR receiver (on ir_rx_pin)
+      - firmware/esphome/packages/${ 'ir-receiver' if enable_ir|string|lower == 'true' else 'empty' }.yaml
+
       - firmware/esphome/packages/monitoring.yaml
       - firmware/esphome/packages/monitoring-wifi.yaml
-      - firmware/esphome/packages/monitoring-eth.yaml
-      # Ethernet (W5500), running alongside `wifi:` via the network priority list above.
-      # Shares the SPI pins with the display, so the display package must stay excluded.
-      - firmware/esphome/packages/ethernet-w5500.yaml
+
+      # Ethernet (W5500), running alongside `wifi:` via the network priority list
+      # above, plus its own diagnostic sensors (which need `ethernet:` present).
+      - firmware/esphome/packages/${ 'monitoring-eth' if enable_lan|string|lower == 'true' else 'empty' }.yaml
+      - firmware/esphome/packages/${ 'ethernet-w5500' if enable_lan|string|lower == 'true' else 'empty' }.yaml
+
+  # Guard: turns the SPI collision between Ethernet and the OLED into a readable
+  # error. Resolves to an empty mapping unless both toggles are on, in which case
+  # the undefined variable aborts the build naming the conflict.
+  toggle_guard:
+    ${ {} if not (enable_lan|string|lower == 'true' and enable_oled|string|lower == 'true')
+          else error_enable_lan_and_enable_oled_both_true_they_share_the_spi_pins }
 
