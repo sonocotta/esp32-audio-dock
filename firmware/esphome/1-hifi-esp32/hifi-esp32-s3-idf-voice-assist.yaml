@@ -94,8 +94,9 @@ logger:
   initial_level: INFO
 
 ota:
-  platform: esphome
-  password: !secret ota_password
+  - platform: esphome
+    id: ota_esphome
+    password: !secret ota_password
 
 wifi:
   ssid: !secret wifi_ssid

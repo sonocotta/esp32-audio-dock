@@ -127,8 +127,9 @@ api:
   reboot_timeout: 0s
 
 ota:
-  platform: esphome
-  password: !secret ota_password
+  - platform: esphome
+    id: ota_esphome
+    password: !secret ota_password
 
 wifi:
   ssid: !secret wifi_ssid

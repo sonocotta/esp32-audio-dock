@@ -44,6 +44,7 @@ This directory contains ESPHome firmware configurations for all ESP32 Audio Dock
     - [Advanced Configuration](#advanced-configuration)
   - [Secrets Management](#secrets-management)
     - [Setup Secrets File](#setup-secrets-file)
+    - [Encrypted OTA](#encrypted-ota)
   - [Package System](#package-system)
     - [Core Packages](#core-packages)
     - [DAC Packages](#dac-packages)
@@ -356,7 +357,7 @@ device it can both play to and pull from.
 Extra entities beyond the usual Sendspin player set:
 
 | Entity | What it does |
-|---|---|
+| --- | --- |
 | **Mic Source Streaming** (binary sensor) | On while the server is actually pulling audio from the mic. Read from the hub, so it stays right across reconnects. |
 | **Mic Signal** (switch) | The source's "something is playing here" hint to the server. Starts on; turn it off to see how the server handles a source going quiet. |
 | **Mic Mute** (switch) | Mutes the mic in the driver while the stream keeps running - separates a dead capture path from a mic that hears nothing, and breaks a feedback loop without ending the test. |
@@ -801,6 +802,60 @@ ota_password: "YourOTAPassword"
 # Password for the fallback access point (legacy boards only)
 ap_password: "YourAPPassword"
 ```
+
+### Encrypted OTA
+
+OTA updates use `ota_password` by default. To use an encryption key instead,
+extend the `ota_esphome` platform from your own device config, alongside the
+package that pulls in the board config. Which form to use depends on whether
+your device config already sets an API encryption key:
+
+<table>
+<tr>
+<th>No <code>api</code> encryption key</th>
+<th><code>api</code> encryption key already set</th>
+</tr>
+<tr>
+<td>
+
+```yaml
+ota:
+  - id: !extend ota_esphome
+    password: !remove
+    encryption:
+      key: !secret ota_encryption_key
+```
+
+</td>
+<td>
+
+```yaml
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - id: !extend ota_esphome
+    password: !remove
+    encryption:
+```
+
+</td>
+</tr>
+</table>
+
+Without an API key, add `ota_encryption_key` to `secrets.yaml`, a
+base64-encoded 32-byte key (generate one with `openssl rand -base64 32`).
+
+With an API key, a bare `encryption:` inherits it. ESPHome rejects an explicit
+OTA key that doesn't match the API one, so the left-hand form fails validation
+there. ESPHome also warns that `ota: password:` wastes flash and RAM once a
+static API key is set.
+
+To add OTA settings of your own, extend `ota_esphome` as above rather than
+adding a second `platform: esphome` block with its own `id`. ESPHome refuses
+to merge two blocks on the same port that both have an explicit id.
+
 ---
 
 ## Package System
@@ -986,9 +1041,9 @@ Where the toggles are **not** offered, and why:
 ## Additional Resources
 
 - **Main Project**: [ESP32 Audio Dock Repository](../../README.md)
-- **ESPHome Documentation**: https://esphome.io
-- **Home Assistant**: https://www.home-assistant.io
-- **Snapcast**: https://github.com/badaix/snapcast
+- **ESPHome Documentation**: <https://esphome.io>
+- **Home Assistant**: <https://www.home-assistant.io>
+- **Snapcast**: <https://github.com/badaix/snapcast>
 - **Discord Community**: Join our [Discord](https://discord.gg/PtnaAaQMpS) for support
 
 ---
