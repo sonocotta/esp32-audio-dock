@@ -22,6 +22,17 @@
 		},
 		{
 			"label": "ESPHome: Build and Upload over USB",
+			"detail": "Finds the USB serial port itself. On an ESP32-S3 flashing over its native USB: the port can drop mid-handshake ('Device not configured') - just run the task again - and after a successful flash the log tail ends with 'ERROR Serial port closed!' because the chip re-enumerates. Both are harmless; use the OTA task or 'esphome logs --device <ip>' for logs on those boards.",
+			"type": "shell",
+			"command": "PORTS=$(find /dev -maxdepth 1 \\( -name 'cu.usbmodem*' -o -name 'cu.usbserial*' -o -name 'cu.wchusbserial*' -o -name 'cu.SLAB_USBtoUART*' -o -name 'ttyUSB*' -o -name 'ttyACM*' \\) | sort); COUNT=$(printf '%s\\n' \"$PORTS\" | grep -c .); if [ \"$COUNT\" -eq 0 ]; then echo 'No USB serial port found. Plug the board in (data cable, not charge-only), or run \"ESPHome: Build and Upload over USB (pick port)\".'; exit 1; fi; PORT=$(printf '%s\\n' \"$PORTS\" | head -1); if [ \"$COUNT\" -gt 1 ]; then echo 'Several USB serial ports found:'; printf '%s\\n' \"$PORTS\"; echo \"Using $PORT - run the (pick port) task to choose another.\"; fi; echo \"Flashing ${file} over $PORT\"; .venv/bin/esphome run ${file} --device \"$PORT\"",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "ESPHome: Build and Upload over USB (pick port)",
+			"detail": "Same, but asks for the port. Use it when more than one board is plugged in; 'ls /dev/cu.*' lists the candidates.",
 			"type": "shell",
 			"command": ".venv/bin/esphome run ${file} --device ${input:usbPort}",
 			"options": {
@@ -34,8 +45,8 @@
 		{
 			"id": "usbPort",
 			"type": "promptString",
-			"description": "USB serial port",
-			"default": "/dev/tty.usbserial-0001"
+			"description": "USB serial port (ls /dev/cu.* - an ESP32-S3's native USB is cu.usbmodem*, a CP2102 bridge is cu.usbserial-*)",
+			"default": "/dev/cu.usbserial-0001"
 		}
 	]
 }

@@ -61,18 +61,25 @@ substitutions:
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
-  min_version: 2026.10.0
+  min_version: 2026.11.0
   name_add_mac_suffix: false
-  platformio_options:
-    board_build.flash_mode: dio
 
 esp32:
   variant: ESP32S3
   flash_size: 8MB
+  flash_mode: dio
   cpu_frequency: 240MHz
   framework:
     type: esp-idf
     version: recommended
+    advanced:
+      # Keep only the generic SPI flash driver. ESP-IDF otherwise links one
+      # driver per vendor (gd, issi, mxic, winbond, boya, th) and uses just the
+      # one matching the flash ID, so the rest are idle: ~1KB IRAM on the ESP32,
+      # ~2-3KB on the ESP32-S3, plus 124B DRAM each. Safe here because every
+      # board runs flash in dio mode, where the generic driver handles any chip;
+      # the vendor drivers only matter for qio/qout or flash above 16MB.
+      flash_chip: generic
     sdkconfig_options:
       CONFIG_ESP32S3_DATA_CACHE_64KB: "y"
       CONFIG_ESP32S3_DATA_CACHE_LINE_64B: "y"
