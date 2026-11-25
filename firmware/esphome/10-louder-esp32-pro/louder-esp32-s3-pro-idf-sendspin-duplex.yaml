@@ -85,7 +85,7 @@ substitutions:
   # is quiet. 16 is tuned by ear on rev-D hardware; the gain saturates at
   # full scale rather than wrapping, so overshooting clips loud passages
   # instead of turning them into noise.
-  source_gain_factor: "16"
+  source_gain_factor: "64"
 
   # TAS5825M
   tas58xx_variant: TAS5825M
