@@ -14,6 +14,8 @@
 # ============================================================
 
 substitutions:
+  # Override in your own config with: ota_password: !secret ota_password
+  ota_password: ""
   name: louder-esp32
   friendly_name: Louder-ESP32
   task_stack_in_psram: "false" 
@@ -126,7 +128,7 @@ api:
 ota:
   - platform: esphome
     id: ota_esphome
-    password: !secret ota_password
+    password: ${ota_password}
 
 wifi:
   ssid: !secret wifi_ssid

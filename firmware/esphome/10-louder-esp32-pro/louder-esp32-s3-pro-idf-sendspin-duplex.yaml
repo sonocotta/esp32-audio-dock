@@ -37,6 +37,8 @@
 # ============================================================
 
 substitutions:
+  # Override in your own config with: ota_password: !secret ota_password
+  ota_password: ""
   # Deliberately not `louder-esp32s3-pro`: the node name differs from the
   # shipping configs so this experiment can run next to a production board
   # on the same network without colliding in mDNS or Home Assistant.
@@ -195,7 +197,7 @@ api:
 ota:
   - platform: esphome
     id: ota_esphome
-    password: !secret ota_password
+    password: ${ota_password}
 
 wifi:
   ssid: !secret wifi_ssid

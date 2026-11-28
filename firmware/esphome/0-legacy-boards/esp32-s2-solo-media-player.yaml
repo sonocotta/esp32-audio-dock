@@ -1,4 +1,6 @@
 substitutions:
+  # Override in your own config with: ota_password: !secret ota_password
+  ota_password: ""
   name: esp32-s2-test
   friendly_name: ESP32-S2-Solo Media Player
 
@@ -41,7 +43,7 @@ api:
 ota:
   - platform: esphome
     id: ota_esphome
-    password: !secret ota_password
+    password: ${ota_password}
 
 wifi:
   ssid: !secret wifi_ssid

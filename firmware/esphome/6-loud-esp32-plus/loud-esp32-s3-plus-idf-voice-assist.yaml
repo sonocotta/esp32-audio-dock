@@ -11,6 +11,8 @@
 # ============================================================
 
 substitutions:
+  # Override in your own config with: ota_password: !secret ota_password
+  ota_password: ""
   name: loud-esp32s3-plus
   friendly_name: Loud-ESP32S3-Plus
   task_stack_in_psram: "true"
@@ -117,7 +119,7 @@ api:
 ota:
   - platform: esphome
     id: ota_esphome
-    password: !secret ota_password
+    password: ${ota_password}
 
 wifi:
   ssid: !secret wifi_ssid
