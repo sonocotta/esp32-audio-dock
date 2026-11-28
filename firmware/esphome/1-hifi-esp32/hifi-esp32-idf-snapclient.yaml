@@ -151,6 +151,7 @@ packages:
       # Shares the SPI pins with the display, so `enable_lan` and the display
       # toggle are mutually exclusive - see the guard at the end of this block.
       - firmware/esphome/packages/${ 'ethernet-w5500' if enable_lan|string|lower == 'true' else 'empty' }.yaml
+      - firmware/esphome/packages/${ 'ethernet-w5500-esp32' if enable_lan|string|lower == 'true' else 'empty' }.yaml
 
   # Guard: the W5500 and the OLED are wired to the same SPI pins on this
   # board (the W5500 drives clk/mosi/miso itself rather than sharing the
