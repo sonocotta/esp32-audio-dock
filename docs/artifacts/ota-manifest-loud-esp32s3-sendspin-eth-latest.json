@@ -1,14 +1,14 @@
 {
   "name": "loud-esp32s3-sendspin-eth",
-  "version": "2026.11.19-68b339db",
+  "version": "2026.11.25-7bf0dfb6",
   "builds": [
     {
       "chipFamily": "ESP32-S3",
       "ota": {
-        "md5": "f4dea008212bf181781eb5909537f932",
+        "md5": "da2e4c350b84503ba7921ef0b86682f5",
         "path": "https://sonocotta.github.io/esp32-audio-dock/artifacts/binaries/esphome/loud-esp32s3-sendspin-eth/firmware.ota.bin",
-        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/68b339db",
-        "summary": "Loud-ESP32-S3 (Rev H) Sendspin Ethernet firmware 2026.11.19-68b339db"
+        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/7bf0dfb6",
+        "summary": "Loud-ESP32-S3 (Rev H) Sendspin Ethernet firmware 2026.11.25-7bf0dfb6"
       }
     }
   ],

@@ -1,14 +1,14 @@
 {
   "name": "hifi-esp32-plus-sendspin-eth",
-  "version": "2026.11.19-68b339db",
+  "version": "2026.11.25-7bf0dfb6",
   "builds": [
     {
       "chipFamily": "ESP32",
       "ota": {
-        "md5": "2128a6f32d5a97a9e79b10af3fe32c84",
+        "md5": "f51972f5799837ea5ba90f85d7ac8a63",
         "path": "https://sonocotta.github.io/esp32-audio-dock/artifacts/binaries/esphome/hifi-esp32-plus-sendspin-eth/firmware.ota.bin",
-        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/68b339db",
-        "summary": "HiFi-ESP32-Plus Sendspin Ethernet firmware 2026.11.19-68b339db"
+        "release_url": "https://github.com/sonocotta/esp32-audio-dock/commit/7bf0dfb6",
+        "summary": "HiFi-ESP32-Plus Sendspin Ethernet firmware 2026.11.25-7bf0dfb6"
       }
     }
   ],
