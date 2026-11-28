@@ -44,6 +44,7 @@ packages:
     ref: main
     files:
       - firmware/esphome/packages/ethernet-w5500.yaml
+      - firmware/esphome/packages/ethernet-w5500-esp32.yaml
       - firmware/esphome/packages/monitoring-eth.yaml
 
 esphome:

@@ -8,6 +8,8 @@
 # ============================================================
 
 substitutions:
+  # Override in your own config with: ota_password: !secret ota_password
+  ota_password: ""
   name: louder-esp32s3-mini-42
   friendly_name: Louder-ESP32-Mini
   task_stack_in_psram: "true" 
@@ -82,7 +84,7 @@ api:
 ota:
   - platform: esphome
     id: ota_esphome
-    password: !secret ota_password
+    password: ${ota_password}
 
 wifi:
   ssid: !secret wifi_ssid

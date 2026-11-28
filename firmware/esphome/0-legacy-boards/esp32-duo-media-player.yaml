@@ -1,4 +1,6 @@
 substitutions:
+  # Override in your own config with: ota_password: !secret ota_password
+  ota_password: ""
   name: esphome-web-e002d0
   friendly_name: ESP32-Duo Media Player
 
@@ -40,7 +42,7 @@ api:
 ota:
   - platform: esphome
     id: ota_esphome
-    password: !secret ota_password
+    password: ${ota_password}
 
 wifi:
   ssid: !secret wifi_ssid

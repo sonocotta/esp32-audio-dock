@@ -4,14 +4,24 @@
 # Extends sendspin media player with ESP32 (non-S3 models) specific optimizations
 # ============================================================
 
+substitutions:
+  # Wi-Fi-path IRAM only. Set to "n" on Ethernet-primary boards so the IRAM
+  # goes to lwIP (CONFIG_LWIP_IRAM_OPTIMIZATION, below) instead.
+  sendspin_wifi_iram_opt: "y"
+
+# `esp32:` is single-instance, so this must be a mapping to merge with the
+# board config's own `esp32:` block, and `sdkconfig_options:` belongs under
+# `framework:`. Written as a list item before, it was discarded silently.
 esp32:
-  - id: !extend esp32_id
+  framework:
     sdkconfig_options:
-        # Sendspin dev recommends
-        CONFIG_ESP_WIFI_RX_IRAM_OPT: "y" # Unnecessary on an ESP32-S3; uses more internal memory
-        CONFIG_ESP_WIFI_IRAM_OPT: "y"  # Unnecessary on an ESP32-S3; uses more internal memory
-        CONFIG_ESP_WIFI_EXTRA_IRAM_OPT: "y"  # Unnecessary on an ESP32-S3; uses more internal memory
-        CONFIG_LWIP_IRAM_OPTIMIZATION: "y"  # Unnecessary on an ESP32-S3; uses more internal memory
+      # Sendspin dev recommends. Wi-Fi-only; see sendspin_wifi_iram_opt above.
+      CONFIG_ESP_WIFI_RX_IRAM_OPT: ${sendspin_wifi_iram_opt} # Unnecessary on an ESP32-S3; uses more internal memory
+      CONFIG_ESP_WIFI_IRAM_OPT: ${sendspin_wifi_iram_opt}  # Unnecessary on an ESP32-S3; uses more internal memory
+      CONFIG_ESP_WIFI_EXTRA_IRAM_OPT: ${sendspin_wifi_iram_opt}  # Unnecessary on an ESP32-S3; uses more internal memory
+      # Kept on unconditionally: lwIP carries the audio stream on BOTH
+      # transports, so this one pays for its IRAM either way.
+      CONFIG_LWIP_IRAM_OPTIMIZATION: "y"  # Unnecessary on an ESP32-S3; uses more internal memory
 
 
 audio:
@@ -25,4 +35,3 @@ audio:
     #   state_memory: internal  # Unnecessary on an ESP32-S3; uses more internal memory
     #   pseudostack:
     #     threadsafe: false  # Unnecessary on an ESP32-S3; prevents decoding two Opus streams simultaneously
-

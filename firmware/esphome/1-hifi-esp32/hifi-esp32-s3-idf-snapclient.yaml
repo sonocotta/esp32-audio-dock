@@ -14,6 +14,8 @@
 # ============================================================
 
 substitutions:
+  # Override in your own config with: ota_password: !secret ota_password
+  ota_password: ""
   name: hifi-esp32s3
   friendly_name: HiFi-ESP32-S3
   task_stack_in_psram: "true"
@@ -114,7 +116,7 @@ api:
 ota:
   - platform: esphome
     id: ota_esphome
-    password: !secret ota_password
+    password: ${ota_password}
 
 wifi:
   ssid: !secret wifi_ssid
