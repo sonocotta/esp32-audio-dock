@@ -1,0 +1,24 @@
+# ============================================================
+# Ethernet W5500 - lwIP tuning for CLASSIC ESP32
+# ============================================================
+# Include after packages/ethernet-w5500.yaml, on `variant: esp32` boards only.
+#
+# Sendspin, speaker.media_player and rtsp_server all request ESPHome's
+# WiFi-tuned lwIP profile: a 65534-byte TCP receive window. The W5500 runs at
+# 8MHz and cannot drain that, so the surplus queues in the W5500 and in lwIP,
+# and the queueing delay overruns the player's 100ms audio buffer - the
+# audible dropout. Bandwidth was never the limit (8Mbps for a ~1.5Mbps
+# stream); the window is. Measured 1212 -> 46 buffer overruns per hour.
+#
+# Not validated on ESP32-S3, which is why this is opt-in and chip-scoped
+# rather than part of ethernet-w5500.yaml.
+#
+# Background and full measurements: sonocotta/esp32-audio-dock#183
+# ============================================================
+
+substitutions:
+  # Raising this is what the fault was. Override only with a measurement.
+  eth_lwip_high_performance: "false"
+
+network:
+  enable_high_performance: ${eth_lwip_high_performance}

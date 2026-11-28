@@ -1,6 +1,6 @@
 {
   "name": "loud-esp32s3-g-sendspin",
-  "version": "2026.11.25-7bf0dfb6",
+  "version": "2026.11.19-68b339db",
   "home_assistant_domain": "esphome",
   "funding_url": "https://esphome.io/guides/supporters.html",
   "new_install_prompt_erase": true,
